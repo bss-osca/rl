@@ -1,0 +1,1276 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```
+
+```{r links, child="links.md"}
+```
+
+# Transforming data {#mod-r-transform}
+
+In this module, we consider transformation of data. In general raw data may be messy and need to be structured in a __tidy__ way. Tidying your data means storing it in a structured form suitable for analysis. This is done using a tibble (data frame) where each column is a variable, and each row is an observation. Tidy data is important because the consistent structure lets you focus your struggle on questions about the data.
+
+Given a raw dataset the first step is to clean it and and transform it to a tidy format. Given tidy data, you next often need to __transform__ it. Transformation includes narrowing in on observations of interest (e.g. only observations from a specific year or warehouse), creating new variables based on existing variables (like the cost of using the machine that day given idle time). Together, tidying and transforming are called __wrangling__, because it can be a hard process to get your data in the right form.
+
+In this chapter, you will learn how to work with tibbles using the [dplyr package][tidyverse-dplyr] which is a part of the [tidyverse][tidyverse-main-page]. 
+
+We are all different and you may like different learning styles compared to others. In the learning path diagram, there may be links to alternative online content. Note this is an alternative to the standard learning path that you may use instead. The learning path may also have extra content, that is not a part of syllabus, you can have a look at. 
+
+```{r, echo=FALSE, out.width="100%", fig.asp=NA, include=TRUE}
+g <- create_learning_path(
+   url = "https://docs.google.com/spreadsheets/d/1bBe42LHK-bE7CsU9eNBzi_7VNjbmv-Ybr7285pE61jM/edit?usp=sharing", 
+   sheet = "r-transform", 
+   x_legend = -0.5, y_legend = 0.25)
+render_graph(g)
+```
+
+<!-- * Roger Peng provides a good video giving an [Introduction to the dplyr R package][video-dplyr].  -->
+<!-- * [Chapter 12](https://bookdown.org/rdpeng/rprogdatascience/managing-data-frames-with-the-dplyr-package.html) in @rdpeng provides a nice introduction to dplyr.  -->
+<!-- * An alternative interactive DataCamp course is [Working with Data in the Tidyverse][datacamp-r-dplyr-bakeoff] which may be good to take if you need more training. -->
+
+
+
+## Learning outcomes {#lo-r-transform}
+
+By the end of this module, you are expected to be able to:
+
+* Describe what tidy and wangling is.
+* Apply the most common string functions.
+* Apply tidy operations to data.
+* Transform data.
+* Clean data.
+
+The learning outcomes relate to the [overall learning goals](#lg-course) number 7, 11-14 and 18 of the course.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Working with data in the tidyverse {#r-transform-tidyverse}
+
+An excellent introduction on how to transform data using the tidyverse is given in the interactive DataCamp course [Data Manipulation with dplyr][datacamp-r-dplyr]. Please complete the course before continuing. 
+
+<!-- ## Tidy  -->
+
+
+<!-- ## Wangling -->
+
+
+<!-- https://learn.datacamp.com/projects/758 -->
+<!-- https://learn.datacamp.com/courses/dealing-with-missing-data-in-r -->
+<!-- https://learn.datacamp.com/courses/introduction-to-the-tidyverse -->
+
+
+## Mutating joins {#r-transform-joins}
+
+Mutating joins allow you to combine variables from multiple tables. There are four types of mutating join, which differ in their behavior when a match is not found. We'll illustrate each with a simple example:
+
+```{r}
+df1 <- tibble(x = c(1, 2), y = 2:1)
+df2 <- tibble(x = c(3, 1), a = 10, b = "a")
+df1
+df2
+```
+
+Note that column `x` is present in both tables and used when joining them.
+
+  * `inner_join(df1, df2)` only includes observations that match in both `df1` and `df2`.
+    
+    ```{r}
+    df1 %>% 
+      inner_join(df2) 
+    ```
+    
+  * `left_join(df1, df2)` includes all observations in `df1`, regardless of whether
+    they match or not. This is the most commonly used join because it ensures 
+    that you don't lose observations from your primary table.
+  
+    ```{r}
+    df1 %>% 
+      left_join(df2)
+    ```
+  
+  * `right_join(df1, df2)` includes all observations in `df2`. It's equivalent to 
+    `left_join(df2, df1)`, but the columns and rows will be ordered differently.
+  
+    ```{r}
+    df1 %>% 
+      right_join(df2)
+    df2 %>% 
+      left_join(df1)
+    ```
+
+  * `full_join()` includes all observations from `df1` and `df2`.
+
+    ```{r}
+    df1 %>% 
+      full_join(df2)
+    ```
+
+The left, right and full joins are collectively know as __outer joins__. When a row doesn't match in an outer join, the new variables are filled in with missing values.
+
+While mutating joins are primarily used to add new variables, they can also generate new observations. If a match is not unique, a join will add all possible combinations (the Cartesian product) of the matching observations:
+
+```{r}
+df1 <- tibble(x = c(1, 1, 2), y = 1:3)
+df2 <- tibble(x = c(1, 1, 2), z = c("a", "b", "a"))
+df1 %>% 
+  left_join(df2)
+```
+
+Filtering joins match observations in the same way as mutating joins, but affect the observations, not the variables. There are two types:
+
+* `semi_join(df1, df2)` __keeps__ all observations in `df1` that have a match in `df2`.
+* `anti_join(df1, df2)` __drops__ all observations in `df1` that have a match in `df2`.
+
+These are most useful for diagnosing join mismatches. If you're worried about what observations your joins will match, start with a `semi_join()` or `anti_join()`. `semi_join()` and `anti_join()` never duplicate; they only remove observations. 
+
+```{r}
+df1 <- tibble(x = c(1, 1, 3, 4), y = 1:4)
+df2 <- tibble(x = c(1, 1, 2), z = c("a", "b", "a"))
+
+# Four rows to start with:
+df1 %>% nrow()
+# And we get four rows after the join
+df1 %>% inner_join(df2, by = "x") %>% nrow()
+# But only two rows actually match
+df1 %>% semi_join(df2, by = "x") %>% nrow()
+```
+
+
+## Recap {#rc-r-transform}
+
+* We consider transformation of tidy data where data are stored using a tibble (data frame) where each column is a variable, and each row is an observation/case.
+
+* Tidy data is important because the consistent structure lets you focus your struggle on questions about the data. 
+
+* Transformation includes narrowing in on observations of interest (e.g. only observations from a specific year or warehouse), creating new variables based on existing variables (like the cost of using the machine that day given idle time). 
+
+* Tidying and transforming are called wrangling, because it can be a hard process to get your data in the right form.
+
+* The package dplyr provides a consistent set of verbs that helps you solve the most common data manipulation challenges:
+   - The `filter` function chooses rows (cases/observations) that meet a specific criteria. 
+   - The `select` function chooses columns (variables) based on their names.
+   - The `arrange` function reorders the rows. 
+   - The `transmute` function adds/modifies columns (variables) and drops existing ones.
+   - The `mutate` function adds/modifies columns (variables).
+   - The `group_by` function groups variables for groupwise operations.
+   - The `ungroup` function removes the current grouping.
+   - The `count` function counts rows based on a grouping. 
+   - The `summarise` function reduces multiple values down to a single summary.
+   - The `distinct` function selects unique/distinct rows.
+   - The `pull` function can be used to extract columns as vectors (it is similar to $).
+   
+* Some nice to know functions to use inside e.g. `summarise` or `mutate` are
+   - The `n()` function counts the number of rows in a group.
+   - The `n_distinct` counts the number of unique rows in a group.
+   - The `first` function considers the first row in a group (remember to order it as needed).
+   - The `slice_min` and `slice_max` functions select rows with highest or lowest values of a variable.
+   - The `across` function makes it easy to apply the same transformation to multiple columns.
+   
+* Use `print(n = Inf)` in a pipe to print all rows.
+
+* Use the pipe operator `%>%` to connect operations.  
+
+* Use functions `glimpse`, `tail`, `head`, `View` to have a look at the data.
+
+* The `skim` function in the skimr package provides an approach to summary statistics.
+
+* Use `as.character`, `as.numeric`, etc. to convert data to a different type.
+
+* Use `nrow` and `ncol` functions to get the number of rows and columns of the data.
+
+* The 'Data transformation with dplyr' cheatsheet is very useful. Find the newest version in RStudio **Help > Cheatsheets**.
+
+You may also have a look at the [slides for this module](https://bss-osca.github.io/tfa/slides/07-03_r-transform-slides.html).
+
+
+## Exercises {#ex-r-transform}
+
+`r strExercises`
+
+[Link to the project on RStudio Cloud for this module][r-cloud-mod17]. 
+
+### Exercise (gapminder) {#ex-gapminder1}
+
+Use the *exercise R markdown template* to solve this exercise (**File > New File > R Markdown...**, select **From template** and then **TFA Exercise**).
+
+The gapminder data set provides values for life expectancy, GDP per capita, and population, every five years, from 1952 to 2007 for 142 countries. The data can be loaded using the gapminder package:
+
+```{r message = FALSE, warning = FALSE}
+library(gapminder)
+gapminder
+```
+
+Let us try to examine the dataset (use pipes `%>%` as much as possible). 
+
+```{r, solution=TRUE}
+gapminder %>% glimpse()
+gapminder %>% summary()
+gapminder %>% tail()
+```
+
+   (@) Use `glimpse`, `summary` and `tail` to examine the data.
+
+   (@) Use `count` to count the number of
+   
+```{r, solution=TRUE}
+gapminder %>% 
+  count(country) %>% 
+  nrow()
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) countries, 
+       
+```{r, solution=TRUE}
+gapminder %>% 
+  count(continent) %>% 
+  nrow()
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) continents,
+       
+```{r, solution=TRUE}
+gapminder %>% 
+  count(continent, country) %>% 
+  count(continent)     # or
+gapminder %>% 
+  distinct(continent, country) %>% 
+  count(continent)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) countries per continent. 
+
+
+
+   
+```{r, solution=TRUE}
+gapminder %>% 
+  distinct(continent) %>% 
+  pull(continent) %>% 
+  as.character()
+```   
+```{r, hint=TRUE, eval=FALSE, eval=FALSE}
+gapminder %>% 
+  distinct(___) %>% 
+  pull(___) %>% 
+  as.character()
+```  
+
+   (@) Retrieve a vector with all distinct continent values.
+
+   
+   
+   (@) Subset rows to find:
+   
+```{r, solution=TRUE}
+gapminder %>% 
+  filter(lifeExp < 29)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) all rows with life expectancy less that 29 years,
+
+
+```{r, solution=TRUE}
+gapminder %>% 
+  filter(country == "Rwanda", year > 1979)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) all rows for Rwanda after year 1979,
+
+
+```{r, solution=TRUE}
+gapminder %>%  
+  filter(country %in% c("Rwanda", "Afghanistan", "France"))
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) all rows for Rwanda, Afghanistan or France.
+
+
+
+   (@) Select columns 
+   
+```{r, solution=TRUE}
+gapminder %>% 
+  select(year, lifeExp)
+```  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) year and life expectancy,
+    
+
+```{r, solution=TRUE}
+gapminder %>% 
+  select(country, gdpPercap)
+```   
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) country and GDP per capita.
+    
+      
+
+```{r, solution=TRUE}
+gapminder %>% 
+   filter((gdpPercap > 40000 & continent == "Europe") | (gdpPercap < 400 & continent == "Africa")) %>% 
+   # print(n=Inf) %>%   # if want to see the intermediate results
+   select(continent, country, gdpPercap) # %>% print(n=Inf)
+```   
+```{r, hint=TRUE, eval=FALSE, eval=FALSE}
+gapminder %>% 
+   filter((gdpPercap > ___ & continent == ___) | (___)) %>% 
+   # print(n=Inf) %>%   # if want to see the intermediate results
+   select(continent, ___, ___) # %>% print(n=Inf)
+```   
+
+   (@) Subset your data set to find all rows with GDP per capita greater than 40000 in Europe or with GDP per capita less than 500 in Africa.
+
+
+
+
+```{r, solution=TRUE}
+gapminder %>%
+  mutate(gdp = pop * gdpPercap)
+```   
+
+   (@) Use `mutate` to calculate each country's GDP (population times GDP per capita).
+
+
+
+In general GDP numbers are large and abstract. Let us try to calculate relative numbers.
+
+
+```{r, solution=TRUE, text = "The relative GDP per capita numbers are, in general, well below 1. We see that most of the countries covered by this dataset have substantially lower GDP per capita, relative to Denmark, across the entire time period."}
+mean_dk <- gapminder %>% 
+  filter(country == "Denmark") %>% 
+  pull(gdpPercap) %>% 
+  mean()
+dat <- gapminder %>% 
+  mutate(gdpPercapRel = gdpPercap/mean_dk)
+```  
+```{r, title = "Hint 2", hint=TRUE, eval=FALSE, eval=FALSE}
+dat <- gapminder %>% 
+  mutate(gdpPercapRel = ___)
+``` 
+```{r, title = "Hint 1", hint=TRUE, eval=FALSE, eval=FALSE, text = "First you must calculate the mean of Danish `gdpPercap` and next use that to add a new column `gdpPercapRel`."}
+mean_dk <- gapminder %>% 
+  filter(country == "Denmark") %>% 
+  pull(___) %>% 
+  mean()
+``` 
+
+   (@) Use `mutate` to calculate GDP per capita relative to mean GDP per capita in Denmark over the whole period (`gdpPercap` divided by the mean of Danish `gdpPercap`). Have a look at the calculated data. Does the numbers seem reasonable? I perceive Denmark to be a "high GDP" country, so I predict that the distribution of `gdpPercapRel` is located below 1, possibly even well below. 
+
+
+
+
+   (@) Use `arrange` to order 
+   
+```{r, solution=TRUE}
+gapminder %>% 
+  arrange(year, country)
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) data by year then country, as opposed to current by country then year,
+
+
+```{r, solution=TRUE}
+gapminder %>%
+  filter(year == 2007) %>%
+  arrange(lifeExp)
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) data from 2007, sorted on life expectancy,
+
+
+```{r, solution=TRUE}
+gapminder %>%
+  filter(year == 2007) %>%
+  arrange(desc(lifeExp))
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) data from 2007, sorted on life expectancy in **desc**ending order. Hint: use `desc()` inside `arrange`.
+ 
+
+
+   (@) Use `select` to 
+   
+```{r, solution=TRUE}
+gapminder %>% 
+  select(yr = year, everything())
+```  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) rename `year` to `yr` and keep all other columns (the select helper `everything` may be used),
+ 
+ 
+```{r, solution=TRUE}
+gapminder %>% 
+  select(-pop)
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) remove `pop`,
+  
+
+```{r, solution=TRUE}
+gapminder %>% 
+  select(year, pop, everything())
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) reorder columns in order `year`, `pop`, ... (remaining).
+
+
+  (@) Use `group_by` and `summarize` to find the
+  
+  
+```{r, solution=TRUE}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(n = n())
+```  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) number of observations per continent,
+     
+
+```{r, solution=TRUE}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(n = n(), n_countries = n_distinct(country))
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) number of countries per continent (use `n_distinct` inside `summarize` to count the number of distinct observations),
+
+
+```{r, solution=TRUE}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(avg_lifeExp = mean(lifeExp))
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) average life expectancy by continent,
+     
+
+```{r, solution=TRUE}
+gapminder %>% 
+  filter(continent == "Asia") %>% 
+  group_by(year) %>% 
+  summarize(min_lifeExp = min(lifeExp), max_lifeExp = max(lifeExp))
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d) minimum and maximum life expectancies seen by year in Asia.
+
+      
+
+```{r, solution=TRUE}
+gapminder %>% 
+  group_by(country) %>%                 # group by country
+  select(country, year, lifeExp) %>%    # select relevant columns
+  arrange(year, .by_group = TRUE) %>%   # make sure that data is sorted correct
+  mutate(lifeExp_gain = lifeExp - first(lifeExp)) %>%       
+  filter(year < 1963)                   # just for nice printing
+``` 
+```{r, hint=TRUE, eval=FALSE, eval=FALSE, text = "The `first` function may be helpful to extract the first value from a vector in each group."}
+gapminder %>% 
+  group_by(country) %>%                 # group by country
+  select(country, year, lifeExp) %>%    # select relevant columns
+  arrange(year, .by_group = TRUE) %>%   # make sure that data is sorted correct
+  mutate(lifeExp_gain = ___) %>%        # define new variable
+  filter(year < 1963)                   # just for nice printing
+``` 
+
+  (@) Sometimes you do not want to collapse the $n$ rows for each group into one row. That is, you do not want to use `summarize` but `mutate` within your groups. Try to make a new variable that is the years of life expectancy gained (lost) relative to 1952, for each individual country. 
+      
+      
+
+
+```{r, solution=TRUE, text = "Mostly you are seeing what genocide looks like in dry statistics on average life expectancy."}
+gapminder %>%
+  select(country, year, continent, lifeExp) %>%     
+  group_by(continent, country) %>%                  
+  mutate(le_delta = lifeExp - lag(lifeExp)) %>%
+  summarize(worst_le_delta = min(le_delta, na.rm = TRUE)) %>%
+  slice_min(worst_le_delta) %>%
+  arrange(worst_le_delta)
+``` 
+```{r, hint=TRUE, eval=FALSE, eval=FALSE, text = "The `lag` function is useful to select the value in the previous row. Positive values of `le_delta` means lifeExp went up, negative means it went down. Break the code into pieces, starting at the top, and inspect the intermediate results. These commands are built up gradually, with lots of errors and refinements along the way."}
+gapminder %>%
+  select(country, year, continent, lifeExp) %>%             # select relevant columns
+  group_by(continent, country) %>%                          # group
+  mutate(le_delta = ___) %>%                                # within country, take (lifeExp in year i) - (lifeExp in year i - 1)
+  summarize(worst_le_delta = min(___, na.rm = TRUE)) %>%    # find lowest value
+  slice_min(worst_le_delta) %>%                             # find min in each continent
+  arrange(worst_le_delta)                                   # arrange 
+```
+      
+  (@) Which country experienced the sharpest 5-year drop in life expectancy in each continent? Recall that the Gapminder data only has data every five years, e.g. for 1952, 1957, etc. So this really means looking at life expectancy changes between adjacent timepoints. 
+
+      
+      
+
+
+
+### Exercise (babynames) {#ex-babynames1}
+
+Use the *exercise R markdown template* to solve this exercise (**File > New File > R Markdown...**, select **From template** and then **TFA Exercise**).
+
+The package babynames contains the dataset `babynames` provided by the U.S. Social Security Administration. For each year from 1880 to 2017, the number of children of each sex given each name. All names with more than 5 uses are given (source: http://www.ssa.gov/oact/babynames/limits.html).
+
+Install it using 
+
+```r
+install.packages("babynames")
+```
+
+We will use the skimr package to get an overview over `babynames`:
+
+```{r}
+library(babynames)
+library(skimr)
+skim(babynames)
+```
+
+```{r, solution=TRUE, text = "The last line only selects the `n` column."}
+``` 
+
+  1) Which of these is NOT a way to select the `name` and `n` columns together?
+  
+      ```r
+      select(babynames, -c(year, sex, prop))
+      select(babynames, name:n)
+      select(babynames, starts_with("n"))
+      select(babynames, ends_with("n"))
+      ```
+  
+  2) Use `filter` and the logical operators to find:
+  
+```{r, solution=TRUE}
+babynames %>% 
+  filter(prop >= 0.08)
+```   
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) all of the names where prop is greater than or equal to 0.08,
+
+```{r, solution=TRUE}
+babynames %>% 
+  filter(name == "Sea")
+```       
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) all of the children named "Sea".
+
+
+
+  3) Use Boolean operators to return only the rows that contain:
+  
+```{r, solution=TRUE}
+babynames %>% 
+  filter(name == "Sue", sex == "M")
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) _boys_ named Sue,
+
+
+```{r, solution=TRUE}
+babynames %>% 
+  filter(year == 1880, n == 5 | n == 6)
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) names that were used by exactly 5 or 6 children in 1880,
+
+
+```{r, solution=TRUE}
+babynames %>% 
+  filter(name %in% c("Acura", "Lexus", "Yugo"))
+``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) names that are one of Acura, Lexus, or Yugo.
+      
+
+```{r, solution=TRUE}
+min(babynames$n)
+max(babynames$n)
+```  
+
+  4) What is the smallest value of n? What is the largest?
+
+
+```{r, solution=TRUE}
+babynames %>% 
+  filter(sex == "F", year == 2017) %>% 
+  select(name, n) %>% 
+  arrange(desc(n)) 
+```  
+```{r, hint=TRUE, eval=FALSE}
+babynames %>% 
+  filter(___) %>% 
+  select(name, n) %>% 
+  arrange(desc(___)) 
+``` 
+
+  5) Write a sequence of functions that filters babynames to just the girls that were born in 2017, then select the `name` and `n` columns, then arrange the results so that the most popular names are near the top.
+
+
+```{r, solution=TRUE}
+# for instance
+babynames %>% 
+  filter(sex == "M", name == "Lars")
+```  
+
+  6) Trim `babynames` to just the rows that contain your `name` and your `sex`.
+
+
+ 
+```{r, solution=TRUE}
+babynames %>% 
+  filter(name == "Khaleesi") %>% 
+  summarise(total = sum(n), first = min(year))
+```  
+```{r, hint=TRUE, eval=FALSE}
+babynames ___ 
+  filter(____) ___
+  ____(total = ___, first = ___)
+``` 
+
+  7) Extract the rows where `name == "Khaleesi"`. Then use `summarise()` to find the total number of children named Khaleesi and the first year Khaleesi appeared in the data.
+
+
+```{r, solution=TRUE}
+babynames %>%
+  group_by(name, sex) %>% 
+  summarize(total = sum(n)) %>% 
+  arrange(desc(total))
+```  
+```{r, hint=TRUE, eval=FALSE}
+babynames %>%
+  _______(name, sex) %>% 
+  _______(total = _____(n)) %>% 
+  _______(desc(_____))
+``` 
+
+  8) Use `group_by()`, `summarise()`, and `arrange()` to display the ten most popular names. Compute popularity as the *total* number of children of a single gender given a name. 
+      
+      
+```{r, solution=TRUE}
+babynames %>% 
+  group_by(year) %>% 
+  summarise(total = sum(n))
+```  
+
+  9) Use `group_by()` to calculate the total number of children born each year over time.
+
+
+```{r, solution=TRUE, text = "The same results if you use `n` since in the same order."}
+babynames %>% 
+  group_by(year, sex) %>% 
+  mutate(rank = min_rank(desc(n))) %>% 
+  arrange(year, sex, desc(prop))
+```  
+```{r, hint=TRUE, eval=FALSE}
+babynames %>% 
+  group_by(___, ___) %>% 
+  ___(rank = ___(desc(___))) %>% 
+  arrange(year, sex, desc(prop))
+``` 
+
+  10) Column `prop` denotes the proportion given year and sex. Use `mutate()` and `min_rank()` to rank each row in babynames from _largest_ `prop` to lowest `prop` given year and sex. What happens if you do the same using the `n` column?
+
+
+```{r, solution=TRUE}
+babynames %>% 
+  group_by(year, sex) %>% 
+  mutate(rank = min_rank(desc(n))) %>% 
+  filter(rank == 1, year > 2009)
+```  
+
+  11) Filter the results to find all names with `rank == 1` after 2009.
+
+
+
+
+
+
+### Exercise (profit) {#ex-profit1}
+
+```{r, eval=FALSE, include=FALSE}
+lines <- read_lines("test.txt", n_max = 3)
+cat(lines, sep = "\n")
+dat <- read_csv("test.txt")
+write_csv(dat, "profit_char.csv")
+skim(dat)
+
+dat <- read_csv(
+  "profit_char.csv",
+  col_types = cols(Quarter = col_number(),
+  Channel = col_character(),
+  `Customer ID` = col_character(),
+  Country = col_character(),
+  `Product Line` = col_character(),
+  Revenue = col_number(),
+  `Product Cost` = col_number(),
+  `Customer Service Cost` = col_number(),
+  Profit = col_number())
+                )
+
+write_csv(dat, "profit_full.csv")
+
+skim(dat)
+
+# make messy
+set.seed(42)
+dat <- read_csv("test.txt")
+idx <- sample(1:nrow(dat), round(runif(1)*500), replace = F)
+dat$Quarter[idx] <- str_replace(dat$Quarter[idx], "Q", "")
+idx <- sample(1:nrow(dat), round(runif(1)*500), replace = F)
+dat$Quarter[idx] <- str_replace(dat$Quarter[idx], "Q", "q")
+
+idx <- sample(1:nrow(dat), round(runif(1)*100), replace = F)
+dat$Revenue[idx] <- ""
+idx <- sample(1:nrow(dat), round(runif(1)*50), replace = F)
+dat$Revenue[idx] <- "?"
+idx <- sample(1:nrow(dat), round(runif(1)*50), replace = F)
+dat$Revenue[idx] <- "unknown"
+idx <- sample(1:nrow(dat), round(runif(1)*50), replace = F)
+dat$Revenue[idx] <- "Unknown"
+
+idx <- sample(1:nrow(dat), round(runif(1)*100), replace = F)
+dat$`Customer Service Cost`[idx] <- "NA"
+idx <- sample(1:nrow(dat), round(runif(1)*100), replace = F)
+dat$`Customer Service Cost`[idx] <- "?"
+
+idx <- sample(1:nrow(dat), round(runif(1)*100), replace = F)
+dat$`Product Cost`[idx] <- ""
+
+write_csv(dat, "profit_raw.csv")
+```
+
+Use the *exercise R markdown template* to solve this exercise (**File > New File > R Markdown...**, select **From template** and then **TFA Exercise**).
+
+Consider the dataset profit containing quarterly financial records for each costumer, product, etc.:
+
+```{r}
+library(skimr)
+path <- system.file("extdata/profit_raw.csv", package = "tfa")
+profit <- read_csv(path)
+skim(profit)
+```
+
+Note that it seems that the dataset need to be cleaned. All columns are strings (some should be numbers) and there seems to be missing values. You may start by having a view of the dataset using:
+
+```r
+View(profit)
+```
+
+First focus on column `Quarter` which currently has `r profit %>% distinct(Quarter) %>% nrow()` distinct values:
+
+```{r}
+profit %>% distinct(Quarter)
+```
+
+You would like it to be a numeric with values 1-4. 
+
+```{r, solution=TRUE}
+
+profit <- profit %>%  
+  mutate(Quarter = str_remove(Quarter, "q") %>% str_remove("Q") %>% as.numeric())
+profit %>% distinct(Quarter)
+
+``` 
+```{r, hint=TRUE, eval=FALSE}
+profit <- profit %>%  
+  mutate(Quarter = str_remove(___, "q") %>% str_remove(___) %>% as.numeric())
+profit %>% distinct(Quarter)
+``` 
+
+  1) Use `mutate`, `str_remove` and `as.numeric` to convert the column to a numeric by removing all 'q' and 'Q' values.
+
+Let us look at the next columns:
+
+```{r}
+profit %>% distinct(Channel) %>% pull()
+profit %>% distinct(`Customer ID`) %>% pull()
+profit %>% distinct(Country) %>% pull()
+profit %>% distinct(`Product Line`) %>% pull()
+```
+
+These seem to be okay. The last columns should be numbers. Let us consider `Revenue`. 
+
+```{r}
+profit %>% distinct(Revenue) %>% pull() %>% head(n = 100)
+```
+
+Most values start with a dollar sign. Let us have a look at the other ones:
+
+```{r}
+profit %>% filter(!str_starts(Revenue, fixed("$"))) 
+na_values <- profit %>% 
+  filter(!str_starts(Revenue, fixed("$"))) %>% 
+  distinct(Revenue) %>% 
+  pull(Revenue)
+na_values
+```
+
+The expression is a bit complex. Let us break it up. Function `fixed` just returns the fixed string '$'. This is necessary since the dollar sign has a special meaning in regular expressions (beyond the scope here). Function `str_starts` checks if the string starts with a dollar sign. We use the logical negation (NOT) to find the complementary set. 
+
+Note that different strings have been used to indicate `NA` values (`r na_values`). Let us first use a single value to indicate `NA` (a question mark):
+```{r}
+profit <- profit %>% 
+  mutate(Revenue = str_replace_all(Revenue, c("unknown" = "?", "Unknown" = "?")))
+```
+
+Next, we replace all `?` with `NA`:
+```{r}
+profit <- profit %>% 
+  mutate(Revenue = na_if(Revenue, "?"))
+profit %>% # check
+  filter(!str_starts(Revenue, fixed("$"))) 
+```
+
+Finally, we remove all dollar signs:
+
+```{r}
+profit <- profit %>% 
+  mutate(Revenue = str_remove(Revenue, fixed("$ ")) %>% as.numeric())
+profit
+```
+
+As one pipe: 
+```{r, eval=FALSE}
+profit <- profit %>% 
+  mutate(Revenue = str_replace_all(Revenue, c("unknown" = "?", "Unknown" = "?"))) %>% 
+  mutate(Revenue = na_if(Revenue, "?")) %>% 
+  mutate(Revenue = str_remove(Revenue, fixed("$ ")) %>% as.numeric())
+```
+
+
+
+  2) Convert the remaining columns to numeric like shown for `Revenue` above. 
+  
+
+```{r, solution=TRUE, message=FALSE}
+profit <- read_csv(path)
+profit <- profit %>% 
+  mutate(across(Revenue:Profit, ~str_replace_all(.x, c("unknown" = "?", "Unknown" = "?")) )) %>% 
+  mutate(across(Revenue:Profit, ~na_if(.x, "?") )) %>% 
+  mutate(across(Revenue:Profit, ~str_remove(.x, fixed("$ ")) %>% as.numeric() )) 
+profit
+```
+```{r, hint=TRUE, eval=FALSE}
+profit <- read_csv(path) %>% 
+  mutate(across(___:___, ~str_replace_all(.x, c("unknown" = "?", "Unknown" = "?")) )) %>% 
+  mutate(across(___:___, ~na_if(.x, "?") )) %>% 
+  mutate(across(___:___, ~str_remove(.x, fixed("$ ")) %>% as.numeric() )) 
+profit
+```
+   3) Use the `across` function to apply the operations in Question 2 for a set of columns. Hint: see the examples on the help page of `across`. 
+
+
+
+```{r, solution=TRUE, message=FALSE}
+profit <- read_csv(path) %>% 
+  mutate(Quarter = str_remove(Quarter, "q") %>% str_remove("Q") %>% as.numeric()) %>% 
+  mutate(across(Revenue:Profit, ~str_replace_all(.x, c("unknown" = "?", "Unknown" = "?")) )) %>% 
+  mutate(across(Revenue:Profit, ~na_if(.x, "?") )) %>% 
+  mutate(across(Revenue:Profit, ~str_remove(.x, fixed("$ ")) %>% as.numeric() )) 
+skim(profit)
+```
+
+  4) Write one pipe that does all the cleaning.
+  
+
+
+
+```{r, solution=TRUE}
+profit <- profit %>% 
+  mutate(Profit_calc = Revenue - `Product Cost` - `Customer Service Cost`, Diff = abs(Profit - Profit_calc)) %>%  
+  mutate(Profit = if_else(Diff > 0 & Diff <= 1, Profit_calc, Profit, missing = Profit) ) 
+profit %>% filter(Diff == 1, is.na(Profit_calc))  # check
+```
+```{r, hint=TRUE, eval=FALSE}
+profit <- profit %>% 
+  mutate(Profit_calc = Revenue - `Product Cost` - `Customer Service Cost`, Diff = abs(___)) %>%  
+  mutate(Profit = if_else(Diff > 0 & Diff <= 1, ___, Profit, Profit) ) 
+profit %>% filter(Diff == 1, is.na(Profit_calc))  # check
+```
+
+  5) Validate that revenue - product costs - customer service cost equals profit. If you see small rounding errors (less than or equal one) then recalculate the profit.
+
+
+
+
+```{r, solution=TRUE}
+profit <- profit %>% 
+  rowwise() %>% 
+  mutate(c_na = sum(is.na(c_across(Revenue:Profit)))) %>% 
+  mutate(Revenue = if_else(is.na(Revenue) & c_na == 1, Profit + `Product Cost` + `Customer Service Cost`, Revenue, Revenue),
+         `Product Cost` = if_else(is.na(`Product Cost`) & c_na == 1, - Profit + Revenue - `Customer Service Cost`, `Product Cost`), 
+         `Customer Service Cost` = if_else(is.na(`Customer Service Cost`) & c_na == 1, - Profit + Revenue - `Product Cost`, `Customer Service Cost`)) %>% 
+  select(Quarter:Profit)
+
+# check - do numbers match
+profit %>% 
+  mutate(Profit_calc = Revenue - `Product Cost` - `Customer Service Cost`, Diff = abs(Profit - Profit_calc)) %>%  
+  filter(Diff > 0)
+
+# check - find NA values
+profit %>% 
+  rowwise() %>% 
+  mutate(c_na = sum(is.na(c_across(Revenue:Profit)))) %>% 
+  filter(c_na > 0)
+```
+```{r, hint=TRUE, eval=FALSE, text = "You can check you calculations using your code from Question 5.", title = "Hint 2"}
+profit <- profit %>% 
+  rowwise() %>% 
+  mutate(c_na = sum(is.na(c_across(Revenue:Profit)))) %>% 
+  mutate(Revenue = if_else(is.na(___) & c_na == 1, ___, Revenue, Revenue),
+         `Product Cost` = if_else(is.na(___) & c_na == 1, ___, `Product Cost`), 
+         `Customer Service Cost` = if_else(is.na(___) & c_na == 1, ___, `Customer Service Cost`)) %>% 
+  select(Quarter:Profit)
+```
+```{r, hint=TRUE, eval=FALSE, text = "Recall that profit = revenue - product costs - customer service cost; that is, if a single value of these are missing then the value can be calculated using the other ones.", title = "Hint 1"}
+# To find the number of missing values (`NA`) you can create a new column 
+# counting the number of missing values:
+profit <- profit %>% 
+  rowwise() %>% 
+  mutate(ct_na = sum(is.na(c_across(Revenue:Profit)))) %>% 
+  ungroup()
+profit %>% filter(ct_na >= 1)
+```
+
+   6) Recalculate values in columns `Revenue` to `Profit` if possible. 
+
+     
+  
+
+
+
+```{r, solution=TRUE, message=FALSE}
+profit %>% 
+  group_by(Quarter) %>% 
+  slice_max(Profit, n = 2)
+```
+
+  7) Find the two best rows with highest profit in each quarter.
+  
+
+
+```{r, solution=TRUE, message=FALSE, text = "The results are not the same since use another group by."}
+profit %>% 
+  group_by(Quarter, `Customer ID`) %>% 
+  summarise(Profit = sum(Profit)) %>% 
+  slice_max(Profit, n = 2)
+```
+```{r, hint=TRUE, eval=FALSE, message=FALSE}
+profit %>% 
+  group_by(___, `Customer ID`) %>% 
+  summarise(Profit = ___) %>% 
+  slice_max(Profit, n = 2)
+```
+
+  8) Find the two best customers with highest profit in each quarter. Is the result the same as in Question 7?
+
+
+
+
+```{r, solution=TRUE, message=FALSE}
+profit %>% 
+  group_by(`Product Line`) %>% 
+  summarise(Profit = sum(Profit)) %>% 
+  slice_max(Profit)
+# ... repeat 
+
+# Using a function
+summarise_profit  <- function(data, group_var, summarise_var) {
+  data %>%
+    group_by(across({{ group_var }})) %>% 
+    summarise(across({{ summarise_var }}, sum)) %>% 
+    slice_max(Profit)
+}
+summarise_profit(profit, `Product Line`, Profit)
+summarise_profit(profit, `Customer ID`, Profit)
+# ... repeat
+
+# Using purrr package to get a single tibble (if interested in the purrr package)
+val <- names(profit)[1:5]
+max_profit <- map_df(
+  val, 
+  ~{
+      tmp <- profit %>% 
+        group_by(.data[[.x]]) %>% 
+        summarise(Profit = sum(Profit), .groups = "drop") %>% 
+        slice_max(Profit)
+      tibble(by = .x, 
+        best = as.character(tmp[[1,1]]),
+        profit = tmp[[1,2]] 
+      )
+    } 
+  )
+max_profit 
+```
+```{r, hint=TRUE, eval=FALSE, message=FALSE}
+profit %>% 
+  group_by(___) %>% 
+  summarise(Profit = ___) %>% 
+  slice_max(Profit)
+# ... repeat 
+```
+
+  9) Find the product line, customer, channel, country and quarter with the highest profit. 
+  
+
+
+
+```{r, solution=TRUE, message=FALSE}
+profit %>% 
+  group_by(`Customer ID`) %>% 
+  distinct(Country) %>% 
+  count(`Customer ID`)
+```
+
+  10) Are there rows with the same customer in different countries?
+  
+
+
+
+```{r, solution=TRUE, message=FALSE}
+profit %>% 
+  arrange(desc(Profit), desc(Revenue))
+```
+
+  11) Sort the data decreasing with respect to profit and next revenue.
+  
+
+  
+  
+```{r, solution=TRUE , message=FALSE}
+profit %>% 
+  group_by(`Product Line`) %>% 
+  summarise(cost = sum(`Product Cost` + `Customer Service Cost`)) %>% 
+  # print() %>%   # if want a peek before slicing 
+  slice_max(cost)
+
+profit %>% 
+  group_by(`Product Line`) %>% 
+  summarise(cost = sum(`Product Cost`)) %>% 
+  slice_min(cost)
+```
+```{r, hint=TRUE, eval=FALSE , message=FALSE}
+profit %>% 
+  group_by(`Product Line`) %>% 
+  summarise(cost = sum(___)) %>% 
+  # print() %>%   # if want a peek before slicing 
+  slice_max(___)
+
+profit %>% 
+  ___% 
+  slice_min(cost)
+```
+
+  12) Which product line has the highest and lowest total cost?
+
+
+
+
+```{r, solution=TRUE, message=FALSE}
+profit %>%
+  mutate(cust_cost_new = `Customer Service Cost` * 1.05, 
+         profit_new = Revenue - cust_cost_new - `Product Cost`) %>% 
+  group_by(`Product Line`) %>% 
+  summarise(cust_cost = sum(`Customer Service Cost`), profit = sum(Profit), 
+            cust_cost_new = sum(cust_cost_new), profit_new = sum(profit_new),
+            profit_decrease = profit_new - profit)
+```
+```{r, hint=TRUE, eval=FALSE, message=FALSE}
+profit %>%
+  mutate(cust_cost_new = ___ * 1.05, 
+         profit_new = ___) %>% 
+  group_by(`Product Line`) %>% 
+  summarise(cust_cost = sum(___), profit = sum(Profit), 
+            cust_cost_new = ___, profit_new = ___,
+            profit_decrease = ___)
+```
+
+  13) Assume that customer service cost increases with 5%. How will that affect the profit for each product line?
+  
+```{r}
+rm(profit)
+```
+
+
+### Exercise (fisheries) {#ex-fish}
+
+Use the *exercise R markdown template* to solve this exercise (**File > New File > R Markdown...**, select **From template** and then **TFA Exercise**).
+
+The dataset called `fisheries` contains world fisheries harvest for 2005. The tonnage from capture and aquaculture is listed by country.
+
+You need the `tidyverse` package as usual:
+
+```{r}
+library(tidyverse)
+# install tfa package using remotes::install_github("bss-osca/tfa/tfa-package", upgrade = FALSE)     
+```
+
+We load the needed datasets:
+
+```{r}
+fisheries <- read_csv(system.file("extdata/fisheries.csv", package = "tfa"))
+fisheries
+continents <- read_csv(system.file("extdata/continents.csv", package = "tfa"))
+continents
+```
+
+Some mean statistics:
+
+```{r }
+fisheries %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE))
+```
+
+
+
+```{r, solution=TRUE}
+fisheries %>% 
+  anti_join(continents)      # countries not belonging to a continent
+fisheries <- fisheries %>% 
+  print() %>% 
+  left_join(continents) %>% 
+  print()
+fisheries %>% filter(is.na(continent))   # same result - countries not belonging to a continent
+```
+```{r, hint=TRUE, eval=FALSE, title="Hint 2"}
+fisheries %>% 
+  anti_join(___)      # countries not belonging to a continent
+fisheries <- fisheries %>% 
+  print() %>% 
+  left_join(___) %>% 
+  print()
+fisheries %>% 
+  filter(is.na(___))   # same result - countries not belonging to a continent
+```
+```{r, hint=TRUE, eval=FALSE, title="Hint 1", text="You could use `anti_join` to find missing values. Use `left_join` to join the datasets."}
+```
+
+1) Use a mutating join to add a continent column to the `fisheries` dataset. Are there some countries which do not belong to a continent? 
+
+
+
+```{r, solution=TRUE}
+fisheries <- fisheries %>%
+  filter(total > 100000)
+```
+```{r, hint=TRUE, eval=FALSE}
+fisheries <- ___ %>%
+  filter(___)
+```
+
+2) Filter out countries whose total harvest was less than 100,000 tons.
+
+
+
+```{r, solution=TRUE}
+fisheries %>% filter(is.na(continent))
+fisheries <- fisheries %>%
+  mutate(continent = case_when(
+    country == "Democratic Republic of the Congo" ~ "Africa",
+    country == "Hong Kong"                        ~ "Asia",
+    country == "Myanmar"                          ~ "Asia",
+    TRUE                                          ~ continent
+    )
+  )
+fisheries %>% filter(is.na(continent))
+```
+```{r, hint=TRUE, eval=FALSE}
+fisheries %>% filter(is.na(continent))
+fisheries <- ___ %>%
+  mutate(continent = case_when(
+    country == ___ ~ "Africa",
+    country == ___ ~ "Asia",
+    country == ___ ~ "Asia",
+    TRUE           ~ continent
+    )
+  )
+fisheries %>% filter(is.na(continent))
+```
+
+3) If still any countries not belonging to a continent then add them to the closest continent.
+
+
+
+```{r, solution=TRUE, text="The percentage of fish harvest done using aquaculture."}
+fisheries <- fisheries %>% 
+  mutate(aquaculture_perc = aquaculture / total)
+```
+```{r, hint=TRUE, eval=FALSE}
+fisheries <- ___ %>% 
+  mutate(___)
+```
+
+4) Add column `aquaculture_perc = aquaculture / total` and explain the variable.
+
+
+
+
+```{r, solution=TRUE}
+fisheries %>%                 
+  group_by(continent) %>%                      
+  summarize(mean_ap = mean(aquaculture_perc))           
+```
+```{r, hint=TRUE, eval=FALSE}
+fisheries %>%                  # start with the fisheries data frame
+  ___ %>%                      # group by continent
+  ___(mean_ap = ___)           # calculate mean aquaculture
+```
+
+5) Calculate the mean aquaculture percentage (we'll call it `mean_ap` for short) for continents in the fisheries data.
+
+
+
+```{r, solution=TRUE}
+fisheries_summary_continent <- fisheries %>%                 
+  group_by(continent) %>%                      
+  summarize(mean_ap = mean(aquaculture_perc), min_ap = min(aquaculture_perc), max_ap = max(aquaculture_perc)) %>% 
+  print()
+```
+```{r, hint=TRUE, eval=FALSE}
+fisheries_summary_continent <- fisheries %>%    # start with the fisheries data frame
+  ___ %>%                                       # group by continent
+  ___(mean_ap = ___, min_ap = ___, ___)         # calculate mean aquaculture
+```
+
+6) Now expand your calculations to also calculate the minimum and maximum 
+aquaculture percentage for continents in the fisheries data and store the summary table in a data frame called `fisheries_summary_continent`. 
+
+
+
+```{r, solution=TRUE}
+fisheries_summary_continent %>%      
+  arrange(desc(mean_ap))                             
+```
+```{r, hint=TRUE, eval=FALSE}
+fisheries_summary_continent %>%      # start with the fisheries_summary_continent data frame
+  ___                                # order in descending order of mean_ap
+```
+
+7) Take the `fisheries_summary_continent` data frame and order the results in descending 
+order of mean aquaculture percentage.
+
+
+
+```{r, solution=TRUE, text="An example plot"}
+ggplot(fisheries_summary_continent, 
+       aes(y = reorder(continent, mean_ap), x = mean_ap)) +
+  geom_col() +
+  labs(
+    x = "",
+    y = "",
+    title = "Average share of aquaculture by continent",
+    subtitle = "out of total fisheries harvest",
+    caption = "Source: bit.ly/2VrawTt"
+  ) 
+```
+
+8) If you already have read the module about visualizations, then try to make some relevant plots.
+
+
+
+
+

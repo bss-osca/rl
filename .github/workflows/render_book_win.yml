@@ -1,0 +1,46 @@
+on:
+  push:
+    # branches: master
+    branches-ignore:
+      - '**'
+
+name: Generate book
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      GITHUB_PAT: ${{ secrets.TFA }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@master
+
+      - name: Setup pandoc
+        uses: r-lib/actions/setup-pandoc@master
+
+      # - name: Query dependencies
+      #   run: |
+      #     install.packages('remotes')
+      #     saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+      #     writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+      #   shell: Rscript {0}
+
+      - name: Install packages
+        run: |
+          Rscript -e 'install.packages("renv")'
+          Rscript -e 'renv::restore()'
+
+      - name: Render book
+        run: Rscript book/render_book.R
+
+      - name: Commit results
+        run: |
+          git config user.email "junk@relund.dk"
+          git config user.name "Lars Relund"
+          git add .
+          git commit --allow-empty -am 'gHA build: ${{github.run_number}}' || echo "No changes to commit"
+          git pull --rebase
+          git push https://${{github.actor}}:${{secrets.token}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "No changes to commit"

@@ -13,3 +13,9 @@ RnwWeave: knitr
 LaTeX: pdfLaTeX
 
 AutoAppendNewline: Yes
+
+BuildType: Package
+PackageUseDevtools: Yes
+PackagePath: package/rl
+PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace

@@ -1,0 +1,58 @@
+on:
+  push:
+    # branches: master
+    branches-ignore:
+      - '**'
+
+name: Generate book (Mac)
+
+jobs:
+  Render-book-mac:
+    runs-on: macOS-latest
+    env:
+      RGL_USE_NULL: true
+      BING_MAPS_API_KEY: ${{ secrets.BING_MAPS_KEY }}
+      GGMAP_GOOGLE_API_KEY: ${{ secrets.GGMAP_GOOGLE_KEY }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
+        with:
+          use-public-rspm: true
+
+      - name: Install dependicies
+        run: |
+          brew install libgit2
+          brew install --cask xquartz
+
+      - name: Setup renv
+        uses: r-lib/actions/setup-renv@v1
+
+      - name: Cache bookdown results
+        uses: actions/cache@v2
+        with:
+          path: _bookdown_files
+          key: bookdown-${{ hashFiles('**/*Rmd') }}
+          restore-keys: bookdown-
+
+      - name: Install R stuff
+        run: |
+          R -e 'icons::download_fontawesome()'
+
+      - name: Render book
+        run: Rscript book/render_book.R
+
+      - name: Commit results
+        run: |
+          git config user.email "junk@relund.dk"
+          git config user.name "Lars Relund"
+          git add .
+          git commit --allow-empty -am 'gHA build: ${{github.run_number}}' || echo "No changes to commit"
+          git pull --rebase
+          git push https://${{github.actor}}:${{secrets.token}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "No changes to commit"

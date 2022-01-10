@@ -1,0 +1,616 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r include = FALSE, cache=FALSE}
+source("common.R")
+```
+
+
+# Functions {#mod-r-functions}
+
+> To understand computations in R, two slogans are helpful:
+>
+>    Everything that exists is an object.
+>
+>    Everything that happens is a function call.
+>
+>   John Chambers
+
+Writing functions is a core activity of an R programmer. It represents the key step of the transition from a user to a programmer. Functions have inputs and outputs. Functions (and control structures) are what makes your code more dynamic.
+
+Functions are often used to encapsulate a sequence of expressions that needs to be executed numerous times, perhaps under slightly different conditions. In programming, functional programming is a programming paradigm, a style of how code is written. Rather than repeating the code, functions and control structures allow one to build code in blocks. As a result, your code becomes more structured, more readable and much easier to maintain and debug (find errors).
+
+We are all different and you may like different learning styles compared to others. In the learning path diagram, there may be links to alternative online content. Note this is an alternative to the standard learning path that you may use instead. The learning path may also have extra content, that is not a part of syllabus, you can have a look at. 
+
+```{r, echo=FALSE, out.width="100%", fig.asp=NA, include=TRUE}
+g <- create_learning_path(
+   url = "https://docs.google.com/spreadsheets/d/1bBe42LHK-bE7CsU9eNBzi_7VNjbmv-Ybr7285pE61jM/edit?usp=sharing", 
+   sheet = "r-functions", 
+   x_legend = 3.5, y_legend = 4.25)
+render_graph(g)
+```
+
+
+
+<!-- `r strLPath` -->
+
+<!-- * For a more detailed interactive tutorial about functions see the DataCamp course [Introduction to Writing Functions in R][datacamp-r-functions]. -->
+<!-- * Hefin Rhys has a video about [Writing functions in R][video-functions] giving examples in RStudio. -->
+<!-- * An introduction to functions is also given in [Chapter 14](https://bookdown.org/rdpeng/rprogdatascience/functions.html) of @rdpeng. -->
+<!-- * A detailed tutorial on functions is given in Chapters [18][stat-545-functions-part1], [19][stat-545-functions-part2] and [20][stat-545-functions-part3] of @stat545. -->
+
+
+
+## Learning outcomes {#lo-r-functions}
+
+By the end of this module, you are expected to be able to:
+
+* Call a function.
+* Formulate a function with different input arguments.
+* Describe why functions are important in R.
+* Set defaults for input arguments. 
+* Return values from functions.
+* Explain how variable scope and precedence works.
+* Document functions. 
+
+The learning outcomes relate to the [overall learning goals](#lg-course) number 2, 3, 4 and 10 of the course.
+
+<!-- SOLO increasing: identify · memorize · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyze · relate · derive · -->
+<!-- evaluate · apply · argue · theorize · generalize · hypothesis · solve · reflect -->
+
+
+## DataCamp course {#r-dc-functions}
+
+An excellent introduction to functions is given in [Chapter 3][datacamp-r-intermediate-chap3] in the DataCamp course [Intermediate R][datacamp-r-intermediate]. Please complete the chapter before continuing. 
+
+
+## Functions returning multiple objects {#r-functions-extra}
+
+Functions in R only return a single object. However, note that the object may be a list. That is, if you want to return multiple arguments, store them in a list. A simple example:
+
+```{r}
+test <- function() {
+  # the function does some stuff and calculate some results
+  res1 <- 45
+  res2 <- "Success"
+  res3 <- c(4, 7, 9)
+  res4 <- list(cost = 23, profit = 200)
+  lst <- list(days = res1, run = res2, id = res3, money = res4)
+  return(lst)
+}
+test()
+```
+
+
+## The `...` argument {#r-functions-arg}
+
+The special argument `...` indicates a variable number of arguments and is usually used to pass arguments to nested functions used inside the function. Consider example:
+
+```{r}
+my_name <- function(first = "Lars", last = "Nielsen") {
+  str_c(first, last, sep = " ")
+}
+my_name()
+
+cite_text <- function(text, ...) {
+  str_c(text, ', -', my_name(...))
+}
+cite_text("Learning by doing is the best way to learn how to program!")
+cite_text("Learning by doing is the best way to learn how to program!", last = "Relund")
+cite_text("To be or not to be", first = "Shakespeare", last = "")
+```
+
+Note in the first function run, we use the defaults in `my_name`. In the second run, we change the default last name and in the last run, we change both arguments.
+
+If you need to retrieve/capture the content of the `...` argument, put it in a list:
+
+```{r}
+test <- function(...) {
+  return(list(...))
+}
+test(x = 4, y = "hey", z = 1:5)
+```
+
+
+
+## Documenting your functions {#r-functions-doc}
+
+It is always a good idea to document your functions. This is in fact always done in functions of a package. For instance try `?mutate` and see the documentation in the **Help** tab.
+
+Assume that you have written a function
+
+```{r}
+subtract <- function(x, y) {
+  return(x-y)
+}
+```
+
+In RStudio you can insert a [Roxygen](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html) documentation skeleton by having the cursor at the first line of the function and go to **Code > Insert Roxygen Skeleton** (Ctrl+Alt+Shift+R):
+
+```{r}
+#' Title
+#'
+#' @param x 
+#' @param y 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+subtract <- function(x, y) {
+  return(x-y)
+}
+```
+
+You now can modify your documentation to
+
+```{r}
+#' Subtract two vectors
+#'
+#' @param x First vector.
+#' @param y Vector to be subtracted.
+#'
+#' @return The difference.
+#' @export
+#'
+#' @examples
+#' subtract(x = c(5,5), y = c(2,3))
+subtract <- function(x, y) {
+  return(x-y)
+}
+```
+
+Note 
+
+* Parameters/function arguments are documented using the `@param` tag.
+* Return value is documented using the `@return` tag. 
+* Under the `@examples` tag you can insert some examples. 
+* Ignore the `@export` tag. This is used if you include your function in your own package. Package development is beyond the scope of this course. If you are interested, have a look at the book @r-pkgs. 
+
+A list of further tags can be seen in the vignette [Rd (documentation) tags](https://roxygen2.r-lib.org/articles/rd.html).
+
+
+## Recap {#rc-functions}
+
+Writing functions is a core activity of an R programmer. It represents the key step of the transition from a user to a programmer. Functions have inputs and outputs. Functions (and control structures) are what makes your code more dynamic.
+
+Functions are often used to encapsulate a sequence of expressions that need to be executed numerous times, perhaps under slightly different conditions. In programming, functional programming is a programming paradigm, a style of how code is written. Rather than repeating the code, functions and control structures allow one to build code in blocks. As a result, your code becomes more structured, more readable and much easier to maintain and debug (find errors).
+
+Functions can be defined using the `function()` directive. 
+
+The named arguments (input values) can have default values. Moreover, R passes arguments by value. That is, an R function cannot change the variable that you input to that function. 
+
+A function can be called using its name and its arguments can be specified by name or by position in the argument list.
+
+Functions always return the last expression evaluated in the function body or when you use the `return` flow control statement (good coding practice). 
+
+Scoping refers to the rules R use to look up the value of variables. A function will first look inside the body of the function to identify all the variables. If all variables exist, no further search is required. Otherwise, R will look one level up to see if the variable exists. 
+
+Functions can be assigned to R objects just like any other R object.
+
+Document your functions using the Roxygen skeleton!
+
+You may also have a look at the [slides for this module](https://bss-osca.github.io/tfa/slides/06-02_r-functions-slides.html).
+
+
+
+## Exercises {#ex-r-functions}
+
+`r strExercises`
+
+[Link to the project on RStudio Cloud for this module][r-cloud-mod14]. 
+
+### Exercise (defining functions)
+
+*Solve this exercise using a script file.*
+
+```{r, solution=TRUE}
+#' Computes the sum of the integers from 1 to n (inclusive).
+#'
+#' @param n Max value in the sum.
+#'
+#' @return Sum of the integers from 1 to n.
+#'
+#' @examples
+#' sum_n(30)
+sum_n <- function(n) {
+  return(sum(1:n))
+}
+sum_n(5000)
+```
+```{r, hint=TRUE, eval=FALSE}
+#' Computes the sum of the integers from 1 to n (inclusive).
+#'
+#' @param n Max value in the sum.
+#'
+#' @return Sum of the integers from 1 to n.
+#'
+#' @examples
+#' sum_n(30)
+sum_n <- function(n) {
+  return(___)
+}
+sum_n(5000)
+```
+
+1) Create a function `sum_n` that for any given value, say $n$, computes the sum of the integers from 1 to n (inclusive). Use the function to determine the sum of integers from 1 to 5000. Document your function too.
+
+
+```{r, solution=TRUE}
+#' Computes the sum S_n = 1^2 + 2^2 + 3^2 + ... + n^2
+#'
+#' @param n Max input in sum.
+#'
+#' @return S_n
+compute_s_n <- function(n) {
+  return(sum((1:n)^2))
+}
+compute_s_n(10)
+```
+
+2) Write a function `compute_s_n` that for any given $n$ computes the sum $S_n = 1^2 + 2^2 + 3^2 + \dots + n^2$. Report the value of the sum when $n=10$.
+
+
+```{r, solution=TRUE, title="Solution 1"}
+s_n <- vector('numeric', 25)
+for (n in 1:25) {
+  s_n[n] <- compute_s_n(n)
+}
+s_n
+```
+```{r, hint=TRUE, eval=FALSE, title="Hint 1"}
+s_n <- vector('numeric', 25)
+for (n in 1:25) {
+  s_n[n] <- ___
+}
+s_n
+```
+```{r, solution=TRUE, title="Solution 2"}
+compute_s_n_alt <- function(n) {
+  return(n*(n+1)*(2*n+1)/6)
+}
+for (n in 1:25) {
+  if (s_n[n] != compute_s_n_alt(n)) {
+    cat('Error!')
+    break
+  }
+}
+```
+```{r, hint=TRUE, eval=FALSE, title="Hint 2"}
+compute_s_n_alt <- function(n) {
+  return(n*(n+1)*___)
+}
+for (n in 1:25) {
+  if (s_n[n] != ___) {
+    cat('Error!')
+    break
+  }
+}
+```
+
+3) Define an empty numerical vector `s_n` of size 25 using `s_n <- vector("numeric", 25)` and store in the results of $S_1, S_2, \dots S_{25}$ using a for-loop. 
+   Confirm that the formula for the sum is $S_n= n(n+1)(2n+1)/6$ for $n = 1, \ldots, 25$.
+
+
+
+
+
+```{r, solution=TRUE}
+biggest <- function(a, b) {
+  if (a > b) return(1)
+  return(0)
+}
+biggest(3,4)
+biggest(3,3)
+biggest(8,2)
+```
+```{r, hint=TRUE, eval=FALSE}
+biggest <- function(a, b) {
+  if (a > b) ___
+  return(0)
+}
+```
+
+4) Write a function `biggest` which takes two integers as arguments.  Let the 
+function  return  1  if  the  first argument  is  larger  than  the second and return  0 
+otherwise. 
+
+
+```{r, solution=TRUE}
+shipping_cost <- function(total) {
+  return(0.1 * total)
+}
+shipping_cost(450)
+```
+```{r, hint=TRUE, eval=FALSE}
+shipping_cost <- function(total) {
+  return(___)
+}
+```
+
+5) Write a function that returns the shipping cost as 10% of the total cost of an 
+order (input argument).   
+
+
+
+```{r, solution=TRUE}
+shipping_cost <- function(total, pct = 0.1) {
+  return(pct * total)
+}
+shipping_cost(450)
+shipping_cost(450, pct = 0.2)
+```
+```{r, hint=TRUE, eval=FALSE}
+shipping_cost <- function(total, pct = ___) {
+  ___
+}
+```
+
+6) Given Question 5, rewrite the function so the percentage is an input argument with a default of 10%. 
+
+
+```{r, solution=TRUE}
+shipping_cost <- function(total) {
+  return(0.1 * total)
+}
+
+gasoline_cost <- function(total) {
+  return(shipping_cost(total) * 0.5)
+}
+gasoline_cost(450)
+```
+```{r, hint=TRUE, eval=FALSE}
+gasoline_cost <- function(total) {
+  return(shipping_cost(___) * ___)
+}
+```
+
+7) Given Question 5, the shipping cost can be split into parts. One part is gasoline which is 50% of the shipping cost. Write a function that has total cost as input argument and calculate the gasoline cost and use the function defined in Question 5 inside it.   
+  
+  
+  
+```{r, solution=TRUE}
+shipping_cost <- function(total, pct = 0.1) {
+  return(pct * total)
+}
+
+gasoline_cost <- function(total, ...) {
+  return(shipping_cost(total, ...) * 0.5)
+}
+gasoline_cost(450)
+gasoline_cost(450, pct = 0.2)
+```
+```{r, hint=TRUE, eval=FALSE}
+gasoline_cost <- function(total, ...) {
+  return(shipping_cost(___) * ___)
+}
+```
+
+8) Given Question 6, the shipping cost can be split into parts. One part is gasoline which is 50% of the shipping cost. Write a function that has total cost a input argument and calculate the gasoline cost and use the function defined in Question 6 inside it. Hint: Use the `...` argument to pass arguments to `shipping_cost`.
+
+
+
+```{r, solution=TRUE}
+shipping_cost <- function(total, pct = 0.1) {
+  return(pct * total)
+}
+
+gasoline_cost <- function(total, ...) {
+  return(shipping_cost(total, ...) * 0.5)
+}
+
+costs <- function(total, ...) {
+  lst <- list(total = total, shipping = shipping_cost(total, ...), gasoline = gasoline_cost(total, ...))
+  return(lst)
+}
+costs(450)
+costs(450, pct = 0.15)
+```
+```{r, hint=TRUE, eval=FALSE}
+shipping_cost <- function(total, pct = 0.1) {
+  return(pct * total)
+}
+
+gasoline_cost <- function(total, ...) {
+  return(shipping_cost(total, ...) * 0.5)
+}
+
+costs <- function(total, ...) {
+  lst <- list(total = ___, shipping = ___, gasoline = ___)
+  return(lst)
+}
+```
+
+9) Given Question 8, write a function `costs` that, given total cost, returns the total cost, shipping cost and gasoline cost.
+
+  
+  
+  
+### Exercise (scope)
+
+```{r, solution=TRUE, text = "That value is still 3 since `x` defined inside the function is a local variable."}
+```
+
+1) After running the code below, what is the value of variable `x`?
+
+```{r, eval=FALSE}
+x <- 3
+my_func <- function(y){
+  x <- 5
+  return(y + 5)
+}
+my_func(7)
+```
+
+```{r, solution=TRUE, text = "The code runs. But it is not good coding practice to call global variables inside a function (`x`). Instead `x` should have been an argument to the function."}
+```
+
+2) Is there any problems with the following code?
+
+```{r, eval=FALSE}
+x <- 3
+my_func <- function(y){
+  return(y + x) 
+}
+my_func(7)
+```
+
+```{r, solution=TRUE, text = "That value is still 3 since `my_func` has not been called yet."}
+```
+
+3) Have a look at the documentation for operator `<<-` (run `?'<<-'`). After running the code below, what is the value of variable `x`?
+
+```{r, eval=FALSE}
+x <- 3
+my_func <- function(y){
+  x <- 4
+  x <<- 5
+  return(y + 5)
+}
+```
+
+```{r, solution=TRUE, text = "That value of `x` is 5 since `<<-` is used to look at the parent environment. The function call returns 11 since the `x` used is the local variable. In general avoid using `<<-` and give local variables different names compared to global ones."}
+```
+
+4) After running the code below, what is the value of variable `x` and output of the function call?
+
+```{r, eval=FALSE}
+x <- 3
+my_func <- function(y){
+  x <- 4
+  x <<- 5
+  return(y + x)
+}
+my_func(7)
+```
+
+
+### Exercise (job sequencing)
+
+*Solve this exercise using a script file.*
+
+This exercise is based on Exercise 6.12 in @vba-book. 
+
+Consider a problem of determining the best sequencing of jobs on a machine. A set of startup costs are given for 5 machines:
+
+```{r}
+startup_costs <- c(27, 28, 32, 35, 26)
+startup_costs
+```
+
+Moreover, when changing from one job to another job, the setup costs are given as:
+
+```{r}
+setup_costs <- matrix(c(
+  NA, 35, 22, 44, 12,
+  49, NA, 46, 38, 17,
+  46, 12, NA, 29, 41,
+  23, 37, 31, NA, 26,
+  17, 23, 28, 34, NA), 
+  byrow = T, nrow = 5)
+setup_costs
+```
+
+The goal of the problem is to determine a sequence of jobs which minimizes the total setup cost including the startup cost.
+
+One possible way to find a sequence is the use a greedy strategy:
+
+```
+Greedy Algorithm
+Step 0: Start with the job which has minimal startup cost.
+Step 1: Select the next job as the job not already done 
+        with minimal setup cost given current job. 
+Step 2: Set next job in Step 1 to current job and 
+        go to Step 1 if not all jobs are done.
+```
+
+In R the greedy algorithm can be implemented as:
+
+```{r}
+greedy <- function(startup, setup) {
+  jobs <- nrow(setup)
+  cur_job <- which.min(startup)
+  cost <- startup[cur_job]
+  # cat("Start job:", cur_job, "\n")
+  job_seq <- cur_job
+  setup[, cur_job] <- NA
+  for (i in 1:(jobs-1)) {
+    next_job <- which.min(setup[cur_job, ])
+    # cat("Next job:", next_job, "\n") 
+    cost <- cost + setup[cur_job, next_job]
+    job_seq <- c(job_seq, next_job)
+    cur_job <- next_job
+    setup[, cur_job] <- NA
+  }
+  # print(setup)
+  return(list(seq = job_seq, cost = cost))
+}
+greedy(startup_costs, setup_costs)
+```
+
+First, the job with minimum startup cost is found using function `which.min` and we define cost as the startup cost. We use `cat` to make some debugging statements and initialize `job_seq` with the first job. Next, we have to find a way of ignoring jobs already done. We do that here by setting the columns of setup cost equal to NA for jobs already done. Hence, they will not be selected by `which.min`. The `for` loop runs 4 times and selects jobs and accumulate the total cost.
+
+A well-known better strategy is to:
+
+```
+Better Algorithm
+Step 0: Subtract minimum of startup and setup cost for each job from setup and 
+        startup costs (that is columnwise)
+Step 1: Call the greedy algorithm with the modified costs. Note that the total 
+        cost returned has to be modified a bit.
+```
+
+```{r, solution=TRUE}
+better <- function(startup, setup) {
+  jobs <- nrow(setup)
+  min_col_val <- apply(rbind(startup, setup), 2, min, na.rm = T)
+  startup <- startup - min_col_val
+  min_mat <- matrix(rep(min_col_val, jobs), 
+                    ncol = jobs, byrow = T)
+  setup <- setup - min_mat
+  lst <- greedy(startup, setup)
+  lst$cost <- lst$cost + sum(min_col_val)
+  return(lst)
+}
+better(startup_costs, setup_costs)
+```
+```{r, hint=TRUE, eval=FALSE, title="Hint 2"}
+better <- function(startup, setup) {
+  jobs <- nrow(setup)
+  min_col_val <- apply(rbind(startup, setup), 2, min, na.rm = T)
+  startup <- startup - min_col_val
+  min_mat <- matrix(rep(min_col_val, jobs), 
+                    ncol = jobs, byrow = T)
+  setup <- setup - ___
+  lst <- greedy(startup, setup)
+  lst$cost <- lst$cost + sum(___)
+  return(lst)
+}
+better(startup_costs, setup_costs)
+```
+```{r, hint=TRUE, eval=FALSE, title="Hint 1"}
+better <- function(startup, setup) {
+  jobs <- nrow(setup)
+  min_col_val <- apply(___)
+  startup <- startup - ___
+  min_mat <- matrix(rep(min_col_val, jobs), 
+                    ncol = ___, byrow = T)
+  setup <- setup - ___
+  lst <- greedy(___, ___)
+  lst$cost <- lst$cost + ___
+  return(lst)
+}
+better(startup_costs, setup_costs)
+```
+
+Implement a `better` function calculating a better strategy. Hint: to find the minimum column costs, you may use `apply(rbind(startup, setup), 2, min, na.rm = T)`.
+
+
+```{r links, child="links.md"}
+```
+
+

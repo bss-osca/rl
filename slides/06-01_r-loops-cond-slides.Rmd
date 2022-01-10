@@ -1,0 +1,313 @@
+---
+title: "Loops and conditionals"
+author: "Lars Relund Nielsen"
+output:
+  xaringan::moon_reader:
+    css: "./libs/slides.css"
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, child = "setup.Rmd", echo=FALSE}
+```
+
+```{r include=FALSE}
+# use xaringan::inf_mr(cast_from = ".") to preview
+```
+
+layout: true
+
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/tfa/mod-r-loops-cond" target="_blank">Book</a> | <a href="https://bss-osca.github.io/tfa/slides/06-01_r-loops-cond-slides.html" target="_blank">Slides</a> | <a href="https://github.com/bss-osca/tfa/blob/master/slides/06-01_r-loops-cond-slides.Rmd" target="_blank">Source</a> | <a href="https://rstudio.cloud/spaces/176810/project/3020139" target="_blank">R project</a>
+</span>
+</div> 
+
+---
+
+
+## Comparison/relational operators
+
+- `<` for less than, `>` for greater than,
+- `<=` for less than or equal to, `>=` for greater than or equal to,
+- `==` for equal to each other (and not `=` which is typically used for assignment!),
+- `!=` not equal to each other.
+
+```{r l1, eval=FALSE}
+x <- TRUE   # you may use x <- T 
+y <- FALSE  # you may use y <- F
+x == y
+```
+--
+```{r, ref.label="l1", echo=FALSE}
+```
+--
+```{r l2, eval=FALSE}
+z <- c(1, -1, 3)
+z > 0   # vector comparison
+```
+--
+```{r, ref.label="l2", echo=FALSE}
+```
+
+---
+
+## A vector of booleans  
+
+```{r l3, eval=FALSE}
+z <- c(1, -1, 3)
+z > 0
+all(z > 0)
+any(z > 0)
+```
+--
+```{r, ref.label="l3", echo=FALSE}
+```
+--
+.your-turn[
+Your turn - Try to guess the output
+```{r, eval=FALSE}
+x <- c(1, 2, 45, NA, -1)
+x > 0
+x > -100
+any(x > 0)
+all(x > -100)
+```
+]
+
+```{r echo=FALSE}
+countdown(minutes = 1)
+```
+
+---
+
+## Logical operators 
+
+- `&` and,
+- `|` or,
+- `!` not.
+- If you use `&&` and `||` only the first element in vectors are compared. 
+
+```{r}
+x <- 4
+y <- "Lars"
+z <- NA
+x == 4 & y == "lars"
+```
+--
+```{r l4, eval=FALSE}
+x > 4 | y != "lars"
+```
+--
+```{r, ref.label="l4", echo=FALSE}
+```
+
+---
+Remember parenthesis 
+```{r l5, eval=FALSE}
+(x == 4 | y != "Lars") & !is.na(z)
+x == 4 | (y != "Lars" & !is.na(z))
+```
+--
+```{r, ref.label="l5", echo=FALSE}
+```
+--
+
+Logical operators applied to vectors
+```{r}
+v1 <- 1:4
+v2 <- c(2,-1,7,9)
+v1 > 1 & v2 < 3
+```
+--
+```{r l6, eval=FALSE}
+v1 > 1 && v2 < 3
+```
+--
+```{r, ref.label="l6", echo=FALSE}
+```
+
+---
+
+## Conditional Statements (a single boolean)
+
+Use of `if` and `while` (a single boolean)
+
+```{r}
+x <- 5
+if (x < 3) {
+  cat("first")
+} else if (x > 4) {
+  cat("next")
+} else {
+  cat("last")
+}
+```
+
+```{r}
+x <- 1
+while(x < 5) {
+  x <- x + 1
+}
+```
+
+---
+
+## Conditional Statements (vector of booleans)
+
+```{r, include=FALSE}
+options(width=45)
+```
+
+Use of `if_else` (a vectorized alternative)
+.midi[
+.pull-left[
+```{r}
+library(tidyverse)   
+x <- c(-5:5, NA)
+
+## using if and for
+res <- rep("", length(x))
+res
+for (i in 1:length(x)) {
+  if (is.na(x[i])) res[i] <- "missing"
+  else if (x[i] < 0) res[i] <- "negative"
+  else res[i] <- "positive"
+}
+res
+```
+]
+.pull-right[ 
+```{r}
+## using if_else
+res <- if_else(x < 0, 
+               "negative (true)", 
+               "positive (false)", 
+               "missing (na)")
+res
+```
+]
+]
+
+```{r, include=FALSE}
+options(width=80)
+```
+
+---
+
+## Loops (`for` or `while`)
+
+```{r}
+v <- c(2,4,9,0)  # values we want to iterate over
+res <- rep(NA, length(v)) # vector to store results in
+for (idx in 1:length(v)) {
+  res[idx] <- 6 * v[idx] + 9
+}
+res   # equal 6*v + 9 
+
+x <- 1; res <- x
+while(x < 5) {
+  x <- x + 1
+  res <- res + x 
+}
+res   # equal sum(1:5)
+```
+
+---
+
+## Use a vectorized alternative
+
+Loops in R may be slow. However, not if you follow some golden rules:
+
+* Do not use a loop when a vectorized alternative exists.
+* Do not grow objects (via `c`, `cbind`, etc) during the loop - R has to create a new object and copy across the information just to add a new element or row/column. Instead, allocate an object to hold the results and fill it in during the loop.
+
+```{r}
+6 * v + 9
+sum(1:5)
+```
+
+---
+
+## Nested loops
+
+```{r, eval=FALSE}
+for (i in 1:3) {
+  for (j in 1:2) {
+    # code here
+  }
+}
+```
+
+You can replace nested loops with a single loop by using `expand_grid`:
+
+```{r, eval=FALSE}
+library(tidyverse)
+ite <- expand_grid(i = 1:3, j=1:2)
+for (r in 1:nrow(ite)) { # iterate over rows
+   i <- ite$i[r]
+   j <- ite$j[r]
+   # code here
+}
+```
+
+This way of looping is a more flexible approach since you can nest more loops by adding more columns to `ite` and add different values in each column.
+
+---
+
+## Your Turn
+
+.your-turn[
+- Given a dice and a 52-card deck, use a for loop to write all the possible combinations as strings in the form `Dice = [value] and card = [value]`. Hint (fill the missing):
+
+```{r, eval=FALSE}
+dice <- 1:6
+card_suit <- c("clubs", "diamonds", "hearts", "spades")
+card_number <- c("ace", 2:10, "jack", "queen", "king")
+ite <- expand_grid(Dice = dice, 
+                   Card_suit = ___, 
+                   ___)  
+for (r in 1:nrow(ite)) { # iterate over rows
+   cat("Dice = ", ___, " and card = ", ___, " (", ___, ").\n", sep="")
+}
+```
+]
+
+```{r echo=FALSE}
+countdown(minutes = 5)
+```
+
+???
+
+```{r, include=TRUE}
+library(tidyverse)
+dice <- 1:6
+card_suit <- c("clubs", "diamonds", "hearts", "spades")
+card_number <- c("ace", 2:10, "jack", "queen", "king")
+dat <- expand_grid(Dice = dice, Card_suit = card_suit, Card_number = card_number)
+for (r in 1:nrow(dat)) {
+  cat("Dice = ", dat$Dice[r], " and card = ", dat$Card_number[r], " (", dat$Card_suit[r], ").\n", sep="")
+} 
+```
+
+
+
+
+
+
+```{r copy, include=FALSE}
+file.copy(list.files(pattern = ".html"), "../docs/slides/", overwrite = T)
+file.copy("./slides.css", "./libs/", overwrite = T)
+file.copy("libs", "../docs/slides/", recursive = T)
+file.copy("img", "../docs/slides/", recursive = T)
+system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
+```
+
+```{r links, child="links.md", include=FALSE}
+```
