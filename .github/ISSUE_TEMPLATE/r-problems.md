@@ -3,7 +3,7 @@ name: R problems
 about: Problems with R
 title: "[R] <add problem desc>"
 labels: r
-assignees: relund, JesperBangMikkelsen, jubaau
+assignees: relund
 
 ---
 
