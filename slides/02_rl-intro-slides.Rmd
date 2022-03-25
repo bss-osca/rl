@@ -2,7 +2,6 @@
 title: "An introduction to<br/>Reinforcement Learning (RL)"
 author: "Lars Relund Nielsen"
 output:
-  self_contained: true
   xaringan::moon_reader:
     css: "./libs/slides.css"
     lib_dir: libs
@@ -43,6 +42,7 @@ footerHtml <- withTags({
    )
 })
 footerHtml
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 ```
 
 ---

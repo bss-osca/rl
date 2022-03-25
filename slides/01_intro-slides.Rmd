@@ -38,7 +38,7 @@ withTags({
       )
    )
 })
-knitr::opts_chunk$set(fig.path=str_c("img/", module_name))
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 ```
 
 ---

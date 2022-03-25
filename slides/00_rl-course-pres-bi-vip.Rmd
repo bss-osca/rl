@@ -3,7 +3,6 @@ title: "Reinforcement Learning for Business"
 author: "Lars Relund Nielsen"
 output:
   xaringan::moon_reader:
-    self_contained: true
     css: "./libs/slides.css"
     lib_dir: libs
     nature:
