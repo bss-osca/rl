@@ -7,7 +7,7 @@ editor_options:
 ```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
 ```
 
-# (PART) Introduction {-}
+# (PART) Introduction to RL {-}
 
 # An introduction to RL {#mod-rl-intro}
 
@@ -52,6 +52,35 @@ Visual Basic for Applications (VBA) is an implementation of the BASIC programmin
 VBA is a [compiled language](https://en.wikipedia.org/wiki/Compiled_language#:~:text=A%20compiled%20language%20is%20a,%2Druntime%20translation%20takes%20place) implemented using compilers (translators that generate machine code from source code). That is, code need to be compiled first before running it. You can only run VBA using the desktop version of Excel. That is, you can't create, run, or edit VBA in Excel for the web. 
 
 With VBA you can extend Excel and automate tasks by coding different algorithms that for instance can be run by pressing a button. Since VBA is a programming language, the initial learning curve is steeper compared to Excel. However, you will get started fast because you already know Excel.
+
+
+## RL within a Business Analytics (BA) framework
+Within a Business Analytics (BA) framework the course focuses on giving you an introduction to programming, handeling data and doing descriptive analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (key performance indicators (KPIs), what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics. Predictive and prescriptive analytics are covered in other courses of the [programme][osca-programme].
+
+Analytics may be seen as a data driven process:
+
+```{r process, echo = FALSE, fig.cap="Analytics as a data driven process."}
+knitr::include_graphics("img/process.png")
+```
+
+For doing data driven analytics you first must __import__ your data. That is, take data from a database, file, web API etc. and transform it into a data frame/table. In general raw data may be messy and need to be structured in a __tidy__ way. Tidying your data means storing it in a structured form suitable for analysis. In brief, when your data is __tidy__, each column is a variable, and each row is an observation. Tidy data is important because the consistent structure lets you focus your struggle on questions about the data. 
+Once you have tidy data, a common first step is to __transform__ it. Transformation includes narrowing in on observations of interest (e.g. only observations from a specific year or warehouse), creating new variables based on existing variables (e.g. the cost of using the machine that day given idle time). Together, tidying and transforming are called __wrangling__, because 
+it can be a hard process to get your data in the right form.
+
+The next step is to do a simple __exploration__ of you data such as calculating a set of summary statistics (like counts, means or KPIs). A good way to get an overview over your data is by __visualization__. A good visualisation will show you things that you did not expect, raise new questions about the data or confirm your hypothesis. A good visualization might also hint that you're asking the wrong question, or you need to collect different data. Exploration and visualization are descriptive analytics and used to answer questions such as: What happened? How many, how often, where? Where exactly is the problem? What actions are needed?
+__Models__ are complementary tools to visualization. Once you have made your questions sufficiently precise, you can use a model to answer them. A model is a description of a system using mathematical concepts and a simplification of the real system. That is, the results of a model are based on a set of assumptions. Models for statistical analysis, forecasting, system behavior are predictive analytics and answer questions like: Why is this happening? What if these trends continue? What will happen next? Models for prescriptive analytics use optimization and other decision modeling techniques to suggest decision options with the goal of improving business performance and answer questions like: What is the best that can happen?
+
+Exploration, visualization and modeling may be seen as different steps which can be used for __analyzing__ the data and answer the overall questions. This course will focus on the two first steps. 
+
+Given an analysis, __communication__ is an absolutely critical part. It does not matter how well your models and visualization have led you to understand the data unless you can also communicate your results to decision makers. 
+
+Note that analytics is not a one-way process, it is common that you several times have to tidy and transform your data, explore and visualize based on the results of a model, rerun the model based on feedback from the decision makers etc. Common connections are visualized using directed arrows in Figure \@ref(fig:process). 
+
+Surrounding the process is __programming__. Programming is the Swiss army knife you use during parts of the process. An introduction to programming is given using both VBA in Excel and the programming language and free software environment [R]. Programming focus on writing algorithms. An __algorithm__ is a finite sequence of well-defined instructions to solve a specific problem or to perform a computation. That is, we use a programming language to program an algorithm that solves a specific task, e.g. find the best route, sort words, make a plot, etc.
+
+
+## RL within a machine learning framework
+
 
   
 ## Your first program {#vba-hello}
@@ -118,83 +147,11 @@ Excel functions can be called with the `WorksheetFunction` e.g. `WorksheetFuncti
 
 You may also have a look at the [slides for this module](https://bss-osca.github.io/tfa/slides/01-01_vba-intro-slides.html).
 
-## Exercises {#ex-vba-intro}
+## Exercises {#sec-rl-intro-ex}
 
 `r strExercises`
 
 ### Exercise - Hello {#ex-vba-hello}
-
-   (1) Based on Chapter 1 in @vba-book, create your own "Hello World" macro.
-   (2) Create a new procedure
-   
-```
-Public Sub MyHello() 
-   Dim name as String 
-   Name = InputBox("Type your name:")
-   MsgBox("Hello " & Name)
-End Sub
-```
-
-   (3) Run it using a button and using the shortcut F5. 
-   
-
-
-### Exercise - Record a macro {#ex-vba-macro}
-   
-Do the following steps:
-
-   (1) Type 'My name is:' in cell A1. 
-   (2) Type you name in cell B1 and activate it (click on it).
-   (3) Start the macro recorder and call the macro `ChangeLayout`.
-   (4) Change the color to blue and font size to 14.
-   (5) Stop the macro recorder.
-   (6) Activate cell A1 and run the macro.
-   (7) Open the VBA editor and inspect the macro. 
-   (8) Cleanup the macro so only stuff about color and size are maintained.
-   (9) Add a button to run the macro.
-   (10) Add numbers to cells A3:D3, select the cells and run the macro.
-   (11) Modify the macro in the editor so the font size is 10 and test it.
-
-
-### Exercise - User input {#ex-vba-user-input}
-
-Write a procedure (sub) `CheckNumber` that:
-
-   (1) Ask for a number using an input box.
-   (2) Make a message box telling if the number is above 10.
-   (3) Write the number to a cell.
-   
-Remember to save the file as a macro-enabled workbook (xlsm).   
-
-
-### Exercise - Max and min number {#ex-vba-max-min}
-
-The [file](https://github.com/bss-osca/tfa/blob/master/vba/vba-max-min-template.xlsm) contains a procedure to generate 40 random numbers.
-
-```{r, hint=TRUE, eval=FALSE}
-Sub FindMax()
-    Dim m As Integer
-    m = 0
-    For r = 1 To 40
-        If Cells(r, 1) ___ m Then
-            m = ___
-        End If
-    Next
-    Range("D1") = ___
-End Sub
-```
-
-   (1) Create a procedure that finds the maximum number and write it to cell D1. Assign the procedure to button _Find max_.
-   (2) Create a procedure that finds the minimum number and write it to cell D2. Assign the procedure to button _Find min_.
-   (3) Create a procedure that finds the number range and write it to cell D3. Assign the procedure to button _Find range_. Given two numbers `m1` and `m2`, you can concatenate them to a string using `&` e.g. `"[" & m1 & "," & m2 & "]"`.
-   (4) Create a procedure that count the number of positives and write it to cell D4. Assign the procedure to button _Count positives_.
-   
-It may often be nice to know the row number of the minimum and maximum values.
-
-   (5) Create a procedure that finds the maximum row number and write it to cell D5. Assign the procedure to button _Find max row_.
-   (6) Create a procedure that finds the minimum row number and write it to cell D6. Assign the procedure to button _Find min row_.
-   
-The procedure `RunAll` which is already linked to button _Run All_, runs all the procedures. Have a look at the code and try it out.
 
 
 ```{r links, child="links.md", include=FALSE}

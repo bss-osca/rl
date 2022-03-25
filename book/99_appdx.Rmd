@@ -1,98 +1,3 @@
---- 
-title: "Reinforcement Learning for Business (RL)"
-subtitle: "Course notes"
-author: 
-- Lars Relund Nielsen
-knit: "bookdown::render_book"
-site: bookdown::bookdown_site
-url: 'https\://bss-osca.github.io/rl/'
-github-repo: bss-osca/rl
-cover-image: img/logo.png
-documentclass: book
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
-link-citations: yes
-description: "Course notes for 'Reinforcement Learning for Business'"
-favicon: assets/favicon.ico
-date: "`r Sys.Date()`"
-editor_options: 
-  chunk_output_type: console
----
---- 
-title: "Reinforcement Learning for Business (RL)"
-subtitle: "Course notes"
-author: 
-- Lars Relund Nielsen
-knit: "bookdown::render_book"
-site: bookdown::bookdown_site
-url: 'https\://bss-osca.github.io/rl/'
-github-repo: bss-osca/rl
-cover-image: img/logo.png
-documentclass: book
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
-link-citations: yes
-description: "Course notes for 'Reinforcement Learning for Business'"
-favicon: assets/favicon.ico
-date: "`r Sys.Date()`"
-editor_options: 
-  chunk_output_type: console
----
-
-<!--chapter:end:index.Rmd-->
-
-
-# Introduction to the book {#mod-intro}
-
-Placeholder
-
-
-## Learning outcomes {#lo-intro}
-## Purpose for the book {#purpose}
-## How this book is organized {#organization}
-## Acknowledgements {#ack} 
-
-<!--chapter:end:01_intro.Rmd-->
-
-
-# (PART) Introduction to RL {-}
-# An introduction to RL {#mod-rl-intro}
-
-Placeholder
-
-
-## Learning outcomes {#mod-rl-intro-lo}
-## What is VBA {#vba-what}
-## RL within a Business Analytics (BA) framework
-## RL within a machine learning framework
-## Your first program {#vba-hello}
-## The macro recorder {#vba-macro}
-## A short overview
-## Recap {#rc-vba-intro}
-## Exercises {#sec-rl-intro-ex}
-### Exercise - Hello {#ex-vba-hello}
-
-<!--chapter:end:02_rl-intro.Rmd-->
-
-
-# (PART) Programming in VBA {-}
-# Data types and variables {#mod-vba-datatypes}
-
-Placeholder
-
-
-## Learning outcomes {#lo-vba-datatypes}
-## Datatypes {#vba-datatypes}
-### Collections
-## How do I structure my code? {#vba-code-structure}
-## Recap
-## Exercises {#ex-vba-datatypes}
-### Exercise - Product search {#ex-vba-search-products}
-### Exercise - Read arrays {#ex-vba-read-arrays}
-### Exercise - Read collections {#ex-vba-read-collections}
-
-<!--chapter:end:03.Rmd-->
-
 ```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
 ```
 
@@ -197,10 +102,10 @@ I recommend using [hypothes.is] to annotate the online course notes. You can cre
 
 We all get stuck sometimes and need some help. Below are some advises on how to help yourself and ask for help:
 
-If you have a question related to the theory of RL then you may try to
+If you have a question related to the theory of RL:
 
-  * ask it during the lecture or in the breaks
-  * ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap. 
+  * Ask it during the lecture or in the breaks
+  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap. 
 
 If you have a question related to R:
 
@@ -211,7 +116,7 @@ If you have a question related to R:
   * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.
   * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap.   
 
-_Note help using mail correspondence is not supported!_
+__Note help using mail correspondence is not supported!__
 
 
 
@@ -332,6 +237,3 @@ knitr::write_bib(c(
 
 ```{r links, child="links.md"}
 ```
-
-<!--chapter:end:99_appdx.Rmd-->
-
