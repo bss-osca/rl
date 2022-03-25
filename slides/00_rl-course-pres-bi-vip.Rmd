@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       # out.width = "100%",
                       fig.align = "center",
                       dpi = 300,
-                      cache = TRUE, autodep = TRUE,
+                      # cache = TRUE, autodep = TRUE,
                       warning = FALSE,
                       message = FALSE)
 ```
@@ -782,8 +782,6 @@ res %>%
         color = "Control") +
    theme(legend.position="bottom")
 ```
-
-In general we do not need to explore ($\epsilon = 0$) (the other player explore enough for us) and a high explore probability ($\epsilon = 0.9$) make us loose. Moreover, using a high step size seems to work best. 
 
 ---
 
