@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>An introduction to Reinforcement Learning (RL)</title>
+    <title>Reinforcement Learning for Business</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -13,7 +13,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# An introduction to<br/>Reinforcement Learning (RL)
+# Reinforcement Learning for Business
 ### Lars Relund Nielsen
 
 ---
@@ -24,23 +24,28 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
 layout: true
-  
-<div class="my-footer">
-<span>
-<a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Book</a>
- | 
-<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
- | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
-</span>
-</div>
+
+---
+
+## Course overview 
+
+- The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).
+- 5 ECTS.
+- Lectures/tutorials each week.
+- Exercises are given to support learning.
+- R is used as programming tool. 
+- 20 minutes oral exam.
+
+For more information see the [course description](https://kursuskatalog.au.dk/en?search=Reinforcement%20Learning%20for%20Business).
 
 ---
 
 ## What is reinforcement learning
 
-RL can be seen as
+RL can be seen as 
 
 * An approach of modelling sequential decision making problems.
 * An approach for learning good decision making under uncertainty from experience.
@@ -53,17 +58,15 @@ RL can be seen as
 
 ## Sequential decision problems
 
-Examples (with possible actions) are:
+Examples with possible actions are:
 
 * Playing backgammon (how to move the checkers).
-* [Driving a car](https://arxiv.org/pdf/1807.00412.pdf) (left, right, forward, back, break, stop, ...).
-* How to [invest/maintain a portfolio of stocks](https://medium.com/ibm-data-ai/reinforcement-learning-the-business-use-case-part-2-c175740999) (buy, sell, amount).  
-* [Control an inventory](https://www.youtube.com/watch?v=pxWkg2N0l9c) (wait, buy, amount).
-* Vehicle routing (routes).
+* Driving a car (left, right, forward, back, break, stop, ...).
+* How to invest/maintain a portfolio of stocks (buy, sell, amount).  
+* Control an inventory (wait, buy, amount).
 * Maintain a spare-part (wait, maintain).
-* [Robot operations](https://arxiv.org/pdf/2103.14295.pdf) (sort, move, ...)
-* [Dairy cow treatment/replacement](http://dx.doi.org/10.1016/j.ejor.2019.01.050) (treat, replace, ...)
-* Recommender systems e.g. [Netflix recommendations](https://scale.com/blog/Netflix-Recommendation-Personalization-TransformX-Scale-AI-Insights) (videos)
+* Robot operations (sort, move, ...)
+* Dairy cow treatment/replacement (treat, replace, ...)
 
 Note current decisions have an impact on the future. 
 
@@ -88,85 +91,6 @@ This can also be seen as learning the reward of our actions.
 
 ---
 
-layout: true
-
-## RL in a Business Analytics framework
-
-
-
----
-
-background-image: url("./img/analytics_plot1.png")
-
----
-
-background-image: url("./img/analytics_plot2.png")
-
----
-
-background-image: url("./img/analytics_plot3.png")
-
----
-
-background-image: url("./img/analytics_plot4.png")
-
----
-
-background-image: url("./img/analytics_plot5.png")
-
----
-
-background-image: url("./img/analytics_plot6.png")
-
----
-
-background-image: url("./img/analytics_plot7.png")
-
----
-
-background-image: url("./img/analytics_plot8.png")
-
----
-
-background-image: url("./img/analytics_plot9.png")
-
----
-
-layout: true
-
-<div class="my-footer">
-<span>
-<a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Book</a>
- | 
-<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
- | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
-</span>
-</div>
-
----
-
-## RL in different research deciplines
-
-.pull-left[
-RL is used in many research fields using different names
-- RL (most used) originated from computer science and AI.
-- *Approximate dynamic programming (ADP)* is mostly used within operations research.
-- *Neuro-dynamic programming* (when states are represented using a neural network).
-- RL is closely related to *Markov decision processes* (a mathematical model for a sequential decision problem).
-]
-
-.pull-right[
-
-
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/rl-names.png" alt="Adopted from Silver (2015)." width="100%" /&gt;
-&lt;p class="caption"&gt;Adopted from Silver (2015).&lt;/p&gt;
-&lt;/div&gt;
-]
-
----
-
 ## RL in a Machine Learning framework
 
 .pull-left[
@@ -179,8 +103,6 @@ RL is used in many research fields using different names
 ]
 
 .pull-right[
-
-
 &lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="img/rl-ml.png" alt="Adopted from Silver (2015)." width="100%" /&gt;
 &lt;p class="caption"&gt;Adopted from Silver (2015).&lt;/p&gt;
@@ -206,7 +128,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/unnamed-chunk-10-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/unnamed-chunk-6-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -222,7 +144,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/unnamed-chunk-11-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/unnamed-chunk-7-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -238,7 +160,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/unnamed-chunk-12-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/unnamed-chunk-8-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -254,7 +176,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/unnamed-chunk-13-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/unnamed-chunk-9-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -270,7 +192,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/unnamed-chunk-14-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/unnamed-chunk-10-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -288,7 +210,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/unnamed-chunk-15-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/unnamed-chunk-11-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -326,7 +248,7 @@ layout:true
 - The history is the sequence of observations, actions and rewards `$$H_t = (O_0, A_0, R_1, O_1, \ldots, A_{t-1}, R_t, O_t).$$`
 ]
 .right-column-small[
-&lt;img src="img/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -336,7 +258,7 @@ layout:true
 - The state `\(S_t\)` is the information used to take the next action.
 ]
 .right-column-small[
-&lt;img src="img/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -350,7 +272,7 @@ layout:true
   * Markov state: given the present state the future is independent of the past.  
 ]
 .right-column-small[
-&lt;img src="img/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -396,23 +318,142 @@ layout:false
 
 ## Let's play Tic-Tac-Toe
 
+
+
+
+
+
+
+&lt;table style="width: 100%; border: 0px !important;"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;/td&gt;
+    &lt;td&gt;&lt;table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; . &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;/td&gt;
+    &lt;td&gt;&lt;table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; X &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; O &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+
 ---
 
-layout:true 
-.footer[]
+## Gameplay
+
+Let `\(S_t\)` denote the board state before the opponent makes a move.
+
+
+
+&lt;img src="img/hgf-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-background-image: url("./img/r-classroom.jpeg")
+## Learning to play
+
+- Define `\(V(S)\)` to be 1 if we win, 0 if we loose and 0.5 otherwise (reward/pr of winning).
+- Most of the time we *exploit* our knowledge with `\(pr = 1-\epsilon\)`, i.e. choose the action which gives us the highest estimated reward and update the value of a state using `$$V(S_t) = V(S_t) + \alpha(V(S_{t+1}-V(S_t)))$$` where `\(\alpha\)` is the *step-size* parameter. 
+- Some times we *explore* with `\(pr = \epsilon\)` and choose another action/move than what seems optimal. 
 
 ---
 
-layout:false
 
-# References
 
-Silver, D. (2015). _Lectures on Reinforcement Learning_. URL:
-[https://www.davidsilver.uk/teaching/](https://www.davidsilver.uk/teaching/).
+
+```
+## [1] 1
+```
+
+```
+## [1] 0
+```
+
+
+
+
+
+
+
+
+
+
+
+## Play against a player who moves randomly:
+
+&lt;img src="img/unnamed-chunk-25-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+
+In general we do not need to explore ($\epsilon = 0$) (the other player explore enough for us) and a high explore probability ($\epsilon = 0.9$) make us loose. Moreover, using a high step size seems to work best. 
+
+---
+
+## Play against a player which moves to first free
+
+&lt;img src="img/unnamed-chunk-26-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -567,8 +608,7 @@ Silver, D. (2015). _Lectures on Reinforcement Learning_. URL:
 "ratio": "16:9",
 "highlightLines": true,
 "highlightStyle": "solarized-light",
-"countIncrementalSlides": false,
-"slideNumberFormat": ""
+"countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

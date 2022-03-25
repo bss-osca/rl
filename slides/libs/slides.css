@@ -100,13 +100,13 @@ a, a > code {
 }
 
 .left-column-wide {
-  width: 67%;
+  width: 60%;
   float: left;
   margin-top: 0;
   padding-top: 0;
 }
 .right-column-small {
-  width: 30%;
+  width: 39%;
   float: right;
   margin-top: 0;
   padding-top: 0;
@@ -279,20 +279,6 @@ div.my-footer a {
   bottom: 3em;
   padding-right: 4em;
   font-size: 70%;
-}
-
-
-/* Logo */
-.remark-slide-content:after {
-    content: "";
-    position: absolute;
-    bottom: 5px;
-    right: 1100px;
-    height: 60px;
-    width: 81px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url("logo.png");
 }
 
 

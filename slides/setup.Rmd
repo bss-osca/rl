@@ -1,4 +1,4 @@
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, cache=FALSE}
 # Common setup for all the slides
 
 # R options
@@ -12,7 +12,7 @@ options(
 # figure height, width, dpi
 knitr::opts_chunk$set(echo = TRUE, 
                       fig.width = 6, 
-                      fig.asp = 0.5,
+                      # fig.asp = 0.5,
                       fig.path="img/",
                       out.width = "100%",
                       fig.align = "center",
@@ -33,6 +33,16 @@ library(conflicted)
 conflict_prefer("filter", "dplyr")
 library(icons)
 library(tidyverse)
+library(here)
+#file.copy("../book/links.md", "links.md", overwrite = T)
 
-file.copy("../book/links.md", "links.md", overwrite = T)
+## load_refs
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+bib <- ReadBib("../book/rl.bib", check = FALSE)
 ```
