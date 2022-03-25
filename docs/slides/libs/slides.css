@@ -282,20 +282,6 @@ div.my-footer a {
 }
 
 
-/* Logo */
-.remark-slide-content:after {
-    content: "";
-    position: absolute;
-    bottom: 5px;
-    right: 1100px;
-    height: 60px;
-    width: 81px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url("logo.png");
-}
-
-
 /* Slide number */
 .remark-slide-number {
   color: #333333;

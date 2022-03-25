@@ -2,6 +2,7 @@
 title: "An introduction to<br/>Reinforcement Learning (RL)"
 author: "Lars Relund Nielsen"
 output:
+  self_contained: true
   xaringan::moon_reader:
     css: "./libs/slides.css"
     lib_dir: libs
