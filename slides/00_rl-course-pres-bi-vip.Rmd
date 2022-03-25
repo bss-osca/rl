@@ -36,6 +36,11 @@ knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE)
 ```
 
+```{r, echo=FALSE}
+module_name <- "bi-vip"
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
+```
+
 layout: true
 
 ---
