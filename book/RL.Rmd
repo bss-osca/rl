@@ -9,7 +9,7 @@ url: 'https\://bss-osca.github.io/rl/'
 github-repo: bss-osca/rl
 cover-image: img/logo.png
 documentclass: book
-bibliography: [book.bib, packages.bib]
+bibliography: [rl.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
@@ -29,7 +29,7 @@ url: 'https\://bss-osca.github.io/rl/'
 github-repo: bss-osca/rl
 cover-image: img/logo.png
 documentclass: book
-bibliography: [book.bib, packages.bib]
+bibliography: [rl.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
@@ -41,16 +41,161 @@ editor_options:
 
 <!--chapter:end:index.Rmd-->
 
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 
-# Introduction to the book {#mod-intro}
+# Introduction {- #mod-intro}
 
-Placeholder
+```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```
+
+
+```{r include = FALSE, cache=FALSE}
+library(tidyverse)
+library(devtools)
+library(DT)
+library(htmltools)
+library(rmarkdown)
+library(bsplus)
+library(here)
+#tagList(html_dependency_font_awesome())
+```
+
+
+This site contains course notes for the course "Reinforcement Learning for Business" held at [Aarhus BSS][BSS]. It consists of a set of modules containing learning path for the course modules. The course is an elective course mainly for the [Operations and Supply Chain Analytics][osca-programme] and [Business Intelligence][bi-programme] programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.
 
 
 ## Learning outcomes {#lo-intro}
-## Purpose for the book {#purpose}
-## How this book is organized {#organization}
-## Acknowledgements {#ack} 
+
+By the end of this module, you are expected to:
+
+* Memorize the purpose of the course.
+* Have downloaded the textbook.
+* Describe what Business Analytics are.
+* Know how the course is organized.
+
+The learning outcomes relate to the [overall learning goals](#lg-course) number 1, 3 and 5 of the course.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Purpose of the course {#sec-purpose}
+
+The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).
+
+RL may be seen as
+
+* An approach of modelling sequential decision making problems.
+* An approach for learning good decision making under uncertainty from experience.
+* Mathematical models for learning-based decision making.
+* Trying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.
+* Estimating and finding near optimal decisions of a stochastic process with sequential decision making. 
+* A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.
+
+RL can also be seen as a way of modelling intuition. As humans, we often learn by trial and error. For instance, when playing a game, our strategy is based on the game rules and what we have experienced works based on previous plays. In a RL setting, the system has specific states, actions and reward structure, that is, the rules of the game, and it is up to the agent how to solve the game, i.e. find actions that maximize the reward. Typically, the agent starts with totally random trials and finishes with sophisticated tactics and superhuman skills. By leveraging the power of search and many trials, RL is an effective way to find good actions. 
+
+A classic RL example is the bandit problem: You are in a casino and want to choose one of many slot machines (one-armed bandits) in each round. However, you do not know the distribution of the payouts of the machines. In the beginning, you will probably just try out machines (exploration) and then, after some learning, you will prefer the best ones (exploitation). Now the problem arises that if you use a slot machine frequently, you will not be able to gain information about the others and may not even find the best machine (exploration-exploitation dilemma). RL focuses on finding a balance between exploration of uncharted territory and exploitation of current knowledge.
+
+The course starts by giving a general overview over RL and introducing bandit problems. Next, the mathematical framework of Markov decision processes (MDPs) is given as a classical formalization of sequential decision making. In this case, actions influence not just immediate rewards, but also subsequent situations, or states, and therefore also future rewards. An MDP assumes that the dynamics of the underlying process and the reward structure are known explicitly by the decision maker. In the last part of the course, we go beyond the case of decision making in known environments and study RL methods for stochastic control. 
+
+
+## Business analytics {#sec-ba}
+
+[Business Analytics](https://en.wikipedia.org/wiki/Business_analytics) (BA) (or just [Analytics](http://connect.informs.org/analytics/home)) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using "big" data sources.
+
+**Descriptive Analytics**: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.
+
+**Predictive Analytics**: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).
+
+**Prescriptive Analytics**: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since reinforcement learning focus optimizing decisions it is Prescriptive Analytics.
+
+```{r analytics, fig.cap="Business Analytics and competive advantage.", echo=FALSE}
+knitr::include_graphics("img/analytics_plot9.png")
+```
+
+Companies who use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. This enterprise approach generates a companywide respect for applying descriptive, predictive and prescriptive analytics in areas such as supply chain, marketing and human resources. Focusing on BA gives a company a competive advantage (see Figure \@ref(fig:analytics)).
+
+Related areas: In the past *Business Intelligence* traditionally focuses on querying, reporting, online analytical processing, i.e. descriptive analytics. However, a more modern definition of Business Intelligence is the union of descriptive and predictive analytics. *Operations Research* or *Management Science* deals with the application of advanced analytical methods to help make better decisions and can hence be seen as prescriptive analytics. However, traditionally it has been taking a more theoretical approach and focusing on problem-driven research while BA takes a more data-driven approach. *Logistics* is a cross-functional area focusing on the effective and efficient flows of goods and services, and the related flows of information and cash. *Supply Chain Management* adds a process-oriented and cross-company perspective. Both can be seen as prescriptive analytics with a more problem-driven research focus. Advanced Analytics is often used as a classification of both predictive and prescriptive analytics. *Data science* is an interdisciplinary field about scientific methods, processes, and systems to extract knowledge or insights from data in various forms, either structured or unstructured and can be seen as Business analytics applied to a wider range of data. 
+
+
+## Reinforcement learning textbook
+
+The course uses the free textbook *Reinforcement Learning: An Introduction* by @Sutton21. The book is essential reading for anyone wishing to learn the theory and practice of modern Reinforcement learning. Read the weekly readings before the lecture to understand the material better, and perform better in the course.
+
+Sutton and Barto's book is the most cited publication in RL research, and is responsible for making RL accessible to people around the world. The new edition, released in 2018, offers improved notation and explanations, additional algorithms, advanced topics, and many new examples; and it's totally free. Just follow the citation link to download a pdf file. 
+
+
+## Course organization {#sec-organization}
+
+Each week considers a learning module. A learning module is related to a chapter in the textbook. The learning path in a typical week are 
+
+- Before lectures: Read the chapter in the textbook and consider the extra module material.
+- Lectures (at campus).
+- After lectures: Module Exercises (in groups).
+
+Lectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials are given and we focus on a specific RL problem.
+
+Module \@ref(mod-intro) (this module) gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:
+
+   * [Part I](#mod-rl-intro) gives you a general introduction to RL and the bandit problem. 
+
+   <!-- * [Part II](#mod-vba-datatypes) gives you an overview over programming in VBA including datatypes (Module \@ref(mod-vba-datatypes)), procedures (Module \@ref(mod-vba-procedures)), loop and conditional statements (Module \@ref(mod-vba-loops-cond)) and the object model (Module \@ref(mod-vba-object-model)). -->
+   <!-- * [Part III](#mod-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
+   <!-- * [Part IV](#mod-vba-project) presents the mandatory VBA project. -->
+   <!-- * [Part V](#mod-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). -->
+   <!-- * [Part VI](#mod-r-loops-cond) gives you an overview over programming in R including loops and conditionals (Module \@ref(mod-r-loops-cond)) and functions (Module \@ref(mod-r-functions)). -->
+
+   <!-- * [Part VII](#mod-r-tidyverse-intro) the focus is on import/export, tidy and transformation of data. Module \@ref(mod-r-tidyverse-intro) first gives you an introduction to the [tidyverse][tidyverse-main-page] packages and introduces you to literal programming using R Markdown. Next, Module \@ref(mod-r-io) shows you how to export and import data. Finally, Module \@ref(mod-r-transform) focuses on transformation of data. -->
+   <!-- * [Part VIII](#mod-r-plot) considers visualization of data in R (Module \@ref(mod-r-plot)). -->
+   <!-- * [Part IX](#mod-project) presents the mandatory R project. -->
+   <!-- * [Part X](#mod-r-maps) contains extra modules useful when coding in R.  -->
+
+The appendix contains different modules that may be helpful for you including hints on [how to work in groups](#groups), [how to get help](#help) if you are stuck and [how to annotate](#annotate) the course notes.
+   
+
+
+
+## Programming software
+
+We use [R] as programming software and it is assumed that you are familiar with using R. [R] is a programming language and free software environment. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work. R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. 
+
+If you need a brush-up on your R programming skills then have a look at Module ??? in the appendix. 
+
+
+## Acknowledgements and license {#ack} 
+
+Some of the materials in this book are taken from various places
+
+* The bookdown skeleton and some notes are based on the [Tools for Analytics][tfa-course] course.
+
+<!-- * Some parts in Module \@ref(mod-intro) are inspired by [Chapter 1](https://r4ds.had.co.nz/introduction.html) in @r4ds. -->
+<!-- * The VBA modules are inspired by the book @vba-book. This also holds for some of the exercises.  -->
+<!-- * Module \@ref(mod-r-install) is inspired by [Chapter 1](https://stat545.com/block000_r-rstudio-install.html) in @stat545. -->
+<!-- * Module \@ref(mod-r-workflow) is using some text and images from [Chapter 1](https://moderndive.netlify.app/1-getting-started.html) in @moderndrive and [Chapter 2](https://stat545.com/block002_hello-r-workspace-wd-project.html) in @stat545. A few exercises are inspired by [Chapter 2](https://rafalab.github.io/dsbook/r-basics.html) in @dsbook. -->
+<!-- * Notes about git and GitHub in the appendix are based on @hgit. -->
+<!-- * Exercise \@ref(ex-gapminder1) is a revision of Chapters 6-7 in @stat545. -->
+<!-- * Exercise \@ref(ex-babynames1) is a revision of [Session 3](https://github.com/rstudio-education/welcome-to-the-tidyverse/blob/master/03-Transform/03-Transform-Exercises.Rmd) in the [Welcome to the tidyverse][course-welcome-to-the-tidyverse] course. -->
+<!-- * Exercise \@ref(ex-gapminder2) is a revision of [Chapter 9](https://rafalab.github.io/dsbook/gapminder.html) in @dsbook. -->
+<!-- * Exercise \@ref(ex-covid19) is inspired by the COVID19 application [exercise](https://raw.githubusercontent.com/rstudio-education/datascience-box/master/course-materials/application-exercises/ae-01b-covid/covid.Rmd) at the [data science in a box](https://github.com/rstudio-education/datascience-box) course. -->
+<!-- * Exercise \@ref(ex-lego) is inspired by the Lego homework [exercise](https://github.com/rstudio-education/datascience-box/blob/master/course-materials/hw-instructions/hw-04/hw-04-legos-instructors.Rmd) at the [data science in a box](https://github.com/rstudio-education/datascience-box) course. -->
+<!-- * Exercise \@ref(ex-fish) is inspired by the Fisheries application [exercise](https://github.com/rstudio-education/datascience-box/blob/master/course-materials/application-exercises/ae-05-fisheries-datajoins/fisheries.Rmd) at the [data science in a box](https://github.com/rstudio-education/datascience-box) course. -->
+
+
+I would like to thank all for their inspiration. 
+
+<!-- Also thanks to Solveig for proofreading the draft. -->
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+
+```{r links, child="links.md"}
+```
 
 <!--chapter:end:01_intro.Rmd-->
 
@@ -75,263 +220,13 @@ Placeholder
 <!--chapter:end:02_rl-intro.Rmd-->
 
 
-# (PART) Programming in VBA {-}
-# Data types and variables {#mod-vba-datatypes}
+# (APPENDIX) Appendix {- #mod-apdx}
 
 Placeholder
 
 
-## Learning outcomes {#lo-vba-datatypes}
-## Datatypes {#vba-datatypes}
-### Collections
-## How do I structure my code? {#vba-code-structure}
-## Recap
-## Exercises {#ex-vba-datatypes}
-### Exercise - Product search {#ex-vba-search-products}
-### Exercise - Read arrays {#ex-vba-read-arrays}
-### Exercise - Read collections {#ex-vba-read-collections}
-
-<!--chapter:end:03.Rmd-->
-
-```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
-```
-
-# (APPENDIX) Appendix {- #mod-apdx}
-
-# Setting up R {#r-setup} 
-
-
-
-
-# Working in groups {#groups}
-
-During the course you have been allocated into groups. You are expected to solve the exercises and write the project report in your group. Before you start, it is a good idea to agree on a set of group rules. First, agree on a [coding convention](#coding-convention) when you are going to use R. Most people in the R community use snake case but camel case is also okay. Next, setup rules on when to meet and how you will organize the work. For instance, it is a good idea that all try to solve some of the exercises before you meet and you then discuss the answers, problems etc. Finally, it is a good idea to have a common place for your code. You have different options:
-
-1) Use a cloud storage services such as Dropbox, OneDrive or Google Drive.
-2) Use a version control system such as Git together with [GitHub]. GitHub is a code sharing and publishing service and may be seen as a social networking site for programmers. 
-3) If you use RStudio Cloud then one person in the group can create a shared workspace with projects: 
-   - First create a new workspace named e.g. _Shared_. 
-   - Press _Members_ and add the group members as moderators.
-   - Now go back to _Projects_ in the _RL_ workspace and move one project to the shared workspace. Rename it to e.g. _Group Project_. 
-   Members will now have access to this project where you can share code. NOTE you can not work collectively on a file simultaneously. That is, only one member can change a file at a time! Hence it is a good idea to have your own private project to work on and use this project as a place where you can share code. If you want to download a project to your laptop then press the export button. 
-
-The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I'm talking about, think of it as the "Track Changes" features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see [Why Git? Why GitHub?][hg-why].
-
 ## Joint R project structure {-}
-
-I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.  
-
-
-# Coding/naming convention {#coding-convention}
-
-The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible. 
-
-Different ways of naming you variables exists. You are advised to adopt a naming convention; some use [snake case][wiki-snake-case] others use [camel case][wiki-camel-case]. The R community mostly use snake case but camel case is also okay. Choose the naming convention you like best in your study group. But stick only to one of them. A few examples:
-
-```
-this_is_snake_case   # note you do not use capital letters here
-thisIsCamelCase      # you start each word with a capital letter (except the first)
-```
-When defining variables and functions, it is in general good practice to use nouns for variables and verbs for functions.
-
-
 ## Commenting your code
-
-It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. A few examples in VBA are
-
-The top of a module file:
-
-```
-'' Module description.
-'  Can be more than one line.
-' 
-' @remarks Put your remarks on the module implementation here
-' @author Lars Relund <junk@relund.dk>
-' @date 2016-08-26
-```
-
-Before each `sub`, `function` etc. write:
-
-```
-'' Sub description
-' 
-' @pre Precondition 
-' @post Postcondition
-'
-' @param strA	Explanation of input parameter strA
-' @param intB Explanation of input parameter intB
-' @return Return value (if a function)
-' @remarks Further remarks 
-Public Function MyFunc(strA As String, intB As Integer) As Integer {
-   ...
-}
-```
-
-Further tags (i.e. keywords starting with @) can be seen [here](https://roxygen2.r-lib.org/articles/rd.html).
-
-In R we use a 'hash' (#') to comment functions:
-
-```{r, eval=FALSE}
-#' Subtract two vectors
-#'
-#' @param x First vector.
-#' @param y Vector to be subtracted.
-#'
-#' @return The difference.
-#' @export
-#'
-#' @examples
-#' subtract(x = c(5,5), y = c(2,3))
-subtract <- function(x, y) {
-  return(x-y)
-}
-```
-
-
-# Annotate the course notes {#annotate}
-
-I recommend using [hypothes.is] to annotate the online course notes. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help me indicate spell errors, unclear content etc. in the notes. 
-
-
-# Getting help {#help}
-
-We all get stuck sometimes and need some help. Below are some advises on how to help yourself and ask for help:
-
-If you have a question related to the theory of RL then you may try to
-
-  * ask it during the lecture or in the breaks
-  * ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap. 
-
-If you have a question related to R:
-
-  * First try to understand the error message and solve the problem. You may try to debug your code by inserting `browser()` in your R code. See [Chapter 11][debug-in-r] in @wtf for further details.  
-  * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "vba range", "r dplyr filter", "r tidyverse", "r subset vector", etc.
-  * Do you need help for a specific function in R then try `?[function-name]` such as `?geom_line`, `?mutate`, etc. Mostly, focus on the last section with examples. Moreover, some packages may have written vignettes try `browseVignettes(package = "package_name")` to check.
-  * Have a look at **Help > Cheatsheets** in RStudio.
-  * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.
-  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap.   
-
-_Note help using mail correspondence is not supported!_
-
-
-
-# Learning goals {#lg-course}
-							
-The purpose of this course is to give students a knowledge about IT tools for Analytics which requires the analyst to be qualified in handling tools beyond e.g. basic Excel. 							
-After having participated in the course, the student must, in addition to achieving general academic skills, demonstrate:			
-							
-Knowledge of	
-
-  1.	how a computer works at a basic level.						
-  2.	basic programming such as variables, arrays, loops, functions and procedures. 						
-  3.	what an algorithm is. 						
-  4.	how to implement an algorithm based on a description. 						
-  5.	different programming languages. 						
-  6.	how to manage a code in a collaborative working environment.						
-							
-Skills to 		
-
-  7.	handle data such as import, tidy, transform, visualize and export. 						
-  8.	develop well-structured code. 						
-  9.	perform testing and debugging. 						
-  10.	implement/code selected algorithms. 						
-  11.	apply analytical techniques on data.						
-  12.	apply relevant methods, algorithms and techniques from this course in order to solve a specific problem.						
-							
-Competences to		
-
-  13.	independently handle data given a problem. 						
-  14.	independently analyze data given a relevant research question.						
-  15.	compare different programming languages.						
-  16.	compare different algorithms solving a problem and discuss their advantages and disadvantages.
-  17.	interpret and discuss results based on a data analysis in relation to the relevant academic literature.						
-  18.	communicate results from applied research in a scientific way, e.g. using literate programming.						
-
-
-<!-- # Schedule {}  -->
-
-<!-- The schedule for the course is given below. -->
-
-<!-- ```{r, echo=FALSE, message=FALSE, cache=FALSE, eval=FALSE} -->
-<!-- source("common.R") -->
-<!-- library(googlesheets4) -->
-<!-- sheets_deauth() -->
-<!-- sheet <- read_sheet("https://docs.google.com/spreadsheets/d/1-fSG3KWip0Vm5Uwf9T6vUMuH0ReBhpITHT3rl896vwc/edit?usp=sharing", -->
-<!--            sheet = "Schedule") -->
-<!-- knitr::kable(sheet) -->
-<!-- ``` -->
-
-<!-- <p><iframe width="1300" height="600" frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRka2NKE77BvtIoJc1GW-Dr_oABzQdQhMC94KpPjW7DpSTnepN9RV3m6w1ILKe3YoQwUj0C6JAe3K1T/pubhtml?gid=1591856300&amp;single=true&amp;widget=true&amp;headers=false"></iframe></p> -->
-
-
-# Business Analytics {#sec:ba}
-
-Business Analytics (BA) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using "big" data sources.
-
-Descriptive Analytics: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.
-
-Predictive Analytics: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).
-
-Prescriptive Analytics: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. 
-
-Companies who use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. This enterprise approach generates a companywide respect for applying descriptive, predictive and prescriptive analytics in areas such as supply chain, marketing and human resources. 
-
-Related areas: In the past Business Intelligence traditionally focuses on querying, reporting, online analytical processing, i.e. descriptive analytics. However, a more modern definition of Business Intelligence is the union of descriptive and predictive analytics. Operations Research or Management Science deals with the application of advanced analytical methods to help make better decisions and can hence be seen as prescriptive analytics. However, traditionally it has been taking a more theoretical approach and focusing on problem-driven research while BA takes a more data-driven approach. Logistics is a cross-functional area focusing on the effective and efficient flows of goods and services, and the related flows of information and cash. Supply Chain Management adds a process-oriented and cross-company perspective. Both can be seen as prescriptive analytics with a more problem-driven research focus. Advanced Analytics is often used as a classification of both predictive and prescriptive analytics. Data science is an interdisciplinary field about scientific methods, processes, and systems to extract knowledge or insights from data in various forms, either structured or unstructured and can be seen as Business analytics applied to a wider range of data. 
-
-Resources
-http://analytics-magazine.org/the-analytics-journey/ 
-https://en.wikipedia.org/wiki/Business_analytics 
-http://connect.informs.org/analytics/home 
-https://www.or-exchange.org/questions/5645/informs-analytics-definition 
-https://en.wikipedia.org/wiki/Prescriptive_analytics
-https://en.wikipedia.org/wiki/Predictive_analytics 
-
-<!-- Business Analytics (BA) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem and the creation of business value by integration of concepts, methods and data. As a process, it can be characterized by descriptive, predictive, and prescriptive model building using "big" data sources. For further details, see http://analytics-magazine.org/the-analytics-journey/. -->
-
-<!-- Operations Research and Management Science deal with the application of advanced analytical methods in order to make better decisions. Hence, they are closely related to prescriptive analytics. Companies that use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. To a larger extent than before, data may be available for validation purposes. -->
-
-
-# Colophon {}
-
-This book was written in [bookdown](http://bookdown.org/) inside [RStudio](http://www.rstudio.com/ide/). 
-<!-- The website [stat545.com](https://stat545.com) is hosted with [Netlify](https://www.netlify.com), and automatically updated after every commit by [Travis-CI](https://travis-ci.org). The complete source is available from [GitHub](https://github.com/rstudio-education/stat545). -->
-
-This version of the book was built with:
-
-```{r message = FALSE, warning = FALSE, echo = FALSE}
-# needed because new_session is set to true in _bookdown.yml
-all_pkgs <- renv::dependencies(path = "DESCRIPTION") %>% 
-  pull(Package) 
-
-session <- devtools::session_info(pkgs = all_pkgs)
-
-session$platform
-```
-
-Along with these packages:
-
-```{r message = FALSE, warning = FALSE, echo = FALSE}
-session$packages %>% 
-  select(package, loadedversion, date, source) %>% 
-  DT::datatable(rownames = FALSE,
-                class = 'cell-border stripe',
-                filter = list(position = 'top'),
-                options = list(pageLength = nrow(session$packages), 
-                           autoWidth = TRUE,
-                           bInfo = FALSE,
-                           paging = FALSE))
-```
-
-
-```{r include = FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
-```
-
-```{r links, child="links.md"}
-```
 
 <!--chapter:end:99_appdx.Rmd-->
 

@@ -9,7 +9,7 @@ url: 'https\://bss-osca.github.io/rl/'
 github-repo: bss-osca/rl
 cover-image: img/logo.png
 documentclass: book
-bibliography: [book.bib, packages.bib]
+bibliography: [rl.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
