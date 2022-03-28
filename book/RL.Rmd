@@ -18,26 +18,6 @@ date: "`r Sys.Date()`"
 editor_options: 
   chunk_output_type: console
 ---
---- 
-title: "Reinforcement Learning for Business (RL)"
-subtitle: "Course notes"
-author: 
-- Lars Relund Nielsen
-knit: "bookdown::render_book"
-site: bookdown::bookdown_site
-url: 'https\://bss-osca.github.io/rl/'
-github-repo: bss-osca/rl
-cover-image: img/logo.png
-documentclass: book
-bibliography: [rl.bib, packages.bib]
-biblio-style: apalike
-link-citations: yes
-description: "Course notes for 'Reinforcement Learning for Business'"
-favicon: assets/favicon.ico
-date: "`r Sys.Date()`"
-editor_options: 
-  chunk_output_type: console
----
 
 <!--chapter:end:index.Rmd-->
 
@@ -47,7 +27,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Introduction {- #mod-intro}
+# Introduction {#mod-intro}
 
 ```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
 ```
@@ -199,34 +179,381 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 
 <!--chapter:end:01_intro.Rmd-->
 
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```
 
 # (PART) Introduction to RL {-}
+
 # An introduction to RL {#mod-rl-intro}
 
-Placeholder
+This module gives a short introduction to VBA. In general syllabus will point to chapters in @vba-book; however, there is a lot for videos about VBA online such as course [14-Hour VBA Course][vba-yt-course2]. You may have a look at these videos instead if you prefer a different learning style. In the learning path diagram links to alternative online content will be pointed out. Note this is alternatives to the standard learning path that you may use instead. The learning path may also have extra content that is not a part of syllabus you can have a look at.
 
+Since Excel change as new versions arrive and it work on different operating systems, the look in the screenshots and videos might be a bit different from your version. However, you still should be able to understand it. 
+
+__Learning path diagram__
+
+Click/hover the nodes to follow links and see details.
+
+```{r, echo=FALSE, out.width="100%", fig.asp=NA}
+g <- create_learning_path(
+   url = "https://docs.google.com/spreadsheets/d/1bBe42LHK-bE7CsU9eNBzi_7VNjbmv-Ybr7285pE61jM/edit?usp=sharing", 
+   sheet = "vba-intro", 
+   x_legend = 4.5, y_legend = 6.1)
+render_graph(g, height = 500)
+```
 
 ## Learning outcomes {#mod-rl-intro-lo}
+
+By the end of this module, you are expected to:
+
+* Describe what VBA is.
+* Setup Excel for VBA.
+* Know how the macro recorder works.
+* Make your first program.
+* Have an overview over what VBA can do.
+* Recorded you first macro using the macro recorder
+
+The learning outcomes relate to the [overall learning goals](#lg-course) number 2 and 4 of the course.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
 ## What is VBA {#vba-what}
+
+Visual Basic for Applications (VBA) is an implementation of the BASIC programming language intended to control and automate Microsoft Office applications, developed by Microsoft. For instance, you can automatically create sheets, delete objects, create user-defined functions or read/write data to a sheet. It is not a standalone program, it can only run in the host application. In this course we will focus on running VBA from Excel. VBA is widely used in the industry (specially linked to Excel) and easy to learn. Microsoft stopped investing in VBA in 2008. It only update it for small changes. However, VBA is still a vital part of desktop Office applications, and will continue to be so in the future. 
+
+VBA is a [compiled language](https://en.wikipedia.org/wiki/Compiled_language#:~:text=A%20compiled%20language%20is%20a,%2Druntime%20translation%20takes%20place) implemented using compilers (translators that generate machine code from source code). That is, code need to be compiled first before running it. You can only run VBA using the desktop version of Excel. That is, you can't create, run, or edit VBA in Excel for the web. 
+
+With VBA you can extend Excel and automate tasks by coding different algorithms that for instance can be run by pressing a button. Since VBA is a programming language, the initial learning curve is steeper compared to Excel. However, you will get started fast because you already know Excel.
+
+
 ## RL within a Business Analytics (BA) framework
+Within a Business Analytics (BA) framework the course focuses on giving you an introduction to programming, handeling data and doing descriptive analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (key performance indicators (KPIs), what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics. Predictive and prescriptive analytics are covered in other courses of the [programme][osca-programme].
+
+Analytics may be seen as a data driven process:
+
+```{r process, echo = FALSE, fig.cap="Analytics as a data driven process."}
+knitr::include_graphics("img/process.png")
+```
+
+For doing data driven analytics you first must __import__ your data. That is, take data from a database, file, web API etc. and transform it into a data frame/table. In general raw data may be messy and need to be structured in a __tidy__ way. Tidying your data means storing it in a structured form suitable for analysis. In brief, when your data is __tidy__, each column is a variable, and each row is an observation. Tidy data is important because the consistent structure lets you focus your struggle on questions about the data. 
+Once you have tidy data, a common first step is to __transform__ it. Transformation includes narrowing in on observations of interest (e.g. only observations from a specific year or warehouse), creating new variables based on existing variables (e.g. the cost of using the machine that day given idle time). Together, tidying and transforming are called __wrangling__, because 
+it can be a hard process to get your data in the right form.
+
+The next step is to do a simple __exploration__ of you data such as calculating a set of summary statistics (like counts, means or KPIs). A good way to get an overview over your data is by __visualization__. A good visualisation will show you things that you did not expect, raise new questions about the data or confirm your hypothesis. A good visualization might also hint that you're asking the wrong question, or you need to collect different data. Exploration and visualization are descriptive analytics and used to answer questions such as: What happened? How many, how often, where? Where exactly is the problem? What actions are needed?
+__Models__ are complementary tools to visualization. Once you have made your questions sufficiently precise, you can use a model to answer them. A model is a description of a system using mathematical concepts and a simplification of the real system. That is, the results of a model are based on a set of assumptions. Models for statistical analysis, forecasting, system behavior are predictive analytics and answer questions like: Why is this happening? What if these trends continue? What will happen next? Models for prescriptive analytics use optimization and other decision modeling techniques to suggest decision options with the goal of improving business performance and answer questions like: What is the best that can happen?
+
+Exploration, visualization and modeling may be seen as different steps which can be used for __analyzing__ the data and answer the overall questions. This course will focus on the two first steps. 
+
+Given an analysis, __communication__ is an absolutely critical part. It does not matter how well your models and visualization have led you to understand the data unless you can also communicate your results to decision makers. 
+
+Note that analytics is not a one-way process, it is common that you several times have to tidy and transform your data, explore and visualize based on the results of a model, rerun the model based on feedback from the decision makers etc. Common connections are visualized using directed arrows in Figure \@ref(fig:process). 
+
+Surrounding the process is __programming__. Programming is the Swiss army knife you use during parts of the process. An introduction to programming is given using both VBA in Excel and the programming language and free software environment [R]. Programming focus on writing algorithms. An __algorithm__ is a finite sequence of well-defined instructions to solve a specific problem or to perform a computation. That is, we use a programming language to program an algorithm that solves a specific task, e.g. find the best route, sort words, make a plot, etc.
+
+
 ## RL within a machine learning framework
+
+
+  
 ## Your first program {#vba-hello}
+
+We will use the book _VBA Programming in Business Economics_ by @vba-book. Read Chapter 1 in @vba-book. You may also have a look at the alternative videos instead as listed in the learning path diagram (select only one of the video paths).
+
+
 ## The macro recorder {#vba-macro}
+
+It is possible to use the Macro recorder to turn your actions in Excel into VBA code. This can be particularly useful if you have forgotten the code for a specific color or the name of a function. Unfortunately, you cannot record if-statements or loops, so the recorder is not an easy way out of learning to code. But it is a handy tool.
+
+Read Chapter 2 in @vba-book. You may also have a look at the alternative videos instead as listed in the learning path diagram (select only one of the video paths).
+
+
 ## A short overview
+
+Read Chapter 3 in @vba-book which gives a short overview over VBA so you can get started coding.  
+
+
 ## Recap {#rc-vba-intro}
+
+This module gives a short introduction to VBA which is: 
+
+- A programming language intended to control and automate Microsoft Office applications (we use Excel).
+- VBA (Visual Basic for Applications) is an implementation of BASIC developed by Microsoft. 
+- A [compiled language](https://en.wikipedia.org/wiki/Compiled_language#:~:text=A%20compiled%20language%20is%20a,%2Druntime%20translation%20takes%20place). That is, code need to be compiled first before running it. 
+- You can only run VBA using the desktop version of Excel (not the web version).
+- With VBA you can extend Excel and automate tasks by coding different algorithms that for instance can be run by pressing a button. 
+
+For running VBA code the **Developer** tab needs to be visible in Excel. This can be done by check marking the **Developer** tab under the 'Ribbon and Toolbar' options in Excel. You add it by choosing **Excel -> Preferences -> Ribbon and toolbar** (`r icons::fontawesome$brands$apple`) or right click a tab and choose **Customize ribbon ...** (`r icons::fontawesome$brands$windows`).
+
+In the **Developer** tab you open the VBA editor by pressing the **Visual basic** button (`r icons::fontawesome$brands$windows` Alt + F11, `r icons::fontawesome$brands$apple` ⌥ + F11).
+
+A few useful shortcuts:
+
+- Toggle VBA editor and Excel (`r icons::fontawesome$brands$windows` Alt + F11, `r icons::fontawesome$brands$apple` ⌘⇧´).
+- Run current procedure or continues execution after pausing (F5).
+<!-- - Terminate a procedure and reset all variables to their default values (Shift + F5). -->
+- Auto complete code (Ctrl + Space). On a mac you may have to disable the default shortcut (Ctrl + Space) for switching input sources. You can go to the System Preferences -> Keyboard -> Shortcuts -> Input Sources and disable it.
+- Use the debugger and go to next line of code (`r icons::fontawesome$brands$windows` F8, `r icons::fontawesome$brands$apple` ⇧⌘I).
+<!-- - Open the Object Browser (F2). -->
+- Switch between subs/functions (`r icons::fontawesome$brands$windows`  Ctrl + Up/Down, `r icons::fontawesome$brands$apple` ⌘ + Up/Down).
+<!-- - Run Debugger to this line (Ctrl + F8). -->
+
+Basic building blocks in programming:
+
+- _Variables_ store stuff in memory.
+- _Procedures_ (functions and subs) execute a set of instructions.
+- _Conditional statements_ (decisions) are used to execute different instructions depending on a true/false statement.
+- _Loops_ are used to execute code repeatedly. 
+- _Input/output_ are needed to read data and output the result.
+
+Variables are used to store information in the program. Think of it as a box that can contain e.g. a number, a string or and array of integers. The variable name is the label on the box.
+
+In VBA we deal with two kinds of procedures: A `Sub` which can work as a “macro” in Excel, i.e. we can call it using e.g. a button and a `Function` which can work like Excel functions, i.e. return a value.
+
+Examples on input/output are dialog boxes which can be created using `MsgBox` or `InputBox`. You can also write/read values from a sheet using `Range` or `Cells`. Note it is always a good idea to know which sheet you are considering use the `Worksheets` function.
+
+Conditional statements (decisions) execute different instructions depending on a true/false. 
+
+Loops can be used to execute code repeatedly.
+
+Excel functions can be called with the `WorksheetFunction` e.g. `WorksheetFunction.Sum(Range("D2:E5"))`
+
+You may also have a look at the [slides for this module](https://bss-osca.github.io/tfa/slides/01-01_vba-intro-slides.html).
+
 ## Exercises {#sec-rl-intro-ex}
+
+`r strExercises`
+
 ### Exercise - Hello {#ex-vba-hello}
+
+
+```{r links, child="links.md", include=FALSE}
+```
 
 <!--chapter:end:02_rl-intro.Rmd-->
 
+```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```
 
 # (APPENDIX) Appendix {- #mod-apdx}
 
-Placeholder
+# Setting up R {#r-setup} 
 
+
+
+
+# Working in groups {#groups}
+
+During the course you have been allocated into groups. You are expected to solve the exercises and write the project report in your group. Before you start, it is a good idea to agree on a set of group rules. First, agree on a [coding convention](#coding-convention) when you are going to use R. Most people in the R community use snake case but camel case is also okay. Next, setup rules on when to meet and how you will organize the work. For instance, it is a good idea that all try to solve some of the exercises before you meet and you then discuss the answers, problems etc. Finally, it is a good idea to have a common place for your code. You have different options:
+
+1) Use a cloud storage services such as Dropbox, OneDrive or Google Drive.
+2) Use a version control system such as Git together with [GitHub]. GitHub is a code sharing and publishing service and may be seen as a social networking site for programmers. 
+3) If you use RStudio Cloud then one person in the group can create a shared workspace with projects: 
+   - First create a new workspace named e.g. _Shared_. 
+   - Press _Members_ and add the group members as moderators.
+   - Now go back to _Projects_ in the _RL_ workspace and move one project to the shared workspace. Rename it to e.g. _Group Project_. 
+   Members will now have access to this project where you can share code. NOTE you can not work collectively on a file simultaneously. That is, only one member can change a file at a time! Hence it is a good idea to have your own private project to work on and use this project as a place where you can share code. If you want to download a project to your laptop then press the export button. 
+
+The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I'm talking about, think of it as the "Track Changes" features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see [Why Git? Why GitHub?][hg-why].
 
 ## Joint R project structure {-}
+
+I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.  
+
+
+# Coding/naming convention {#coding-convention}
+
+The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible. 
+
+Different ways of naming you variables exists. You are advised to adopt a naming convention; some use [snake case][wiki-snake-case] others use [camel case][wiki-camel-case]. The R community mostly use snake case but camel case is also okay. Choose the naming convention you like best in your study group. But stick only to one of them. A few examples:
+
+```
+this_is_snake_case   # note you do not use capital letters here
+thisIsCamelCase      # you start each word with a capital letter (except the first)
+```
+When defining variables and functions, it is in general good practice to use nouns for variables and verbs for functions.
+
+
 ## Commenting your code
+
+It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. A few examples in VBA are
+
+The top of a module file:
+
+```
+'' Module description.
+'  Can be more than one line.
+' 
+' @remarks Put your remarks on the module implementation here
+' @author Lars Relund <junk@relund.dk>
+' @date 2016-08-26
+```
+
+Before each `sub`, `function` etc. write:
+
+```
+'' Sub description
+' 
+' @pre Precondition 
+' @post Postcondition
+'
+' @param strA	Explanation of input parameter strA
+' @param intB Explanation of input parameter intB
+' @return Return value (if a function)
+' @remarks Further remarks 
+Public Function MyFunc(strA As String, intB As Integer) As Integer {
+   ...
+}
+```
+
+Further tags (i.e. keywords starting with @) can be seen [here](https://roxygen2.r-lib.org/articles/rd.html).
+
+In R we use a 'hash' (#') to comment functions:
+
+```{r, eval=FALSE}
+#' Subtract two vectors
+#'
+#' @param x First vector.
+#' @param y Vector to be subtracted.
+#'
+#' @return The difference.
+#' @export
+#'
+#' @examples
+#' subtract(x = c(5,5), y = c(2,3))
+subtract <- function(x, y) {
+  return(x-y)
+}
+```
+
+
+# Annotate the course notes {#annotate}
+
+I recommend using [hypothes.is] to annotate the online course notes. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help me indicate spell errors, unclear content etc. in the notes. 
+
+
+# Getting help {#help}
+
+We all get stuck sometimes and need some help. Below are some advises on how to help yourself and ask for help:
+
+If you have a question related to the theory of RL:
+
+  * Ask it during the lecture or in the breaks
+  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap. 
+
+If you have a question related to R:
+
+  * First try to understand the error message and solve the problem. You may try to debug your code by inserting `browser()` in your R code. See [Chapter 11][debug-in-r] in @wtf for further details.  
+  * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "vba range", "r dplyr filter", "r tidyverse", "r subset vector", etc.
+  * Do you need help for a specific function in R then try `?[function-name]` such as `?geom_line`, `?mutate`, etc. Mostly, focus on the last section with examples. Moreover, some packages may have written vignettes try `browseVignettes(package = "package_name")` to check.
+  * Have a look at **Help > Cheatsheets** in RStudio.
+  * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.
+  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap.   
+
+__Note help using mail correspondence is not supported!__
+
+
+
+# Learning goals {#lg-course}
+							
+The purpose of this course is to give students a knowledge about IT tools for Analytics which requires the analyst to be qualified in handling tools beyond e.g. basic Excel. 							
+After having participated in the course, the student must, in addition to achieving general academic skills, demonstrate:			
+							
+Knowledge of	
+
+  1.	how a computer works at a basic level.						
+  2.	basic programming such as variables, arrays, loops, functions and procedures. 						
+  3.	what an algorithm is. 						
+  4.	how to implement an algorithm based on a description. 						
+  5.	different programming languages. 						
+  6.	how to manage a code in a collaborative working environment.						
+							
+Skills to 		
+
+  7.	handle data such as import, tidy, transform, visualize and export. 						
+  8.	develop well-structured code. 						
+  9.	perform testing and debugging. 						
+  10.	implement/code selected algorithms. 						
+  11.	apply analytical techniques on data.						
+  12.	apply relevant methods, algorithms and techniques from this course in order to solve a specific problem.						
+							
+Competences to		
+
+  13.	independently handle data given a problem. 						
+  14.	independently analyze data given a relevant research question.						
+  15.	compare different programming languages.						
+  16.	compare different algorithms solving a problem and discuss their advantages and disadvantages.
+  17.	interpret and discuss results based on a data analysis in relation to the relevant academic literature.						
+  18.	communicate results from applied research in a scientific way, e.g. using literate programming.						
+
+
+<!-- # Schedule {}  -->
+
+<!-- The schedule for the course is given below. -->
+
+<!-- ```{r, echo=FALSE, message=FALSE, cache=FALSE, eval=FALSE} -->
+<!-- source("common.R") -->
+<!-- library(googlesheets4) -->
+<!-- sheets_deauth() -->
+<!-- sheet <- read_sheet("https://docs.google.com/spreadsheets/d/1-fSG3KWip0Vm5Uwf9T6vUMuH0ReBhpITHT3rl896vwc/edit?usp=sharing", -->
+<!--            sheet = "Schedule") -->
+<!-- knitr::kable(sheet) -->
+<!-- ``` -->
+
+<!-- <p><iframe width="1300" height="600" frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRka2NKE77BvtIoJc1GW-Dr_oABzQdQhMC94KpPjW7DpSTnepN9RV3m6w1ILKe3YoQwUj0C6JAe3K1T/pubhtml?gid=1591856300&amp;single=true&amp;widget=true&amp;headers=false"></iframe></p> -->
+
+
+
+
+# Colophon {}
+
+This book was written in [bookdown](http://bookdown.org/) inside [RStudio](http://www.rstudio.com/ide/). 
+<!-- The website [stat545.com](https://stat545.com) is hosted with [Netlify](https://www.netlify.com), and automatically updated after every commit by [Travis-CI](https://travis-ci.org). The complete source is available from [GitHub](https://github.com/rstudio-education/stat545). -->
+
+This version of the book was built with:
+
+```{r message = FALSE, warning = FALSE, echo = FALSE}
+# needed because new_session is set to true in _bookdown.yml
+all_pkgs <- renv::dependencies(path = "DESCRIPTION") %>% 
+  pull(Package) 
+
+session <- devtools::session_info(pkgs = all_pkgs)
+
+session$platform
+```
+
+Along with these packages:
+
+```{r message = FALSE, warning = FALSE, echo = FALSE}
+session$packages %>% 
+  select(package, loadedversion, date, source) %>% 
+  DT::datatable(rownames = FALSE,
+                class = 'cell-border stripe',
+                filter = list(position = 'top'),
+                options = list(pageLength = nrow(session$packages), 
+                           autoWidth = TRUE,
+                           bInfo = FALSE,
+                           paging = FALSE))
+```
+
+
+```{r include = FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+```{r links, child="links.md"}
+```
 
 <!--chapter:end:99_appdx.Rmd-->
 

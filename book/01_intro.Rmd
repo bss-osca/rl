@@ -4,7 +4,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Introduction {- #mod-intro}
+# Introduction {#mod-intro}
 
 ```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
 ```
