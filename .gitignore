@@ -3,6 +3,7 @@
 .Rdata
 .httr-oauth
 .DS_Store
-temp
+**temp
+**tmp
 Rprof.out
 **.bak
