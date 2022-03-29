@@ -25,12 +25,12 @@ layout: true
 
 ```{r, echo=FALSE}
 module_name <- "intro"
-module_number <- "01"
+module_number <- "00"
 library(htmltools)
 withTags({
    div(class="my-footer",
       span(
-         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Book"), 
+         a(href=str_c("https://bss-osca.github.io/rl/index.html"), target="_blank", "Book"), 
          " | ",
          a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
          " | ",
@@ -133,10 +133,7 @@ class: inverse, middle, center
 ```{r links, child="../book/links.md"}
 ```
 
-```{r copy to docs, include=FALSE}
+```{r postprocess, include=FALSE}
 system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
-file.copy(list.files(pattern = ".html"), "../docs/slides/", overwrite = T)
 file.copy("./slides.css", "./libs/", overwrite = T)
-file.copy("libs", "../docs/slides/", recursive = T)
-file.copy("img", "../docs/slides/", recursive = T)
 ```

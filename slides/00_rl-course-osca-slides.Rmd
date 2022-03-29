@@ -110,10 +110,7 @@ knitr::include_graphics("img/rl-ml.png")
 ```{r links, child="../book/links.md"}
 ```
 
-```{r copy to docs, include=FALSE}
+```{r postprocess, include=FALSE}
 system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
-file.copy(list.files(pattern = ".html"), "../docs/slides/", overwrite = T)
 file.copy("./slides.css", "./libs/", overwrite = T)
-file.copy("libs", "../docs/slides/", recursive = T)
-file.copy("img", "../docs/slides/", recursive = T)
 ```
