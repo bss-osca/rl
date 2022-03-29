@@ -108,30 +108,9 @@ Competences to
    12. select and apply the appropriate RL model for a given business problem
    13. interpret and communicate the results from RL
 
-
-
-## Business analytics {-}
-
-[Business Analytics](https://en.wikipedia.org/wiki/Business_analytics) (BA) (or just [Analytics](http://connect.informs.org/analytics/home)) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using "big" data sources.
-
-**Descriptive Analytics**: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.
-
-**Predictive Analytics**: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).
-
-**Prescriptive Analytics**: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since reinforcement learning focus optimizing decisions it is Prescriptive Analytics.
-
-```{r analytics, fig.cap="Business Analytics and competive advantage.", echo=FALSE}
-knitr::include_graphics("img/analytics_plot9.png")
-```
-
-Companies who use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. This enterprise approach generates a companywide respect for applying descriptive, predictive and prescriptive analytics in areas such as supply chain, marketing and human resources. Focusing on BA gives a company a competive advantage (see Figure \@ref(fig:analytics)).
-
-Related areas: In the past *Business Intelligence* traditionally focuses on querying, reporting, online analytical processing, i.e. descriptive analytics. However, a more modern definition of Business Intelligence is the union of descriptive and predictive analytics. *Operations Research* or *Management Science* deals with the application of advanced analytical methods to help make better decisions and can hence be seen as prescriptive analytics. However, traditionally it has been taking a more theoretical approach and focusing on problem-driven research while BA takes a more data-driven approach. *Logistics* is a cross-functional area focusing on the effective and efficient flows of goods and services, and the related flows of information and cash. *Supply Chain Management* adds a process-oriented and cross-company perspective. Both can be seen as prescriptive analytics with a more problem-driven research focus. Advanced Analytics is often used as a classification of both predictive and prescriptive analytics. *Data science* is an interdisciplinary field about scientific methods, processes, and systems to extract knowledge or insights from data in various forms, either structured or unstructured and can be seen as Business analytics applied to a wider range of data. 
-
-
 ## Reinforcement learning textbook {-}
 
-The course uses the free textbook *Reinforcement Learning: An Introduction* by @Sutton21. The book is essential reading for anyone wishing to learn the theory and practice of modern Reinforcement learning. Read the weekly readings before the lecture to understand the material better, and perform better in the course.
+The course uses the free textbook *Reinforcement Learning: An Introduction* by @Sutton18. The book is essential reading for anyone wishing to learn the theory and practice of modern Reinforcement learning. Read the weekly readings before the lecture to understand the material better, and perform better in the course.
 
 Sutton and Barto's book is the most cited publication in RL research, and is responsible for making RL accessible to people around the world. The new edition, released in 2018, offers improved notation and explanations, additional algorithms, advanced topics, and many new examples; and it's totally free. Just follow the citation link to download it. 
 
