@@ -198,7 +198,8 @@ Competences to
    13. interpret and communicate the results from RL
 
 
-		
+
+
 <!-- # Schedule {}  -->
 
 <!-- The schedule for the course is given below. -->
