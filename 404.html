@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Page not found | Reinforcement Learning for Business (RL)</title>
+  <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Page not found | Reinforcement Learning for Business (RL)" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://bss-osca.github.io/rl/" />
+  <meta property="og:image" content="https://bss-osca.github.io/rl//img/logo.png" />
+  <meta property="og:description" content="Course notes for ‘Reinforcement Learning for Business’" />
+  <meta name="github-repo" content="bss-osca/rl" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Page not found | Reinforcement Learning for Business (RL)" />
+  
+  <meta name="twitter:description" content="Course notes for ‘Reinforcement Learning for Business’" />
+  <meta name="twitter:image" content="https://bss-osca.github.io/rl//img/logo.png" />
+
+<meta name="author" content="Lars Relund Nielsen" />
+
+
+<meta name="date" content="2022-03-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+
+
+<script src="libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.21/datatables.js"></script>
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<html>
+<head>
+<script>
+  $(document).ready(function() {
+
+  // Section anchors
+  $('.section h1, .section h2, .section h3, .section h4, .section h5').each(function() {
+    anchor = '#' + $(this).parent().attr('id');
+    $(this).addClass("hasAnchor").prepend('<a href="' + anchor + '" class="anchor"></a>');
+  });
+});
+</script>
+<script src="https://hypothes.is/embed.js" async></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+</html>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="assets/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="toc-logo"><a href="./"><img src="img/logo.png"></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="mod-intro.html"><a href="mod-intro.html"><i class="fa fa-check"></i><b>1</b> Introduction<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="mod-intro.html"><a href="mod-intro.html#lo-intro"><i class="fa fa-check"></i><b>1.1</b> Learning outcomes<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="mod-intro.html"><a href="mod-intro.html#sec-purpose"><i class="fa fa-check"></i><b>1.2</b> Purpose of the course<span></span></a></li>
+<li class="chapter" data-level="1.3" data-path="mod-intro.html"><a href="mod-intro.html#sec-ba"><i class="fa fa-check"></i><b>1.3</b> Business analytics<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="mod-intro.html"><a href="mod-intro.html#reinforcement-learning-textbook"><i class="fa fa-check"></i><b>1.4</b> Reinforcement learning textbook<span></span></a></li>
+<li class="chapter" data-level="1.5" data-path="mod-intro.html"><a href="mod-intro.html#sec-organization"><i class="fa fa-check"></i><b>1.5</b> Course organization<span></span></a></li>
+<li class="chapter" data-level="1.6" data-path="mod-intro.html"><a href="mod-intro.html#programming-software"><i class="fa fa-check"></i><b>1.6</b> Programming software<span></span></a></li>
+<li class="chapter" data-level="1.7" data-path="mod-intro.html"><a href="mod-intro.html#ack"><i class="fa fa-check"></i><b>1.7</b> Acknowledgements and license<span></span></a></li>
+</ul></li>
+<li class="part"><span><b>I Introduction to RL<span></span></b></span></li>
+<li class="chapter" data-level="2" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html"><i class="fa fa-check"></i><b>2</b> An introduction to RL<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#mod-rl-intro-lo"><i class="fa fa-check"></i><b>2.1</b> Learning outcomes<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#sec-rl-what"><i class="fa fa-check"></i><b>2.2</b> What is RL<span></span></a></li>
+<li class="chapter" data-level="2.3" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#rl-within-a-business-analytics-ba-framework"><i class="fa fa-check"></i><b>2.3</b> RL within a Business Analytics (BA) framework<span></span></a></li>
+<li class="chapter" data-level="2.4" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#rl-within-a-machine-learning-framework"><i class="fa fa-check"></i><b>2.4</b> RL within a machine learning framework<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#a-short-overview"><i class="fa fa-check"></i><b>2.5</b> A short overview<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#rc-vba-intro"><i class="fa fa-check"></i><b>2.6</b> Recap<span></span></a></li>
+<li class="chapter" data-level="2.7" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#sec-rl-intro-ex"><i class="fa fa-check"></i><b>2.7</b> Exercises<span></span></a>
+<ul>
+<li class="chapter" data-level="2.7.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#ex-vba-hello"><i class="fa fa-check"></i><b>2.7.1</b> Exercise - Hello<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix<span></span></b></span></li>
+<li class="chapter" data-level="A" data-path="r-setup.html"><a href="r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
+<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a>
+<ul>
+<li><a href="groups.html#joint-r-project-structure">Joint R project structure<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="coding-convention.html"><a href="coding-convention.html"><i class="fa fa-check"></i><b>C</b> Coding/naming convention<span></span></a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="coding-convention.html"><a href="coding-convention.html#commenting-your-code"><i class="fa fa-check"></i><b>C.1</b> Commenting your code<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="annotate.html"><a href="annotate.html"><i class="fa fa-check"></i><b>D</b> Annotate the course notes<span></span></a></li>
+<li class="chapter" data-level="E" data-path="help.html"><a href="help.html"><i class="fa fa-check"></i><b>E</b> Getting help<span></span></a></li>
+<li class="chapter" data-level="F" data-path="lg-course.html"><a href="lg-course.html"><i class="fa fa-check"></i><b>F</b> Learning goals<span></span></a></li>
+<li class="chapter" data-level="G" data-path="colophon.html"><a href="colophon.html"><i class="fa fa-check"></i><b>G</b> Colophon<span></span></a></li>
+<li class="divider"></li>
+<li><center>
+  <a rel="license" href="./index.html#ack">
+    License: CC BY-NC-SA<br>
+    <i class = "fab fa-creative-commons fa-2x"></i>
+    <i class = "fab fa-creative-commons-by fa-2x"></i>
+    <i class = "fab fa-creative-commons-nc fa-2x"></i>
+    <i class = "fab fa-creative-commons-sa fa-2x"></i>
+  </a>
+</li></center>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reinforcement Learning for Business (RL)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="page-not-found" class="section level1">
+<h1>Page not found</h1>
+<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
+<p>You may want to try searching to find the page's new location, or use
+the table of contents to find the page you are looking for.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/bss-osca/rl/edit/master/book/%s",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
