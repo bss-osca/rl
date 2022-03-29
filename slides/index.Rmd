@@ -11,7 +11,7 @@ library(stringr)
 ```
 
 ```{r, results='asis', echo=FALSE} 
-fNames <- list.files("../docs/slides/", pattern = ".html")
+fNames <- list.files(".", pattern = ".html")
 fNames <- fNames[str_detect(fNames, "index", negate = TRUE)]
 tags$ul(tagList(lapply(fNames, function(f) tags$li(tags$a(paste0(f), href = f)))))
 ```
