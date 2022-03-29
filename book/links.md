@@ -28,8 +28,6 @@
 [dplyr-cran]: https://CRAN.R-project.org/package=dplyr
 [debug-in-r]: https://rstats.wtf/debugging-r-code.html
 
-[excel-vs-r]: https://www.jessesadler.com/post/excel-vs-r/
-
 [google-form]: https://forms.gle/s39GeDGV9AzAXUo18
 [google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
 [GitHub]: https://github.com/
@@ -48,7 +46,6 @@
 [hypothes.is]: https://web.hypothes.is/
 
 [osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
-
 
 [Peergrade]: https://peergrade.io
 [peergrade-signup]: https://app.peergrade.io/join
