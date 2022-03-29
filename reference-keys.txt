@@ -1,13 +1,5 @@
 fig:analytics
 fig:process
-mod-intro
-lo-intro
-sec-purpose
-sec-ba
-reinforcement-learning-textbook
-sec-organization
-programming-software
-ack
 mod-rl-intro
 mod-rl-intro-lo
 sec-rl-what
@@ -23,5 +15,5 @@ coding-convention
 commenting-your-code
 annotate
 help
-lg-course
+mod-lg-course
 colophon
