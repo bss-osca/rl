@@ -40,9 +40,8 @@ jobs:
           key: bookdown-${{ hashFiles('**/*Rmd') }}
           restore-keys: bookdown-
 
-      - name: Build site
-        run: bookdown::render_book("book/index.Rmd", quiet = TRUE)
-        shell: Rscript {0}
+      - name: Render book
+        run: Rscript book/render_book.R
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
