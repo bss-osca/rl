@@ -7,6 +7,11 @@ editor_options:
 ```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
 ```
 
+```{r}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+
 # (PART) Introduction to RL {-}
 
 # An introduction to RL {#mod-rl-intro}
@@ -203,13 +208,15 @@ The reward $R_t$ is a number representing the reward at time $t$ (negative if a 
 
 The goal is to find a policy that maximize the total future reward. A *policy* is the agent’s behaviour and is a map from state to action, i.e. a function $$a = \pi(s)$$ saying that given the agent is in state $s$ we choose action $a$.
 
-The total future reward is a currently not defined clearly. Let the *value function* denote the future reward in state $s$ and define it as the expected discounted future reward: $$V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).$$ Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states. The value of the discount factor is important:
+The total future reward is a currently not defined clearly. Let the *value function* denote the future reward in state $s$ and define it as the expected discounted future reward: $$V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).$$ Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states $$\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).$$
+
+The value of the discount factor is important:
 
    - Discount factor $\gamma=0$: Only care about present reward.
    - Discount factor $\gamma=1$: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.
    - Discount factor $\gamma<1$: Rewards near to the present more beneficial. Note $V(s)$ will converge to a number even if the time-horizon is infinite.
    
-The policy that maximize the total future reward given state $s$ is: $$\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).$$
+
 
 <!-- ## Model free vs Model based -->
 
@@ -223,15 +230,491 @@ Examples in the exploration and exploitation dilemma are for instance movie reco
 
 ## RL in action (Tic-Tac-Toe)
 
+```{r}
+library(R6)
+library(hash)
+library(zoo)
+```
 
+The current state of the board is represented by a row-wise concatenation of the players' marks in a 3x3 grid. For example, the 9 character long string `"......X.O"` denotes a board state in which player X has placed a mark in the first field of the third column whereas player O has placed a mark in the third field of the third column:
 
+```{css, echo=FALSE}
+.table-bordered th, .table-bordered td {
+    border: 1px solid black !important; 
+}
+```
 
+```{r, message=FALSE, echo=FALSE}
+plot_board_state_cat <- function(state) {
+   s <- str_split(state, "")[[1]]
+   r1 <- str_c("|  ", s[1], "  |  ", s[2], "   |  ", s[3],"  |\n")
+   r2 <- str_c("|  ", s[4], "  |  ", s[5], "   |  ", s[6],"  |\n")
+   r3 <- str_c("|  ", s[7], "  |  ", s[8], "   |  ", s[9],"  |\n")
+   str <- str_c("|------------------|\n", r1, "|------------------|\n", r2, "|------------------|\n", r3, "|------------------|\n")
+   return(cat(str))
+}
 
+plot_board_state <- function(state) {
+   s <- str_split(state, "")[[1]]
+   tbl <- matrix(s, nrow = 3, byrow = T)
+   tbl <- as_tibble(tbl, .name_repair = "minimal")
+   tbl <- tbl %>% 
+      kbl(align = "c", col.names = NULL, table.attr = "border: 1px solid black !important;") %>% 
+      kable_styling(full_width = F, bootstrap_options = c("bordered")) 
+   return(tbl)
+}
+```
 
+```{r, message=FALSE, echo=FALSE}
+plot_board_state("......X.O")
+```
+That is, we index the fields row-wise:
+```{r, message=FALSE, echo=FALSE}
+plot_board_state("123456789")
+```
 
+The game is continued until all fields are filled or the game is over (win or loose). 
 
+<!-- All states are observed from the perspective of player X who is also assumed to have played first.  -->
 
+The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for 'win', 0.5 for 'draw', and 0 for 'loss'. These values can be seen as the probability of winning. 
 
+Examples of winning, loosing and a draw from player Xs point of view:
+```{r, message=FALSE, echo=FALSE}
+tblW <- plot_board_state("..X.X.XOO")
+tblL <- plot_board_state("X.X.X.OOO")
+tblD <- plot_board_state("XXOOOXXXO")
+```
+
+<table style="width: 100%; border: 0px !important">
+ <tbody>
+  <tr style="border: 0px !important;">
+    <td style="border: 0px !important;">`r tblW`</td>
+    <td style="border: 0px !important;">`r tblL`</td>
+    <td style="border: 0px !important;">`r tblD`</td>
+  </tr>
+ </tbody>
+</table>
+
+Note a state can be also be represented using a *state vector* of length 9:
+
+```{r, echo=TRUE}
+stateStr <- function(sV) {
+   str <- str_c(sV, collapse = "")
+   return(str)
+}
+stateVec <- function(s) {
+   sV <- str_split(s, "")[[1]]
+   return(sV)
+}
+sV <- stateVec("X.X.X.OOO")
+sV
+```
+
+Given a state vector, we can check if we win or loose:
+
+```{r, echo=TRUE}
+#' Check board state
+#'
+#' @param pfx Player prefix (the char used on the board).
+#' @param sV Board state vector.
+#' @return A number 1 (win), 0 (loose) or 0.5 (draw/unknown)
+win <- function(pfx, sV) {
+   idx <- which(sV == pfx)
+   mineV <- rep(0, 9)
+   mineV[idx] <- 1
+   mineM <- matrix(mineV, 3, 3, byrow = TRUE)
+   if (any(rowSums(mineM) == 3) ||  # win
+      any(colSums(mineM) == 3) ||
+      sum(diag(mineM)) == 3 ||
+      sum(mineM[1,3] + mineM[2,2] + mineM[3,1]) == 3) return(1)
+   idx <- which(sV == ".")
+   mineV[idx] <- 1
+   mineM <- matrix(mineV, 3, 3, byrow = TRUE)
+   if (any(rowSums(mineM) == 0) ||  # loose
+      any(colSums(mineM) == 0) ||
+      sum(diag(mineM)) == 0 ||
+      sum(mineM[1,3] + mineM[2,2] + mineM[3,1]) == 0) return(0)
+   return(0.5)  # draw
+}
+win("O", sV)
+win("X", sV)
+```
+
+We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then then a *draw* game may look as in Figure \@ref(fig:hgf). We start with an empty board state $S_0$, and the opponent makes a move, next we choose a move $A_0$ (among the empty fields) and we end up in state $S_1$. This continues until the game is over. 
+
+```{r hgf, echo=FALSE, out.width="100%", fig.cap="A draw."}
+set.seed(567)
+stateN <- 9   # states/stage
+stages <- 10   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+path <- c(6, 15, 23, 31, 38, 49, 59, 66, 75, 86)  # using starte ids
+states <- states %>% mutate(draw = if_else(sId %in% setdiff(1:9, path[1]), F, T))
+states$label[path[seq_along(path) %% 2 == 1]] <- str_c("S[", seq_along(path[seq_along(path) %% 2 == 1])-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+for (i in 1:(length(path)-1)) {
+   turn <- ((i-1) %% 2) == 1
+   if (turn) {
+      harc <- list(
+         state = path[i],
+         trans =  path[i + 1]
+         # label = str_c("A[", i/2 - 1, "]")
+      )
+      actions <- addHArc(actions, harc)
+      nxt <-
+         sample(setdiff((i * stateN + 1):((i + 1) * stateN), path[i + 1]), 9-i)
+      for (s in nxt) {
+         harc <- list(state = path[i],
+                      trans =  s,
+                      lty = 2)
+         actions <- addHArc(actions, harc)
+      }
+   }
+   else {
+      harc <- list(state = path[i],
+                   trans =  path[i + 1],
+                   col = "grey")
+      actions <- addHArc(actions, harc)
+   }
+}
+par(mar = c(0, 0, 0, 0)) 
+plotHypergraph(gridDim, states, actions, showGrid = F, cex = 0.5, radx = 0.02, rady=0.025, marX=0.02, marY=0.07)
+```
+
+### Players and learning to play
+
+Assume that we initially define a value $V(S)$ of each state $S$ to be 1 if we win, 0 if we loose and 0.5 otherwise. Most of the time we *exploit* our knowledge, i.e. choose the action which gives us the highest estimated reward (probability of winning). However, some times (with probability $\epsilon$) we *explore* and choose another action/move than what seems optimal. These moves make us experience states we may otherwise never see. If we exploit we update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1}-V(S_t)))$$ where $\alpha$ is the *step-size* parameter which influences the rate of learning. 
+
+Let us implement a RL player using a [R6 class](https://adv-r.hadley.nz/r6.html) and store the values using a [hash list](https://github.com/decisionpatterns/r-hash). We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method `move` takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state and update the value function (if exploit). The player explore with probability `epsilon` if there is not a next state that makes us win. 
+
+```{r, echo=TRUE}
+PlayerRL <- R6Class("PlayerRL",
+   public = list(
+      pfx = "",
+      hV = NA,
+      control = list(epsilon = 0.2, alpha = 0.3),
+      clearLearning = function() clear(self$hV),
+      initialize = function(pfx = "", control = list(epsilon = 0.2, alpha = 0.3)) {
+         self$pfx <- pfx
+         self$control <- control
+         self$hV <- hash()
+      },
+      finalize = function() {
+         # cat("FIN\n")
+         clear(self$hV)
+      },
+      move = function(sP, sV) { # previous state (before opponent move) and current state (before we move)
+         idx <- which(sV == ".")
+         state <- stateStr(sP)
+         if (!has.key(state, self$hV)) self$hV[[state]] <- 0.5
+         keys <- c()
+         keysV <- NULL
+         for (i in idx) {  # find possible moves
+            sV[i] <- self$pfx
+            str <- str_c(sV, collapse = "")
+            keys <- c(keys, str)
+            keysV <- rbind(keysV, sV)
+            sV[i] <- "."
+         }
+         # add missing states
+         idx <- which(!has.key(keys, self$hV))
+         if (length(idx) > 0) {
+            for (i in 1:nrow(keysV)) {
+               self$hV[keys[i]] <- win(self$pfx, keysV[i,])
+            }
+         }
+         # cat("Player", pfx, "\n")
+         # print(self$hV)
+         # update and find next state
+         val <- values(self$hV[keys])
+         # cat("Moves:"); print(val)
+         m <- max(val)
+         if (rbinom(1,1, self$control$epsilon) > 0 & any(val < m) & m < 1) { # explore
+            idx <- which(val < m)
+            idx <- idx[sample(length(idx), 1)]
+            nextS <- names(val)[idx] 
+            # cat("Explore - ")
+         } else { # exploit
+            idx <- which(val == m)
+            idx <- idx[sample(length(idx), 1)]
+            nextS <- names(val)[idx] # pick one
+            self$hV[[state]] <- self$hV[[state]] + self$control$alpha * (m - self$hV[[state]])
+            # cat("Exploit - ")
+         }
+         # cat("Next:", nextS, "\n")
+         return(str_split(nextS, "")[[1]])
+      }
+   )
+)
+```
+
+We then can define a player using:
+```{r, echo=TRUE}
+playerA <- PlayerRL$new(pfx = "A", control = list(epsilon = 0.5, alpha = 0.1))   
+```
+
+Other players may be defined similarly, e.g. a player which moves randomly (if can not win in the next move):
+
+```{r, echo=TRUE}
+PlayerRandom <- R6Class("PlayerRandom",
+   public = list(
+      pfx = NA,
+      initialize = function(pfx) {
+         self$pfx <- pfx
+      },
+      move = function(sP, sV) {  # previous state (before opponent move) and current state (before we move)
+         idx <- which(sV == ".")
+         state <- stateStr(sV)
+         keys <- c()
+         keysV <- NULL
+         for (i in idx) {  # find possible moves
+            sV[i] <- self$pfx
+            str <- str_c(sV, collapse = "")
+            keys <- c(keys, str)
+            keysV <- rbind(keysV, sV)
+            sV[i] <- "."
+         }
+         # check if can win in one move
+         for (i in 1:nrow(keysV)) {
+            if (win(self$pfx, keysV[i,]) == 1) {
+               return(keysV[i,])  # next state is the win state
+            }
+         }
+         # else pick one random
+         return(keysV[sample(nrow(keysV), 1),])
+      }
+   )
+)
+```
+
+A player which always place at the lowest field index:
+
+```{r, echo=TRUE}
+PlayerFirst <- R6Class("PlayerFirst",
+   public = list(
+      pfx = NA,
+      initialize = function(pfx) {
+         self$pfx <- pfx
+      },
+      move = function(sP, sV) { # previous state (before opponent move) and current state (before we move)
+         idx <- which(sV == ".")
+         sV[idx[1]] <- self$pfx
+         return(sV)
+      }
+   )
+)
+```
+
+### Gameplay
+
+We define a game which returns the prefix of the winner (`NA` if a draw):
+
+```{r, echo=TRUE}
+#' @param player1 A player R6 object. This player starts the game
+#' @param player2 A player R6 object.
+#' @param verbose Print gameplay.
+#' @return The winners prefix or NA if a tie.
+playGame <- function(player1, player2, verbose = FALSE) {
+   sP2 <- rep(".", 9)  # start state / game state
+   sP1 <- sP2          # state from player 1s viewpoint
+   for (i in 1:5) { # at most 4.5 rounds
+      ## player 1
+      if (verbose) cat("Player ", player1$pfx, ":\n", sep="")
+      sP1 <- player1$move(sP1, sP2)  # new state from player 1s viewpoint
+      # states <- c(states, stateChr(sV))
+      # cat(stateStr(sV), " | ", sep = "")
+      if (verbose) plot_board_state_cat(stateStr(sP1))
+      if (win(player1$pfx, sP1) == 1) {
+         return(player1$pfx)
+         break
+      }
+      if (i == 5) break  # a draw
+      ## player 2
+      if (verbose) cat("Player ", player2$pfx, ":\n", sep="")
+      sP2 <- player2$move(sP2, sP1)
+      # states <- c(states, stateChr(sV))
+      # cat(stateStr(sV), " | ", sep = "")
+      if (verbose) plot_board_state_cat(stateStr(sP2))
+      if (win(player2$pfx, sP2) == 1) {
+         return(player2$pfx)
+         break
+      }
+   }
+   return(NA)
+}
+```
+
+Let us play a game between `playerA` and `playerR`:
+
+```{r, echo=TRUE}
+playerR <- PlayerRandom$new(pfx = "R")
+playGame(playerA, playerR, verbose = T)
+```
+
+Note `playerA` has been learning when playing the game. The current estimates that are stored in the hash list are:
+
+```{r, echo=TRUE}
+playerA$hV
+```
+
+### Learning by a sequence of games {#rl-intro-tic-learn}
+
+With a single game only a few states are explored and estimates are not good. Let us instead play a sequence of games and learn along the way:
+
+```{r, echo=TRUE}
+#' @param playerA Player A (R6 object).
+#' @param playerB Player B (R6 object).
+#' @param games Number of games
+#' @param prA Probability of `playerA` starts.
+#' @return A list with results (a data frame and a plot).  
+playGames <- function(playerA, playerB, games, prA = 0.5) {
+   winSeq <- rep(NA, games)
+   for (g in 1:games) {
+      # find start player
+      if (sample(0:1, 1, prob = c(prA, 1-prA)) == 0) {
+         player1 <- playerA
+         player2 <- playerB
+      } else {
+         player2 <- playerA
+         player1 <- playerB
+      }
+      winSeq[g] <- playGame(player1, player2)
+   }
+   # process the data
+   dat <- tibble(game = 1:length(winSeq), winner = winSeq) %>% 
+      mutate(
+         players = str_c(playerA$pfx, playerB$pfx),
+         winA := case_when(
+            winner == playerA$pfx ~ 1,
+            winner == playerB$pfx ~ 0,
+            TRUE ~ 0.5
+         ),
+         winsA_r = rollapply(winA, ceiling(games/10), mean, align = "right", fill = NA)  #, fill = 0, partial = T
+      )
+   # make a plot
+   pt <- dat %>% 
+      ggplot(aes(x = game, y = winA)) +
+      geom_line(aes(y = winsA_r), size = 0.2) +
+      geom_smooth(se = F) +
+      labs(y = str_c("Avg. wins player ", playerA$pfx),
+           title = str_c("Wins ", playerA$pfx, " = ", round(mean(dat$winA), 2), " ", playerB$pfx, " = ", round(1-mean(dat$winA), 2)))
+   return(list(dat = dat, plot = pt))
+}
+```
+
+Let us now play games against a player who moves randomly using $\epsilon = 0.1$ (explore probability) and $\alpha = 0.1$ (step size).
+```{r, echo=TRUE}
+playerA <- PlayerRL$new(pfx = "A", control = list(epsilon = 0.1, alpha = 0.1)) 
+playerR <- PlayerRandom$new(pfx = "R")
+res <- playGames(playerA, playerR, games = 2000)
+res$plot
+```
+
+The black curve is the moving average of winning with a trend line. Note the values of the parameters have an effect on our learning:
+
+```{r}
+lst <- list(list(epsilon = 0, alpha = 0.1), 
+            list(epsilon = 0, alpha = 0.5), 
+            list(epsilon = 0, alpha = 0.9),
+            list(epsilon = 0.05, alpha = 0.9),
+            list(epsilon = 0.9, alpha = 0.9))
+res <- list()
+for (i in seq_along(lst)) {
+   playerA <- PlayerRL$new(pfx = "A", control = lst[[i]])
+   res[[i]] <- playGames(playerA, playerR, games = 2000)$dat %>% mutate(control = str_c(c("e = ", "a = "), as.character(lst[[i]]), collapse = " ")) 
+}
+res <- map_dfr(res, ~ .x)
+res %>% 
+   ggplot(aes(x = game, y = winA, color = control)) +
+   geom_line(aes(y = winsA_r, color = control), size = 0.2) +
+   geom_smooth(se = F) +
+   labs(title = "Number of wins for player A against R given different parameters",
+        color = "Control") +
+   theme(legend.position="bottom")
+```
+
+In general we do not need to explore ($\epsilon = 0$) (the other player explore enough for us) and a high explore probability ($\epsilon = 0.9$) make us loose. Moreover, using a high step size seems to work best. 
+
+Other players may give different results. If the RL player play against a player which always move to first free field index:
+
+```{r}
+playerF <- PlayerFirst$new(pfx = "F")
+res <- list()
+for (i in seq_along(lst)) {
+   playerA <- PlayerRL$new(pfx = "A", control = lst[[i]])
+   res[[i]] <- playGames(playerA, playerF, games = 2000)$dat %>% mutate(control = str_c(c("e = ", "a = "), as.character(lst[[i]]), collapse = " ")) 
+}
+res <- map_dfr(res, ~ .x)
+res %>% 
+   ggplot(aes(x = game, y = winA, color = control)) +
+   geom_line(aes(y = winsA_r, color = control), size = 0.2) +
+   geom_smooth(se = F) +
+   labs(title = "Number of wins for player A against F given different parameters",
+        color = "Control") +
+   theme(legend.position="bottom")
+```
+
+Here a high step size and a low exploration probability is good and the RL player will soon figure out how to win all the time.
+
+This is different if the RL player A play against another clever (RL) player B. 
+
+```{r, echo=TRUE}
+playerA <- PlayerRL$new(pfx = "A", control = list(epsilon = 0, alpha = 0.1))
+playerB <- PlayerRL$new(pfx = "B", control = list(epsilon = 0, alpha = 0.1))
+```
+
+If both players play using the same control parameters, one would expect that they after learning should win/loose with probability 0.5. However if there is no exploration ($\epsilon = 0$) this is not always true: 
+
+```{r}
+set.seed(892)
+res <- list()
+for (i in 1:5) {
+   playerA$clearLearning()
+   playerB$clearLearning()
+   res[[i]] <- playGames(playerA, playerB, games = 2000)$dat %>% mutate(control = str_c("Run ", i)) 
+}
+res <- map_dfr(res, ~ .x)
+res %>% 
+   ggplot(aes(x = game, y = winA, color = control)) +
+   geom_line(aes(y = winsA_r, color = control), size = 0.2) +
+   geom_smooth(se = F) +
+   labs(title = "Number of wins for player A against B given same parameters",
+        color = "") +
+   theme(legend.position="bottom")
+```
+
+Depending on how the game starts a player may learn a better strategy and win/loose more. That is, exploration is important. Finally let us play against a player B with fixed control parameters.
+
+```{r}
+playerB <- PlayerRL$new(pfx = "B", control = list(epsilon = 0.1, alpha = 0.5))
+lst <- list(list(epsilon = 0.05, alpha = 0.5),
+            list(epsilon = 0.1,  alpha = 0.5),
+            list(epsilon = 0.9,  alpha = 0.5),
+            list(epsilon = 0.1,  alpha = 0.1),
+            list(epsilon = 0.1,  alpha = 0.9)
+            )
+res <- list()
+for (i in seq_along(lst)) {
+   playerA <- PlayerRL$new(pfx = "A", control = lst[[i]])
+   playerB$clearLearning()
+   res[[i]] <- playGames(playerA, playerB, games = 2000)$dat %>% mutate(control = str_c(c("e = ", "a = "), as.character(lst[[i]]), collapse = " ")) 
+}
+res <- map_dfr(res, ~ .x)
+res %>% 
+   ggplot(aes(x = game, y = winA, color = control)) +
+   geom_line(aes(y = winsA_r, color = control), size = 0.2) +
+   geom_smooth(se = F) +
+   labs(title = "Number of wins for player A against B (e = 0.1, a = 0.5) given different parameters",
+        color = "Control") +
+   theme(legend.position="bottom")
+```
+
+In general it is best to explore using the same probability otherwise you loose more and a higher step size than your opponent will make you win. 
 
 
 
@@ -239,7 +722,69 @@ Examples in the exploration and exploitation dilemma are for instance movie reco
 
 `r strExercises`
 
-### Exercise - Hello {#ex-vba-hello}
+### Exercise - Self-Play {#ex-r-intro-self}
+
+```{r, solution=TRUE, text='If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical).'}
+```
+
+Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
+played against itself. What do you think would happen in this case? Would it learn a different way of playing?
+
+
+### Exercise - Symmetries   
+
+Many tic-tac-toe positions appear different but are really the same because of symmetries. 
+
+```{r, solution=TRUE, text='It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.'}
+```
+   1. How might we amend the reinforcement learning algorithm described above to take advantage of this?
+   
+```{r, solution=TRUE, text='A smaller state space would increase the speed of learning and reduce the memory required.'}
+```
+   2. In what ways would this improve the algorithm? 
+   
+```{r, solution=TRUE, text='If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should now use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.'}
+```
+   3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
+
+
+### Exercise - Greedy Play   
+
+```{r, solution=TRUE, text="As seen in Section \\@ref(rl-intro-tic-learn) using $\\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behaviour over time."}
+```
+Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
+
+
+### Exercise - Learning from Exploration   
+
+Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
+
+```{r, solution=TRUE, text="The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy."}
+```
+   1. What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves? 
+   
+```{r, solution=TRUE, text="The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states."}
+```
+   2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
+
+
+### Exercise - Other Improvements   
+
+```{r, solution=TRUE, text="Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state."}
+```
+Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?
+   
+
+ 
+
+
+
+
+
+
+
+
+
 
 
 ```{r links, child="links.md", include=FALSE}

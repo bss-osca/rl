@@ -3,6 +3,7 @@
 library(knitr)
 knitr::opts_chunk$set(
   comment = "#>",
+  echo = FALSE,
   collapse = TRUE,
   message = FALSE,
   warning = FALSE,
@@ -16,6 +17,7 @@ knitr::opts_chunk$set(
   fig.show = "hold"
 )
 
+library(here)
 library(tidyverse)
 options(dplyr.summarise.inform = FALSE)
 library(bsplus)
@@ -25,10 +27,13 @@ library(igraph)
 library(DiagrammeR)
 library(googlesheets4)
 library(fs)
+library(kableExtra)
+library(diagram)
 library(conflicted)
 conflict_prefer("filter", "dplyr", quiet = TRUE)
 conflict_prefer("select", "dplyr", quiet = TRUE)
 conflict_prefer("lag", "dplyr", quiet = TRUE)
+conflict_prefer("groups", "dplyr", quiet = TRUE)
 
 options(
   width = 100,
@@ -288,6 +293,78 @@ create_learning_path <- function(url, sheet, x_legend = 0, y_legend = 0, margin_
       arrowhead = "vee") %>%
     add_graph_legend(x_legend, y_legend)
   return(graph)
+}
+
+
+#' Plot parts of the state expanded hypergraph
+#' 
+#' A plot is created based on a grid. Each grid point is numbered from bottom to top and next from left to right,
+#' i.e. given grid coordinates (row,col) the grid id is (col-1)*rows + (1 + rows - row). 
+#' 
+#' @param gridDim A 2-dim vector (rows,cols) representing the size of the grid.
+#' @param states A data frame containing columns: sId = state id, gId = grid id, label = text and draw = boolean 
+#' @param actions A list with mandatory items head = state id, tails = state and voluntary items label, ids, lwd, lty, highlight and col.
+#'   if highlight is true then highlight the action (useful if want to show the policy).
+#' @param showGrid If true show the grid points (good for debugging).
+#' @param radx Node size scaling (same with rady).
+#' @param ... Graphical parameters e.g. \code{cex=0.5} to control text size. 
+#'   
+#' @return NULL
+plotHypergraph<-function(gridDim, states=NULL, actions=NULL, showGrid=FALSE, 
+                         radx = 0.03, rady=0.07, cex=1, marX=0.035, marY=0.07, ...)
+{
+   # internal functions
+   gMap<-function(sId) return(states$gId[states$sId %in% sId])		# return gId given sId
+   sMap<-function(gId) return(states$sId[states$gId %in% gId])		# return sId given gId
+   
+   pos <- coordinates(rep(gridDim[1], gridDim[2]), hor = F)  # coordinates of each point in the grid
+   openplotmat(xlim=c(min(pos[,1])-marX,max(pos[,1])+marX), 
+               ylim=c(min(pos[,2])-marY,max(pos[,2])+marY) )  #main = "State expanded hypergraph"
+   
+   # plot actions
+   if (!is.null(actions)) {
+      for (i in seq_along(actions)) {
+         head <- actions[[i]]$state
+         tails <- actions[[i]]$trans
+         lwd <- if_else(is.null(actions[[i]]$lwd), 1, actions[[i]]$lwd)
+         lty <- if_else(is.null(actions[[i]]$lty), 1, actions[[i]]$lty)
+         col <- if_else(is.null(actions[[i]]$col), "black", actions[[i]]$col)
+         label <- if_else(is.null(actions[[i]]$label), "", actions[[i]]$label)
+         if (str_length(label) != 0) label <- parse(text = label)
+         highlight <- if_else(is.null(actions[[i]]$highlight), F, actions[[i]]$highlight)
+         if (highlight) lwd <- lwd + 1
+         pt <- splitarrow(to = pos[gMap(tails), ], from = pos[gMap(head),], lwd=lwd, lty=lty, arr.type = "none",
+                          # arr.side = 1, arr.pos = 0.7, arr.type="curved", arr.lwd = 0.5, arr.length = 0.25, arr.width = 0.2, 
+                          lcol=col)
+         textempty(pt, lab=label, adj=c(2, 1), cex=cex, ...)
+      }
+   }	
+   
+   # plot states
+   if (!is.null(states)) {
+      for (i in 1:length(states$gId)) { 
+         label <- ""
+         if (str_length(states$label[i]) != 0) label <- parse(text = states$label[i])
+         if (states$draw[i]) textellipse(pos[states$gId[i], ], lab = label, radx = radx, rady=rady, shadow.size = 0, lwd=0.5, cex=cex) 
+      }
+   }
+   
+   # Plot rewards
+   if (!is.null(actions)) {
+      for (i in seq_along(actions)) {
+         if (!is.null(actions[[i]]$reward)) {
+            label <- parse(text = actions[[i]]$reward$label)
+            state <- actions[[i]]$reward$state
+            textempty(pos[gMap(state), ], lab=label, adj=c(2.1, 0), cex=cex, ...)
+         }
+      }
+   }	
+   
+   # visual view of the point numbers (for figuring out how to map stateId to gridId)
+   if (showGrid) {
+      for (i in 1:dim(pos)[1]) textrect(pos[i, ], lab = i, radx = 0.0, cex=cex)
+   }
+   return(invisible(NULL))
 }
 
 

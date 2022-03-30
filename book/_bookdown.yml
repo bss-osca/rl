@@ -1,6 +1,6 @@
 book_filename: "rl"
 delete_merged_file: true
-new_session: false
+new_session: true
 #output_dir: "../docs"
 # rmd_files: ["index.Rmd",
 #             "01-01_intro-vba.Rmd",
