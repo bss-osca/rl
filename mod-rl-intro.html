@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-03-29" />
+<meta name="date" content="2022-03-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,6 +54,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.21/datatables.js"></script>
@@ -213,10 +215,19 @@ div.csl-indent {
 <li class="chapter" data-level="1.7" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#the-rl-data-stream"><i class="fa fa-check"></i><b>1.7</b> The RL data-stream<span></span></a></li>
 <li class="chapter" data-level="1.8" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#states-actions-rewards-and-policies"><i class="fa fa-check"></i><b>1.8</b> States, actions, rewards and policies<span></span></a></li>
 <li class="chapter" data-level="1.9" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#exploitation-vs-exploration"><i class="fa fa-check"></i><b>1.9</b> Exploitation vs Exploration<span></span></a></li>
-<li class="chapter" data-level="1.10" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#rl-in-action-tic-tac-toe"><i class="fa fa-check"></i><b>1.10</b> RL in action (Tic-Tac-Toe)<span></span></a></li>
+<li class="chapter" data-level="1.10" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#rl-in-action-tic-tac-toe"><i class="fa fa-check"></i><b>1.10</b> RL in action (Tic-Tac-Toe)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.10.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#players-and-learning-to-play"><i class="fa fa-check"></i><b>1.10.1</b> Players and learning to play<span></span></a></li>
+<li class="chapter" data-level="1.10.2" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#gameplay"><i class="fa fa-check"></i><b>1.10.2</b> Gameplay<span></span></a></li>
+<li class="chapter" data-level="1.10.3" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#rl-intro-tic-learn"><i class="fa fa-check"></i><b>1.10.3</b> Learning by a sequence of games<span></span></a></li>
+</ul></li>
 <li class="chapter" data-level="1.11" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#sec-rl-intro-ex"><i class="fa fa-check"></i><b>1.11</b> Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="1.11.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#ex-vba-hello"><i class="fa fa-check"></i><b>1.11.1</b> Exercise - Hello<span></span></a></li>
+<li class="chapter" data-level="1.11.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#ex-r-intro-self"><i class="fa fa-check"></i><b>1.11.1</b> Exercise - Self-Play<span></span></a></li>
+<li class="chapter" data-level="1.11.2" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#exercise---symmetries"><i class="fa fa-check"></i><b>1.11.2</b> Exercise - Symmetries<span></span></a></li>
+<li class="chapter" data-level="1.11.3" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#exercise---greedy-play"><i class="fa fa-check"></i><b>1.11.3</b> Exercise - Greedy Play<span></span></a></li>
+<li class="chapter" data-level="1.11.4" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#exercise---learning-from-exploration"><i class="fa fa-check"></i><b>1.11.4</b> Exercise - Learning from Exploration<span></span></a></li>
+<li class="chapter" data-level="1.11.5" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#exercise---other-improvements"><i class="fa fa-check"></i><b>1.11.5</b> Exercise - Other Improvements<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
@@ -345,7 +356,7 @@ Figure 1.1: Business Analytics and competive advantage.
 <li><em>Neuro-dynamic programming</em> (when states are represented using a neural network).</li>
 <li>RL is closely related to <em>Markov decision processes</em> (a mathematical model for a sequential decision problem).</li>
 </ul>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
 <img src="img/rl-names.png" alt="Adopted from @Silver15." width="70%" />
 <p class="caption">
 Figure 1.2: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" role="doc-biblioref">2015</a>)</span>.
@@ -365,7 +376,7 @@ Figure 1.2: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" 
 <li>Your goal is to find a policy that optimize the total reward function.</li>
 </ul></li>
 </ul>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
 <img src="img/rl-ml.png" alt="Adopted from @Silver15." width="70%" />
 <p class="caption">
 Figure 1.3: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" role="doc-biblioref">2015</a>)</span>.
@@ -380,8 +391,8 @@ Figure 1.3: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" 
 <li>Environment: The system/world where observations and rewards are found.</li>
 </ul>
 <p>Data are revealed sequentially as you take actions <span class="math display">\[(O_0, A_0, R_1, O_1, A_1, R_2, O_2, \ldots).\]</span> At time <span class="math inline">\(t\)</span> the agent have been taken action <span class="math inline">\(A_{t-1}\)</span> and observed observation <span class="math inline">\(O_t\)</span> and reward <span class="math inline">\(R_t\)</span>:</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
-<img src="rl_files/figure-html/unnamed-chunk-8-1.png" alt="Agent-environment representation." width="672" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-6-1.png" alt="Agent-environment representation." width="672" />
 <p class="caption">
 Figure 1.4: Agent-environment representation.
 </p>
@@ -391,8 +402,8 @@ Figure 1.4: Agent-environment representation.
 <div id="states-actions-rewards-and-policies" class="section level2 hasAnchor" number="1.8">
 <h2><span class="header-section-number">1.8</span> States, actions, rewards and policies<a href="mod-rl-intro.html#states-actions-rewards-and-policies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The (agent) state <span class="math inline">\(S_t\)</span> is the information used to take the next action <span class="math inline">\(A_t\)</span>:</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
-<img src="rl_files/figure-html/unnamed-chunk-9-1.png" alt="State and action." width="672" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" alt="State and action." width="672" />
 <p class="caption">
 Figure 1.5: State and action.
 </p>
@@ -409,13 +420,13 @@ Figure 1.5: State and action.
 <li>Vehicle routing (transportation cost).</li>
 </ul>
 <p>The goal is to find a policy that maximize the total future reward. A <em>policy</em> is the agent’s behaviour and is a map from state to action, i.e. a function <span class="math display">\[a = \pi(s)\]</span> saying that given the agent is in state <span class="math inline">\(s\)</span> we choose action <span class="math inline">\(a\)</span>.</p>
-<p>The total future reward is a currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states. The value of the discount factor is important:</p>
+<p>The total future reward is a currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
+<p>The value of the discount factor is important:</p>
 <ul>
 <li>Discount factor <span class="math inline">\(\gamma=0\)</span>: Only care about present reward.</li>
 <li>Discount factor <span class="math inline">\(\gamma=1\)</span>: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.</li>
 <li>Discount factor <span class="math inline">\(\gamma&lt;1\)</span>: Rewards near to the present more beneficial. Note <span class="math inline">\(V(s)\)</span> will converge to a number even if the time-horizon is infinite.</li>
 </ul>
-<p>The policy that maximize the total future reward given state <span class="math inline">\(s\)</span> is: <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
 <!-- ## Model free vs Model based -->
 </div>
 <div id="exploitation-vs-exploration" class="section level2 hasAnchor" number="1.9">
@@ -425,12 +436,792 @@ Figure 1.5: State and action.
 </div>
 <div id="rl-in-action-tic-tac-toe" class="section level2 hasAnchor" number="1.10">
 <h2><span class="header-section-number">1.10</span> RL in action (Tic-Tac-Toe)<a href="mod-rl-intro.html#rl-in-action-tic-tac-toe" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The current state of the board is represented by a row-wise concatenation of the players’ marks in a 3x3 grid. For example, the 9 character long string <code>"......X.O"</code> denotes a board state in which player X has placed a mark in the first field of the third column whereas player O has placed a mark in the third field of the third column:</p>
+<style type="text/css">
+.table-bordered th, .table-bordered td {
+    border: 1px solid black !important; 
+}
+</style>
+<table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+.
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+.
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+That is, we index the fields row-wise:
+<table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+9
+</td>
+</tr>
+</tbody>
+</table>
+<p>The game is continued until all fields are filled or the game is over (win or loose).</p>
+<!-- All states are observed from the perspective of player X who is also assumed to have played first.  -->
+<p>The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probability of winning.</p>
+<p>Examples of winning, loosing and a draw from player Xs point of view:</p>
+<table style="width: 100%; border: 0px !important">
+<tbody>
+<tr style="border: 0px !important;">
+<td style="border: 0px !important;">
+<table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td style="border: 0px !important;">
+<table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td style="border: 0px !important;">
+<table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note a state can be also be represented using a <em>state vector</em> of length 9:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="mod-rl-intro.html#cb1-1" aria-hidden="true" tabindex="-1"></a>stateStr <span class="ot">&lt;-</span> <span class="cf">function</span>(sV) {</span>
+<span id="cb1-2"><a href="mod-rl-intro.html#cb1-2" aria-hidden="true" tabindex="-1"></a>   str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb1-3"><a href="mod-rl-intro.html#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(str)</span>
+<span id="cb1-4"><a href="mod-rl-intro.html#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="mod-rl-intro.html#cb1-5" aria-hidden="true" tabindex="-1"></a>stateVec <span class="ot">&lt;-</span> <span class="cf">function</span>(s) {</span>
+<span id="cb1-6"><a href="mod-rl-intro.html#cb1-6" aria-hidden="true" tabindex="-1"></a>   sV <span class="ot">&lt;-</span> <span class="fu">str_split</span>(s, <span class="st">&quot;&quot;</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb1-7"><a href="mod-rl-intro.html#cb1-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(sV)</span>
+<span id="cb1-8"><a href="mod-rl-intro.html#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="mod-rl-intro.html#cb1-9" aria-hidden="true" tabindex="-1"></a>sV <span class="ot">&lt;-</span> <span class="fu">stateVec</span>(<span class="st">&quot;X.X.X.OOO&quot;</span>)</span>
+<span id="cb1-10"><a href="mod-rl-intro.html#cb1-10" aria-hidden="true" tabindex="-1"></a>sV</span>
+<span id="cb1-11"><a href="mod-rl-intro.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;X&quot; &quot;.&quot; &quot;X&quot; &quot;.&quot; &quot;X&quot; &quot;.&quot; &quot;O&quot; &quot;O&quot; &quot;O&quot;</span></span></code></pre></div>
+<p>Given a state vector, we can check if we win or loose:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="mod-rl-intro.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Check board state</span></span>
+<span id="cb2-2"><a href="mod-rl-intro.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb2-3"><a href="mod-rl-intro.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param pfx Player prefix (the char used on the board).</span></span>
+<span id="cb2-4"><a href="mod-rl-intro.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param sV Board state vector.</span></span>
+<span id="cb2-5"><a href="mod-rl-intro.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A number 1 (win), 0 (loose) or 0.5 (draw/unknown)</span></span>
+<span id="cb2-6"><a href="mod-rl-intro.html#cb2-6" aria-hidden="true" tabindex="-1"></a>win <span class="ot">&lt;-</span> <span class="cf">function</span>(pfx, sV) {</span>
+<span id="cb2-7"><a href="mod-rl-intro.html#cb2-7" aria-hidden="true" tabindex="-1"></a>   idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> pfx)</span>
+<span id="cb2-8"><a href="mod-rl-intro.html#cb2-8" aria-hidden="true" tabindex="-1"></a>   mineV <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>)</span>
+<span id="cb2-9"><a href="mod-rl-intro.html#cb2-9" aria-hidden="true" tabindex="-1"></a>   mineV[idx] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-10"><a href="mod-rl-intro.html#cb2-10" aria-hidden="true" tabindex="-1"></a>   mineM <span class="ot">&lt;-</span> <span class="fu">matrix</span>(mineV, <span class="dv">3</span>, <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-11"><a href="mod-rl-intro.html#cb2-11" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">rowSums</span>(mineM) <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">||</span>  <span class="co"># win</span></span>
+<span id="cb2-12"><a href="mod-rl-intro.html#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">any</span>(<span class="fu">colSums</span>(mineM) <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">||</span></span>
+<span id="cb2-13"><a href="mod-rl-intro.html#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(<span class="fu">diag</span>(mineM)) <span class="sc">==</span> <span class="dv">3</span> <span class="sc">||</span></span>
+<span id="cb2-14"><a href="mod-rl-intro.html#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(mineM[<span class="dv">1</span>,<span class="dv">3</span>] <span class="sc">+</span> mineM[<span class="dv">2</span>,<span class="dv">2</span>] <span class="sc">+</span> mineM[<span class="dv">3</span>,<span class="dv">1</span>]) <span class="sc">==</span> <span class="dv">3</span>) <span class="fu">return</span>(<span class="dv">1</span>)</span>
+<span id="cb2-15"><a href="mod-rl-intro.html#cb2-15" aria-hidden="true" tabindex="-1"></a>   idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">&quot;.&quot;</span>)</span>
+<span id="cb2-16"><a href="mod-rl-intro.html#cb2-16" aria-hidden="true" tabindex="-1"></a>   mineV[idx] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-17"><a href="mod-rl-intro.html#cb2-17" aria-hidden="true" tabindex="-1"></a>   mineM <span class="ot">&lt;-</span> <span class="fu">matrix</span>(mineV, <span class="dv">3</span>, <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-18"><a href="mod-rl-intro.html#cb2-18" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">rowSums</span>(mineM) <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">||</span>  <span class="co"># loose</span></span>
+<span id="cb2-19"><a href="mod-rl-intro.html#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">any</span>(<span class="fu">colSums</span>(mineM) <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">||</span></span>
+<span id="cb2-20"><a href="mod-rl-intro.html#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(<span class="fu">diag</span>(mineM)) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">||</span></span>
+<span id="cb2-21"><a href="mod-rl-intro.html#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(mineM[<span class="dv">1</span>,<span class="dv">3</span>] <span class="sc">+</span> mineM[<span class="dv">2</span>,<span class="dv">2</span>] <span class="sc">+</span> mineM[<span class="dv">3</span>,<span class="dv">1</span>]) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="dv">0</span>)</span>
+<span id="cb2-22"><a href="mod-rl-intro.html#cb2-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fl">0.5</span>)  <span class="co"># draw</span></span>
+<span id="cb2-23"><a href="mod-rl-intro.html#cb2-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-24"><a href="mod-rl-intro.html#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">win</span>(<span class="st">&quot;O&quot;</span>, sV)</span>
+<span id="cb2-25"><a href="mod-rl-intro.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb2-26"><a href="mod-rl-intro.html#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">win</span>(<span class="st">&quot;X&quot;</span>, sV)</span>
+<span id="cb2-27"><a href="mod-rl-intro.html#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code></pre></div>
+<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then then a <em>draw</em> game may look as in Figure <a href="mod-rl-intro.html#fig:hgf">1.6</a>. We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hgf"></span>
+<img src="01_rl-intro_files/figure-html/hgf-1.png" alt="A draw." width="100%" />
+<p class="caption">
+Figure 1.6: A draw.
+</p>
+</div>
+<div id="players-and-learning-to-play" class="section level3 hasAnchor" number="1.10.1">
+<h3><span class="header-section-number">1.10.1</span> Players and learning to play<a href="mod-rl-intro.html#players-and-learning-to-play" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Assume that we initially define a value <span class="math inline">\(V(S)\)</span> of each state <span class="math inline">\(S\)</span> to be 1 if we win, 0 if we loose and 0.5 otherwise. Most of the time we <em>exploit</em> our knowledge, i.e. choose the action which gives us the highest estimated reward (probability of winning). However, some times (with probability <span class="math inline">\(\epsilon\)</span>) we <em>explore</em> and choose another action/move than what seems optimal. These moves make us experience states we may otherwise never see. If we exploit we update the value of a state using <span class="math display">\[V(S_t) = V(S_t) + \alpha(V(S_{t+1}-V(S_t)))\]</span> where <span class="math inline">\(\alpha\)</span> is the <em>step-size</em> parameter which influences the rate of learning.</p>
+<p>Let us implement a RL player using a <a href="https://adv-r.hadley.nz/r6.html">R6 class</a> and store the values using a <a href="https://github.com/decisionpatterns/r-hash">hash list</a>. We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method <code>move</code> takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state and update the value function (if exploit). The player explore with probability <code>epsilon</code> if there is not a next state that makes us win.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="mod-rl-intro.html#cb3-1" aria-hidden="true" tabindex="-1"></a>PlayerRL <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;PlayerRL&quot;</span>,</span>
+<span id="cb3-2"><a href="mod-rl-intro.html#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb3-3"><a href="mod-rl-intro.html#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">pfx =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-4"><a href="mod-rl-intro.html#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">hV =</span> <span class="cn">NA</span>,</span>
+<span id="cb3-5"><a href="mod-rl-intro.html#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>),</span>
+<span id="cb3-6"><a href="mod-rl-intro.html#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">clearLearning =</span> <span class="cf">function</span>() <span class="fu">clear</span>(self<span class="sc">$</span>hV),</span>
+<span id="cb3-7"><a href="mod-rl-intro.html#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">pfx =</span> <span class="st">&quot;&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)) {</span>
+<span id="cb3-8"><a href="mod-rl-intro.html#cb3-8" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>pfx <span class="ot">&lt;-</span> pfx</span>
+<span id="cb3-9"><a href="mod-rl-intro.html#cb3-9" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>control <span class="ot">&lt;-</span> control</span>
+<span id="cb3-10"><a href="mod-rl-intro.html#cb3-10" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>hV <span class="ot">&lt;-</span> <span class="fu">hash</span>()</span>
+<span id="cb3-11"><a href="mod-rl-intro.html#cb3-11" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb3-12"><a href="mod-rl-intro.html#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">finalize =</span> <span class="cf">function</span>() {</span>
+<span id="cb3-13"><a href="mod-rl-intro.html#cb3-13" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat(&quot;FIN\n&quot;)</span></span>
+<span id="cb3-14"><a href="mod-rl-intro.html#cb3-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">clear</span>(self<span class="sc">$</span>hV)</span>
+<span id="cb3-15"><a href="mod-rl-intro.html#cb3-15" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb3-16"><a href="mod-rl-intro.html#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">move =</span> <span class="cf">function</span>(sP, sV) { <span class="co"># previous state (before opponent move) and current state (before we move)</span></span>
+<span id="cb3-17"><a href="mod-rl-intro.html#cb3-17" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">&quot;.&quot;</span>)</span>
+<span id="cb3-18"><a href="mod-rl-intro.html#cb3-18" aria-hidden="true" tabindex="-1"></a>         state <span class="ot">&lt;-</span> <span class="fu">stateStr</span>(sP)</span>
+<span id="cb3-19"><a href="mod-rl-intro.html#cb3-19" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has.key</span>(state, self<span class="sc">$</span>hV)) self<span class="sc">$</span>hV[[state]] <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb3-20"><a href="mod-rl-intro.html#cb3-20" aria-hidden="true" tabindex="-1"></a>         keys <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb3-21"><a href="mod-rl-intro.html#cb3-21" aria-hidden="true" tabindex="-1"></a>         keysV <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb3-22"><a href="mod-rl-intro.html#cb3-22" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> idx) {  <span class="co"># find possible moves</span></span>
+<span id="cb3-23"><a href="mod-rl-intro.html#cb3-23" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> self<span class="sc">$</span>pfx</span>
+<span id="cb3-24"><a href="mod-rl-intro.html#cb3-24" aria-hidden="true" tabindex="-1"></a>            str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb3-25"><a href="mod-rl-intro.html#cb3-25" aria-hidden="true" tabindex="-1"></a>            keys <span class="ot">&lt;-</span> <span class="fu">c</span>(keys, str)</span>
+<span id="cb3-26"><a href="mod-rl-intro.html#cb3-26" aria-hidden="true" tabindex="-1"></a>            keysV <span class="ot">&lt;-</span> <span class="fu">rbind</span>(keysV, sV)</span>
+<span id="cb3-27"><a href="mod-rl-intro.html#cb3-27" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb3-28"><a href="mod-rl-intro.html#cb3-28" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb3-29"><a href="mod-rl-intro.html#cb3-29" aria-hidden="true" tabindex="-1"></a>         <span class="co"># add missing states</span></span>
+<span id="cb3-30"><a href="mod-rl-intro.html#cb3-30" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">has.key</span>(keys, self<span class="sc">$</span>hV))</span>
+<span id="cb3-31"><a href="mod-rl-intro.html#cb3-31" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb3-32"><a href="mod-rl-intro.html#cb3-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(keysV)) {</span>
+<span id="cb3-33"><a href="mod-rl-intro.html#cb3-33" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>hV[keys[i]] <span class="ot">&lt;-</span> <span class="fu">win</span>(self<span class="sc">$</span>pfx, keysV[i,])</span>
+<span id="cb3-34"><a href="mod-rl-intro.html#cb3-34" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb3-35"><a href="mod-rl-intro.html#cb3-35" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb3-36"><a href="mod-rl-intro.html#cb3-36" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat(&quot;Player&quot;, pfx, &quot;\n&quot;)</span></span>
+<span id="cb3-37"><a href="mod-rl-intro.html#cb3-37" aria-hidden="true" tabindex="-1"></a>         <span class="co"># print(self$hV)</span></span>
+<span id="cb3-38"><a href="mod-rl-intro.html#cb3-38" aria-hidden="true" tabindex="-1"></a>         <span class="co"># update and find next state</span></span>
+<span id="cb3-39"><a href="mod-rl-intro.html#cb3-39" aria-hidden="true" tabindex="-1"></a>         val <span class="ot">&lt;-</span> <span class="fu">values</span>(self<span class="sc">$</span>hV[keys])</span>
+<span id="cb3-40"><a href="mod-rl-intro.html#cb3-40" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat(&quot;Moves:&quot;); print(val)</span></span>
+<span id="cb3-41"><a href="mod-rl-intro.html#cb3-41" aria-hidden="true" tabindex="-1"></a>         m <span class="ot">&lt;-</span> <span class="fu">max</span>(val)</span>
+<span id="cb3-42"><a href="mod-rl-intro.html#cb3-42" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">rbinom</span>(<span class="dv">1</span>,<span class="dv">1</span>, self<span class="sc">$</span>control<span class="sc">$</span>epsilon) <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> <span class="fu">any</span>(val <span class="sc">&lt;</span> m) <span class="sc">&amp;</span> m <span class="sc">&lt;</span> <span class="dv">1</span>) { <span class="co"># explore</span></span>
+<span id="cb3-43"><a href="mod-rl-intro.html#cb3-43" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> <span class="fu">which</span>(val <span class="sc">&lt;</span> m)</span>
+<span id="cb3-44"><a href="mod-rl-intro.html#cb3-44" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> idx[<span class="fu">sample</span>(<span class="fu">length</span>(idx), <span class="dv">1</span>)]</span>
+<span id="cb3-45"><a href="mod-rl-intro.html#cb3-45" aria-hidden="true" tabindex="-1"></a>            nextS <span class="ot">&lt;-</span> <span class="fu">names</span>(val)[idx] </span>
+<span id="cb3-46"><a href="mod-rl-intro.html#cb3-46" aria-hidden="true" tabindex="-1"></a>            <span class="co"># cat(&quot;Explore - &quot;)</span></span>
+<span id="cb3-47"><a href="mod-rl-intro.html#cb3-47" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
+<span id="cb3-48"><a href="mod-rl-intro.html#cb3-48" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> <span class="fu">which</span>(val <span class="sc">==</span> m)</span>
+<span id="cb3-49"><a href="mod-rl-intro.html#cb3-49" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> idx[<span class="fu">sample</span>(<span class="fu">length</span>(idx), <span class="dv">1</span>)]</span>
+<span id="cb3-50"><a href="mod-rl-intro.html#cb3-50" aria-hidden="true" tabindex="-1"></a>            nextS <span class="ot">&lt;-</span> <span class="fu">names</span>(val)[idx] <span class="co"># pick one</span></span>
+<span id="cb3-51"><a href="mod-rl-intro.html#cb3-51" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>hV[[state]] <span class="ot">&lt;-</span> self<span class="sc">$</span>hV[[state]] <span class="sc">+</span> self<span class="sc">$</span>control<span class="sc">$</span>alpha <span class="sc">*</span> (m <span class="sc">-</span> self<span class="sc">$</span>hV[[state]])</span>
+<span id="cb3-52"><a href="mod-rl-intro.html#cb3-52" aria-hidden="true" tabindex="-1"></a>            <span class="co"># cat(&quot;Exploit - &quot;)</span></span>
+<span id="cb3-53"><a href="mod-rl-intro.html#cb3-53" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb3-54"><a href="mod-rl-intro.html#cb3-54" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat(&quot;Next:&quot;, nextS, &quot;\n&quot;)</span></span>
+<span id="cb3-55"><a href="mod-rl-intro.html#cb3-55" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">str_split</span>(nextS, <span class="st">&quot;&quot;</span>)[[<span class="dv">1</span>]])</span>
+<span id="cb3-56"><a href="mod-rl-intro.html#cb3-56" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb3-57"><a href="mod-rl-intro.html#cb3-57" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb3-58"><a href="mod-rl-intro.html#cb3-58" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>We then can define a player using:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="mod-rl-intro.html#cb4-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;A&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))   </span></code></pre></div>
+<p>Other players may be defined similarly, e.g. a player which moves randomly (if can not win in the next move):</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="mod-rl-intro.html#cb5-1" aria-hidden="true" tabindex="-1"></a>PlayerRandom <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;PlayerRandom&quot;</span>,</span>
+<span id="cb5-2"><a href="mod-rl-intro.html#cb5-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb5-3"><a href="mod-rl-intro.html#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">pfx =</span> <span class="cn">NA</span>,</span>
+<span id="cb5-4"><a href="mod-rl-intro.html#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(pfx) {</span>
+<span id="cb5-5"><a href="mod-rl-intro.html#cb5-5" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>pfx <span class="ot">&lt;-</span> pfx</span>
+<span id="cb5-6"><a href="mod-rl-intro.html#cb5-6" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb5-7"><a href="mod-rl-intro.html#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">move =</span> <span class="cf">function</span>(sP, sV) {  <span class="co"># previous state (before opponent move) and current state (before we move)</span></span>
+<span id="cb5-8"><a href="mod-rl-intro.html#cb5-8" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">&quot;.&quot;</span>)</span>
+<span id="cb5-9"><a href="mod-rl-intro.html#cb5-9" aria-hidden="true" tabindex="-1"></a>         state <span class="ot">&lt;-</span> <span class="fu">stateStr</span>(sV)</span>
+<span id="cb5-10"><a href="mod-rl-intro.html#cb5-10" aria-hidden="true" tabindex="-1"></a>         keys <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb5-11"><a href="mod-rl-intro.html#cb5-11" aria-hidden="true" tabindex="-1"></a>         keysV <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb5-12"><a href="mod-rl-intro.html#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> idx) {  <span class="co"># find possible moves</span></span>
+<span id="cb5-13"><a href="mod-rl-intro.html#cb5-13" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> self<span class="sc">$</span>pfx</span>
+<span id="cb5-14"><a href="mod-rl-intro.html#cb5-14" aria-hidden="true" tabindex="-1"></a>            str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb5-15"><a href="mod-rl-intro.html#cb5-15" aria-hidden="true" tabindex="-1"></a>            keys <span class="ot">&lt;-</span> <span class="fu">c</span>(keys, str)</span>
+<span id="cb5-16"><a href="mod-rl-intro.html#cb5-16" aria-hidden="true" tabindex="-1"></a>            keysV <span class="ot">&lt;-</span> <span class="fu">rbind</span>(keysV, sV)</span>
+<span id="cb5-17"><a href="mod-rl-intro.html#cb5-17" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb5-18"><a href="mod-rl-intro.html#cb5-18" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb5-19"><a href="mod-rl-intro.html#cb5-19" aria-hidden="true" tabindex="-1"></a>         <span class="co"># check if can win in one move</span></span>
+<span id="cb5-20"><a href="mod-rl-intro.html#cb5-20" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(keysV)) {</span>
+<span id="cb5-21"><a href="mod-rl-intro.html#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (<span class="fu">win</span>(self<span class="sc">$</span>pfx, keysV[i,]) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb5-22"><a href="mod-rl-intro.html#cb5-22" aria-hidden="true" tabindex="-1"></a>               <span class="fu">return</span>(keysV[i,])  <span class="co"># next state is the win state</span></span>
+<span id="cb5-23"><a href="mod-rl-intro.html#cb5-23" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb5-24"><a href="mod-rl-intro.html#cb5-24" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb5-25"><a href="mod-rl-intro.html#cb5-25" aria-hidden="true" tabindex="-1"></a>         <span class="co"># else pick one random</span></span>
+<span id="cb5-26"><a href="mod-rl-intro.html#cb5-26" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(keysV[<span class="fu">sample</span>(<span class="fu">nrow</span>(keysV), <span class="dv">1</span>),])</span>
+<span id="cb5-27"><a href="mod-rl-intro.html#cb5-27" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-28"><a href="mod-rl-intro.html#cb5-28" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb5-29"><a href="mod-rl-intro.html#cb5-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>A player which always place at the lowest field index:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="mod-rl-intro.html#cb6-1" aria-hidden="true" tabindex="-1"></a>PlayerFirst <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;PlayerFirst&quot;</span>,</span>
+<span id="cb6-2"><a href="mod-rl-intro.html#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb6-3"><a href="mod-rl-intro.html#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">pfx =</span> <span class="cn">NA</span>,</span>
+<span id="cb6-4"><a href="mod-rl-intro.html#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(pfx) {</span>
+<span id="cb6-5"><a href="mod-rl-intro.html#cb6-5" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>pfx <span class="ot">&lt;-</span> pfx</span>
+<span id="cb6-6"><a href="mod-rl-intro.html#cb6-6" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb6-7"><a href="mod-rl-intro.html#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">move =</span> <span class="cf">function</span>(sP, sV) { <span class="co"># previous state (before opponent move) and current state (before we move)</span></span>
+<span id="cb6-8"><a href="mod-rl-intro.html#cb6-8" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">&quot;.&quot;</span>)</span>
+<span id="cb6-9"><a href="mod-rl-intro.html#cb6-9" aria-hidden="true" tabindex="-1"></a>         sV[idx[<span class="dv">1</span>]] <span class="ot">&lt;-</span> self<span class="sc">$</span>pfx</span>
+<span id="cb6-10"><a href="mod-rl-intro.html#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(sV)</span>
+<span id="cb6-11"><a href="mod-rl-intro.html#cb6-11" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-12"><a href="mod-rl-intro.html#cb6-12" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb6-13"><a href="mod-rl-intro.html#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="gameplay" class="section level3 hasAnchor" number="1.10.2">
+<h3><span class="header-section-number">1.10.2</span> Gameplay<a href="mod-rl-intro.html#gameplay" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We define a game which returns the prefix of the winner (<code>NA</code> if a draw):</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="mod-rl-intro.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param player1 A player R6 object. This player starts the game</span></span>
+<span id="cb7-2"><a href="mod-rl-intro.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param player2 A player R6 object.</span></span>
+<span id="cb7-3"><a href="mod-rl-intro.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param verbose Print gameplay.</span></span>
+<span id="cb7-4"><a href="mod-rl-intro.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return The winners prefix or NA if a tie.</span></span>
+<span id="cb7-5"><a href="mod-rl-intro.html#cb7-5" aria-hidden="true" tabindex="-1"></a>playGame <span class="ot">&lt;-</span> <span class="cf">function</span>(player1, player2, <span class="at">verbose =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb7-6"><a href="mod-rl-intro.html#cb7-6" aria-hidden="true" tabindex="-1"></a>   sP2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">&quot;.&quot;</span>, <span class="dv">9</span>)  <span class="co"># start state / game state</span></span>
+<span id="cb7-7"><a href="mod-rl-intro.html#cb7-7" aria-hidden="true" tabindex="-1"></a>   sP1 <span class="ot">&lt;-</span> sP2          <span class="co"># state from player 1s viewpoint</span></span>
+<span id="cb7-8"><a href="mod-rl-intro.html#cb7-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) { <span class="co"># at most 4.5 rounds</span></span>
+<span id="cb7-9"><a href="mod-rl-intro.html#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="do">## player 1</span></span>
+<span id="cb7-10"><a href="mod-rl-intro.html#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Player &quot;</span>, player1<span class="sc">$</span>pfx, <span class="st">&quot;:</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-11"><a href="mod-rl-intro.html#cb7-11" aria-hidden="true" tabindex="-1"></a>      sP1 <span class="ot">&lt;-</span> player1<span class="sc">$</span><span class="fu">move</span>(sP1, sP2)  <span class="co"># new state from player 1s viewpoint</span></span>
+<span id="cb7-12"><a href="mod-rl-intro.html#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># states &lt;- c(states, stateChr(sV))</span></span>
+<span id="cb7-13"><a href="mod-rl-intro.html#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># cat(stateStr(sV), &quot; | &quot;, sep = &quot;&quot;)</span></span>
+<span id="cb7-14"><a href="mod-rl-intro.html#cb7-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">plot_board_state_cat</span>(<span class="fu">stateStr</span>(sP1))</span>
+<span id="cb7-15"><a href="mod-rl-intro.html#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">win</span>(player1<span class="sc">$</span>pfx, sP1) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb7-16"><a href="mod-rl-intro.html#cb7-16" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(player1<span class="sc">$</span>pfx)</span>
+<span id="cb7-17"><a href="mod-rl-intro.html#cb7-17" aria-hidden="true" tabindex="-1"></a>         <span class="cf">break</span></span>
+<span id="cb7-18"><a href="mod-rl-intro.html#cb7-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-19"><a href="mod-rl-intro.html#cb7-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">5</span>) <span class="cf">break</span>  <span class="co"># a draw</span></span>
+<span id="cb7-20"><a href="mod-rl-intro.html#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="do">## player 2</span></span>
+<span id="cb7-21"><a href="mod-rl-intro.html#cb7-21" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Player &quot;</span>, player2<span class="sc">$</span>pfx, <span class="st">&quot;:</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-22"><a href="mod-rl-intro.html#cb7-22" aria-hidden="true" tabindex="-1"></a>      sP2 <span class="ot">&lt;-</span> player2<span class="sc">$</span><span class="fu">move</span>(sP2, sP1)</span>
+<span id="cb7-23"><a href="mod-rl-intro.html#cb7-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># states &lt;- c(states, stateChr(sV))</span></span>
+<span id="cb7-24"><a href="mod-rl-intro.html#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="co"># cat(stateStr(sV), &quot; | &quot;, sep = &quot;&quot;)</span></span>
+<span id="cb7-25"><a href="mod-rl-intro.html#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">plot_board_state_cat</span>(<span class="fu">stateStr</span>(sP2))</span>
+<span id="cb7-26"><a href="mod-rl-intro.html#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">win</span>(player2<span class="sc">$</span>pfx, sP2) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb7-27"><a href="mod-rl-intro.html#cb7-27" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(player2<span class="sc">$</span>pfx)</span>
+<span id="cb7-28"><a href="mod-rl-intro.html#cb7-28" aria-hidden="true" tabindex="-1"></a>         <span class="cf">break</span></span>
+<span id="cb7-29"><a href="mod-rl-intro.html#cb7-29" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-30"><a href="mod-rl-intro.html#cb7-30" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb7-31"><a href="mod-rl-intro.html#cb7-31" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb7-32"><a href="mod-rl-intro.html#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Let us play a game between <code>playerA</code> and <code>playerR</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="mod-rl-intro.html#cb8-1" aria-hidden="true" tabindex="-1"></a>playerR <span class="ot">&lt;-</span> PlayerRandom<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;R&quot;</span>)</span>
+<span id="cb8-2"><a href="mod-rl-intro.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">playGame</span>(playerA, playerR, <span class="at">verbose =</span> T)</span>
+<span id="cb8-3"><a href="mod-rl-intro.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player A:</span></span>
+<span id="cb8-4"><a href="mod-rl-intro.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-5"><a href="mod-rl-intro.html#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-6"><a href="mod-rl-intro.html#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-7"><a href="mod-rl-intro.html#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  .   |  .  |</span></span>
+<span id="cb8-8"><a href="mod-rl-intro.html#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-9"><a href="mod-rl-intro.html#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-10"><a href="mod-rl-intro.html#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-11"><a href="mod-rl-intro.html#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player R:</span></span>
+<span id="cb8-12"><a href="mod-rl-intro.html#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-13"><a href="mod-rl-intro.html#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-14"><a href="mod-rl-intro.html#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-15"><a href="mod-rl-intro.html#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  .   |  .  |</span></span>
+<span id="cb8-16"><a href="mod-rl-intro.html#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-17"><a href="mod-rl-intro.html#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-18"><a href="mod-rl-intro.html#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-19"><a href="mod-rl-intro.html#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player A:</span></span>
+<span id="cb8-20"><a href="mod-rl-intro.html#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-21"><a href="mod-rl-intro.html#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-22"><a href="mod-rl-intro.html#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-23"><a href="mod-rl-intro.html#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  A   |  .  |</span></span>
+<span id="cb8-24"><a href="mod-rl-intro.html#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-25"><a href="mod-rl-intro.html#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-26"><a href="mod-rl-intro.html#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-27"><a href="mod-rl-intro.html#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player R:</span></span>
+<span id="cb8-28"><a href="mod-rl-intro.html#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-29"><a href="mod-rl-intro.html#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-30"><a href="mod-rl-intro.html#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-31"><a href="mod-rl-intro.html#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  A   |  .  |</span></span>
+<span id="cb8-32"><a href="mod-rl-intro.html#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-33"><a href="mod-rl-intro.html#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  R   |  .  |</span></span>
+<span id="cb8-34"><a href="mod-rl-intro.html#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-35"><a href="mod-rl-intro.html#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player A:</span></span>
+<span id="cb8-36"><a href="mod-rl-intro.html#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-37"><a href="mod-rl-intro.html#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-38"><a href="mod-rl-intro.html#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-39"><a href="mod-rl-intro.html#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  A   |  A  |</span></span>
+<span id="cb8-40"><a href="mod-rl-intro.html#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-41"><a href="mod-rl-intro.html#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  R   |  .  |</span></span>
+<span id="cb8-42"><a href="mod-rl-intro.html#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-43"><a href="mod-rl-intro.html#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;A&quot;</span></span></code></pre></div>
+<p>Note <code>playerA</code> has been learning when playing the game. The current estimates that are stored in the hash list are:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="mod-rl-intro.html#cb9-1" aria-hidden="true" tabindex="-1"></a>playerA<span class="sc">$</span>hV</span>
+<span id="cb9-2"><a href="mod-rl-intro.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;hash&gt; containing 22 key-value pair(s).</span></span>
+<span id="cb9-3"><a href="mod-rl-intro.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ......... : 0.5</span></span>
+<span id="cb9-4"><a href="mod-rl-intro.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ........A : 0.5</span></span>
+<span id="cb9-5"><a href="mod-rl-intro.html#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .......A. : 0.5</span></span>
+<span id="cb9-6"><a href="mod-rl-intro.html#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ......A.. : 0.5</span></span>
+<span id="cb9-7"><a href="mod-rl-intro.html#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .....A... : 0.5</span></span>
+<span id="cb9-8"><a href="mod-rl-intro.html#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ....A.... : 0.5</span></span>
+<span id="cb9-9"><a href="mod-rl-intro.html#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ...A..... : 0.5</span></span>
+<span id="cb9-10"><a href="mod-rl-intro.html#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..A...... : 0.5</span></span>
+<span id="cb9-11"><a href="mod-rl-intro.html#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .A....... : 0.5</span></span>
+<span id="cb9-12"><a href="mod-rl-intro.html#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   A........ : 0.5</span></span>
+<span id="cb9-13"><a href="mod-rl-intro.html#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A....A : 0.5</span></span>
+<span id="cb9-14"><a href="mod-rl-intro.html#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A...A. : 0.5</span></span>
+<span id="cb9-15"><a href="mod-rl-intro.html#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A..A.. : 0.5</span></span>
+<span id="cb9-16"><a href="mod-rl-intro.html#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A.A... : 0.5</span></span>
+<span id="cb9-17"><a href="mod-rl-intro.html#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AA.... : 0.55</span></span>
+<span id="cb9-18"><a href="mod-rl-intro.html#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AA..RA : 0.5</span></span>
+<span id="cb9-19"><a href="mod-rl-intro.html#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AA.AR. : 0.5</span></span>
+<span id="cb9-20"><a href="mod-rl-intro.html#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AAA.R. : 1</span></span>
+<span id="cb9-21"><a href="mod-rl-intro.html#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R.AA..... : 0.5</span></span>
+<span id="cb9-22"><a href="mod-rl-intro.html#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R.AAA..R. : 0.5</span></span>
+<span id="cb9-23"><a href="mod-rl-intro.html#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   RA.A..... : 0.5</span></span>
+<span id="cb9-24"><a href="mod-rl-intro.html#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   RA.AA..R. : 0.5</span></span></code></pre></div>
+</div>
+<div id="rl-intro-tic-learn" class="section level3 hasAnchor" number="1.10.3">
+<h3><span class="header-section-number">1.10.3</span> Learning by a sequence of games<a href="mod-rl-intro.html#rl-intro-tic-learn" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With a single game only a few states are explored and estimates are not good. Let us instead play a sequence of games and learn along the way:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="mod-rl-intro.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param playerA Player A (R6 object).</span></span>
+<span id="cb10-2"><a href="mod-rl-intro.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param playerB Player B (R6 object).</span></span>
+<span id="cb10-3"><a href="mod-rl-intro.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param games Number of games</span></span>
+<span id="cb10-4"><a href="mod-rl-intro.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param prA Probability of `playerA` starts.</span></span>
+<span id="cb10-5"><a href="mod-rl-intro.html#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A list with results (a data frame and a plot).  </span></span>
+<span id="cb10-6"><a href="mod-rl-intro.html#cb10-6" aria-hidden="true" tabindex="-1"></a>playGames <span class="ot">&lt;-</span> <span class="cf">function</span>(playerA, playerB, games, <span class="at">prA =</span> <span class="fl">0.5</span>) {</span>
+<span id="cb10-7"><a href="mod-rl-intro.html#cb10-7" aria-hidden="true" tabindex="-1"></a>   winSeq <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, games)</span>
+<span id="cb10-8"><a href="mod-rl-intro.html#cb10-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>games) {</span>
+<span id="cb10-9"><a href="mod-rl-intro.html#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># find start player</span></span>
+<span id="cb10-10"><a href="mod-rl-intro.html#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">c</span>(prA, <span class="dv">1</span><span class="sc">-</span>prA)) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb10-11"><a href="mod-rl-intro.html#cb10-11" aria-hidden="true" tabindex="-1"></a>         player1 <span class="ot">&lt;-</span> playerA</span>
+<span id="cb10-12"><a href="mod-rl-intro.html#cb10-12" aria-hidden="true" tabindex="-1"></a>         player2 <span class="ot">&lt;-</span> playerB</span>
+<span id="cb10-13"><a href="mod-rl-intro.html#cb10-13" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb10-14"><a href="mod-rl-intro.html#cb10-14" aria-hidden="true" tabindex="-1"></a>         player2 <span class="ot">&lt;-</span> playerA</span>
+<span id="cb10-15"><a href="mod-rl-intro.html#cb10-15" aria-hidden="true" tabindex="-1"></a>         player1 <span class="ot">&lt;-</span> playerB</span>
+<span id="cb10-16"><a href="mod-rl-intro.html#cb10-16" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb10-17"><a href="mod-rl-intro.html#cb10-17" aria-hidden="true" tabindex="-1"></a>      winSeq[g] <span class="ot">&lt;-</span> <span class="fu">playGame</span>(player1, player2)</span>
+<span id="cb10-18"><a href="mod-rl-intro.html#cb10-18" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb10-19"><a href="mod-rl-intro.html#cb10-19" aria-hidden="true" tabindex="-1"></a>   <span class="co"># process the data</span></span>
+<span id="cb10-20"><a href="mod-rl-intro.html#cb10-20" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">game =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(winSeq), <span class="at">winner =</span> winSeq) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-21"><a href="mod-rl-intro.html#cb10-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb10-22"><a href="mod-rl-intro.html#cb10-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">players =</span> <span class="fu">str_c</span>(playerA<span class="sc">$</span>pfx, playerB<span class="sc">$</span>pfx),</span>
+<span id="cb10-23"><a href="mod-rl-intro.html#cb10-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">winA :=</span> <span class="fu">case_when</span>(</span>
+<span id="cb10-24"><a href="mod-rl-intro.html#cb10-24" aria-hidden="true" tabindex="-1"></a>            winner <span class="sc">==</span> playerA<span class="sc">$</span>pfx <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb10-25"><a href="mod-rl-intro.html#cb10-25" aria-hidden="true" tabindex="-1"></a>            winner <span class="sc">==</span> playerB<span class="sc">$</span>pfx <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb10-26"><a href="mod-rl-intro.html#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fl">0.5</span></span>
+<span id="cb10-27"><a href="mod-rl-intro.html#cb10-27" aria-hidden="true" tabindex="-1"></a>         ),</span>
+<span id="cb10-28"><a href="mod-rl-intro.html#cb10-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">winsA_r =</span> <span class="fu">rollapply</span>(winA, <span class="fu">ceiling</span>(games<span class="sc">/</span><span class="dv">10</span>), mean, <span class="at">align =</span> <span class="st">&quot;right&quot;</span>, <span class="at">fill =</span> <span class="cn">NA</span>)  <span class="co">#, fill = 0, partial = T</span></span>
+<span id="cb10-29"><a href="mod-rl-intro.html#cb10-29" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-30"><a href="mod-rl-intro.html#cb10-30" aria-hidden="true" tabindex="-1"></a>   <span class="co"># make a plot</span></span>
+<span id="cb10-31"><a href="mod-rl-intro.html#cb10-31" aria-hidden="true" tabindex="-1"></a>   pt <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
+<span id="cb10-32"><a href="mod-rl-intro.html#cb10-32" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> game, <span class="at">y =</span> winA)) <span class="sc">+</span></span>
+<span id="cb10-33"><a href="mod-rl-intro.html#cb10-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> winsA_r), <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb10-34"><a href="mod-rl-intro.html#cb10-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb10-35"><a href="mod-rl-intro.html#cb10-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">str_c</span>(<span class="st">&quot;Avg. wins player &quot;</span>, playerA<span class="sc">$</span>pfx),</span>
+<span id="cb10-36"><a href="mod-rl-intro.html#cb10-36" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">&quot;Wins &quot;</span>, playerA<span class="sc">$</span>pfx, <span class="st">&quot; = &quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(dat<span class="sc">$</span>winA), <span class="dv">2</span>), <span class="st">&quot; &quot;</span>, playerB<span class="sc">$</span>pfx, <span class="st">&quot; = &quot;</span>, <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(dat<span class="sc">$</span>winA), <span class="dv">2</span>)))</span>
+<span id="cb10-37"><a href="mod-rl-intro.html#cb10-37" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">dat =</span> dat, <span class="at">plot =</span> pt))</span>
+<span id="cb10-38"><a href="mod-rl-intro.html#cb10-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Let us now play games against a player who moves randomly using <span class="math inline">\(\epsilon = 0.1\)</span> (explore probability) and <span class="math inline">\(\alpha = 0.1\)</span> (step size).</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="mod-rl-intro.html#cb11-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;A&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>)) </span>
+<span id="cb11-2"><a href="mod-rl-intro.html#cb11-2" aria-hidden="true" tabindex="-1"></a>playerR <span class="ot">&lt;-</span> PlayerRandom<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;R&quot;</span>)</span>
+<span id="cb11-3"><a href="mod-rl-intro.html#cb11-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">playGames</span>(playerA, playerR, <span class="at">games =</span> <span class="dv">2000</span>)</span>
+<span id="cb11-4"><a href="mod-rl-intro.html#cb11-4" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>plot</span></code></pre></div>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The black curve is the moving average of winning with a trend line. Note the values of the parameters have an effect on our learning:</p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In general we do not need to explore (<span class="math inline">\(\epsilon = 0\)</span>) (the other player explore enough for us) and a high explore probability (<span class="math inline">\(\epsilon = 0.9\)</span>) make us loose. Moreover, using a high step size seems to work best.</p>
+<p>Other players may give different results. If the RL player play against a player which always move to first free field index:</p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here a high step size and a low exploration probability is good and the RL player will soon figure out how to win all the time.</p>
+<p>This is different if the RL player A play against another clever (RL) player B.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mod-rl-intro.html#cb12-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;A&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span>
+<span id="cb12-2"><a href="mod-rl-intro.html#cb12-2" aria-hidden="true" tabindex="-1"></a>playerB <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;B&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span></code></pre></div>
+<p>If both players play using the same control parameters, one would expect that they after learning should win/loose with probability 0.5. However if there is no exploration (<span class="math inline">\(\epsilon = 0\)</span>) this is not always true:</p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Depending on how the game starts a player may learn a better strategy and win/loose more. That is, exploration is important. Finally let us play against a player B with fixed control parameters.</p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In general it is best to explore using the same probability otherwise you loose more and a higher step size than your opponent will make you win.</p>
+</div>
 </div>
 <div id="sec-rl-intro-ex" class="section level2 hasAnchor" number="1.11">
 <h2><span class="header-section-number">1.11</span> Exercises<a href="mod-rl-intro.html#sec-rl-intro-ex" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<div id="ex-vba-hello" class="section level3 hasAnchor" number="1.11.1">
-<h3><span class="header-section-number">1.11.1</span> Exercise - Hello<a href="mod-rl-intro.html#ex-vba-hello" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="ex-r-intro-self" class="section level3 hasAnchor" number="1.11.1">
+<h3><span class="header-section-number">1.11.1</span> Exercise - Self-Play<a href="mod-rl-intro.html#ex-r-intro-self" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="5GRbCa4K4LVSuWhw2Urs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="5GRbCa4K4LVSuWhw2Urs-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="5GRbCa4K4LVSuWhw2Urs-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical).
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#5GRbCa4K4LVSuWhw2Urs">
+Solution
+</button>
+<p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
+played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
+</div>
+<div id="exercise---symmetries" class="section level3 hasAnchor" number="1.11.2">
+<h3><span class="header-section-number">1.11.2</span> Exercise - Symmetries<a href="mod-rl-intro.html#exercise---symmetries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Many tic-tac-toe positions appear different but are really the same because of symmetries.</p>
+<div id="h3PK8zC5ZcxNA5XDZAyj" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="h3PK8zC5ZcxNA5XDZAyj-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="h3PK8zC5ZcxNA5XDZAyj-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#h3PK8zC5ZcxNA5XDZAyj">
+Solution
+</button>
+<ol style="list-style-type: decimal">
+<li>How might we amend the reinforcement learning algorithm described above to take advantage of this?</li>
+</ol>
+<div id="3X7Pr2VBGuv9kFu9l1Hc" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="3X7Pr2VBGuv9kFu9l1Hc-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="3X7Pr2VBGuv9kFu9l1Hc-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+A smaller state space would increase the speed of learning and reduce the memory required.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#3X7Pr2VBGuv9kFu9l1Hc">
+Solution
+</button>
+<ol start="2" style="list-style-type: decimal">
+<li>In what ways would this improve the algorithm?</li>
+</ol>
+<div id="f5n1IWGphKaCpoeHkKdU" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="f5n1IWGphKaCpoeHkKdU-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="f5n1IWGphKaCpoeHkKdU-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should now use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#f5n1IWGphKaCpoeHkKdU">
+Solution
+</button>
+<ol start="3" style="list-style-type: decimal">
+<li>Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?</li>
+</ol>
+</div>
+<div id="exercise---greedy-play" class="section level3 hasAnchor" number="1.11.3">
+<h3><span class="header-section-number">1.11.3</span> Exercise - Greedy Play<a href="mod-rl-intro.html#exercise---greedy-play" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="IIRPKknZ89OkYuHcNaWd" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="IIRPKknZ89OkYuHcNaWd-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="IIRPKknZ89OkYuHcNaWd-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+As seen in Section <a href="mod-rl-intro.html#rl-intro-tic-learn">1.10.3</a> using <span class="math inline">\(\epsilon = 0\)</span> may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behaviour over time.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IIRPKknZ89OkYuHcNaWd">
+Solution
+</button>
+<p>Consider Tic-Tac-Toe and suppose the RL player is only greedy (<span class="math inline">\(\epsilon = 0\)</span>), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?</p>
+</div>
+<div id="exercise---learning-from-exploration" class="section level3 hasAnchor" number="1.11.4">
+<h3><span class="header-section-number">1.11.4</span> Exercise - Learning from Exploration<a href="mod-rl-intro.html#exercise---learning-from-exploration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.</p>
+<div id="LOX2DR9PtrhKp94rIneB" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="LOX2DR9PtrhKp94rIneB-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="LOX2DR9PtrhKp94rIneB-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+The probability set <span class="math inline">\(V(s)\)</span> found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set <span class="math inline">\(V(s)\)</span> found by applying learning from exploration is the probability of winning including the active exploration policy.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#LOX2DR9PtrhKp94rIneB">
+Solution
+</button>
+<ol style="list-style-type: decimal">
+<li>What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?</li>
+</ol>
+<div id="Ibl1qkUxovBsWeWFlQLn" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Ibl1qkUxovBsWeWFlQLn-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="Ibl1qkUxovBsWeWFlQLn-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Ibl1qkUxovBsWeWFlQLn">
+Solution
+</button>
+<ol start="2" style="list-style-type: decimal">
+<li>Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?</li>
+</ol>
+</div>
+<div id="exercise---other-improvements" class="section level3 hasAnchor" number="1.11.5">
+<h3><span class="header-section-number">1.11.5</span> Exercise - Other Improvements<a href="mod-rl-intro.html#exercise---other-improvements" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="BTGvBeNRyOGjZmjI1gW3" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="BTGvBeNRyOGjZmjI1gW3-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="BTGvBeNRyOGjZmjI1gW3-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BTGvBeNRyOGjZmjI1gW3">
+Solution
+</button>
+<p>Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?</p>
 
 </div>
 </div>
