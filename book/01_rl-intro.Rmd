@@ -4,7 +4,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
 ```{r}

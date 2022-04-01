@@ -26,7 +26,7 @@ bookdown::serve_book(dir = "book", output_dir = "_book", preview = FALSE, in_ses
 
 # About the course notes {- #mod-intro}
 
-```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
 
@@ -173,6 +173,15 @@ I would like to thank all for their inspiration.
 
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
+
+## Exercises {#sec-intro-ex}
+
+`r strExercises`
+
+### Exercise - Annotate the course notes 
+
+
+### Exercise - GitHub R ...
 
 ```{r links, child="links.md"}
 ```

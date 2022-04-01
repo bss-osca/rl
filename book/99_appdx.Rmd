@@ -1,4 +1,4 @@
-```{r, code = readLines("common.R"), cache = FALSE, include=FALSE}
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
 # (APPENDIX) Appendix {- #mod-apdx}
