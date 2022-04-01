@@ -4,6 +4,9 @@ fig:unnamed-chunk-4
 fig:unnamed-chunk-6
 fig:unnamed-chunk-7
 fig:hgf
+sec-intro-ex
+exercise---annotate-the-course-notes
+exercise---github-r
 mod-rl-intro
 mod-rl-intro-lo
 textbook-readings

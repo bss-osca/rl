@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
 favicon: assets/favicon.ico
-date: "2022-03-30"
+date: "2022-04-01"
 editor_options: 
   chunk_output_type: console
 ---
@@ -164,6 +164,15 @@ I would like to thank all for their inspiration.
 
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
+
+## Exercises {#sec-intro-ex}
+
+Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
+
+### Exercise - Annotate the course notes 
+
+
+### Exercise - GitHub R ...
 
 
 [BSS]: https://bss.au.dk/en/
