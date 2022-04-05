@@ -42,6 +42,9 @@ jobs:
 
       - name: Render book
         run: Rscript book/render_book.R
+        
+      - name Push to rl-student repo
+        run: Rscript push-rl-student.R
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
