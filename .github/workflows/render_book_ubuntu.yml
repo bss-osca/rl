@@ -43,6 +43,9 @@ jobs:
       - name: Render book
         run: Rscript book/render_book.R
         
+      - name: Update student folder
+        run: push-rl-student.R        
+
       - name: Push to rl-student repo
         id: push_directory
         uses: cpina/github-action-push-to-another-repository@main

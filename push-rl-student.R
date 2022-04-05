@@ -1,6 +1,9 @@
+## This file is used by GHA
+
 #### Update rl-student repo ####
 # The subfolder student points to another repo which have been added using 
 # git subtree add --prefix=student https://github.com/bss-osca/rl-student master
+
 
 library(tidyverse)
 ## Prepare files for https://github.com/bss-osca/rl-student
@@ -30,7 +33,7 @@ fs::file_copy(".Rprofile", "student/.Rprofile", overwrite = T)
 fs::file_copy("book/setup.R", "student/setup.R", overwrite = T)
 fs::file_copy("book/links.md", "student/links.md", overwrite = T)
 
-# Push to student GitHub repo
-system("git add student/.")                        # add new files
-system('git commit -m "Update student folder"')    # commit
-system("git subtree push --prefix=student https://github.com/bss-osca/rl-student master")  # push
+## Push to student GitHub repo
+# system("git add student/.")                        # add new files
+# system('git commit -m "Update student folder"')    # commit
+# system("git subtree push --prefix=student https://github.com/bss-osca/rl-student master")  # push
