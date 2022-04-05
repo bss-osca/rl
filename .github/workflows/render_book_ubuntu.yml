@@ -54,7 +54,7 @@ jobs:
           destination-repository-name: 'rl-student'
           user-email: junk@relund.dk
           commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-          target-branch: main
+          target-branch: master
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
