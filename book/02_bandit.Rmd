@@ -1,0 +1,64 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+
+# (PART) Tabular methods {-}
+
+# Multi-armed bandits {#mod-bandit}
+
+This module gives a short introduction to Reinforcement learning. 
+
+## Learning outcomes 
+
+By the end of this module, you are expected to:
+
+<!-- * Describe what VBA is. -->
+<!-- * Setup Excel for VBA. -->
+<!-- * Know how the macro recorder works. -->
+<!-- * Make your first program. -->
+<!-- * Have an overview over what VBA can do. -->
+<!-- * Recorded you first macro using the macro recorder -->
+
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings
+
+For this week, you will need to read Chapter 2 in @Sutton18. Read it before continuing this module.
+
+
+
+## Exercises {#sec-bandit-ex}
+
+`r strExercises`
+
+### Exercise - Self-Play {#ex-r-intro-self}
+
+```{r, solution=TRUE, text='If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical).'}
+```
+
+Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
+played against itself. What do you think would happen in this case? Would it learn a different way of playing?
+
+
+
+
+
+
+```{r links, child="links.md", include=FALSE}
+```
