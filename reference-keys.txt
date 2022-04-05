@@ -27,6 +27,10 @@ exercise---symmetries
 exercise---greedy-play
 exercise---learning-from-exploration
 exercise---other-improvements
+mod-bandit
+learning-outcomes-1
+textbook-readings-1
+sec-bandit-ex
 r-setup
 groups
 coding-convention

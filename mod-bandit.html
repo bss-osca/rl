@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>B Working in groups | Reinforcement Learning for Business (RL)</title>
+  <title>Module 2 Multi-armed bandits | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="B Working in groups | Reinforcement Learning for Business (RL)" />
+  <meta property="og:title" content="Module 2 Multi-armed bandits | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://bss-osca.github.io/rl/" />
   <meta property="og:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="bss-osca/rl" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="B Working in groups | Reinforcement Learning for Business (RL)" />
+  <meta name="twitter:title" content="Module 2 Multi-armed bandits | Reinforcement Learning for Business (RL)" />
   
   <meta name="twitter:description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="twitter:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="r-setup.html"/>
-<link rel="next" href="coding-convention.html"/>
+<link rel="prev" href="mod-rl-intro.html"/>
+<link rel="next" href="r-setup.html"/>
 <script src="libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -287,24 +287,73 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="groups" class="section level1 hasAnchor" number="4">
-<h1><span class="header-section-number">B</span> Working in groups<a href="groups.html#groups" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>During the course you have been allocated into groups. You are expected to solve the exercises and write the project report in your group. Before you start, it is a good idea to agree on a set of group rules. First, agree on a <a href="coding-convention.html#coding-convention">coding convention</a> when you are going to use R. Most people in the R community use snake case but camel case is also okay. Next, setup rules on when to meet and how you will organize the work. For instance, it is a good idea that all try to solve some of the exercises before you meet and you then discuss the answers, problems etc. Finally, it is a good idea to have a common place for your code. You have different options:</p>
-<ol style="list-style-type: decimal">
-<li>Use a cloud storage services such as Dropbox, OneDrive or Google Drive.</li>
-<li>Use a version control system such as Git together with <a href="https://github.com/">GitHub</a>. GitHub is a code sharing and publishing service and may be seen as a social networking site for programmers.</li>
-<li>If you use RStudio Cloud then one person in the group can create a shared workspace with projects:
-<ul>
-<li>First create a new workspace named e.g. <em>Shared</em>.</li>
-<li>Press <em>Members</em> and add the group members as moderators.</li>
-<li>Now go back to <em>Projects</em> in the <em>RL</em> workspace and move one project to the shared workspace. Rename it to e.g. <em>Group Project</em>.
-Members will now have access to this project where you can share code. NOTE you can not work collectively on a file simultaneously. That is, only one member can change a file at a time! Hence it is a good idea to have your own private project to work on and use this project as a place where you can share code. If you want to download a project to your laptop then press the export button.</li>
-</ul></li>
-</ol>
-<p>The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I’m talking about, think of it as the “Track Changes” features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see <a href="https://happygitwithr.com/big-picture.html#big-picture">Why Git? Why GitHub?</a>.</p>
-<div id="joint-r-project-structure" class="section level2 unnumbered hasAnchor">
-<h2>Joint R project structure<a href="groups.html#joint-r-project-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I suggest to have an R project with subfolders <code>joint</code>, <code>[student1 name]</code>, <code>[student2 name]</code>, …, <code>[student5 name]</code>. Student folders contain files only a single student work on (good when you do some exercises before class). Folder <code>joint</code> contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.</p>
+<div id="mod-bandit" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Module 2</span> Multi-armed bandits<a href="mod-bandit.html#mod-bandit" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This module gives a short introduction to Reinforcement learning.</p>
+<div id="learning-outcomes-1" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Learning outcomes<a href="mod-bandit.html#learning-outcomes-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>By the end of this module, you are expected to:</p>
+<!-- * Describe what VBA is. -->
+<!-- * Setup Excel for VBA. -->
+<!-- * Know how the macro recorder works. -->
+<!-- * Make your first program. -->
+<!-- * Have an overview over what VBA can do. -->
+<!-- * Recorded you first macro using the macro recorder -->
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+</div>
+<div id="textbook-readings-1" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Textbook readings<a href="mod-bandit.html#textbook-readings-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For this week, you will need to read Chapter 2 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+</div>
+<div id="sec-bandit-ex" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Exercises<a href="mod-bandit.html#sec-bandit-ex" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<div id="ex-r-intro-self" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Exercise - Self-Play<a href="mod-rl-intro.html#ex-r-intro-self" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="nsH71hiO7I2FSVptbvYC" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="nsH71hiO7I2FSVptbvYC-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="nsH71hiO7I2FSVptbvYC-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical).
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nsH71hiO7I2FSVptbvYC">
+Solution
+</button>
+<p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
+played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
+
+</div>
+</div>
+</div>
+
+
+
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Sutton18" class="csl-entry">
+Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
 </div>
 </div>
             </section>
@@ -312,8 +361,8 @@ Members will now have access to this project where you can share code. NOTE you 
           </div>
         </div>
       </div>
-<a href="r-setup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="coding-convention.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mod-rl-intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="r-setup.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -334,7 +383,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/bss-osca/rl/edit/master/book/99_appdx.Rmd",
+"link": "https://github.com/bss-osca/rl/edit/master/book/02_bandit.Rmd",
 "text": "Edit"
 },
 "history": {
