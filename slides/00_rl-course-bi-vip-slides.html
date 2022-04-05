@@ -67,7 +67,7 @@ Examples with possible actions are:
 * Playing backgammon (how to move the checkers).
 * Driving a car (left, right, forward, back, break, stop, ...).
 * How to invest/maintain a portfolio of stocks (buy, sell, amount).  
-* Control an inventory (wait, buy, amount).
+* Control an inventory (wait, update, amount).
 * Maintain a spare-part (wait, maintain).
 * Robot operations (sort, move, ...)
 * Dairy cow treatment/replacement (treat, replace, ...)
@@ -80,8 +80,8 @@ Note current decisions have an impact on the future.
 
 RL can be seen as a way of modelling intuition. An RL model has specific states, actions and reward structure and our goal as an agent is to find good decisions/actions that maximize the total reward. The agent learn using, for instance:
 
-* totally random trials (in the start),
-* sophisticated tactics and superhuman skills (in the end). 
+* Totally random trials (in the start).
+* Sophisticated tactics and superhuman skills (in the end). 
 
 That is, as the agent learn, the reward estimate of a given action becomes better. 
 
@@ -107,9 +107,11 @@ This can also be seen as learning the reward of our actions.
 ]
 
 .pull-right[
+
+
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/rl-ml.png" alt="Adopted from ." width="100%" /&gt;
-&lt;p class="caption"&gt;Adopted from .&lt;/p&gt;
+&lt;img src="img/rl-ml.png" alt="Adopted from Silver (2015)." width="100%" /&gt;
+&lt;p class="caption"&gt;Adopted from Silver (2015).&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -132,7 +134,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/bi-vip-unnamed-chunk-7-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-8-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -148,7 +150,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/bi-vip-unnamed-chunk-8-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-9-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -164,7 +166,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/bi-vip-unnamed-chunk-9-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-10-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -180,7 +182,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/bi-vip-unnamed-chunk-10-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-11-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -196,7 +198,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/bi-vip-unnamed-chunk-11-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-12-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -214,7 +216,7 @@ layout: true
 
 .right-column-small[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/bi-vip-unnamed-chunk-12-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-13-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
 &lt;/div&gt;
 ]
@@ -252,7 +254,7 @@ layout:true
 - The history is the sequence of observations, actions and rewards `$$H_t = (O_0, A_0, R_1, O_1, \ldots, A_{t-1}, R_t, O_t).$$`
 ]
 .right-column-small[
-&lt;img src="img/bi-vip-unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -262,7 +264,7 @@ layout:true
 - The state `\(S_t\)` is the information used to take the next action.
 ]
 .right-column-small[
-&lt;img src="img/bi-vip-unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -276,7 +278,7 @@ layout:true
   * Markov state: given the present state the future is independent of the past.  
 ]
 .right-column-small[
-&lt;img src="img/bi-vip-unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -415,7 +417,7 @@ Let `\(S_t\)` denote the board state before the opponent makes a move.
 ## Learning to play
 
 - Define `\(V(S)\)` to be 1 if we win, 0 if we loose and 0.5 otherwise (reward/pr of winning).
-- Most of the time we *exploit* our knowledge with `\(pr = 1-\epsilon\)`, i.e. choose the action which gives us the highest estimated reward and update the value of a state using `$$V(S_t) = V(S_t) + \alpha(V(S_{t+1}-V(S_t)))$$` where `\(\alpha\)` is the *step-size* parameter. 
+- Most of the time we *exploit* our knowledge with `\(pr = 1-\epsilon\)`, i.e. choose the action which gives us the highest estimated reward and update the value of a state using `$$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$` where `\(\alpha\)` is the *step-size* parameter. 
 - Some times we *explore* with `\(pr = \epsilon\)` and choose another action/move than what seems optimal. 
 
 ---
@@ -436,19 +438,19 @@ Let `\(S_t\)` denote the board state before the opponent makes a move.
 
 ## Play against a player who moves randomly:
 
-&lt;img src="img/bi-vip-unnamed-chunk-26-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-27-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Play against a "first free" player
 
-&lt;img src="img/bi-vip-unnamed-chunk-27-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-28-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Play against another RL player
 
-&lt;img src="img/bi-vip-unnamed-chunk-28-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/bi-vip-unnamed-chunk-29-1.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
 
 
 

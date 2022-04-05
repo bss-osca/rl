@@ -77,7 +77,7 @@ Examples with possible actions are:
 * Playing backgammon (how to move the checkers).
 * Driving a car (left, right, forward, back, break, stop, ...).
 * How to invest/maintain a portfolio of stocks (buy, sell, amount).  
-* Control an inventory (wait, buy, amount).
+* Control an inventory (wait, update, amount).
 * Maintain a spare-part (wait, maintain).
 * Robot operations (sort, move, ...)
 * Dairy cow treatment/replacement (treat, replace, ...)
@@ -90,8 +90,8 @@ Note current decisions have an impact on the future.
 
 RL can be seen as a way of modelling intuition. An RL model has specific states, actions and reward structure and our goal as an agent is to find good decisions/actions that maximize the total reward. The agent learn using, for instance:
 
-* totally random trials (in the start),
-* sophisticated tactics and superhuman skills (in the end). 
+* Totally random trials (in the start).
+* Sophisticated tactics and superhuman skills (in the end). 
 
 That is, as the agent learn, the reward estimate of a given action becomes better. 
 
@@ -117,8 +117,11 @@ This can also be seen as learning the reward of our actions.
 ]
 
 .pull-right[
-```{r echo=FALSE, out.width="100%", fig.align = "center", fig.cap = str}
+```{r, include=FALSE}
 str <- str_c("Adopted from ", Citet(bib, "Silver15"), ".") 
+```
+
+```{r echo=FALSE, out.width="100%", fig.align = "center", fig.cap = str}
 knitr::include_graphics("img/rl-ml.png")
 ```
 ]
@@ -543,7 +546,7 @@ plotHypergraph(gridDim, states, actions, showGrid = F, cex = 1, radx = 0.02, rad
 ## Learning to play
 
 - Define $V(S)$ to be 1 if we win, 0 if we loose and 0.5 otherwise (reward/pr of winning).
-- Most of the time we *exploit* our knowledge with $pr = 1-\epsilon$, i.e. choose the action which gives us the highest estimated reward and update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1}-V(S_t)))$$ where $\alpha$ is the *step-size* parameter. 
+- Most of the time we *exploit* our knowledge with $pr = 1-\epsilon$, i.e. choose the action which gives us the highest estimated reward and update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$ where $\alpha$ is the *step-size* parameter. 
 - Some times we *explore* with $pr = \epsilon$ and choose another action/move than what seems optimal. 
 
 ---
