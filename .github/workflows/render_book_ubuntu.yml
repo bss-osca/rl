@@ -44,7 +44,17 @@ jobs:
         run: Rscript book/render_book.R
         
       - name: Push to rl-student repo
-        run: Rscript push-rl-student.R
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: student/
+          destination-github-username: 'bss-osca'
+          destination-repository-name: 'rl-student'
+          user-email: junk@relund.dk
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: main
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'

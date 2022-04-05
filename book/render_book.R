@@ -1,3 +1,5 @@
+## This file is used by GHA
+
 sink("render_book.log", append=F, split=T)
 sessionInfo()
 
