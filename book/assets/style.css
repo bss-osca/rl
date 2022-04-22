@@ -269,5 +269,17 @@ blockquote > p:first-child {
    margin-top: 5px;
 }
 
+/* Code folding */
 
+summary {
+  display: list-item;
+  text-align: left;
+}
+summary::after {
+  content: 'Code';
+  font-family: 'Source Code Pro', monospace;
+}
+details[open] > summary::after {
+  content: 'Hide'
+}
 

@@ -125,7 +125,27 @@ This module gives a short introduction to the course. Next, the site consists of
 
    * [Part I](#mod-rl-intro) gives you a general introduction to RL and the bandit problem. 
 
-   <!-- * [Part II](#mod-vba-datatypes) gives you an overview over programming in VBA including datatypes (Module \@ref(mod-vba-datatypes)), procedures (Module \@ref(mod-vba-procedures)), loop and conditional statements (Module \@ref(mod-vba-loops-cond)) and the object model (Module \@ref(mod-vba-object-model)). -->
+   * [Part II](#mod-bandit) consider RL sequential decision problems where the state and state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes are considered as a general modelling framework (Module \@ref(mod-mdp))
+   
+
+<!-- The next three chapters describe three fundamental classes of methods for solving finite -->
+<!-- Markov decision problems: dynamic programming, Monte Carlo methods, and temporaldi↵ -->
+<!-- erence learning. Each class of methods has its strengths and weaknesses. Dynamic -->
+<!-- programming methods are well developed mathematically, but require a complete and -->
+<!-- accurate model of the environment. Monte Carlo methods don’t require a model and are -->
+<!-- conceptually simple, but are not well suited for step-by-step incremental computation. -->
+<!-- Finally, temporal-di↵erence methods require no model and are fully incremental, but are -->
+<!-- more complex to analyze. The methods also di↵er in several ways with respect to their -->
+<!-- efficiency and speed of convergence. -->
+<!-- The remaining two chapters describe how these three classes of methods can be -->
+<!-- combined to obtain the best features of each of them. In one chapter we describe how -->
+<!-- the strengths of Monte Carlo methods can be combined with the strengths of temporaldi↵ -->
+<!-- erence methods via multi-step bootstrapping methods. In the final chapter of this part -->
+<!-- of the book we show how temporal-di↵erence learning methods can be combined with -->
+<!-- model learning and planning methods (such as dynamic programming) for a complete -->
+<!-- and unified solution to the tabular reinforcement learning problem. -->
+   
+
    <!-- * [Part III](#mod-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
    <!-- * [Part IV](#mod-vba-project) presents the mandatory VBA project. -->
    <!-- * [Part V](#mod-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). -->
@@ -145,14 +165,16 @@ The appendix contains different modules that may be helpful for you including hi
 
 We use [R] as programming software and it is assumed that you are familiar with using R. [R] is a programming language and free software environment. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work. R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. 
 
-It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module ??? in the appendix. 
+It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module \@ref(mod-r-setup))  in the appendix. 
 
 
 ## Acknowledgements and license {- #ack} 
 
-Some of the materials in this book are taken from various places
+Materials in this book are taken from various places
 
 * The bookdown skeleton and some notes are based on the [Tools for Analytics][tfa-course] course.
+* Some notes are adopted from [Scott Jeen](https://github.com/enjeeneer/sutton_and_barto).
+* Many exercises are taken from @Sutton18 and modified slightly. 
 
 <!-- * Some parts in Module \@ref(mod-intro) are inspired by [Chapter 1](https://r4ds.had.co.nz/introduction.html) in @r4ds. -->
 <!-- * The VBA modules are inspired by the book @vba-book. This also holds for some of the exercises.  -->
@@ -174,14 +196,30 @@ I would like to thank all for their inspiration.
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 
-## Exercises {#sec-intro-ex}
+
+## Exercises {#sec-intro-ex -}
 
 `r strExercises`
 
-### Exercise - Annotate the course notes 
+### Exercise - How to annotate {#sec-intro-ex-annotate -}
+
+The online course notes can be annotated using [hypothes.is]. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes. 
+
+<!-- <img src="img/annotate.png" align="right" alt="Hypothes.is icons" title="Hypothes.is icons" style = "float: right; margin: 0 0 0 15px;"> -->
+
+   1) Sign-up at [hypothes.is]. If you are using Chrome you may also install the [Chrome extension](https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek).
+   2) Go back to this page and login in the upper right corner (there should be some icons e.g. `<`).
+   3) Select some text and try to annotate it using both a private and public annotation (you may delete it again afterwards). 
 
 
-### Exercise - GitHub R ...
+### Exercise - Templates {#sec-intro-ex-templates -}
+
+A template in RMarkdown of the course notes and exercises are available at [GitHub](gh-rl-student). You can download the repository and keep your own notes during the course by having an R project with it.
+
+   1) Open R studio and do: **File > New Project ... > Version Control > Git**. Add `https://github.com/bss-osca/rl-student` as repository url and create the project.
+   2) Run `renv::restore()` from the R command line to install needed packages (this may take some time). If you experience errors then try to install the packages one at a time using `install.packages("pkg name")`.
+   3) Open e.g. the file `01_rl-intro.Rmd` and try to knit it using the Knit button in the upper left corner. A html file with the output will be made. You should be able to add you own notes and solve the exercises using the Rmd file for each module. 
+
 
 ```{r links, child="links.md"}
 ```

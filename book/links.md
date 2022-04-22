@@ -34,6 +34,8 @@
 [git-install]: https://git-scm.com/downloads
 [github-actions]: https://github.com/features/actions
 [github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
 
 [happy-git]: https://happygitwithr.com
 [hg-install-git]: https://happygitwithr.com/install-git.html
@@ -76,6 +78,7 @@
 [r4ds-factors]: https://r4ds.had.co.nz/factors.html
 [r4ds-strings]: https://r4ds.had.co.nz/strings.html
 [r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
 
 [stat-545]: https://stat545.com
 [stat-545-functions-part1]: https://stat545.com/functions-part1.html

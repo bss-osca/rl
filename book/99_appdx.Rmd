@@ -3,60 +3,13 @@
 
 # (APPENDIX) Appendix {- #mod-apdx}
 
-# Setting up R {#r-setup} 
+# Setting up R {#mod-r-setup} 
 
 [R] is a programming language and free software environment. The R language is widely used among statisticians and data miners for developing statistical software and data analysis. For a further overview and description of the history of R see [Chapter 2](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html) in @rdpeng. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work.
 
-R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. During this course **it is recommend to use RStudio on your laptop** as much as possible; however, you also need to have an [RStudio Cloud][rstudio-cloud] account. Some pros and cons of using R in the cloud vs on the laptop are 
+R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. During this course **it is recommend to use RStudio on your laptop** since there is no limit on CPU usage. If you need to install R and RStudio on your laptop [check this out](https://bss-osca.github.io/tfa/mod-r-install.html#r-install).
 
-__Cloud ([RStudio Cloud][rstudio-cloud])__
-
-Pros:
-
-- Log in and you are ready to use R.
-- No need to download anything.
-- Packages easier to install.
-- Everything can be run using a browser.
-
-Cons:
-
-- There is a limit on user time and CPU time. You need to pay if need more time. 
-- Often slower than the desktop version. 
-- Need an internet connection. 
-- Risky to use at the exam if the internet connection is slow or is down. Use the laptop version instead.
-
-__Laptop ([R] and [RStudio])__
-
-Pros:
-
-- Can be used without any internet connection.
-- No limit on user time and CPU usage.
-- Good if computations takes a lot of time.
-
-Cons:
-
-- You need to install R and RStudio to get started.
-- Packages must be installed.
-- Other needed programs may have to be installed.
-- Updates must be installed.
-
-If you need to install RStudio on your laptop [check this out](https://bss-osca.github.io/tfa/mod-r-install.html).
-
-RStudio Cloud works as your laptop version except that a workspace with projects for each module already is created. 
-
- 
-
-* Join the _Tools for Analytics_ workspace on [RStudio Cloud][rstudio-cloud] (signup if you have not done it yet).
-* Click the _Projects_ link (in the top) and open the project _00-module-11_. A personal copy of the project is loaded for you.
-* Put your cursor in the pane labeled Console, which is where you interact with the live R process. Create a simple object using code like `x <- 2 * 4` (followed by enter or return). Then inspect the `x` object by typing `x` followed by enter or return. You should see the value 8 print to screen. 
-* Try to open a new file **File > New File > New RMarkdown...**. Use the defaults and press **OK**. Next save the file and compile it using **Knit** (Ctrl+Shift+K). You have now compiled a document with R code embedded. 
-
-
-
-
-
-
-
+If you need a brushup on R have a look at the free online course [Introduction to R][datacamp-r-intro] at DataCamp. [DataCamp] is an online platform for learning data science. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here. 
 
 
 # Working in groups {#groups}
@@ -73,9 +26,9 @@ During the course you have been allocated into groups. You are expected to solve
 
 The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I'm talking about, think of it as the "Track Changes" features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see [Why Git? Why GitHub?][hg-why].
 
-## Joint R project structure {-}
+<!-- ## Joint R project structure {-} -->
 
-I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.  
+<!-- I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.   -->
 
 
 # Coding/naming convention {#coding-convention}
@@ -93,41 +46,9 @@ When defining variables and functions, it is in general good practice to use nou
 
 ## Commenting your code
 
-It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. A few examples in VBA are
+It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. 
 
-The top of a module file:
-
-```
-'' Module description.
-'  Can be more than one line.
-' 
-' @remarks Put your remarks on the module implementation here
-' @author Lars Relund <junk@relund.dk>
-' @date 2016-08-26
-```
-
-Before each `sub`, `function` etc. write:
-
-```
-'' Sub description
-' 
-' @pre Precondition 
-' @post Postcondition
-'
-' @param strA	Explanation of input parameter strA
-' @param intB Explanation of input parameter intB
-' @return Return value (if a function)
-' @remarks Further remarks 
-Public Function MyFunc(strA As String, intB As Integer) As Integer {
-   ...
-}
-```
-
-Further tags (i.e. keywords starting with @) can be seen [here](https://roxygen2.r-lib.org/articles/rd.html).
-
-In R we use a 'hash' (#') to comment functions:
-
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=TRUE}
 #' Subtract two vectors
 #'
 #' @param x First vector.
@@ -142,6 +63,8 @@ subtract <- function(x, y) {
   return(x-y)
 }
 ```
+
+You can add a roxygen skeleton automatically using **Code > Insert Roxygen Skeleton** in RStudio. 
 
 
 # Annotate the course notes {#annotate}
@@ -160,8 +83,8 @@ If you have a question related to the theory of RL:
 
 If you have a question related to R:
 
-  * First try to understand the error message and solve the problem. You may try to debug your code by inserting `browser()` in your R code. See [Chapter 11][debug-in-r] in @wtf for further details.  
-  * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "vba range", "r dplyr filter", "r tidyverse", "r subset vector", etc.
+  * First try to understand the error message and solve the problem. You may try to debug your code by inserting `browser()` in your R code. Further details about debugging can be seen [here][debug-in-r].  
+  * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "r dplyr filter", "r tidyverse", "r subset vector", etc.
   * Do you need help for a specific function in R then try `?[function-name]` such as `?geom_line`, `?mutate`, etc. Mostly, focus on the last section with examples. Moreover, some packages may have written vignettes try `browseVignettes(package = "package_name")` to check.
   * Have a look at **Help > Cheatsheets** in RStudio.
   * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.

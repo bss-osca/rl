@@ -1,5 +1,10 @@
 <html>
 <head>
+
+<script id="code-folding-options" type="application/json">
+  {"initial-state": "hide"}
+</script>
+   
 <script>
   $(document).ready(function() {
 
@@ -9,11 +14,29 @@
     $(this).addClass("hasAnchor").prepend('<a href="' + anchor + '" class="anchor"></a>');
   });
 });
+
+// code folding
+document.addEventListener("DOMContentLoaded", function() {
+  const languages = ['r', 'python', 'bash', 'sql', 'cpp', 'stan', 'julia', 'foldable'];
+  const options = JSON.parse(document.getElementById("code-folding-options").text);
+  const show = options["initial-state"] !== "hide";
+  Array.from(document.querySelectorAll("pre.sourceCode")).map(function(pre) {
+    const classList = pre.classList;
+    if (languages.some(x => classList.contains(x))) {
+      const div = pre.parentElement;
+      const state = show || classList.contains("fold-show") && !classList.contains("fold-hide") ? " open" : "";
+      div.outerHTML = `<details${state}><summary></summary>${div.outerHTML}</details>`;
+    }
+  });
+});
 </script>
+
 <script src="https://hypothes.is/embed.js" async></script>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 </head>
 </html>
