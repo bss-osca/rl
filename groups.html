@@ -24,14 +24,14 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-04-05" />
+<meta name="date" content="2022-04-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="r-setup.html"/>
+<link rel="prev" href="mod-r-setup.html"/>
 <link rel="next" href="coding-convention.html"/>
 <script src="libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -70,6 +70,11 @@
 <script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 <html>
 <head>
+
+<script id="code-folding-options" type="application/json">
+  {"initial-state": "hide"}
+</script>
+   
 <script>
   $(document).ready(function() {
 
@@ -79,12 +84,30 @@
     $(this).addClass("hasAnchor").prepend('<a href="' + anchor + '" class="anchor"></a>');
   });
 });
+
+// code folding
+document.addEventListener("DOMContentLoaded", function() {
+  const languages = ['r', 'python', 'bash', 'sql', 'cpp', 'stan', 'julia', 'foldable'];
+  const options = JSON.parse(document.getElementById("code-folding-options").text);
+  const show = options["initial-state"] !== "hide";
+  Array.from(document.querySelectorAll("pre.sourceCode")).map(function(pre) {
+    const classList = pre.classList;
+    if (languages.some(x => classList.contains(x))) {
+      const div = pre.parentElement;
+      const state = show || classList.contains("fold-show") && !classList.contains("fold-hide") ? " open" : "";
+      div.outerHTML = `<details${state}><summary></summary>${div.outerHTML}</details>`;
+    }
+  });
+});
 </script>
+
 <script src="https://hypothes.is/embed.js" async></script>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 </head>
 </html>
 
@@ -202,10 +225,10 @@ div.csl-indent {
 <li><a href="index.html#course-organization">Course organization<span></span></a></li>
 <li><a href="index.html#programming-software">Programming software<span></span></a></li>
 <li><a href="index.html#ack">Acknowledgements and license<span></span></a></li>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>0.1</b> Exercises<span></span></a>
+<li><a href="index.html#sec-intro-ex">Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="0.1.1" data-path="index.html"><a href="index.html#exercise---annotate-the-course-notes"><i class="fa fa-check"></i><b>0.1.1</b> Exercise - Annotate the course notes<span></span></a></li>
-<li class="chapter" data-level="0.1.2" data-path="index.html"><a href="index.html#exercise---github-r"><i class="fa fa-check"></i><b>0.1.2</b> Exercise - GitHub R …<span></span></a></li>
+<li><a href="index.html#sec-intro-ex-annotate">Exercise - How to annotate<span></span></a></li>
+<li><a href="index.html#sec-intro-ex-templates">Exercise - Templates<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="part"><span><b>I Introduction to RL<span></span></b></span></li>
@@ -240,17 +263,19 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="mod-bandit.html"><a href="mod-bandit.html#learning-outcomes-1"><i class="fa fa-check"></i><b>2.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.3</b> Exercises<span></span></a>
+<li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
+<li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#incremential-value-estimation"><i class="fa fa-check"></i><b>2.5</b> Incremential value estimation<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.6</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.7</b> Optimistic initial values<span></span></a></li>
+<li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.8</b> Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#ex-r-intro-self"><i class="fa fa-check"></i><b>2.3.1</b> Exercise - Self-Play<span></span></a></li>
+<li class="chapter" data-level="2.8.1" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---self-play"><i class="fa fa-check"></i><b>2.8.1</b> Exercise - Self-Play<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
-<li class="chapter" data-level="A" data-path="r-setup.html"><a href="r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
-<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a>
-<ul>
-<li><a href="groups.html#joint-r-project-structure">Joint R project structure<span></span></a></li>
-</ul></li>
+<li class="chapter" data-level="A" data-path="mod-r-setup.html"><a href="mod-r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
+<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a></li>
 <li class="chapter" data-level="C" data-path="coding-convention.html"><a href="coding-convention.html"><i class="fa fa-check"></i><b>C</b> Coding/naming convention<span></span></a>
 <ul>
 <li class="chapter" data-level="C.1" data-path="coding-convention.html"><a href="coding-convention.html#commenting-your-code"><i class="fa fa-check"></i><b>C.1</b> Commenting your code<span></span></a></li>
@@ -302,17 +327,15 @@ Members will now have access to this project where you can share code. NOTE you 
 </ul></li>
 </ol>
 <p>The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I’m talking about, think of it as the “Track Changes” features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see <a href="https://happygitwithr.com/big-picture.html#big-picture">Why Git? Why GitHub?</a>.</p>
-<div id="joint-r-project-structure" class="section level2 unnumbered hasAnchor">
-<h2>Joint R project structure<a href="groups.html#joint-r-project-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I suggest to have an R project with subfolders <code>joint</code>, <code>[student1 name]</code>, <code>[student2 name]</code>, …, <code>[student5 name]</code>. Student folders contain files only a single student work on (good when you do some exercises before class). Folder <code>joint</code> contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.</p>
-</div>
+<!-- ## Joint R project structure {-} -->
+<!-- I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.   -->
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="r-setup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mod-r-setup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="coding-convention.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

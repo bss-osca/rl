@@ -4,9 +4,8 @@ fig:unnamed-chunk-4
 fig:unnamed-chunk-6
 fig:unnamed-chunk-7
 fig:hgf
-sec-intro-ex
-exercise---annotate-the-course-notes
-exercise---github-r
+fig:bandit
+fig:bandit-choose
 mod-rl-intro
 mod-rl-intro-lo
 textbook-readings
@@ -30,8 +29,14 @@ exercise---other-improvements
 mod-bandit
 learning-outcomes-1
 textbook-readings-1
+the-k-armed-bandit-problem
+estimating-the-value-of-an-action
+incremential-value-estimation
+the-role-of-the-step-size
+optimistic-initial-values
 sec-bandit-ex
-r-setup
+exercise---self-play
+mod-r-setup
 groups
 coding-convention
 commenting-your-code

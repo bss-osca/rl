@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-04-05" />
+<meta name="date" content="2022-04-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -70,6 +70,11 @@
 <script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 <html>
 <head>
+
+<script id="code-folding-options" type="application/json">
+  {"initial-state": "hide"}
+</script>
+   
 <script>
   $(document).ready(function() {
 
@@ -79,12 +84,30 @@
     $(this).addClass("hasAnchor").prepend('<a href="' + anchor + '" class="anchor"></a>');
   });
 });
+
+// code folding
+document.addEventListener("DOMContentLoaded", function() {
+  const languages = ['r', 'python', 'bash', 'sql', 'cpp', 'stan', 'julia', 'foldable'];
+  const options = JSON.parse(document.getElementById("code-folding-options").text);
+  const show = options["initial-state"] !== "hide";
+  Array.from(document.querySelectorAll("pre.sourceCode")).map(function(pre) {
+    const classList = pre.classList;
+    if (languages.some(x => classList.contains(x))) {
+      const div = pre.parentElement;
+      const state = show || classList.contains("fold-show") && !classList.contains("fold-hide") ? " open" : "";
+      div.outerHTML = `<details${state}><summary></summary>${div.outerHTML}</details>`;
+    }
+  });
+});
 </script>
+
 <script src="https://hypothes.is/embed.js" async></script>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 </head>
 </html>
 
@@ -202,10 +225,10 @@ div.csl-indent {
 <li><a href="index.html#course-organization">Course organization<span></span></a></li>
 <li><a href="index.html#programming-software">Programming software<span></span></a></li>
 <li><a href="index.html#ack">Acknowledgements and license<span></span></a></li>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>0.1</b> Exercises<span></span></a>
+<li><a href="index.html#sec-intro-ex">Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="0.1.1" data-path="index.html"><a href="index.html#exercise---annotate-the-course-notes"><i class="fa fa-check"></i><b>0.1.1</b> Exercise - Annotate the course notes<span></span></a></li>
-<li class="chapter" data-level="0.1.2" data-path="index.html"><a href="index.html#exercise---github-r"><i class="fa fa-check"></i><b>0.1.2</b> Exercise - GitHub R …<span></span></a></li>
+<li><a href="index.html#sec-intro-ex-annotate">Exercise - How to annotate<span></span></a></li>
+<li><a href="index.html#sec-intro-ex-templates">Exercise - Templates<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="part"><span><b>I Introduction to RL<span></span></b></span></li>
@@ -240,17 +263,19 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="mod-bandit.html"><a href="mod-bandit.html#learning-outcomes-1"><i class="fa fa-check"></i><b>2.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.3</b> Exercises<span></span></a>
+<li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
+<li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#incremential-value-estimation"><i class="fa fa-check"></i><b>2.5</b> Incremential value estimation<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.6</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.7</b> Optimistic initial values<span></span></a></li>
+<li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.8</b> Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#ex-r-intro-self"><i class="fa fa-check"></i><b>2.3.1</b> Exercise - Self-Play<span></span></a></li>
+<li class="chapter" data-level="2.8.1" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---self-play"><i class="fa fa-check"></i><b>2.8.1</b> Exercise - Self-Play<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
-<li class="chapter" data-level="A" data-path="r-setup.html"><a href="r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
-<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a>
-<ul>
-<li><a href="groups.html#joint-r-project-structure">Joint R project structure<span></span></a></li>
-</ul></li>
+<li class="chapter" data-level="A" data-path="mod-r-setup.html"><a href="mod-r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
+<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a></li>
 <li class="chapter" data-level="C" data-path="coding-convention.html"><a href="coding-convention.html"><i class="fa fa-check"></i><b>C</b> Coding/naming convention<span></span></a>
 <ul>
 <li class="chapter" data-level="C.1" data-path="coding-convention.html"><a href="coding-convention.html#commenting-your-code"><i class="fa fa-check"></i><b>C.1</b> Commenting your code<span></span></a></li>
@@ -287,47 +312,11 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="r-setup" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">A</span> Setting up R<a href="r-setup.html#r-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="mod-r-setup" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">A</span> Setting up R<a href="mod-r-setup.html#mod-r-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p><a href="https://www.r-project.org">R</a> is a programming language and free software environment. The R language is widely used among statisticians and data miners for developing statistical software and data analysis. For a further overview and description of the history of R see <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html">Chapter 2</a> in <span class="citation">Peng (<a href="#ref-rdpeng" role="doc-biblioref">2018</a>)</span>. R can be run from a terminal but in general you use an IDE (integrated development environment) <a href="https://rstudio.com">RStudio</a> for running R and to saving your work.</p>
-<p>R and RStudio can either be run from your laptop or using <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> which run R in the cloud using your browser. During this course <strong>it is recommend to use RStudio on your laptop</strong> as much as possible; however, you also need to have an <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> account. Some pros and cons of using R in the cloud vs on the laptop are</p>
-<p><strong>Cloud (<a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a>)</strong></p>
-<p>Pros:</p>
-<ul>
-<li>Log in and you are ready to use R.</li>
-<li>No need to download anything.</li>
-<li>Packages easier to install.</li>
-<li>Everything can be run using a browser.</li>
-</ul>
-<p>Cons:</p>
-<ul>
-<li>There is a limit on user time and CPU time. You need to pay if need more time.</li>
-<li>Often slower than the desktop version.</li>
-<li>Need an internet connection.</li>
-<li>Risky to use at the exam if the internet connection is slow or is down. Use the laptop version instead.</li>
-</ul>
-<p><strong>Laptop (<a href="https://www.r-project.org">R</a> and <a href="https://rstudio.com">RStudio</a>)</strong></p>
-<p>Pros:</p>
-<ul>
-<li>Can be used without any internet connection.</li>
-<li>No limit on user time and CPU usage.</li>
-<li>Good if computations takes a lot of time.</li>
-</ul>
-<p>Cons:</p>
-<ul>
-<li>You need to install R and RStudio to get started.</li>
-<li>Packages must be installed.</li>
-<li>Other needed programs may have to be installed.</li>
-<li>Updates must be installed.</li>
-</ul>
-<p>If you need to install RStudio on your laptop <a href="https://bss-osca.github.io/tfa/mod-r-install.html">check this out</a>.</p>
-<p>RStudio Cloud works as your laptop version except that a workspace with projects for each module already is created.</p>
-<ul>
-<li>Join the <em>Tools for Analytics</em> workspace on <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> (signup if you have not done it yet).</li>
-<li>Click the <em>Projects</em> link (in the top) and open the project <em>00-module-11</em>. A personal copy of the project is loaded for you.</li>
-<li>Put your cursor in the pane labeled Console, which is where you interact with the live R process. Create a simple object using code like <code>x &lt;- 2 * 4</code> (followed by enter or return). Then inspect the <code>x</code> object by typing <code>x</code> followed by enter or return. You should see the value 8 print to screen.</li>
-<li>Try to open a new file <strong>File &gt; New File &gt; New RMarkdown…</strong>. Use the defaults and press <strong>OK</strong>. Next save the file and compile it using <strong>Knit</strong> (Ctrl+Shift+K). You have now compiled a document with R code embedded.</li>
-</ul>
+<p>R and RStudio can either be run from your laptop or using <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> which run R in the cloud using your browser. During this course <strong>it is recommend to use RStudio on your laptop</strong> since there is no limit on CPU usage. If you need to install R and RStudio on your laptop <a href="https://bss-osca.github.io/tfa/mod-r-install.html#r-install">check this out</a>.</p>
+<p>If you need a brushup on R have a look at the free online course <a href="https://learn.datacamp.com/courses/free-introduction-to-r">Introduction to R</a> at DataCamp. <a href="https://www.datacamp.com/">DataCamp</a> is an online platform for learning data science. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here.</p>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">

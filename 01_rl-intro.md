@@ -387,7 +387,7 @@ We start with an empty board and have at most 9 moves (a player may win before).
 
 ### Players and learning to play
 
-Assume that we initially define a value $V(S)$ of each state $S$ to be 1 if we win, 0 if we loose and 0.5 otherwise. Most of the time we *exploit* our knowledge, i.e. choose the action which gives us the highest estimated reward (probability of winning). However, some times (with probability $\epsilon$) we *explore* and choose another action/move than what seems optimal. These moves make us experience states we may otherwise never see. If we exploit we update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1}-V(S_t)))$$ where $\alpha$ is the *step-size* parameter which influences the rate of learning. 
+Assume that we initially define a value $V(S)$ of each state $S$ to be 1 if we win, 0 if we loose and 0.5 otherwise. Most of the time we *exploit* our knowledge, i.e. choose the action which gives us the highest estimated reward (probability of winning). However, some times (with probability $\epsilon$) we *explore* and choose another action/move than what seems optimal. These moves make us experience states we may otherwise never see. If we exploit we update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$ where $\alpha$ is the *step-size* parameter which influences the rate of learning. 
 
 Let us implement a RL player using a [R6 class](https://adv-r.hadley.nz/r6.html) and store the values using a [hash list](https://github.com/decisionpatterns/r-hash). We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method `move` takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state and update the value function (if exploit). The player explore with probability `epsilon` if there is not a next state that makes us win. 
 
@@ -859,6 +859,8 @@ Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement l
 [git-install]: https://git-scm.com/downloads
 [github-actions]: https://github.com/features/actions
 [github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
 
 [happy-git]: https://happygitwithr.com
 [hg-install-git]: https://happygitwithr.com/install-git.html
@@ -901,6 +903,7 @@ Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement l
 [r4ds-factors]: https://r4ds.had.co.nz/factors.html
 [r4ds-strings]: https://r4ds.had.co.nz/strings.html
 [r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
 
 [stat-545]: https://stat545.com
 [stat-545-functions-part1]: https://stat545.com/functions-part1.html

@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-04-05" />
+<meta name="date" content="2022-04-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -70,6 +70,11 @@
 <script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 <html>
 <head>
+
+<script id="code-folding-options" type="application/json">
+  {"initial-state": "hide"}
+</script>
+   
 <script>
   $(document).ready(function() {
 
@@ -79,12 +84,30 @@
     $(this).addClass("hasAnchor").prepend('<a href="' + anchor + '" class="anchor"></a>');
   });
 });
+
+// code folding
+document.addEventListener("DOMContentLoaded", function() {
+  const languages = ['r', 'python', 'bash', 'sql', 'cpp', 'stan', 'julia', 'foldable'];
+  const options = JSON.parse(document.getElementById("code-folding-options").text);
+  const show = options["initial-state"] !== "hide";
+  Array.from(document.querySelectorAll("pre.sourceCode")).map(function(pre) {
+    const classList = pre.classList;
+    if (languages.some(x => classList.contains(x))) {
+      const div = pre.parentElement;
+      const state = show || classList.contains("fold-show") && !classList.contains("fold-hide") ? " open" : "";
+      div.outerHTML = `<details${state}><summary></summary>${div.outerHTML}</details>`;
+    }
+  });
+});
 </script>
+
 <script src="https://hypothes.is/embed.js" async></script>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 </head>
 </html>
 
@@ -202,10 +225,10 @@ div.csl-indent {
 <li><a href="index.html#course-organization">Course organization<span></span></a></li>
 <li><a href="index.html#programming-software">Programming software<span></span></a></li>
 <li><a href="index.html#ack">Acknowledgements and license<span></span></a></li>
-<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>0.1</b> Exercises<span></span></a>
+<li><a href="index.html#sec-intro-ex">Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="0.1.1" data-path="index.html"><a href="index.html#exercise---annotate-the-course-notes"><i class="fa fa-check"></i><b>0.1.1</b> Exercise - Annotate the course notes<span></span></a></li>
-<li class="chapter" data-level="0.1.2" data-path="index.html"><a href="index.html#exercise---github-r"><i class="fa fa-check"></i><b>0.1.2</b> Exercise - GitHub R …<span></span></a></li>
+<li><a href="index.html#sec-intro-ex-annotate">Exercise - How to annotate<span></span></a></li>
+<li><a href="index.html#sec-intro-ex-templates">Exercise - Templates<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="part"><span><b>I Introduction to RL<span></span></b></span></li>
@@ -240,17 +263,19 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="mod-bandit.html"><a href="mod-bandit.html#learning-outcomes-1"><i class="fa fa-check"></i><b>2.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.3</b> Exercises<span></span></a>
+<li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
+<li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#incremential-value-estimation"><i class="fa fa-check"></i><b>2.5</b> Incremential value estimation<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.6</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.7</b> Optimistic initial values<span></span></a></li>
+<li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.8</b> Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="mod-rl-intro.html"><a href="mod-rl-intro.html#ex-r-intro-self"><i class="fa fa-check"></i><b>2.3.1</b> Exercise - Self-Play<span></span></a></li>
+<li class="chapter" data-level="2.8.1" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---self-play"><i class="fa fa-check"></i><b>2.8.1</b> Exercise - Self-Play<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
-<li class="chapter" data-level="A" data-path="r-setup.html"><a href="r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
-<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a>
-<ul>
-<li><a href="groups.html#joint-r-project-structure">Joint R project structure<span></span></a></li>
-</ul></li>
+<li class="chapter" data-level="A" data-path="mod-r-setup.html"><a href="mod-r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R<span></span></a></li>
+<li class="chapter" data-level="B" data-path="groups.html"><a href="groups.html"><i class="fa fa-check"></i><b>B</b> Working in groups<span></span></a></li>
 <li class="chapter" data-level="C" data-path="coding-convention.html"><a href="coding-convention.html"><i class="fa fa-check"></i><b>C</b> Coding/naming convention<span></span></a>
 <ul>
 <li class="chapter" data-level="C.1" data-path="coding-convention.html"><a href="coding-convention.html#commenting-your-code"><i class="fa fa-check"></i><b>C.1</b> Commenting your code<span></span></a></li>
@@ -291,7 +316,7 @@ div.csl-indent {
 <h1 class="title">Reinforcement Learning for Business (RL)</h1>
 <h2 class="subtitle"><em>Course notes</em></h2>
 <p class="author"><em>Lars Relund Nielsen</em></p>
-<p class="date"><em>2022-04-05</em></p>
+<p class="date"><em>2022-04-22</em></p>
 </div>
 <div id="mod-intro" class="section level1 unnumbered hasAnchor">
 <h1>About the course notes<a href="index.html#mod-intro" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -369,10 +394,26 @@ div.csl-indent {
 <p>Lectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials are given and we focus on a specific RL problem.</p>
 <p>This module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:</p>
 <ul>
-<li><a href="mod-rl-intro.html#mod-rl-intro">Part I</a> gives you a general introduction to RL and the bandit problem.</li>
+<li><p><a href="mod-rl-intro.html#mod-rl-intro">Part I</a> gives you a general introduction to RL and the bandit problem.</p></li>
+<li><p><a href="mod-bandit.html#mod-bandit">Part II</a> consider RL sequential decision problems where the state and state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module <a href="mod-bandit.html#mod-bandit">2</a>) a RL problem in which there is only a single state. Next, Markov decision processes are considered as a general modelling framework (Module <a href="#mod-mdp"><strong>??</strong></a>)</p></li>
 </ul>
-<p><!-- * [Part II](#mod-vba-datatypes) gives you an overview over programming in VBA including datatypes (Module \@ref(mod-vba-datatypes)), procedures (Module \@ref(mod-vba-procedures)), loop and conditional statements (Module \@ref(mod-vba-loops-cond)) and the object model (Module \@ref(mod-vba-object-model)). -->
-<!-- * [Part III](#mod-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
+<!-- The next three chapters describe three fundamental classes of methods for solving finite -->
+<!-- Markov decision problems: dynamic programming, Monte Carlo methods, and temporaldi↵ -->
+<!-- erence learning. Each class of methods has its strengths and weaknesses. Dynamic -->
+<!-- programming methods are well developed mathematically, but require a complete and -->
+<!-- accurate model of the environment. Monte Carlo methods don’t require a model and are -->
+<!-- conceptually simple, but are not well suited for step-by-step incremental computation. -->
+<!-- Finally, temporal-di↵erence methods require no model and are fully incremental, but are -->
+<!-- more complex to analyze. The methods also di↵er in several ways with respect to their -->
+<!-- efficiency and speed of convergence. -->
+<!-- The remaining two chapters describe how these three classes of methods can be -->
+<!-- combined to obtain the best features of each of them. In one chapter we describe how -->
+<!-- the strengths of Monte Carlo methods can be combined with the strengths of temporaldi↵ -->
+<!-- erence methods via multi-step bootstrapping methods. In the final chapter of this part -->
+<!-- of the book we show how temporal-di↵erence learning methods can be combined with -->
+<!-- model learning and planning methods (such as dynamic programming) for a complete -->
+<!-- and unified solution to the tabular reinforcement learning problem. -->
+<p><!-- * [Part III](#mod-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
 <!-- * [Part IV](#mod-vba-project) presents the mandatory VBA project. -->
 <!-- * [Part V](#mod-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). -->
 <!-- * [Part VI](#mod-r-loops-cond) gives you an overview over programming in R including loops and conditionals (Module \@ref(mod-r-loops-cond)) and functions (Module \@ref(mod-r-functions)). --></p>
@@ -385,13 +426,15 @@ div.csl-indent {
 <div id="programming-software" class="section level2 unnumbered hasAnchor">
 <h2>Programming software<a href="index.html#programming-software" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We use <a href="https://www.r-project.org">R</a> as programming software and it is assumed that you are familiar with using R. <a href="https://www.r-project.org">R</a> is a programming language and free software environment. R can be run from a terminal but in general you use an IDE (integrated development environment) <a href="https://rstudio.com">RStudio</a> for running R and to saving your work. R and RStudio can either be run from your laptop or using <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> which run R in the cloud using your browser.</p>
-<p>It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module ??? in the appendix.</p>
+<p>It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module <a href="mod-r-setup.html#mod-r-setup">A</a>) in the appendix.</p>
 </div>
 <div id="ack" class="section level2 unnumbered hasAnchor">
 <h2>Acknowledgements and license<a href="index.html#ack" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Some of the materials in this book are taken from various places</p>
+<p>Materials in this book are taken from various places</p>
 <ul>
 <li>The bookdown skeleton and some notes are based on the <a href="https://bss-osca.github.io/tfa/">Tools for Analytics</a> course.</li>
+<li>Some notes are adopted from <a href="https://github.com/enjeeneer/sutton_and_barto">Scott Jeen</a>.</li>
+<li>Many exercises are taken from <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span> and modified slightly.</li>
 </ul>
 <!-- * Some parts in Module \@ref(mod-intro) are inspired by [Chapter 1](https://r4ds.had.co.nz/introduction.html) in @r4ds. -->
 <!-- * The VBA modules are inspired by the book @vba-book. This also holds for some of the exercises.  -->
@@ -408,14 +451,27 @@ div.csl-indent {
 <!-- Also thanks to Solveig for proofreading the draft. -->
 <p>This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</p>
 </div>
-<div id="sec-intro-ex" class="section level2 hasAnchor" number="0.1">
-<h2><span class="header-section-number">0.1</span> Exercises<a href="index.html#sec-intro-ex" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="sec-intro-ex" class="section level2 unnumbered hasAnchor">
+<h2>Exercises<a href="index.html#sec-intro-ex" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<div id="exercise---annotate-the-course-notes" class="section level3 hasAnchor" number="0.1.1">
-<h3><span class="header-section-number">0.1.1</span> Exercise - Annotate the course notes<a href="index.html#exercise---annotate-the-course-notes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sec-intro-ex-annotate" class="section level3 unnumbered hasAnchor">
+<h3>Exercise - How to annotate<a href="index.html#sec-intro-ex-annotate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The online course notes can be annotated using <a href="https://web.hypothes.is/">hypothes.is</a>. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes.</p>
+<!-- <img src="img/annotate.png" align="right" alt="Hypothes.is icons" title="Hypothes.is icons" style = "float: right; margin: 0 0 0 15px;"> -->
+<ol style="list-style-type: decimal">
+<li>Sign-up at <a href="https://web.hypothes.is/">hypothes.is</a>. If you are using Chrome you may also install the <a href="https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek">Chrome extension</a>.</li>
+<li>Go back to this page and login in the upper right corner (there should be some icons e.g. <code>&lt;</code>).</li>
+<li>Select some text and try to annotate it using both a private and public annotation (you may delete it again afterwards).</li>
+</ol>
 </div>
-<div id="exercise---github-r" class="section level3 hasAnchor" number="0.1.2">
-<h3><span class="header-section-number">0.1.2</span> Exercise - GitHub R …<a href="index.html#exercise---github-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sec-intro-ex-templates" class="section level3 unnumbered hasAnchor">
+<h3>Exercise - Templates<a href="index.html#sec-intro-ex-templates" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A template in RMarkdown of the course notes and exercises are available at <a href="gh-rl-student">GitHub</a>. You can download the repository and keep your own notes during the course by having an R project with it.</p>
+<ol style="list-style-type: decimal">
+<li>Open R studio and do: <strong>File &gt; New Project … &gt; Version Control &gt; Git</strong>. Add <code>https://github.com/bss-osca/rl-student</code> as repository url and create the project.</li>
+<li>Run <code>renv::restore()</code> from the R command line to install needed packages (this may take some time). If you experience errors then try to install the packages one at a time using <code>install.packages("pkg name")</code>.</li>
+<li>Open e.g. the file <code>01_rl-intro.Rmd</code> and try to knit it using the Knit button in the upper left corner. A html file with the output will be made. You should be able to add you own notes and solve the exercises using the Rmd file for each module.</li>
+</ol>
 
 </div>
 </div>
