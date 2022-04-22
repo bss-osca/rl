@@ -31,7 +31,6 @@ learning-outcomes-1
 textbook-readings-1
 the-k-armed-bandit-problem
 estimating-the-value-of-an-action
-incremential-value-estimation
 the-role-of-the-step-size
 optimistic-initial-values
 sec-bandit-ex

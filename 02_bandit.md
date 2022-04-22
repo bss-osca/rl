@@ -47,11 +47,6 @@ By the end of this module, you are expected to:
 <!-- * Have an overview over what VBA can do. -->
 <!-- * Recorded you first macro using the macro recorder -->
 
-
-
-
-
-
 <!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
@@ -103,7 +98,7 @@ How can the value of an action be estimated, i.e. the expected reward of an acti
 \begin{equation} 
 	Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
 \end{equation}
-Storing $Q_t(a)$ this way is cumbersome since memory and computation requirements grow over time. Instead an incremental solution is better. If we assume that $N_t(a) = n-1$ and set $Q_t(a) = Q_n$ then $Q_{n+1}$ becomes:
+Storing $Q_t(a)$ this way is cumbersome since memory and computation requirements grow over time. Instead an *incremental* approach is better. If we assume that $N_t(a) = n-1$ and set $Q_t(a) = Q_n$ then $Q_{n+1}$ becomes:
 \begin{align}
   Q_{n+1} &= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
 		    &= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
@@ -111,7 +106,7 @@ Storing $Q_t(a)$ this way is cumbersome since memory and computation requirement
 		    &= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
 	       &= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
 \end{align}
-That os, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$). 
+That is, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$). 
 
 A greedy approach for selecting the next action is
 \begin{equation}
@@ -139,24 +134,171 @@ Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure
 Let us try to implement the algorithm using an R6 agent and environment class. First we define the agent that do actions based on an $\epsilon$-greedy strategy, stores the estimated $Q$ values and the number of times an action has been chosen:
 
 
+```r
+#' R6 Class representing the RL agent
+RLAgent <- R6Class("RLAgent",
+   public = list(
+      #' @field qV Q estimates.
+      qV = NULL,  
+      
+      #' @field nV Action counter.
+      nV = NULL,  
+      
+      #' @field k Number of bandits.
+      k = NULL,   
+      
+      #' @field epsilon Epsilon used in epsilon greed action selection.
+      epsilon = NULL, 
+      
+      #' @description Create an object (when call new).
+      #' @param k Number of bandits.
+      #' @param epsilon Epsilon used in epsilon greed action selection.
+      #' @return The new object.
+      initialize = function(k = 10, epsilon = 0.01, ini =  0) {
+         self$epsilon <- epsilon
+         self$qV <- rep(ini, k)
+         self$nV <- rep(0, k)
+         self$k <- k
+      },
+      
+      #' @description Clear learning.
+      #' @param eps Epsilon.
+      #' @return Action (index).
+      clearLearning = function() {
+         self$qV <- 0
+         self$nV <- 0
+      },
+      
+      #' @description Select next action using an epsilon greedy strategy.
+      #' @return Action (index).
+      selectActionEG = function() {   
+         if (runif(1) <= self$epsilon) { # explore
+            a <- sample(1:self$k, 1)
+         } else { # exploit
+            a <- which(self$qV == max(self$qV))
+            a <- a[sample(length(a), 1)]
+         }
+         return(a)
+      },
+      
+      #' @description Update learning values (including action counter).
+      #' @param a Action.
+      #' @param r Reward.
+      #' @return NULL (invisible)
+      updateQ = function(a, r) {
+         self$nV[a] <- self$nV[a] + 1
+         self$qV[a] <- self$qV[a] + 1/self$nV[a] * (r - self$qV[a])
+         return(invisible(NULL))
+      }
+   )
+)
+```
 
 Next, the environment generating rewards. The true mean reward $q_*(a)$ of an action were selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward was then generated using a normal distribution with mean $q_*(a)$ and variance 1:
 
 
+```r
+#' R6 Class representing the RL environment
+#' 
+#' Assume that bandits are normal distributed with a mean and std.dev of one. 
+RLEnvironment <- R6Class("RLEnvironment",
+   public = list(
+      #' @field mV Mean values
+      mV = NULL,  
+      
+      #' @field k Number of bandits.
+      k = NULL,   
+      
+      #' @description Create an object (when call new).
+      #' @param k Number of bandits.
+      #' @return The new object.
+      initialize = function(k = 10) {
+         self$mV <- rnorm(k)
+      },
+      
+      #' @description Sample reward of a bandit.
+      #' @param a Bandit (index).
+      #' @return The reward.
+      reward = function(a) {
+         return(rnorm(1, self$mV[a]))
+      },
+      
+      #' @description Returns action with best mean.
+      optimalAction = function() return(which.max(self$mV))
+   )
+)
+```
 
 To test the RL algorithm we use a function returning two plots that compare the performance:
 
 
+```r
+#' Performance of the bandit algorithm using different epsilons.
+#'
+#' @param k Bandits.
+#' @param steps Time steps.
+#' @param runs Number of runs with a new environment generated.
+#' @param epsilons Epsilons to be tested.
+#' @param ini Initial value estimates.
+#' @return Two plots in a list.
+performance <- function(k = 10, steps = 1000, runs = 500, epsilons = c(0, 0.01, 0.1), ini = 0) {
+   rew <- matrix(0, nrow = steps, ncol = length(epsilons))
+   best <- matrix(0, nrow = steps, ncol = length(epsilons))
+   for (run in 1:runs) {
+      env <- RLEnvironment$new(k)
+      oA <- env$optimalAction()
+      # print(oA); print(env$mV)
+      for (i in 1:length(epsilons)) {
+         agent <- RLAgent$new(k, epsilons[i], ini)
+         for (t in 1:steps) {
+            a <- agent$selectActionEG()
+            r <- env$reward(a)
+            agent$updateQ(a, r)
+            rew[t, i] <- rew[t, i] + r  # sum of rewards generated at t
+            best[t, i] <- best[t, i] + (a == oA)
+         }
+      }
+   }
+   # rew <- apply(rew, 2, cumsum)/runs   # avg cumsums of each col 
+   best <- apply(best, 2, cumsum)/runs
+   rew <- rew/runs   # avg of each col 
+   # best <- best/runs  
+   colnames(rew) <- epsilons
+   colnames(best) <- epsilons
+   dat1 <- tibble(t = 1:steps) %>%
+      bind_cols(rew) %>%   # bind data together
+      pivot_longer(!t, values_to = "reward", names_to = "epsilon") %>%   # move rewards to a single column
+      group_by(epsilon) %>% 
+      mutate(rewAvg = cumsum(reward)/t)  %>% # calc reward
+      # mutate(reward = reward/t)  # calc average reward
+      mutate(rewMA = rollapply(reward, 50, mean, align = "right", fill = NA))
+   dat2 <- tibble(t = 1:steps) %>%
+      bind_cols(best) %>%   # bind data together
+      pivot_longer(!t, values_to = "optimal", names_to = "epsilon") %>%   # move rewards to a single column
+      mutate(optimal = optimal/t)  # calc average
+   pt1 <- dat1 %>% 
+      ggplot(aes(x = t, y = rewAvg, col = epsilon)) +
+      geom_line() +
+      geom_line(aes(x = t, y = rewMA, col = epsilon), linetype = "dotted") +
+      labs(y = "Average reward per time unit", x = "Time", title = str_c("Average over ", runs, " runs"))
+   pt2 <- dat2 %>% 
+      ggplot(aes(x = t, y = optimal, col = epsilon)) +
+      geom_line() +
+      labs(y = "Average number of times optimal action chosen", x = "Time", title = str_c("Average over ", runs, " runs"))
+   return(list(ptR = pt1, ptO = pt2))
+}
+```
 
 We test the performance using 2000 runs over 1000 time steps.
 
+
+```r
+pts <- performance(runs = 2000, steps = 1000)
+pts$ptR
+pts$ptO
+```
+
 <img src="02_bandit_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" />
-
-
-
-
-## Incremential value estimation
-
 
 
 ## The role of the step-size
@@ -183,11 +325,11 @@ Below you will find a set of exercises. Always have a look at the exercises befo
 ### Exercise - Self-Play 
 
 
-<div class="modal fade bs-example-modal-lg" id="c4ZGLrADqBCDcUASLG5T" tabindex="-1" role="dialog" aria-labelledby="c4ZGLrADqBCDcUASLG5T-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="c4ZGLrADqBCDcUASLG5T-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="utrAlnWBDCa3l0mrrSFW" tabindex="-1" role="dialog" aria-labelledby="utrAlnWBDCa3l0mrrSFW-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="utrAlnWBDCa3l0mrrSFW-title">Solution</h4></div><div class="modal-body">
 
 <p>If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical).</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#c4ZGLrADqBCDcUASLG5T">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#utrAlnWBDCa3l0mrrSFW">Solution</button>
 
 Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
 played against itself. What do you think would happen in this case? Would it learn a different way of playing?

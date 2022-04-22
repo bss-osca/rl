@@ -265,12 +265,11 @@ div.csl-indent {
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
 <li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
 <li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
-<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#incremential-value-estimation"><i class="fa fa-check"></i><b>2.5</b> Incremential value estimation<span></span></a></li>
-<li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.6</b> The role of the step-size<span></span></a></li>
-<li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.7</b> Optimistic initial values<span></span></a></li>
-<li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.8</b> Exercises<span></span></a>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.6</b> Optimistic initial values<span></span></a></li>
+<li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.7</b> Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="2.8.1" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---self-play"><i class="fa fa-check"></i><b>2.8.1</b> Exercise - Self-Play<span></span></a></li>
+<li class="chapter" data-level="2.7.1" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---self-play"><i class="fa fa-check"></i><b>2.7.1</b> Exercise - Self-Play<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
@@ -318,13 +317,15 @@ div.csl-indent {
 <div id="mod-rl-intro-lo" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Learning outcomes<a href="mod-rl-intro.html#mod-rl-intro-lo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>By the end of this module, you are expected to:</p>
-<!-- * Describe what VBA is. -->
-<!-- * Setup Excel for VBA. -->
-<!-- * Know how the macro recorder works. -->
-<!-- * Make your first program. -->
-<!-- * Have an overview over what VBA can do. -->
-<!-- * Recorded you first macro using the macro recorder -->
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+<ul>
+<li>Describe what RL is.</li>
+<li>Be able to identify different sequential decision problems.</li>
+<li>Know what Business Analytics are and identify RL in that framework.</li>
+<li>Memorise different names for RL and how it fits in a Machine Learning framework.</li>
+<li>Formulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).</li>
+<li>Run your first RL algorithm and evaluate on its solution.</li>
+</ul>
+<p>The learning outcomes relate to the <a href="mod-lg-course.html#mod-lg-course">overall learning goals</a> number 3, 5, 6, 9 and 11 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
@@ -377,7 +378,7 @@ div.csl-indent {
 <p><a href="https://en.wikipedia.org/wiki/Business_analytics">Business Analytics</a> (BA) (or just <a href="http://connect.informs.org/analytics/home">Analytics</a>) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using “big” data sources.</p>
 <p><strong>Descriptive Analytics</strong>: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.</p>
 <p><strong>Predictive Analytics</strong>: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).</p>
-<p><strong>Prescriptive Analytics</strong>: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since reinforcement learning focus optimizing decisions it is Prescriptive Analytics.</p>
+<p><strong>Prescriptive Analytics</strong>: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since RL focus optimizing decisions it is Prescriptive Analytics also known as sequential decision analytics.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:analytics"></span>
 <img src="img/analytics_plot9.png" alt="Business Analytics and competive advantage."  />
 <p class="caption">

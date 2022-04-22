@@ -19,14 +19,14 @@ This module gives a short introduction to Reinforcement learning.
 
 By the end of this module, you are expected to:
 
-<!-- * Describe what VBA is. -->
-<!-- * Setup Excel for VBA. -->
-<!-- * Know how the macro recorder works. -->
-<!-- * Make your first program. -->
-<!-- * Have an overview over what VBA can do. -->
-<!-- * Recorded you first macro using the macro recorder -->
+* Describe what RL is. 
+* Be able to identify different sequential decision problems.
+* Know what Business Analytics are and identify RL in that framework.
+* Memorise different names for RL and how it fits in a Machine Learning framework.
+* Formulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).
+* Run your first RL algorithm and evaluate on its solution.
 
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 5, 6, 9 and 11 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -87,7 +87,7 @@ This can also be seen as learning the reward of our actions.
 
 **Predictive Analytics**: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).
 
-**Prescriptive Analytics**: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since reinforcement learning focus optimizing decisions it is Prescriptive Analytics.
+**Prescriptive Analytics**: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since RL focus optimizing decisions it is Prescriptive Analytics also known as sequential decision analytics.
 
 <div class="figure" style="text-align: center">
 <img src="img/analytics_plot9.png" alt="Business Analytics and competive advantage."  />

@@ -38,8 +38,9 @@ By the end of this module, you are expected to:
 
 * Understand the prerequisites and the goals for the course.
 * Have downloaded the textbook.
-* Describe what Business Analytics are.
 * Know how the course is organized.
+* Installed R and RStudio.
+* Annotated the online notes.
 
 The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 5 and 6 of the course.
 
