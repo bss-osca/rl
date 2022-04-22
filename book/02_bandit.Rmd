@@ -8,7 +8,9 @@ editor_options:
 ```
 
 ```{r}
-knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(
+   echo = TRUE
+)
 ```
 
 
@@ -49,11 +51,6 @@ By the end of this module, you are expected to:
 <!-- * Make your first program. -->
 <!-- * Have an overview over what VBA can do. -->
 <!-- * Recorded you first macro using the macro recorder -->
-
-
-
-
-
 
 <!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
 
@@ -104,7 +101,7 @@ How can the value of an action be estimated, i.e. the expected reward of an acti
 \begin{equation} 
 	Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
 \end{equation}
-Storing $Q_t(a)$ this way is cumbersome since memory and computation requirements grow over time. Instead an incremental solution is better. If we assume that $N_t(a) = n-1$ and set $Q_t(a) = Q_n$ then $Q_{n+1}$ becomes:
+Storing $Q_t(a)$ this way is cumbersome since memory and computation requirements grow over time. Instead an *incremental* approach is better. If we assume that $N_t(a) = n-1$ and set $Q_t(a) = Q_n$ then $Q_{n+1}$ becomes:
 \begin{align}
   Q_{n+1} &= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
 		    &= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
@@ -112,7 +109,7 @@ Storing $Q_t(a)$ this way is cumbersome since memory and computation requirement
 		    &= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
 	       &= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
 \end{align}
-That os, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$). 
+That is, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$). 
 
 A greedy approach for selecting the next action is
 \begin{equation}
@@ -139,7 +136,7 @@ Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure
 
 Let us try to implement the algorithm using an R6 agent and environment class. First we define the agent that do actions based on an $\epsilon$-greedy strategy, stores the estimated $Q$ values and the number of times an action has been chosen:
 
-```{r}
+```{r, echo=TRUE}
 #' R6 Class representing the RL agent
 RLAgent <- R6Class("RLAgent",
    public = list(
@@ -201,7 +198,7 @@ RLAgent <- R6Class("RLAgent",
 
 Next, the environment generating rewards. The true mean reward $q_*(a)$ of an action were selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward was then generated using a normal distribution with mean $q_*(a)$ and variance 1:
 
-```{r}
+```{r, echo=TRUE}
 #' R6 Class representing the RL environment
 #' 
 #' Assume that bandits are normal distributed with a mean and std.dev of one. 
@@ -294,17 +291,11 @@ performance <- function(k = 10, steps = 1000, runs = 500, epsilons = c(0, 0.01, 
 
 We test the performance using 2000 runs over 1000 time steps.
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, echo=TRUE}
 pts <- performance(runs = 2000, steps = 1000)
 pts$ptR
 pts$ptO
 ```
-
-
-
-
-## Incremential value estimation
-
 
 
 ## The role of the step-size
