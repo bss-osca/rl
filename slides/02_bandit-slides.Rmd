@@ -1,0 +1,113 @@
+---
+title: "Multi-armed bandits"
+author: "Lars Relund Nielsen"
+output:
+  xaringan::moon_reader:
+    css: "./libs/slides.css"
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+      slideNumberFormat: ""
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, child = "setup.Rmd", echo=FALSE}
+```
+
+```{r include=FALSE, eval=FALSE}
+# to preview
+xaringan::inf_mr(cast_from = ".")
+```
+
+layout: true
+  
+```{r, echo=FALSE}
+module_name <- "bandit"
+module_number <- "02"
+here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
+library(htmltools)
+footerHtml <- withTags({
+   div(class="my-footer",
+      span(
+         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Book"), 
+         " | ",
+         a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
+         " | ",
+         a(href=str_c("https://github.com/bss-osca/rl/blob/master/slides/", module_number, "_", module_name, "-slides.Rmd"), target="_blank", "Source"),  
+      )
+   )
+})
+footerHtml
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
+```
+
+---
+
+## The k-armed bandit problem
+
+At their core, MABs are a class of algorithms that attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work.
+
+Imagine you are facing a wall of slot machines, and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you’ve gained some experience (exploitation). That’s really all there is to it! Bandits have a strategy for balancing this exploration vs. exploitation trade-off in a way that attempts to maximize total rewards.
+
+
+
+
+.pull-left[
+\item You are faced repeatedly with a choice of \textit{n} actions.
+\item After each choice, you receive a reward from a stationary probability distribution.
+\item Objective is to maximise total reward over some time period, say 100 time steps.
+\item Named after of slot machine (one-armed bandit problem), but \textit{n} levers instead of 1.
+\item Each action has an expected or mean reward based on its probability distribution. We shall call thjs the \textit{value} of the action. We do not know these values with certainty.
+\item Because of this uncertainty, there is always an exploration vs exploitation problem. We always have one action that we deem to be most valuable at any instant, but it is highly likely, at least initially, that there are actions we are yet to explore that are more valuable.
+
+]
+
+.pull-right[
+```{r echo=FALSE, out.width="100%", fig.align = "center"}
+knitr::include_graphics("img/bandit.png")
+```
+]
+
+
+
+
+
+---
+
+## Estimating the value of an action
+
+---
+
+## Incremential value estimation
+
+---
+
+## The role of the step-size
+
+---
+
+## Optimistic initial values
+
+---
+
+
+
+
+# References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib)
+```
+
+
+```{r links, child="../book/links.md"}
+```
+
+```{r postprocess, include=FALSE}
+system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
+file.copy("./slides.css", "./libs/", overwrite = T)
+```
