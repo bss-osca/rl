@@ -64,6 +64,7 @@ options(
 
 
 opts_hooks$set(solution = function(options) {
+  options$class.source = 'fold-show'
   if (isTRUE(options$solution)) {
     options$str_id <- stringi::stri_rand_strings(1, 20)
   }
