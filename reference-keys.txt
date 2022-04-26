@@ -33,8 +33,9 @@ the-k-armed-bandit-problem
 estimating-the-value-of-an-action
 the-role-of-the-step-size
 optimistic-initial-values
+upper-confidence-bound-action-selection
 sec-bandit-ex
-exercise---self-play
+exercise---advertising
 mod-r-setup
 groups
 coding-convention

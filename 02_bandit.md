@@ -57,7 +57,7 @@ By the end of this module, you are expected to:
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 2 in @Sutton18. Read it before continuing this module.
+For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module.
 
 
 ## The k-armed bandit problem
@@ -232,6 +232,9 @@ RLEnvironment <- R6Class("RLEnvironment",
 To test the RL algorithm we use a function returning two plots that compare the performance:
 
 
+
+
+
 ```r
 #' Performance of the bandit algorithm using different epsilons.
 #'
@@ -241,9 +244,10 @@ To test the RL algorithm we use a function returning two plots that compare the 
 #' @param epsilons Epsilons to be tested.
 #' @param ini Initial value estimates.
 #' @return Two plots in a list.
-performance <- function(k = 10, steps = 1000, runs = 500, epsilons = c(0, 0.01, 0.1), ini = 0) {
-   rew <- matrix(0, nrow = steps, ncol = length(epsilons))
-   best <- matrix(0, nrow = steps, ncol = length(epsilons))
+performance <- function(k = 10, steps = 1000, runs = 500, 
+                        epsilons = c(0, 0.01, 0.1), ini = 0) {
+   rew <- matrix(0, nrow = steps, ncol = length(epsilons))   # rewards (one col for each eps)
+   best <- matrix(0, nrow = steps, ncol = length(epsilons))  # add 1 if find the best action
    for (run in 1:runs) {
       env <- RLEnvironment$new(k)
       oA <- env$optimalAction()
@@ -255,36 +259,37 @@ performance <- function(k = 10, steps = 1000, runs = 500, epsilons = c(0, 0.01, 
             r <- env$reward(a)
             agent$updateQ(a, r)
             rew[t, i] <- rew[t, i] + r  # sum of rewards generated at t
-            best[t, i] <- best[t, i] + (a == oA)
+            best[t, i] <- best[t, i] + (a == oA) # times find best actions
          }
       }
    }
-   # rew <- apply(rew, 2, cumsum)/runs   # avg cumsums of each col 
-   best <- apply(best, 2, cumsum)/runs
-   rew <- rew/runs   # avg of each col 
-   # best <- best/runs  
    colnames(rew) <- epsilons
    colnames(best) <- epsilons
    dat1 <- tibble(t = 1:steps) %>%
       bind_cols(rew) %>%   # bind data together
       pivot_longer(!t, values_to = "reward", names_to = "epsilon") %>%   # move rewards to a single column
       group_by(epsilon) %>% 
-      mutate(rewAvg = cumsum(reward)/t)  %>% # calc reward
-      # mutate(reward = reward/t)  # calc average reward
-      mutate(rewMA = rollapply(reward, 50, mean, align = "right", fill = NA))
+      mutate(All = cumsum(reward/runs)/t, `Moving avg (50)` = rollapply(reward/runs, 50, mean, align = "right", fill = NA)) %>% 
+      select(-reward) %>% 
+      pivot_longer(!c(t, epsilon))
    dat2 <- tibble(t = 1:steps) %>%
       bind_cols(best) %>%   # bind data together
-      pivot_longer(!t, values_to = "optimal", names_to = "epsilon") %>%   # move rewards to a single column
-      mutate(optimal = optimal/t)  # calc average
+      pivot_longer(!t, values_to = "optimal", names_to = "epsilon") %>%   
+      group_by(epsilon) %>% 
+      mutate(All = cumsum(optimal/runs)/t, `Moving avg (50)` = rollapply(optimal/runs, 50, mean, align = "right", fill = NA)) %>% 
+      select(-optimal) %>% 
+      pivot_longer(!c(t, epsilon))
+  # calc average
    pt1 <- dat1 %>% 
-      ggplot(aes(x = t, y = rewAvg, col = epsilon)) +
+      ggplot(aes(x = t, y = value, col = epsilon, linetype = name)) +
       geom_line() +
-      geom_line(aes(x = t, y = rewMA, col = epsilon), linetype = "dotted") +
-      labs(y = "Average reward per time unit", x = "Time", title = str_c("Average over ", runs, " runs"))
+      labs(y = "Average reward per time unit", x = "Time", title = str_c("Average over ", runs, " runs "), col = "Epsilon", linetype = "") +
+      theme(legend.position = "bottom")
    pt2 <- dat2 %>% 
-      ggplot(aes(x = t, y = optimal, col = epsilon)) +
+      ggplot(aes(x = t, y = value, col = epsilon, linetype = name)) +
       geom_line() +
-      labs(y = "Average number of times optimal action chosen", x = "Time", title = str_c("Average over ", runs, " runs"))
+      labs(y = "Average number of times optimal action chosen", x = "Time", title = str_c("Average over ", runs, " runs"), col = "Epsilon", linetype = "") +
+      theme(legend.position = "bottom")
    return(list(ptR = pt1, ptO = pt2))
 }
 ```
@@ -298,42 +303,375 @@ pts$ptR
 pts$ptO
 ```
 
-<img src="02_bandit_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" />
+
+The solid line shows averages over all the runs from $t=1$ to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an $\epsilon$-greedy approach is better ($\epsilon = 0.1 is best). That is, exploration is beneficial.
 
 
 ## The role of the step-size
 
+In general we update the reward estimate of an action using 
+
+\begin{equation}
+	Q_{k+1} = Q_k +\alpha_n(a) \left[R_k - Q_k\right]
+\end{equation}
+
+Until now we have used the sample average $\alpha_n(a)= 1/n$; however, other choices of $\alpha_n(a)$ is possible. In general we will converge to the true reward if
+
+\begin{equation}
+    \sum_n \alpha_n(a) = \infty \quad\quad \mathsf{and} \quad\quad  \sum_n \alpha_n(a)^2 < \infty.
+\end{equation}
+
+Meaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant $\alpha_n(a)= \alpha \in (0, 1]$ instead. This results in \(Q_{n+1}\) being a weighted average of the past rewards and the initial estimate \(Q_1\):
+
+\begin{align}
+Q_{n+1} &= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
+&= \alpha R_n + (1 - \alpha)Q_n \nonumber \\
+&= \alpha R_n + (1 - \alpha)[\alpha R_{n-1} + (1 - \alpha)Q_{n-1}] \nonumber \\
+&= \alpha R_n + (1 - \alpha)\alpha R_{n-1} + (1 - \alpha)^2 Q_{n-1}  \nonumber \\
+&= \vdots \nonumber \\
+&= (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} R_i \\
+\end{align}
+
+Because the weight given to each reward depends on how many rewards ago it was observed, we can see that more recent rewards are given more weight. Note the weights \(\alpha\) sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since  the weight given to each reward decays exponentially into the past. This sometimes called an *exponential recency-weighted average*.
 
 
 ## Optimistic initial values
 
+The methods discussed so far are dependent to some extent on the initial action-value estimate i.e. they are biased by their initial estimates. For methods with constant \(\alpha\) this bias is permanent. We may set initial value estimates artificially high to encourage exploration in the short run. For instance, by setting initial values of $Q$ to 5 rather than 0 we encourage exploration, even in the greedy case. Here the agent will almost always be disappointed with it's samples because they are less than the initial estimate and so will explore elsewhere until the values converge.
 
 
+## Upper-Confidence Bound Action Selection
 
+An $\epsilon$-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the \emph{upper-confidence bound}:
+\begin{equation}
+	A_t = \arg\max_a \left(Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right),
+\end{equation}
 
+Note the square root term is a measure of the uncertainty in our estimate. 
 
+* It is proportional to \(t\) i.e. how many time-steps have passed and inversely proportional to \(N_t(a)\) i.e. how many times that action has been visited. 
+* The more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound. 
+* As the timesteps increases, the denominator dominates the numerator as the ln term flattens. 
+* Each time we select an action our uncertainty decreases because $N$ is the denominator of this equation. 
+* If $N_t(a) = 0$ then we consider $a$ as a maximal action, i.e. we select first among actions with $N_t(a) = 0$.
+* The parameter $c>0$ controls the degree of exploration. Higher $c$ results in more weight on the uncertainty. 
 
-
-
-
+Since upper-confidence bound action selection select actions according to their potential, it is expected to perform better than $\epsilon$-greedy methods.
 
 
 ## Exercises {#sec-bandit-ex}
 
 Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
-### Exercise - Self-Play 
+### Exercise - Advertising
 
 
-<div class="modal fade bs-example-modal-lg" id="utrAlnWBDCa3l0mrrSFW" tabindex="-1" role="dialog" aria-labelledby="utrAlnWBDCa3l0mrrSFW-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="utrAlnWBDCa3l0mrrSFW-title">Solution</h4></div><div class="modal-body">
+```r
+#' R6 Class representing the RL advertising environment
+RLAdEnv <- R6Class("RLAdEnv",
+   public = list(
+      #' @field mV Click trough rates
+      mV = c(0.1, 0.83, 0.85, 0.5, 0.7),  
+      
+      #' @field k Number of ads.
+      k = 5,   
+      
+      #' @description Sample reward of a bandit.
+      #' @param a Bandit/ad (index).
+      #' @return One if click on ad and zero otherwise.
+      reward = function(a) {
+         return(rbinom(1, 1, self$mV[a]))
+      },
+      
+      #' @description Returns action with best mean.
+      optimalAction = function() return(which.max(self$mV))
+   )
+)
+```
 
-<p>If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical).</p>
+Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#utrAlnWBDCa3l0mrrSFW">Solution</button>
+* You have $k=5$ adds to choose among.
+* If add $A$ is chosen then the user clicks the add with probability $p_A$ which can be seen as the unknown click trough rate CTR (or an average reward).
+* The CTRs are unknown and samples can be picked using the `RLAdEnv` class and the reward function which returns 1 if click on ad and 0 otherwise.
 
-Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
-played against itself. What do you think would happen in this case? Would it learn a different way of playing?
 
+```r
+env <- RLAdEnv$new()
+env$reward(2)  # click on ad number two
+#> [1] 1
+env$optimalAction()  # the best ad
+#> [1] 3
+env$mV  # true CTRs
+#> [1] 0.10 0.83 0.85 0.50 0.70
+```
+
+In the class the true CTRs can be observed but in practice this is hidden from the agent.  
+
+Consider an $\epsilon$-greedy algorithm to find the best ad. Assume the webpage is visited by 10000 users per day. 
+
+<!-- Q1 -->
+
+<div class="modal fade bs-example-modal-lg" id="uqUutmgA4LlIz9yklEF6" tabindex="-1" role="dialog" aria-labelledby="uqUutmgA4LlIz9yklEF6-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="uqUutmgA4LlIz9yklEF6-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+set.seed(327)  # to get same results 
+
+#' Performance of the bandit algorithm.
+#' @param steps Steps (users).
+#' @param epsilon Epsilon to be tested.
+#' @return A list with statistics.
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rew <- 0
+   for (t in 1:steps) {
+      a <- agent$selectActionEG()
+      r <- env$reward(a)
+      rew <- rew + r
+      agent$updateQ(a, r)
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+testEG(0.01)
+#> $qV
+#> [1] 0.000 0.800 0.852 0.409 0.654
+#> 
+#> $avgReward
+#> [1] 0.849
+testEG(0.1)
+#> $qV
+#> [1] 0.119 0.843 0.849 0.516 0.685
+#> 
+#> $avgReward
+#> [1] 0.824
+testEG(0.5)
+#> $qV
+#> [1] 0.110 0.844 0.851 0.484 0.703
+#> 
+#> $avgReward
+#> [1] 0.725
+
+# True values
+env$optimalAction()
+#> [1] 3
+env$mV
+#> [1] 0.10 0.83 0.85 0.50 0.70
+```
+
+
+<p>Epsilon = 0.01 seems to give the best average.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#uqUutmgA4LlIz9yklEF6">Solution</button>
+
+   1) Run the algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs? What is the average number of clicks per user?
+   
+<!-- Q2 -->
+
+<div class="modal fade bs-example-modal-lg" id="9UNSaGJghbZYV0FR4kTI" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="9UNSaGJghbZYV0FR4kTI-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+## Test function modified with plot feature
+test <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rew <- 0
+   qVal <- matrix(0, nrow = 10000, ncol = 5)
+   colnames(qVal) = str_c("A", 1:5)
+   for (t in 1:steps) {
+      a <- agent$selectActionEG()
+      r <- env$reward(a)
+      rew <- rew + r
+      agent$updateQ(a, r)
+      qVal[t,] <- agent$qV
+   }
+   # make plot
+   dat <- tibble(t = 1:10000) %>%
+      bind_cols(qVal) %>%   # bind data together
+      pivot_longer(!t, values_to = "ctr", names_to = "action") 
+   pt <- dat %>% 
+      ggplot(aes(x = t, y = ctr, col = action)) +
+      geom_line() +
+      labs(y = "Empirical CTRs", x = "Time", title = str_c("CTRs eps = ", epsilon), col = "Action") +
+      theme(legend.position = "bottom")
+   return(list(qV = agent$qV, avgReward = rew/steps, plt = pt))
+}
+test(0.01)$plt
+test(0.5)$plt
+```
+
+<img src="02_bandit_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
+<p>As epsilon grows we estimate the true values better for all actions.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">Solution</button>
+
+   2) Make a plot of the empirical CTRs for $\epsilon = 0.01, 0.5$ over the 10000 time-steps, i.e. plot $Q_t(a)$. 
+   
+<!-- Q3 -->
+
+<div class="modal fade bs-example-modal-lg" id="cJNysHsWq0UWK5lQcvNQ" tabindex="-1" role="dialog" aria-labelledby="cJNysHsWq0UWK5lQcvNQ-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="cJNysHsWq0UWK5lQcvNQ-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+## Test function modified with rewards
+test <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rewards <- c(10, 8, 5, 15, 2)
+   rew <- 0
+   qVal <- matrix(0, nrow = 10000, ncol = 5)
+   colnames(qVal) = str_c("A", 1:5)
+   for (t in 1:steps) {
+      a <- agent$selectActionEG()
+      r <- env$reward(a) * rewards[a]
+      rew <- rew + r
+      agent$updateQ(a, r)
+      qVal[t,] <- agent$qV
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+test(0.01)
+#> $qV
+#> [1] 0.909 6.565 4.583 7.607 1.378
+#> 
+#> $avgReward
+#> [1] 6.83
+test(0.5)
+#> $qV
+#> [1] 0.952 6.640 4.290 7.459 1.355
+#> 
+#> $avgReward
+#> [1] 5.74
+
+# True average reward values
+env$mV * c(10, 8, 5, 15, 2)
+#> [1] 1.00 6.64 4.25 7.50 1.40
+```
+
+
+<p>The best action is now 4 and eps = 0.01 seems to give the best overall average reward.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cJNysHsWq0UWK5lQcvNQ">Solution</button>
+   
+   3) Assume that the rewards of ad clicks is equal to (10, 8, 5, 15, 2). Modify the algorithm so you look at rewards instead of CTRs. What is the best action to choose?
+   
+<!-- Q4 -->
+We now modify the RLAgent and add a Upper-confidence bound function `selectActionUCB`:
+
+
+```r
+#' R6 Class representing the RL agent
+RLAgent <- R6Class("RLAgent",
+   public = list(
+      #' @field qV Q estimates.
+      qV = NULL,  
+      
+      #' @field nV Action counter.
+      nV = NULL,  
+      
+      #' @field k Number of bandits.
+      k = NULL,   
+      
+      #' @field epsilon Epsilon used in epsilon greed action selection.
+      epsilon = NULL, 
+      
+      #' @description Create an object (when call new).
+      #' @param k Number of bandits.
+      #' @param epsilon Epsilon used in epsilon greed action selection.
+      #' @return The new object.
+      initialize = function(k = 10, epsilon = 0.01, ini =  0) {
+         self$epsilon <- epsilon
+         self$qV <- rep(ini, k)
+         self$nV <- rep(0, k)
+         self$k <- k
+      },
+      
+      #' @description Clear learning.
+      #' @param eps Epsilon.
+      #' @return Action (index).
+      clearLearning = function() {
+         self$qV <- 0
+         self$nV <- 0
+      },
+      
+      #' @description Select next action using an epsilon greedy strategy.
+      #' @return Action (index).
+      selectActionEG = function() {   
+         if (runif(1) <= self$epsilon) { # explore
+            a <- sample(1:self$k, 1)
+         } else { # exploit
+            a <- which(self$qV == max(self$qV))
+            a <- a[sample(length(a), 1)]
+         }
+         return(a)
+      },
+      
+      #' @description Select next action using UCB 
+      #' @return Action (index).
+      selectActionUCB = function(c, t) {   
+         val <- self$qV + c * sqrt(log(t + 0.01)/self$nV)
+         a <- which.max(val)
+         return(a)
+      },
+      
+      #' @description Update learning values (including action counter).
+      #' @param a Action.
+      #' @param r Reward.
+      #' @return NULL (invisible)
+      updateQ = function(a, r) {
+         self$nV[a] <- self$nV[a] + 1
+         self$qV[a] <- self$qV[a] + 1/self$nV[a] * (r - self$qV[a])
+         return(invisible(NULL))
+      }
+   )
+)
+```
+   
+
+<div class="modal fade bs-example-modal-lg" id="mhFyML8wY85v311DV6ie" tabindex="-1" role="dialog" aria-labelledby="mhFyML8wY85v311DV6ie-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="mhFyML8wY85v311DV6ie-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+testUCB <- function(c = 2, steps = 10000) {
+   agent <- RLAgent$new(k = 5)
+   rewards <- c(10, 8, 5, 15, 2)
+   rew <- 0
+   for (t in 1:steps) {
+      a <- agent$selectActionUCB(c, t)
+      r <- env$reward(a) * rewards[a]
+      rew <- rew + r
+      agent$updateQ(a, r)
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+testUCB(0.1)
+#> $qV
+#> [1] 0.00 6.63 3.75 0.00 0.00
+#> 
+#> $avgReward
+#> [1] 6.63
+testUCB(5)
+#> $qV
+#> [1] 2.22 6.48 3.68 7.46 1.43
+#> 
+#> $avgReward
+#> [1] 7.28
+testUCB(10)
+#> $qV
+#> [1] 0.556 6.586 3.952 7.502 1.680
+#> 
+#> $avgReward
+#> [1] 7.4
+testUCB(20)
+#> $qV
+#> [1] 1.48 6.62 4.25 7.56 1.42
+#> 
+#> $avgReward
+#> [1] 7.25
+```
+
+
+<p>A value \(c = 10\) seems to be a good choice.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#mhFyML8wY85v311DV6ie">Solution</button>
+
+   4) Test the UCB algorithm for $c$ values $(0.1, 5, 10, 20)$. Which algorithm seems to find the best average reward?
 
 
 
