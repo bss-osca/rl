@@ -1,0 +1,51 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+
+# Markov decision processes {#mod-mdp}
+
+This module consider the k-armed bandit problem which is a sequential decision problem with one state and $k$ actions. The problem is used to illustrate different learning methods used in RL. 
+
+## Learning outcomes 
+
+By the end of this module, you are expected to:
+
+
+
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings
+
+For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module.
+
+
+## The k-armed bandit problem
+
+## Exercises {#sec-mdp-ex}
+
+`r strExercises`
+
+### Exercise - 
+
+
+
+```{r links, child="links.md", include=FALSE}
+```
