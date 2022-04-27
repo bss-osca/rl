@@ -91,6 +91,7 @@ Storing $Q_t(a)$ this way is cumbersome since memory and computation requirement
 		    &= \frac{1}{n}\left( R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i \right) \nonumber \\
 		    &= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
 	       &= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
+  (\#eq:avg)
 \end{align}
 That is, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$). 
 
@@ -568,7 +569,14 @@ testUCB(20)
    4) Test the UCB algorithm for $c$ values $(0.1, 5, 10, 20)$. Which algorithm seems to find the best average reward?
 
 
+### Exercise - A coin game
 
+Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.
+
+   1) Model this as a K-armed bandit problem: define the action set.
+   2) Is the reward a deterministic or stochastic function of your action?
+   3) You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula \@ref(eq:avg) to compute the estimates of the value of each action.
+   4) Decide on which coin to flip next assuming that you exploit.
 
 
 ```{r links, child="links.md", include=FALSE}
