@@ -40,7 +40,7 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module.
+For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
 
 ## The k-armed bandit problem
@@ -758,6 +758,7 @@ Consider a game where you choose to flip one of two (possibly unfair) coins. You
 [slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
 [slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
 [slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
 
 [tidyverse-main-page]: https://www.tidyverse.org
 [tidyverse-packages]: https://www.tidyverse.org/packages/

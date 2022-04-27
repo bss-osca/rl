@@ -13,11 +13,41 @@ editor_options:
 
 This module consider the k-armed bandit problem which is a sequential decision problem with one state and $k$ actions. The problem is used to illustrate different learning methods used in RL. 
 
+<!-- When you’re presented with a problem in industry, the first and most important step is to translate that problem into a Markov Decision Process (MDP). The quality of your solution depends heavily on how well you do this translation. This week, you will learn the definition of MDPs, you will understand goal-directed behavior and how this can be obtained from maximizing scalar rewards, and you will also understand the difference between episodic and continuing tasks. For this week’s graded assessment, you will create three example tasks of your own that fit into the MDP framework. -->
+
+<!-- In this chapter we introduce the formal problem of finite Markov decision processes, or -->
+<!-- finite MDPs, which we try to solve in the rest of the book. This problem involves evaluative -->
+<!-- feedback, as in bandits, but also an associative aspect—choosing di↵erent actions in -->
+<!-- di↵erent situations. MDPs are a classical formalization of sequential decision making, -->
+<!-- where actions influence not just immediate rewards, but also subsequent situations, -->
+<!-- or states, and through those future rewards. Thus MDPs involve delayed reward and -->
+<!-- the need to trade o↵ immediate and delayed reward. Whereas in bandit problems we -->
+<!-- estimated the value q⇤(a) of each action a, in MDPs we estimate the value q⇤(s, a) of -->
+<!-- each action a in each state s, or we estimate the value v⇤(s) of each state given optimal -->
+<!-- action selections. These state-dependent quantities are essential to accurately assigning -->
+<!-- credit for long-term consequences to individual action selections. -->
+<!-- MDPs are a mathematically idealized form of the reinforcement learning problem -->
+<!-- for which precise theoretical statements can be made. We introduce key elements of -->
+<!-- the problem’s mathematical structure, such as returns, value functions, and Bellman -->
+<!-- equations. We try to convey the wide range of applications that can be formulated as -->
+<!-- finite MDPs. As in all of artificial intelligence, there is a tension between breadth of -->
+<!-- applicability and mathematical tractability. In this chapter we introduce this tension -->
+<!-- and discuss some of the trade-o↵s and challenges that it implies. Some ways in which -->
+<!-- reinforcement learning can be taken beyond MDPs are treated in Chapter 17. -->
+
 ## Learning outcomes 
 
 By the end of this module, you are expected to:
 
-
+<!-- Understand Markov Decision Processes (MDP) -->
+<!-- Describe how the dynamics of an MDP are defined -->
+<!-- Understand the graphical representation of a Markov Decision Process -->
+<!-- Explain how many diverse processes can be written in terms of the MDP framework -->
+<!-- Describe how rewards relate to the goal of an agent -->
+<!-- Understand episodes and identify episodic tasks -->
+<!-- Formulate returns for continuing tasks using discounting -->
+<!-- Describe how returns at successive time steps are related to each other -->
+<!-- Understand when to formalize a task as episodic or continuing -->
 
 <!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
 
@@ -135,6 +165,7 @@ Below you will find a set of exercises. Always have a look at the exercises befo
 [slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
 [slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
 [slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
 
 [tidyverse-main-page]: https://www.tidyverse.org
 [tidyverse-packages]: https://www.tidyverse.org/packages/
