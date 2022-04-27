@@ -6,6 +6,7 @@ fig:unnamed-chunk-7
 fig:hgf
 fig:bandit
 fig:bandit-choose
+eq:avg
 mod-rl-intro
 mod-rl-intro-lo
 textbook-readings
@@ -36,6 +37,7 @@ optimistic-initial-values
 upper-confidence-bound-action-selection
 sec-bandit-ex
 exercise---advertising
+exercise---a-coin-game
 mod-mdp
 learning-outcomes-2
 textbook-readings-2

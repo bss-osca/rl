@@ -271,6 +271,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-ex"><i class="fa fa-check"></i><b>2.8</b> Exercises<span></span></a>
 <ul>
 <li class="chapter" data-level="2.8.1" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---advertising"><i class="fa fa-check"></i><b>2.8.1</b> Exercise - Advertising<span></span></a></li>
+<li class="chapter" data-level="2.8.2" data-path="mod-bandit.html"><a href="mod-bandit.html#exercise---a-coin-game"><i class="fa fa-check"></i><b>2.8.2</b> Exercise - A coin game<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="mod-mdp.html"><a href="mod-mdp.html"><i class="fa fa-check"></i><b>3</b> Markov decision processes<span></span></a>
@@ -382,12 +383,13 @@ Figure 2.2: Which ad to choose?
     Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
 \end{equation}\]</span>
 Storing <span class="math inline">\(Q_t(a)\)</span> this way is cumbersome since memory and computation requirements grow over time. Instead an <em>incremental</em> approach is better. If we assume that <span class="math inline">\(N_t(a) = n-1\)</span> and set <span class="math inline">\(Q_t(a) = Q_n\)</span> then <span class="math inline">\(Q_{n+1}\)</span> becomes:
-<span class="math display">\[\begin{align}
+<span class="math display" id="eq:avg">\[\begin{align}
   Q_{n+1} &amp;= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
             &amp;= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
             &amp;= \frac{1}{n}\left( R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i \right) \nonumber \\
             &amp;= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
            &amp;= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
+  \tag{2.1}
 \end{align}\]</span>
 That is, we can update the estimate of the value of <span class="math inline">\(a\)</span> using the previous estimate, the observed reward and how many times the action has occurred (<span class="math inline">\(n\)</span>).</p>
 <p>A greedy approach for selecting the next action is
@@ -968,6 +970,16 @@ Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
 <li>Test the UCB algorithm for <span class="math inline">\(c\)</span> values <span class="math inline">\((0.1, 5, 10, 20)\)</span>. Which algorithm seems to find the best average reward?</li>
+</ol>
+</div>
+<div id="exercise---a-coin-game" class="section level3 hasAnchor" number="2.8.2">
+<h3><span class="header-section-number">2.8.2</span> Exercise - A coin game<a href="mod-bandit.html#exercise---a-coin-game" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.</p>
+<ol style="list-style-type: decimal">
+<li>Model this as a K-armed bandit problem: define the action set.</li>
+<li>Is the reward a deterministic or stochastic function of your action?</li>
+<li>You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula <a href="mod-bandit.html#eq:avg">(2.1)</a> to compute the estimates of the value of each action.</li>
+<li>Decide on which coin to flip next assuming that you exploit.</li>
 </ol>
 
 </div>
