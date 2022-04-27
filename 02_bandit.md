@@ -20,34 +20,17 @@ This module consider the k-armed bandit problem which is a sequential decision p
 
 By the end of this module, you are expected to:
 
-<!-- Define reward -->
-<!-- Understand the temporal nature of the bandit problem -->
-<!-- Define k-armed bandit -->
-<!-- Define action-values -->
-<!-- Define action-value estimation methods -->
-<!-- Define exploration and exploitation -->
-<!-- Select actions greedily using an action-value function -->
-<!-- Define online learning -->
-<!-- Understand a simple online sample-average action-value estimation method -->
-<!-- Define the general online update equation -->
-<!-- Understand why we might use a constant stepsize in the case of non-stationarity -->
-<!-- Define epsilon-greedy -->
-<!-- Compare the short-term benefits of exploitation and the long-term benefits of exploration -->
-<!-- Understand optimistic initial values -->
-<!-- Describe the benefits of optimistic initial values for early exploration -->
-<!-- Explain the criticisms of optimistic initial values -->
-<!-- Describe the upper confidence bound action selection method -->
-<!-- Define optimism in the face of uncertainty -->
+* Define a k-armed bandit and understand the nature of the problem. 
+* Define the reward of a action (action-reward).
+* Describe different methods for estimating the action-reward.
+* Explain the differences between exploration and exploitation.
+* Formulate an $\epsilon$-greedy algorithm for selecting the next action.
+* Interpret the sample-average (variable step-size) versus exponential recency-weighted average (constant step-size) action-reward estimation.
+* Argue why we might use a constant stepsize in the case of non-stationarity. 
+* Understand the effect of optimistic initial values.
+* Formulate an upper confidence bound action selection algorithm.
 
-
-<!-- * Describe what VBA is. -->
-<!-- * Setup Excel for VBA. -->
-<!-- * Know how the macro recorder works. -->
-<!-- * Make your first program. -->
-<!-- * Have an overview over what VBA can do. -->
-<!-- * Recorded you first macro using the macro recorder -->
-
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 1, 3, 6, 9, 10 and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -366,6 +349,12 @@ Below you will find a set of exercises. Always have a look at the exercises befo
 
 ### Exercise - Advertising
 
+Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:
+
+* You have $k=5$ adds to choose among.
+* If add $A$ is chosen then the user clicks the add with probability $p_A$ which can be seen as the unknown click trough rate CTR (or an average reward).
+* The CTRs are unknown and samples can be picked using the `RLAdEnv` class and the reward function which returns 1 if click on ad and 0 otherwise.
+
 
 ```r
 #' R6 Class representing the RL advertising environment
@@ -388,18 +377,9 @@ RLAdEnv <- R6Class("RLAdEnv",
       optimalAction = function() return(which.max(self$mV))
    )
 )
-```
 
-Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:
-
-* You have $k=5$ adds to choose among.
-* If add $A$ is chosen then the user clicks the add with probability $p_A$ which can be seen as the unknown click trough rate CTR (or an average reward).
-* The CTRs are unknown and samples can be picked using the `RLAdEnv` class and the reward function which returns 1 if click on ad and 0 otherwise.
-
-
-```r
 env <- RLAdEnv$new()
-env$reward(2)  # click on ad number two
+env$reward(2)  # click on ad number two (return 0 or 1)?
 #> [1] 1
 env$optimalAction()  # the best ad
 #> [1] 3
@@ -464,7 +444,7 @@ env$mV
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#uqUutmgA4LlIz9yklEF6">Solution</button>
 
-   1) Run the algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs? What is the average number of clicks per user?
+   1) Run the $\epsilon$-greedy algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs? What is the average number of clicks per user?
    
 <!-- Q2 -->
 
@@ -472,7 +452,7 @@ env$mV
 
 ```{.r .fold-show}
 ## Test function modified with plot feature
-test <- function(epsilon, steps = 10000) {
+testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
    rew <- 0
    qVal <- matrix(0, nrow = 10000, ncol = 5)
@@ -495,11 +475,11 @@ test <- function(epsilon, steps = 10000) {
       theme(legend.position = "bottom")
    return(list(qV = agent$qV, avgReward = rew/steps, plt = pt))
 }
-test(0.01)$plt
-test(0.5)$plt
+testEG(0.01)$plt
+testEG(0.5)$plt
 ```
 
-<img src="02_bandit_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" />
 <p>As epsilon grows we estimate the true values better for all actions.</p>
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">Solution</button>
@@ -512,7 +492,7 @@ test(0.5)$plt
 
 ```{.r .fold-show}
 ## Test function modified with rewards
-test <- function(epsilon, steps = 10000) {
+testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
    rewards <- c(10, 8, 5, 15, 2)
    rew <- 0
@@ -527,13 +507,13 @@ test <- function(epsilon, steps = 10000) {
    }
    return(list(qV = agent$qV, avgReward = rew/steps))
 }
-test(0.01)
+testEG(0.01)
 #> $qV
 #> [1] 0.909 6.565 4.583 7.607 1.378
 #> 
 #> $avgReward
 #> [1] 6.83
-test(0.5)
+testEG(0.5)
 #> $qV
 #> [1] 0.952 6.640 4.290 7.459 1.355
 #> 
@@ -553,7 +533,7 @@ env$mV * c(10, 8, 5, 15, 2)
    3) Assume that the rewards of ad clicks is equal to (10, 8, 5, 15, 2). Modify the algorithm so you look at rewards instead of CTRs. What is the best action to choose?
    
 <!-- Q4 -->
-We now modify the RLAgent and add a Upper-confidence bound function `selectActionUCB`:
+We now modify the RLAgent and add an upper-confidence bound function `selectActionUCB`:
 
 
 ```r

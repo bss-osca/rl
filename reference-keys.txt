@@ -36,6 +36,12 @@ optimistic-initial-values
 upper-confidence-bound-action-selection
 sec-bandit-ex
 exercise---advertising
+mod-mdp
+learning-outcomes-2
+textbook-readings-2
+the-k-armed-bandit-problem-1
+sec-mdp-ex
+exercise--
 mod-r-setup
 groups
 coding-convention
