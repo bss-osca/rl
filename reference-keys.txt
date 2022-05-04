@@ -46,7 +46,7 @@ textbook-readings-2
 a-mdp-as-a-model-for-the-agent-environment
 rewards-and-the-objective-function-goal
 policies-and-value-functions
-optimal-policies-and-value-functions
+sec-mdp-opt
 optimality-vs-approximation
 semi-mdps-non-fixed-time-length
 sec-mdp-ex
