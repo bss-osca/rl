@@ -7,6 +7,8 @@ fig:hgf
 fig:bandit
 fig:bandit-choose
 eq:avg
+fig:hgf1
+eq:vq
 mod-rl-intro
 mod-rl-intro-lo
 textbook-readings
@@ -41,7 +43,12 @@ exercise---a-coin-game
 mod-mdp
 learning-outcomes-2
 textbook-readings-2
-the-k-armed-bandit-problem-1
+a-mdp-as-a-model-for-the-agent-environment
+rewards-and-the-objective-function-goal
+policies-and-value-functions
+optimal-policies-and-value-functions
+optimality-vs-approximation
+semi-mdps-non-fixed-time-length
 sec-mdp-ex
 exercise--
 mod-r-setup

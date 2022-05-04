@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-04-27" />
+<meta name="date" content="2022-05-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -278,10 +278,15 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.1" data-path="mod-mdp.html"><a href="mod-mdp.html#learning-outcomes-2"><i class="fa fa-check"></i><b>3.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="3.2" data-path="mod-mdp.html"><a href="mod-mdp.html#textbook-readings-2"><i class="fa fa-check"></i><b>3.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="3.3" data-path="mod-mdp.html"><a href="mod-mdp.html#the-k-armed-bandit-problem-1"><i class="fa fa-check"></i><b>3.3</b> The k-armed bandit problem<span></span></a></li>
-<li class="chapter" data-level="3.4" data-path="mod-mdp.html"><a href="mod-mdp.html#sec-mdp-ex"><i class="fa fa-check"></i><b>3.4</b> Exercises<span></span></a>
+<li class="chapter" data-level="3.3" data-path="mod-mdp.html"><a href="mod-mdp.html#a-mdp-as-a-model-for-the-agent-environment"><i class="fa fa-check"></i><b>3.3</b> A MDP as a model for the agent-environment<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="mod-mdp.html"><a href="mod-mdp.html#rewards-and-the-objective-function-goal"><i class="fa fa-check"></i><b>3.4</b> Rewards and the objective function (goal)<span></span></a></li>
+<li class="chapter" data-level="3.5" data-path="mod-mdp.html"><a href="mod-mdp.html#policies-and-value-functions"><i class="fa fa-check"></i><b>3.5</b> Policies and value functions<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="mod-mdp.html"><a href="mod-mdp.html#optimal-policies-and-value-functions"><i class="fa fa-check"></i><b>3.6</b> Optimal policies and value functions<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="mod-mdp.html"><a href="mod-mdp.html#optimality-vs-approximation"><i class="fa fa-check"></i><b>3.7</b> Optimality vs approximation<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="mod-mdp.html"><a href="mod-mdp.html#semi-mdps-non-fixed-time-length"><i class="fa fa-check"></i><b>3.8</b> semi-MDPs (non-fixed time length)<span></span></a></li>
+<li class="chapter" data-level="3.9" data-path="mod-mdp.html"><a href="mod-mdp.html#sec-mdp-ex"><i class="fa fa-check"></i><b>3.9</b> Exercises<span></span></a>
 <ul>
-<li class="chapter" data-level="3.4.1" data-path="mod-mdp.html"><a href="mod-mdp.html#exercise--"><i class="fa fa-check"></i><b>3.4.1</b> Exercise -<span></span></a></li>
+<li class="chapter" data-level="3.9.1" data-path="mod-mdp.html"><a href="mod-mdp.html#exercise--"><i class="fa fa-check"></i><b>3.9.1</b> Exercise -<span></span></a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
@@ -325,27 +330,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="mod-mdp" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Module 3</span> Markov decision processes<a href="mod-mdp.html#mod-mdp" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This module consider the k-armed bandit problem which is a sequential decision problem with one state and <span class="math inline">\(k\)</span> actions. The problem is used to illustrate different learning methods used in RL.</p>
-<!-- When you’re presented with a problem in industry, the first and most important step is to translate that problem into a Markov Decision Process (MDP). The quality of your solution depends heavily on how well you do this translation. This week, you will learn the definition of MDPs, you will understand goal-directed behavior and how this can be obtained from maximizing scalar rewards, and you will also understand the difference between episodic and continuing tasks. For this week’s graded assessment, you will create three example tasks of your own that fit into the MDP framework. -->
-<!-- In this chapter we introduce the formal problem of finite Markov decision processes, or -->
-<!-- finite MDPs, which we try to solve in the rest of the book. This problem involves evaluative -->
-<!-- feedback, as in bandits, but also an associative aspect—choosing di↵erent actions in -->
-<!-- di↵erent situations. MDPs are a classical formalization of sequential decision making, -->
-<!-- where actions influence not just immediate rewards, but also subsequent situations, -->
-<!-- or states, and through those future rewards. Thus MDPs involve delayed reward and -->
-<!-- the need to trade o↵ immediate and delayed reward. Whereas in bandit problems we -->
-<!-- estimated the value q⇤(a) of each action a, in MDPs we estimate the value q⇤(s, a) of -->
-<!-- each action a in each state s, or we estimate the value v⇤(s) of each state given optimal -->
-<!-- action selections. These state-dependent quantities are essential to accurately assigning -->
-<!-- credit for long-term consequences to individual action selections. -->
-<!-- MDPs are a mathematically idealized form of the reinforcement learning problem -->
-<!-- for which precise theoretical statements can be made. We introduce key elements of -->
-<!-- the problem’s mathematical structure, such as returns, value functions, and Bellman -->
-<!-- equations. We try to convey the wide range of applications that can be formulated as -->
-<!-- finite MDPs. As in all of artificial intelligence, there is a tension between breadth of -->
-<!-- applicability and mathematical tractability. In this chapter we introduce this tension -->
-<!-- and discuss some of the trade-o↵s and challenges that it implies. Some ways in which -->
-<!-- reinforcement learning can be taken beyond MDPs are treated in Chapter 17. -->
+<p>This module gives an introduction to Markov decision processes (MDPs) with a finite number of states and actions. This gives us a full model of a sequential decision problem. MDPs are a classical formalization of sequential decision making, where actions influence not just immediate rewards, but also what will be the next state, and hence future rewards. Thus MDPs involve delayed reward and the need to consider the trade-off between immediate and delayed reward. MDPs are a mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found. Often in a RL problem some parts of this description is unknown and we hereby have to estimate the best policy by learning. For example, in the bandit problem the rewards was unknown.</p>
 <div id="learning-outcomes-2" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Learning outcomes<a href="mod-mdp.html#learning-outcomes-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>By the end of this module, you are expected to:</p>
@@ -366,16 +351,166 @@ div.csl-indent {
 </div>
 <div id="textbook-readings-2" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Textbook readings<a href="mod-mdp.html#textbook-readings-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>For this week, you will need to read Chapter 2 - 2.7 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<p>For this week, you will need to read Chapter 3-3.8 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
 </div>
-<div id="the-k-armed-bandit-problem-1" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> The k-armed bandit problem<a href="mod-mdp.html#the-k-armed-bandit-problem-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="a-mdp-as-a-model-for-the-agent-environment" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> A MDP as a model for the agent-environment<a href="mod-mdp.html#a-mdp-as-a-model-for-the-agent-environment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let us recall the RL problem which considers an agent in an environment:</p>
+<ul>
+<li>Agent: The one who takes the action (computer, robot, decision maker), i.e. the decision making component of a system. Everything else is the environment. A general rule is that anything that the agent does not have absolute control over forms part of the environment.</li>
+<li>Environment: The system/world where observations and rewards are found.</li>
+</ul>
+<p>At time step <span class="math inline">\(t\)</span> the agent is in state <span class="math inline">\(S_t\)</span> and takes action <span class="math inline">\(A_{t}\)</span> and observe the new state <span class="math inline">\(S_{t+1}\)</span> and reward <span class="math inline">\(R_{t+1}\)</span>:</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="03_mdp_files/figure-html/unnamed-chunk-4-1.png" alt="Agent-environment representation." width="672" />
+<p class="caption">
+Figure 1.3: Agent-environment representation.
+</p>
 </div>
-<div id="sec-mdp-ex" class="section level2 hasAnchor" number="3.4">
-<h2><span class="header-section-number">3.4</span> Exercises<a href="mod-mdp.html#sec-mdp-ex" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Note we here assume that the <em>Markov property</em> is satisfied and the current state holds just as much information as the history of observations. That is, given the present state the future is independent of the past:</p>
+<p><span class="math display">\[\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).\]</span>
+That is, the probability of seeing some next state <span class="math inline">\(S_{t+1}\)</span> given the current state is exactly equal to the probability of that next state given the entire history of states.</p>
+<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in Figure <a href="mod-mdp.html#fig:hgf1">3.1</a>. Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hgf1"></span>
+<img src="03_mdp_files/figure-html/hgf1-1.png" alt="State-expanded hypergraph" width="100%" />
+<p class="caption">
+Figure 3.1: State-expanded hypergraph
+</p>
+</div>
+<p>In a <em>finite</em> MDP, the sets of states, actions, and rewards all have a finite number of elements. In this case, the random variables have well defined discrete probability distributions dependent only on the preceding state and action which defines the  of the system:
+<span class="math display">\[\begin{equation}
+    p(s&#39;, r | s, a) = \Pr(S_t = s&#39;, R_t = r | S_{t-1} = s, A_{t-1} = a),
+\end{equation}\]</span>
+which can be used to find the <em>transition probabilities</em>:
+<span class="math display">\[\begin{equation}
+    p(s&#39; | s, a) = \Pr(S_t = s&#39;| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s&#39;, r | s, a), 
+\end{equation}\]</span>
+and the <em>expected reward</em>:
+<span class="math display">\[\begin{equation}
+    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s&#39; \in \mathcal{S}} p(s&#39;, r | s, a).
+\end{equation}\]</span></p>
+<p>That is, to define an MDP the following are needed:</p>
+<ul>
+<li>All states and actions are assumed known.</li>
+<li>A finite number of states and actions. That is, we can store values using tabular methods.</li>
+<li>The transition probabilities and expected rewards are given.</li>
+</ul>
+<p>Moreover, for now a <em>stationary</em> MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.</p>
+</div>
+<div id="rewards-and-the-objective-function-goal" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Rewards and the objective function (goal)<a href="mod-mdp.html#rewards-and-the-objective-function-goal" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The  is a central assumption in reinforcement learning:</p>
+<blockquote>
+<p>All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).</p>
+</blockquote>
+<p>This assumption can be questioned but it this course we assume it holds. The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.</p>
+<p>The return <span class="math inline">\(G_t\)</span> can be defined as the sum of future rewards; however, if the time horizon is infinite the return is also infinite. Hence we use a <em>discount factor</em> <span class="math inline">\(0 \leq \gamma \leq 1\)</span> and define the return as</p>
+<p><span class="math display">\[\begin{equation}
+    G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
+\end{equation}\]</span></p>
+<p>Discounting is important since it allows us to work with finite returns because if <span class="math inline">\(\gamma &lt; 1\)</span> and the reward is bounded by a number <span class="math inline">\(B\)</span> then the return is always finite:</p>
+<p><span class="math display">\[\begin{equation}
+G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k  = B \frac{1}{1 - \gamma}
+\end{equation}\]</span></p>
+<p>Note gamma close to one put weight on future rewards while a gamma close to zero put weight on present rewards. Moreover, an infinite time-horizon is assumed.</p>
+<p>An MDP modelling a problem over a finite time-horizon can be transformed into an infinite time-horizon using an <em>absorbing state</em> with transitions only to itself and a reward of zero. This breaks the agent-environment interaction into <em>episodes</em> (e.g playing a board game). Each episode ends in the absorbing state, possibly with a different reward. Each starts independently of the last, with some distribution of starting states. Sequences of interaction without an absorbing state are called <em>continuing tasks</em>.</p>
+<p>The <em>objective function</em> is to choose actions such that the expected return is maximized. Let us formalize this mathematically in the next sections.</p>
+</div>
+<div id="policies-and-value-functions" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Policies and value functions<a href="mod-mdp.html#policies-and-value-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A <em>policy</em> <span class="math inline">\(\pi\)</span> is a distribution over actions, given some state:</p>
+<p><span class="math display">\[\pi(a | s) = \Pr(A_t = a | S_t = s).\]</span>
+Since the MDP is stationary the policy is time-independent, i.e. given a state, we choose the same action no matter the time-step. If <span class="math inline">\(\pi(a | s) = 1\)</span> for each state, i.e. an action is chosen with probability one always then the policy is called <em>deterministic</em>. Otherwise a policy is called <em>stochastic</em>.</p>
+<p>Given a policy we can define some value functions. The <em>state-value function</em> <span class="math inline">\(v_\pi(s)\)</span> denote the expected return starting from state <span class="math inline">\(s\)</span> when following the policy <span class="math inline">\(\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s].
+\end{align}
+\]</span>
+Note the last equal sign comes from <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</p>
+<p>The <em>action-value function</em> <span class="math inline">\(q_\pi(s, a)\)</span>, denote the expected return starting from state <span class="math inline">\(s\)</span>, taking action <span class="math inline">\(a\)</span> and from thereon following policy <span class="math inline">\(\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s, A_t = a].
+\end{align}
+\]</span></p>
+<p>This action-value, also known as “q-value”, is very important, as it tells us directly what action to pick in a particular state. Given the definition of q-values, the state-value function is an average over the q-values of all actions we could take in that state:</p>
+<p><span class="math display" id="eq:vq">\[\begin{equation}
+v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a)
+\tag{3.1}
+\end{equation}\]</span></p>
+<p>A q-value (action-value) is equal to the expected reward <span class="math inline">\(r(s,a)\)</span> that we get from choosing action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span>, plus a discounted amount of the average state-value of all the future states:</p>
+<p><span class="math display">\[q_\pi(s, a) = r(s,a) + \gamma\sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) v_\pi(s&#39;)\]</span></p>
+<p>Joining the equations, the state-value of a particular state <span class="math inline">\(s\)</span> now becomes the sum of weighted state-values of all possible
+subsequent states <span class="math inline">\(s&#39;\)</span>, where the weights are the policy probabilities:</p>
+<p><span class="math display">\[
+\begin{align}
+  v_\pi(s) &amp;= \sum_{a \in \mathcal{A}}\pi(a | s)q_\pi(s, a) \\
+  &amp;= \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) v_\pi(s&#39;)\right),
+\end{align}
+\]</span>
+which is known as the <em>Bellman equation</em>.
+<!-- in exactly the same way we can define a q-value as a weighted sum of the -->
+<!-- q-values of all states we could reach given we pick the action of the q-value: --></p>
+<!-- $$ -->
+<!-- \begin{align} -->
+<!-- q_\pi(s, a) &= \mathcal{R}_s^a + \gamma\sum_{s' \in \mathcal{S}} P_{ss'}^a v_\pi(s') \\ -->
+<!-- &= \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a \sum_{a' \in \mathcal{A}} \pi(a'|s')q_\pi(s',a') -->
+<!-- \end{align} -->
+<!-- $$ -->
+</div>
+<div id="optimal-policies-and-value-functions" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Optimal policies and value functions<a href="mod-mdp.html#optimal-policies-and-value-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The objective function of an MDP can now be stated mathematically which is to find an optimal policy <span class="math inline">\(\pi_*\)</span> with state-value function:</p>
+<p><span class="math display">\[v_*(s) = \max_\pi v_\pi(s),\]</span>
+That is, a policy <span class="math inline">\(\pi &#39;\)</span> is defined as better than policy <span class="math inline">\(\pi\)</span> if its expected return is higher for all states. If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy <span class="math inline">\(\pi_*\)</span> that is better than or equal to all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the <em>optimal state-value function</em> <span class="math inline">\(v_*\)</span>.</p>
+<p>We may rewrite <span class="math inline">\(v_*(s)\)</span> using Eq. <a href="mod-mdp.html#eq:vq">(3.1)</a>:</p>
+<p><span class="math display">\[\begin{align}
+  v_*(s) &amp;= \max_\pi v_\pi(s) \\
+         &amp;= \max_\pi \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a) \\
+         &amp;= \max_\pi \max_a q_\pi(s, a)\qquad \text{(set $\pi(a|s) = 1$ where $q_\pi$ is largest)} \\
+         &amp;= \max_a \max_\pi q_\pi(s, a) \\
+         &amp;= \max_a q_*(s, a), \\
+\end{align}\]</span></p>
+<p>where the <em>optimal q-value/action-value function</em> <span class="math inline">\(q_*\)</span> is:</p>
+<p><span class="math display">\[\begin{align}
+q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+          &amp;= r(s,a) + \gamma\sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) v_*(s&#39;) \\
+          &amp;= r(s,a) + \gamma\sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) \max_{a&#39;} q_*(s&#39;, a&#39;).
+\end{align}\]</span></p>
+<p>This is the the <em>Bellman optimality equation</em> for <span class="math inline">\(q_*\)</span> and the optimal policy is:</p>
+<p><span class="math display">\[
+\pi_*(a | s) =
+\begin{cases}
+1 \text{ if } a = \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
+0 \text { otherwise.}
+\end{cases}
+\]</span></p>
+<p>Similar we can write the <em>Bellman optimality equation</em> for <span class="math inline">\(v_*\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+  v_*(s) &amp;= \max_a q_*(s, a) \\
+         &amp;= \max_a r(s,a) + \gamma\sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) v_*(s&#39;)
+\end{align}\]</span></p>
+<p>Using <span class="math inline">\(v_*\)</span> the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store <span class="math inline">\(q_*\)</span>, we can find <span class="math inline">\(v_*\)</span> by a one-step-ahead search, acting greedily.</p>
+</div>
+<div id="optimality-vs-approximation" class="section level2 hasAnchor" number="3.7">
+<h2><span class="header-section-number">3.7</span> Optimality vs approximation<a href="mod-mdp.html#optimality-vs-approximation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+Fully solving the Bellman optimality equations can be hugely expensive, especially if the number of states is huge, as is the case with most interesting problems.
+Solving the Bellman optimality equation is akin to exhaustive search. We play out  possible scenario until the terminal state and collect their expected reward. Our policy then defines the action that maximises this expected reward.
+<p>In the continuous case the Bellman optimality equation is unsolvable as the recursion on the next state’s value function would never end.
+\end{itemize}</p>
+<p>curse of dimdasf</p>
+</div>
+<div id="semi-mdps-non-fixed-time-length" class="section level2 hasAnchor" number="3.8">
+<h2><span class="header-section-number">3.8</span> semi-MDPs (non-fixed time length)<a href="mod-mdp.html#semi-mdps-non-fixed-time-length" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="sec-mdp-ex" class="section level2 hasAnchor" number="3.9">
+<h2><span class="header-section-number">3.9</span> Exercises<a href="mod-mdp.html#sec-mdp-ex" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<div id="exercise--" class="section level3 hasAnchor" number="3.4.1">
-<h3><span class="header-section-number">3.4.1</span> Exercise -<a href="mod-mdp.html#exercise--" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="exercise--" class="section level3 hasAnchor" number="3.9.1">
+<h3><span class="header-section-number">3.9.1</span> Exercise -<a href="mod-mdp.html#exercise--" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 
 </div>
 </div>
