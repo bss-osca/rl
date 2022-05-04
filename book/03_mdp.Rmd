@@ -281,7 +281,7 @@ Given a policy we can define some value functions. The *state-value function* $v
 $$
 \begin{align}
   v_\pi(s) &= \mathbb{E}_\pi[G_t | S_t = s] \\
-  &= \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s].
+  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
 \end{align}
 $$
 Note the last equal sign comes from $G_t = R_{t+1} + \gamma G_{t+1}$.
@@ -291,7 +291,7 @@ The *action-value function* $q_\pi(s, a)$, denote the expected return starting f
 $$
 \begin{align}
   q_\pi(s, a) &= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
-  &= \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s, A_t = a].
+  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
 \end{align}
 $$
 
@@ -327,19 +327,24 @@ which is known as the *Bellman equation*.
 <!-- $$ -->
 
 
-## Optimal policies and value functions
+## Optimal policies and value functions {#sec-mdp-opt}
 
 The objective function of an MDP can now be stated mathematically which is to find an optimal policy $\pi_*$ with state-value function:
 
-$$v_*(s) = \max_\pi v_\pi(s),$$
-That is, a policy \(\pi '\) is defined as better than policy $\pi$ if its expected return is higher for all states. If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy $\pi_*$ that is better than or equal to all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the *optimal state-value function* \(v_*\). 
+$$v_*(s) = \max_\pi v_\pi(s).$$
+That is, a policy \(\pi '\) is defined as better than policy $\pi$ if its expected return is higher for all states. Note the objective function is not a scalar here but if the agent start in state $s_0$ then we may reformulate the objective function maximize the expected return to $$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$
+
+
+
+
+If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy $\pi_*$ that is better than or equal to all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the *optimal state-value function* \(v_*\). 
 
 We may rewrite $v_*(s)$ using Eq. \@ref(eq:vq):
 
 \begin{align}
   v_*(s) &= \max_\pi v_\pi(s) \\
          &= \max_\pi \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a) \\
-         &= \max_\pi \max_a q_\pi(s, a)\qquad \text{(set $\pi(a|s) = 1$ where $q_\pi$ is largest)} \\
+         &= \max_\pi \max_a q_\pi(s, a)\qquad \text{(set $\pi(a|s) = 1$ where $q_\pi$ is maximal)} \\
          &= \max_a \max_\pi q_\pi(s, a) \\
          &= \max_a q_*(s, a), \\
 \end{align}
@@ -369,19 +374,49 @@ Similar we can write the *Bellman optimality equation* for $v_*$:
          &= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
 \end{align}
 
-Using \(v_*\) the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store $q_*$, we can find $v_*$ by a one-step-ahead search, acting greedily.
+Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal
+value functions. Using \(v_*\), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store $v_*$, we can find $v_*$ by a one-step-ahead search using $q_*$, acting greedy.
 
 
 ## Optimality vs approximation 
 
-\item Fully solving the Bellman optimality equations can be hugely expensive, especially if the number of states is huge, as is the case with most interesting problems.
-\item Solving the Bellman optimality equation is akin to exhaustive search. We play out \textit{every} possible scenario until the terminal state and collect their expected reward. Our policy then defines the action that maximises this expected reward. 
-\item In the continuous case the Bellman optimality equation is unsolvable as the recursion on the next state's value function would never end.
-\end{itemize}
+In Section \@ref(sec-mdp-opt) optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g. if the number of states is huge. Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables also known as the *curse of dimensionality*. 
 
-curse of dimdasf
+Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
+
+
+
+<!-- \subsection{Key Takeaways} -->
+<!-- \begin{itemize} -->
+<!-- \item We summarise our goal for the agent as a \textit{reward}; its objective is to maximise the cumulative sum of future rewards -->
+<!-- \item For episodic tasks, returns terminate (and are backpropogated) when the episode ends. For the continuous control case, returns are discounted so they do not run to infinity.  -->
+<!-- \item A state signal that succeeds in retaining all relevant information about the past is \textit{Markov}.  -->
+<!-- \item Markov Decision Processes (MDPs) are the mathematically idealised version of the RL problem. They have system dynamics: $p(s', r | s, a) = Pr \{R_{r+1} = r, S_{t+1} = s' | S_t, A_t\}$ -->
+<!-- \item Policies are a (probabilistic) mapping from states to actions. -->
+<!-- \item Value functions estimate how good it is for an agent to be in a state ($v_\pi$) or to take an action from a state ($q_\pi$). They are always defined w.r.t policies as the value of a state depends on the policy one takes in that state. Value functions are the \textit{expected cumulative sum of future rewards} from a state or state-action pair. -->
+<!-- \item Knowing our policy and system dynamics, we can define the state value function is defined by the Bellman equation: $v_\pi(s) = \sum_{a} \pi(a|s) \sum_{s',r} p(s', r | s, a) \left[r + \gamma v_\pi(s')\right]$ -->
+<!-- \item An optimal policy ($\pi_*$) is the policy that maximises expected cumulative reward from all states. From the optimal policy we can derive the optimal value functions $q_*$ and $v_*$. -->
+<!-- \end{itemize} -->
+
 
 ## semi-MDPs (non-fixed time length)
+
+So far we have considered MDPs with a fixed length between each time-step. The model can be extended to MDPs with non-fixed time-lengths known as semi-MDPs. Here $l(s,a,s')$ denote the expected length of a time-step given that the system is in state $s$, action $a$ is chosen and makes a transition to state $s'$. Then the discount rate over a time-step with length $l(s,a,s')$ is 
+
+$$\gamma(s,a,s') = \gamma^{l(s,a,s')},$$ 
+
+and the Bellman optimality equations becomes:
+
+$$
+  v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s,a,s')  v_*(s'),
+$$
+
+and
+$$
+q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s,a,s') \max_{a'} q_*(s', a').
+$$
+
+That is, the discount rate now is a part of the sum since it depends on the length which depends on the transition. 
 
 
 
