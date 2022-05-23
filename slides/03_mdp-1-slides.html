@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Markov Decision Processes (MDPs)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lars Relund Nielsen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Markov Decision Processes (MDPs)
+### Lars Relund Nielsen
+
+---
+
+
+
+
+
+
+
+layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Book</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/03_mdp-1-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/03_mdp-1-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
+
+---
+
+## Learning outcomes
+
+* Identify the different elements of a Markov Decision Processes (MDP).
+* Describe how the dynamics of an MDP are defined.
+* Understand how the agent-environment RL description relates to an MDP.
+* Interpret the graphical representation of a Markov Decision Process.
+* Describe how rewards are used to define the objective function (expected return).
+* Interpret the discount factor and its effect on the objective function.
+* Identify episodes and how to formulate an MDP by adding an absorbing state. 
+
+---
+
+## Markov Decision Processes
+
+* A mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found.
+* Often in a RL problem some parts of this description is unknown (in the bandit problem e.g. the rewards). This is not the case for an MDP.
+* In a finite MDP, the sets of states, actions, and rewards all have a finite number of elements.
+* The random variables have well defined discrete probability distributions dependent only on the preceding state and action.
+
+---
+
+
+
+## An MDP as a model for the agent-environment
+
+.left-column-wide[
+- Agent: The one who takes the action, i.e. the decision making component of a system. A general rule is that anything that the agent does not have absolute control over forms part of the environment. 
+- Environment: The system/world where observations and rewards are found. 
+- We assume that we can observe the full state of the system.
+- *Markov property* satisfied. Given the present state the future is independent of the past: `$$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$`
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/mdp-1-unnamed-chunk-5-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+layout: true
+
+## MDP visualization (state-expanded hypergraph)
+
+
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout:false
+
+## Mathematical description of the MDP 
+
+- At time-step `\(t\)`: states `\(S_t \in \mathcal{S}\)`, actions `\(A_t \in \mathcal{A}(s)\)` and rewards `\(R_t \in \mathcal{R} \subset \mathbb{R}.\)`
+- Since a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. 
+- The random variables have well defined discrete probability distributions which defines the dynamics of the system:
+`\begin{equation}
+    p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
+\end{equation}`
+which can be used to find the *transition probabilities*:
+`\begin{equation}
+    p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
+\end{equation}`
+and the *expected reward*:
+`\begin{equation}
+    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
+\end{equation}`
+
+---
+
+## Parameters need for defining an MDP
+
+That is, to define an MDP the following are needed:
+
+* All states and actions are assumed known. 
+* A finite number of states and actions. That is, we can store values using tabular methods. 
+* The transition probabilities and expected rewards are given (or `\(p(s', r | s, a)\)`).
+
+Assume a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.
+
+---
+
+## Reward hypothesis
+
+A central assumption in reinforcement learning:
+
+&gt; All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
+
+- The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
+- This assumption can be questioned (e.g. risk-adverse behaviour) but in this course we assume it holds.
+
+---
+
+## Rewards and the objective function (goal)
+
+The return `\(G_t\)` (discounted sum of future rewards):
+
+`\begin{equation}
+	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
+\end{equation}`
+
+Note we use a *discount factor* `\(0 \leq \gamma \leq 1\)` so an infinite time-horizon do not give problems. 
+
+- If `\(\gamma &lt; 1\)` and the reward is bounded, then the return is always finite (see backboard).
+- Discounting allows us to work with finite returns.
+- A `\(\gamma\)` close to 1 put weight on future rewards.
+- A `\(\gamma\)` close to 0 put weight on present rewards. 
+
+*Objective function*: choose actions so the expected return is maximized. 
+
+---
+
+## MDPs with a finite time-horizon
+
+- Finite time-horizon MDP: there is an upper bound on the number of time-steps need before finishes (e.g playing a board game).
+- Playing one game or going trough the MDP once is an *episode*. Afterwards a new game is started (a new episode).
+- Here we do not need a discount factor (can set `\(\gamma = 1\)`). 
+
+But how can we transform it into an MDP with infinite time-horizon?
+
+   1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
+   2. When a game stops a transition to the absorbing state happen.
+
+Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (are called (*continuing tasks*). 
+
+&lt;!-- ## Policies and value functions --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Optimal policies and value functions  --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Optimality vs approximation  --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## semi-MDPs (non-fixed time length) --&gt;
+
+&lt;!-- --- --&gt;
+
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
+
+
+
+[BSS]: https://bss.au.dk/en/
+[bi-programme]: https://kandidat.au.dk/en/businessintelligence/
+
+[course-help]: https://github.com/bss-osca/rl/issues
+[cran]: https://cloud.r-project.org
+[cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
+[course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+
+[DataCamp]: https://www.datacamp.com/
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/cbaee6c73e7d78549a9e32a900793b2d5491ace1824efc1760a6729735948215
+[datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
+[datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
+[datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
+[datacamp-r-communicating-chap3]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/introduction-to-rmarkdown
+[datacamp-r-communicating-chap4]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/customizing-your-rmarkdown-report
+[datacamp-r-intermediate]: https://learn.datacamp.com/courses/intermediate-r
+[datacamp-r-intermediate-chap1]: https://campus.datacamp.com/courses/intermediate-r/chapter-1-conditionals-and-control-flow
+[datacamp-r-intermediate-chap2]: https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops
+[datacamp-r-intermediate-chap3]: https://campus.datacamp.com/courses/intermediate-r/chapter-3-functions
+[datacamp-r-intermediate-chap4]: https://campus.datacamp.com/courses/intermediate-r/chapter-4-the-apply-family
+[datacamp-r-functions]: https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r
+[datacamp-r-tidyverse]: https://learn.datacamp.com/courses/introduction-to-the-tidyverse
+[datacamp-r-strings]: https://learn.datacamp.com/courses/string-manipulation-with-stringr-in-r
+[datacamp-r-dplyr]: https://learn.datacamp.com/courses/data-manipulation-with-dplyr
+[datacamp-r-dplyr-bakeoff]: https://learn.datacamp.com/courses/working-with-data-in-the-tidyverse
+[datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
+[datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
+[dplyr-cran]: https://CRAN.R-project.org/package=dplyr
+[debug-in-r]: https://rstats.wtf/debugging-r-code.html
+
+[google-form]: https://forms.gle/s39GeDGV9AzAXUo18
+[google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
+[GitHub]: https://github.com/
+[git-install]: https://git-scm.com/downloads
+[github-actions]: https://github.com/features/actions
+[github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
+
+[happy-git]: https://happygitwithr.com
+[hg-install-git]: https://happygitwithr.com/install-git.html
+[hg-why]: https://happygitwithr.com/big-picture.html#big-picture
+[hg-github-reg]: https://happygitwithr.com/github-acct.html#github-acct
+[hg-git-install]: https://happygitwithr.com/install-git.html#install-git
+[hg-exist-github-first]: https://happygitwithr.com/existing-github-first.html
+[hg-exist-github-last]: https://happygitwithr.com/existing-github-last.html
+[hg-credential-helper]: https://happygitwithr.com/credential-caching.html
+[hypothes.is]: https://web.hypothes.is/
+
+[osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
+
+[Peergrade]: https://peergrade.io
+[peergrade-signup]: https://app.peergrade.io/join
+[point-and-click]: https://en.wikipedia.org/wiki/Point_and_click
+[pkg-bookdown]: https://bookdown.org/yihui/bookdown/
+[pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
+[pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
+[pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+
+[R]: https://www.r-project.org
+[RStudio]: https://rstudio.com
+[rstudio-cloud]: https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz
+[r-cloud-mod12]: https://rstudio.cloud/spaces/176810/project/2963819
+[r-cloud-mod13]: https://rstudio.cloud/spaces/176810/project/3020139
+[r-cloud-mod14]: https://rstudio.cloud/spaces/176810/project/3020322
+[r-cloud-mod15]: https://rstudio.cloud/spaces/176810/project/3020509
+[r-cloud-mod16]: https://rstudio.cloud/spaces/176810/project/3026754
+[r-cloud-mod17]: https://rstudio.cloud/spaces/176810/project/3034015
+[r-cloud-mod18]: https://rstudio.cloud/spaces/176810/project/3130795
+[r-cloud-mod19]: https://rstudio.cloud/spaces/176810/project/3266132
+[rstudio-download]: https://rstudio.com/products/rstudio/download/#download
+[rstudio-customizing]: https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio
+[rstudio-key-shortcuts]: https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts
+[rstudio-workbench]: https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png
+[r-markdown]: https://rmarkdown.rstudio.com/
+[ropensci-writexl]: https://docs.ropensci.org/writexl/
+[r4ds-pipes]: https://r4ds.had.co.nz/pipes.html
+[r4ds-factors]: https://r4ds.had.co.nz/factors.html
+[r4ds-strings]: https://r4ds.had.co.nz/strings.html
+[r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
+
+[stat-545]: https://stat545.com
+[stat-545-functions-part1]: https://stat545.com/functions-part1.html
+[stat-545-functions-part2]: https://stat545.com/functions-part2.html
+[stat-545-functions-part3]: https://stat545.com/functions-part3.html
+[slides-welcome]: https://bss-osca.github.io/rl/slides/00-rl_welcome.html
+[slides-m1-3]: https://bss-osca.github.io/rl/slides/01-welcome_r_part.html
+[slides-m4-5]: https://bss-osca.github.io/rl/slides/02-programming.html
+[slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
+[slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
+[slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
+
+[tidyverse-main-page]: https://www.tidyverse.org
+[tidyverse-packages]: https://www.tidyverse.org/packages/
+[tidyverse-core]: https://www.tidyverse.org/packages/#core-tidyverse
+[tidyverse-ggplot2]: https://ggplot2.tidyverse.org/
+[tidyverse-dplyr]: https://dplyr.tidyverse.org/
+[tidyverse-tidyr]: https://tidyr.tidyverse.org/
+[tidyverse-readr]: https://readr.tidyverse.org/
+[tidyverse-purrr]: https://purrr.tidyverse.org/
+[tidyverse-tibble]: https://tibble.tidyverse.org/
+[tidyverse-stringr]: https://stringr.tidyverse.org/
+[tidyverse-forcats]: https://forcats.tidyverse.org/
+[tidyverse-readxl]: https://readxl.tidyverse.org
+[tidyverse-googlesheets4]: https://googlesheets4.tidyverse.org/index.html
+[tutorial-markdown]: https://commonmark.org/help/tutorial/
+[tfa-course]: https://bss-osca.github.io/tfa/
+
+[Udemy]: https://www.udemy.com/
+
+[vba-yt-course1]: https://www.youtube.com/playlist?list=PLpOAvcoMay5S_hb2D7iKznLqJ8QG_pde0
+[vba-course1-hello]: https://youtu.be/f42OniDWaIo
+
+[vba-yt-course2]: https://www.youtube.com/playlist?list=PL3A6U40JUYCi4njVx59-vaUxYkG0yRO4m
+[vba-course2-devel-tab]: https://youtu.be/awEOUaw9q58
+[vba-course2-devel-editor]: https://youtu.be/awEOUaw9q58
+[vba-course2-devel-project]: https://youtu.be/fp6PTbU7bXo
+[vba-course2-devel-properties]: https://youtu.be/ks2QYKAd9Xw
+[vba-course2-devel-hello]: https://youtu.be/EQ6tDWBc8G4
+
+[video-install]: https://vimeo.com/415501284
+[video-rstudio-intro]: https://vimeo.com/416391353
+[video-packages]: https://vimeo.com/416743698
+[video-projects]: https://vimeo.com/319318233
+[video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
+[video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
+[video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10&amp;t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10
+[video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
+[video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
+[video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
+[video-tibble-vs-df]: https://www.youtube.com/watch?v=EBk6PnvE1R4
+[video-dplyr]: https://www.youtube.com/watch?v=aywFompr1F4
+
+[wiki-snake-case]: https://en.wikipedia.org/wiki/Snake_case
+[wiki-camel-case]: https://en.wikipedia.org/wiki/Camel_case
+[wiki-interpreted]: https://en.wikipedia.org/wiki/Interpreted_language
+[wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
+[wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
+[wiki-json]: https://en.wikipedia.org/wiki/JSON
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": false,
+"slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

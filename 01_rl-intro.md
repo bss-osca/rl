@@ -36,7 +36,7 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 1 in @Sutton18. Read it before continuing this module.
+For this week, you will need to read Chapter 1-1.5 in @Sutton18. Read it before continuing this module.
 
 
 ## What is reinforcement learning
@@ -719,6 +719,11 @@ Depending on how the game starts a player may learn a better strategy and win/lo
 
 In general it is best to explore using the same probability otherwise you loose more and a higher step size than your opponent will make you win. 
 
+
+
+## Summary
+
+Read Chapter 1.6 in @Sutton18.
 
 
 ## Exercises {#sec-rl-intro-ex}

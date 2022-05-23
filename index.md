@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
 favicon: assets/favicon.ico
-date: "2022-05-04"
+date: "2022-05-23"
 editor_options: 
   chunk_output_type: console
 ---
@@ -164,9 +164,11 @@ It is assumed as a prerequisite that you know how to use R. If you need a brush-
 
 Materials in this book are taken from various places
 
+* The notes are based on @Sutton18.
 * The bookdown skeleton and some notes are based on the [Tools for Analytics][tfa-course] course.
-* Some notes are adopted from [Scott Jeen](https://github.com/enjeeneer/sutton_and_barto).
-* Many exercises are taken from @Sutton18 and modified slightly. 
+* Some notes are adopted from [Scott Jeen](https://github.com/enjeeneer/sutton_and_barto), 
+[Bryn Elesedy](https://github.com/brynhayder/reinforcement_learning_an_introduction) and [Peter Goldsborough](https://github.com/peter-can-write/david-silver-rl-notes).
+* Some exercises are taken from @Sutton18 and modified slightly. 
 
 <!-- * Some parts in Module \@ref(mod-intro) are inspired by [Chapter 1](https://r4ds.had.co.nz/introduction.html) in @r4ds. -->
 <!-- * The VBA modules are inspired by the book @vba-book. This also holds for some of the exercises.  -->
