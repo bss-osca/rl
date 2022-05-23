@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Markov decision processes {#mod-mdp}
+# Markov decision processes (MDPs) {#mod-mdp-1}
 
 This module gives an introduction to Markov decision processes (MDPs) with a finite number of states and actions. This gives us a full model of a sequential decision problem. MDPs are a classical formalization of sequential decision making, where actions influence not just immediate rewards, but also what will be the next state, and hence future rewards. Thus MDPs involve delayed reward and the need to consider the trade-off between immediate and delayed reward. MDPs are a mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found. Often in a RL problem some parts of this description is unknown and we hereby have to estimate the best policy by learning. For example, in the bandit problem the rewards was unknown.  
 
@@ -23,17 +23,22 @@ This module gives an introduction to Markov decision processes (MDPs) with a fin
 
 By the end of this module, you are expected to:
 
-<!-- Understand Markov Decision Processes (MDP) -->
-<!-- Describe how the dynamics of an MDP are defined -->
-<!-- Understand the graphical representation of a Markov Decision Process -->
-<!-- Explain how many diverse processes can be written in terms of the MDP framework -->
-<!-- Describe how rewards relate to the goal of an agent -->
-<!-- Understand episodes and identify episodic tasks -->
-<!-- Formulate returns for continuing tasks using discounting -->
-<!-- Describe how returns at successive time steps are related to each other -->
-<!-- Understand when to formalize a task as episodic or continuing -->
+* Identify the different elements of a Markov Decision Processes (MDP).
+* Describe how the dynamics of an MDP are defined.
+* Understand how the agent-environment RL description relates to an MDP.
+* Interpret the graphical representation of a Markov Decision Process.
+* Describe how rewards are used to define the objective function (expected return).
+* Interpret the discount factor and its effect on the objective function.
+* Identify episodes and how to formulate an MDP by adding an absorbing state. 
 
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2 and 4 of the course. -->
+<!-- * Identify a policy as a distribution over actions for each possible state. -->
+<!-- * Define value functions for a state and action.  -->
+<!-- * Derive the Bellman equation for a value function. -->
+<!-- * Understand how Bellman equations relate current and future values. -->
+<!-- * Define an optimal policy. -->
+<!-- * Derive the Bellman optimality equation for a value function. -->
+
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 7, 10, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -43,10 +48,10 @@ By the end of this module, you are expected to:
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 3-3.8 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here](sutton-notation).
+For this week, you will need to read Chapter 3-3.4 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here](sutton-notation).
 
 
-## A MDP as a model for the agent-environment
+## An MDP as a model for the agent-environment
 
 ```{r, include=FALSE}
 ## plot an RL (agent/environment relation)
@@ -220,7 +225,7 @@ plotHypergraphV2(gridDim, states, actions, showGrid = F)
 
 ```
 
-In a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. In this case, the random variables have well defined discrete probability distributions dependent only on the preceding state and action which defines the \emph{dynamics} of the system:
+In a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. In this case, the random variables have well defined discrete probability distributions dependent only on the preceding state and action which defines the dynamics of the system:
 \begin{equation}
     p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
 \end{equation}
@@ -235,22 +240,22 @@ and the *expected reward*:
 
 That is, to define an MDP the following are needed:
 
-* All states and actions are assumed known. 
 * A finite number of states and actions. That is, we can store values using tabular methods. 
-* The transition probabilities and expected rewards are given.
+* All states $S \in \mathcal{S}$ and actions $A \in \mathcal{A}(s)$ are known.  
+* The transition probabilities $p(s' | s, a)$ and expected rewards $r(s, a)$ are given. Alternatively, $p(s', r | s, a)$.
 
 Moreover, for now a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.  
 
 
 ## Rewards and the objective function (goal)
 
-The \emph{reward hypothesis} is a central assumption in reinforcement learning:
+The *reward hypothesis* is a central assumption in reinforcement learning:
 
 > All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
 
-This assumption can be questioned but it this course we assume it holds. The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
+This assumption can be questioned but in this course we assume it holds. The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
 
-The return \(G_t\) can be defined as the sum of future rewards; however, if the time horizon is infinite the return is also infinite. Hence we use a *discount factor* $0 \leq \gamma \leq 1$ and define the return as 
+The return $G_t$ can be defined as the sum of future rewards; however, if the time horizon is infinite the return is also infinite. Hence we use a *discount factor* $0 \leq \gamma \leq 1$ and define the return as 
 
 \begin{equation}
 	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
@@ -269,123 +274,6 @@ An MDP modelling a problem over a finite time-horizon can be transformed into an
 The *objective function* is to choose actions such that the expected return is maximized. Let us formalize this mathematically in the next sections. 
 
 
-## Policies and value functions
-
-A *policy* $\pi$ is a distribution over actions, given some state:
-
-$$\pi(a | s) = \Pr(A_t = a | S_t = s).$$
-Since the MDP is stationary the policy is time-independent, i.e. given a state, we choose the same action no matter the time-step. If $\pi(a | s) = 1$ for each state, i.e. an action is chosen with probability one always then the policy is called *deterministic*. Otherwise a policy is called *stochastic*.
-
-Given a policy we can define some value functions. The *state-value function* $v_\pi(s)$ denote the expected return starting from state $s$ when following the policy $\pi$:
-
-$$
-\begin{align}
-  v_\pi(s) &= \mathbb{E}_\pi[G_t | S_t = s] \\
-  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
-\end{align}
-$$
-Note the last equal sign comes from $G_t = R_{t+1} + \gamma G_{t+1}$.
-
-The *action-value function* $q_\pi(s, a)$, denote the expected return starting from state $s$, taking action $a$ and from thereon following policy $\pi$:
-
-$$
-\begin{align}
-  q_\pi(s, a) &= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
-  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
-\end{align}
-$$
-
-This action-value, also known as "q-value", is very important, as it tells us directly what action to pick in a particular state. Given the definition of q-values, the state-value function is an average over the q-values of all actions we could take in that state:
-
-\begin{equation}
-v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a)
-(\#eq:vq)
-\end{equation}
-
-A q-value (action-value) is equal to the expected reward $r(s,a)$ that we get from choosing action $a$ in state $s$, plus a discounted amount of the average state-value of all the future states:
-
-$$q_\pi(s, a) = r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')$$
-
-Joining the equations, the state-value of a particular state $s$ now becomes the sum of weighted state-values of all possible
-subsequent states $s'$, where the weights are the policy probabilities:
-
-$$
-\begin{align}
-  v_\pi(s) &= \sum_{a \in \mathcal{A}}\pi(a | s)q_\pi(s, a) \\
-  &= \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),
-\end{align}
-$$
-which is known as the *Bellman equation*.
-<!-- in exactly the same way we can define a q-value as a weighted sum of the -->
-<!-- q-values of all states we could reach given we pick the action of the q-value: -->
-
-<!-- $$ -->
-<!-- \begin{align} -->
-<!-- q_\pi(s, a) &= \mathcal{R}_s^a + \gamma\sum_{s' \in \mathcal{S}} P_{ss'}^a v_\pi(s') \\ -->
-<!-- &= \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a \sum_{a' \in \mathcal{A}} \pi(a'|s')q_\pi(s',a') -->
-<!-- \end{align} -->
-<!-- $$ -->
-
-
-## Optimal policies and value functions {#sec-mdp-opt}
-
-The objective function of an MDP can now be stated mathematically which is to find an optimal policy $\pi_*$ with state-value function:
-
-$$v_*(s) = \max_\pi v_\pi(s).$$
-That is, a policy \(\pi '\) is defined as better than policy $\pi$ if its expected return is higher for all states. Note the objective function is not a scalar here but if the agent start in state $s_0$ then we may reformulate the objective function maximize the expected return to $$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$
-
-
-
-
-If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy $\pi_*$ that is better than or equal to all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the *optimal state-value function* \(v_*\). 
-
-We may rewrite $v_*(s)$ using Eq. \@ref(eq:vq):
-
-\begin{align}
-  v_*(s) &= \max_\pi v_\pi(s) \\
-         &= \max_\pi \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a) \\
-         &= \max_\pi \max_a q_\pi(s, a)\qquad \text{(set $\pi(a|s) = 1$ where $q_\pi$ is maximal)} \\
-         &= \max_a \max_\pi q_\pi(s, a) \\
-         &= \max_a q_*(s, a), \\
-\end{align}
-
-where the *optimal q-value/action-value function* \(q_*\) is:
-
-\begin{align}
-q_*(s, a) &= \max_\pi q_\pi(s, a) \\
-          &= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s') \\
-          &= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) \max_{a'} q_*(s', a').
-\end{align}
-
-This is the the *Bellman optimality equation* for $q_*$ and the optimal policy is:
-
-$$
-\pi_*(a | s) =
-\begin{cases}
-1 \text{ if } a = \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
-0 \text { otherwise.}
-\end{cases}
-$$
-
-Similar we can write the *Bellman optimality equation* for $v_*$:
-
-\begin{align}
-  v_*(s) &= \max_a q_*(s, a) \\
-         &= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
-\end{align}
-
-Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal
-value functions. Using \(v_*\), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store $v_*$, we can find $v_*$ by a one-step-ahead search using $q_*$, acting greedy.
-
-
-## Optimality vs approximation 
-
-In Section \@ref(sec-mdp-opt) optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g. if the number of states is huge. Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables also known as the *curse of dimensionality*. 
-
-Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
-
-
-
 <!-- \subsection{Key Takeaways} -->
 <!-- \begin{itemize} -->
 <!-- \item We summarise our goal for the agent as a \textit{reward}; its objective is to maximise the cumulative sum of future rewards -->
@@ -399,33 +287,129 @@ Large state or action spaces may happen in practice; moreover, they may also be 
 <!-- \end{itemize} -->
 
 
-## semi-MDPs (non-fixed time length)
+## Summary
 
-So far we have considered MDPs with a fixed length between each time-step. The model can be extended to MDPs with non-fixed time-lengths known as semi-MDPs. Here $l(s,a,s')$ denote the expected length of a time-step given that the system is in state $s$, action $a$ is chosen and makes a transition to state $s'$. Then the discount rate over a time-step with length $l(s,a,s')$ is 
-
-$$\gamma(s,a,s') = \gamma^{l(s,a,s')},$$ 
-
-and the Bellman optimality equations becomes:
-
-$$
-  v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s,a,s')  v_*(s'),
-$$
-
-and
-$$
-q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s,a,s') \max_{a'} q_*(s', a').
-$$
-
-That is, the discount rate now is a part of the sum since it depends on the length which depends on the transition. 
+* MDPs formalize the problem of an agent interacting with an environment. 
+* The agent and environment interact at discrete time steps. 
+* At each time, the agent observes the current state of the environment. Then selects an action and the the environment transitions to a new state with a reward. * An agent's choices have long-term consequences (delayed reward). 
+* Selected actions influences future states and rewards. 
+* The objective is to maximize the expected discounted return. 
+* With a discount factor less than one, we can guarantee the return remains finite. 
+* The value of the discount factor defines how much we care about short-term rewards versus long-term rewards.
+* A first step in applying reinforcement learning is to formulate the problem as an MDP. 
 
 
-
-## Exercises {#sec-mdp-ex}
+## Exercises {#sec-mdp-1-ex}
 
 `r strExercises`
 
-### Exercise - 
+### Exercise - Sequential decision problems
 
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="Examples could be: \n\n1) Ludo - State: position on the board. Actions: Possible movements. Rewards: In a win state e.g. 1, in a loose state -1 and 0 otherwise. \n\n2) Inventory management - State: inventory level. Actions: Order $x$ units, wait. Rewards: a negative number representing inventory holding cost plus ordering cost. \n\n3) Investment - State: current portfolio, KPI's from considered companies. Actions: Buy/sell $x$ stocks of company $y.$ Rewards: returns - costs."}
+```
+
+   1) Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words. 
+  
+   2) How do the states, actions and rewards look like for the bandit problem? Try drawing the state-expanded hypergraph. 
+   
+   
+
+
+### Exercise - Expected return
+
+<!-- Q1 -->
+```{r, solution=TRUE}
+gam <- 0.8
+g <-0
+r <- c(-3, 5, 2, 7, 1)
+for (i in 4:0) {
+   g <- r[i+1] +  gam*g
+}
+g
+```
+
+   1) Suppose $\gamma=0.8$ and we observe the following sequence of rewards: $R_1 = -3$, $R_2 = 5$, $R_3=2$, $R_4 = 7$, and $R_5 = 1$ with a finite time-horizon of $T=5$. What is $G_0$? Hint: work backwards and recall that $G_t = R_{t+1} + \gamma G_{t+1}$.
+   
+   
+<!-- Q2 -->
+```{r, solution=TRUE}
+# recall sum_k  g^k = 1/(1-g)
+g1 <- 7 * 1/(1-0.9)
+g1
+g0 <- 2 + 0.9 * 70
+g0
+```
+
+   2) Suppose $\gamma=0.9$ and we observe rewards: $R_1 = 2$, $R_t = 7$, $t>1$ given a infinite time-horizon. What is $G_0$ and $G_1$? 
+
+
+
+### Exercise - Gambler's problem {#mdp-2-ex-gambler}
+
+A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. If the coin comes up heads, he wins as many dollars as he has staked on that flip; if it is tails, he loses his stake. The game ends when the gambler reaches his goal of a capital equal $100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP.
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="$$\\mathcal{S} = \\{ s | 0 \\leq s \\leq 100 \\}$$"}
+```
+
+   1) Define the state space $\mathcal{S}$.
+   
+<!-- Q2 -->
+```{r, solution=TRUE, text="$$\\mathcal{A}(s) = \\{ a | 0 \\leq a \\leq s \\}$$"}
+```
+
+   2) Define the action space $\mathcal{A}(s)$.
+   
+<!-- Q3 -->
+```{r, solution=TRUE, text="$$r(s,a) = \\mathbb{E}[R_a] = p_h a$$"}
+```
+   
+   3) Let $R_a$ denote the reward given bet $a. Calculate the expected rewards.
+
+<!-- Q4 -->
+```{r, solution=TRUE, text="Note $$p(s | s', a) = \\Pr(s = s' + \\mathbb{1}_{\\text{win}}a).$$ Hence there are two transitions: if $s = s' - a$ then $p(s | s', a) = 1-p_h$ and if $s = s' + a$ then $p(s | s', a) = p_h$."}
+```
+
+   4) Calculate the transition probabilities.
+
+
+```{r links, child="links.md", include=FALSE}
+```
+
+
+### Exercise - Factory storage {#mdp-1-ex-storage}
+
+A factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
+$$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
+If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
+
+The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week $n$ just before the regular removal opportunity.
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="$$\\mathcal{S} = \\{ 0,1,2,3,4 \\}$$"}
+```
+
+   1) Define the state space $\mathcal{S}$.
+   
+<!-- Q2 -->
+```{r, solution=TRUE, text="Let $e$ and $k$ denote empty and keep the waste from the tank. Then the action space is $$\\mathcal{A}(s) = \\{ e, k \\}.$$"}
+```
+
+   2) Define the action space $\mathcal{A}(s)$.
+ 
+<!-- Q3 -->
+```{r, solution=TRUE, text="The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence $$r(s, e) = -(25 + 5s)$$and$$r(s,k) = -30\\sum_{i>4-s} (s+i-4)p_i$$"}
+```
+
+   3) Calculate the expected rewards $r(s,a)$.
+
+<!-- Q4 -->
+```{r, solution=TRUE, text="The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\\text{ if } s\\leq s' \\leq 3$$ $$p(4|s,k) = \\sum_{i\\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\\text{ if }  0\\leq s' \\leq 3$$ $$p(s'|s,k) =  0 \\text{ otherwise.}$$"}
+```
+
+   4) Calculate the transition probabilities $p(s'|s,a)$.
 
 
 ```{r links, child="links.md", include=FALSE}

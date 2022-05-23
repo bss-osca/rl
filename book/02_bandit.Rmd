@@ -21,6 +21,9 @@ knitr::opts_chunk$set(
 
 This module consider the k-armed bandit problem which is a sequential decision problem with one state and $k$ actions. The problem is used to illustrate different learning methods used in RL. 
 
+The module is also the first module in the *Tabular methods* part of the notes. This part describe almost all the core ideas of reinforcement learning algorithms in their simplest forms where the state and action spaces are small enough for the approximate value functions to be represented as arrays or tables. 
+
+
 ## Learning outcomes 
 
 By the end of this module, you are expected to:
@@ -341,6 +344,11 @@ Note the square root term is a measure of the uncertainty in our estimate.
 * The parameter $c>0$ controls the degree of exploration. Higher $c$ results in more weight on the uncertainty. 
 
 Since upper-confidence bound action selection select actions according to their potential, it is expected to perform better than $\epsilon$-greedy methods.
+
+
+## Summary 
+
+Read Chapter 2.10 in @Sutton18.
 
 
 ## Exercises {#sec-bandit-ex}
