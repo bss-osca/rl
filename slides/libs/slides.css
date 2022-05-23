@@ -112,6 +112,19 @@ a, a > code {
   padding-top: 0;
 }
 
+.left-column-small {
+  width: 39%;
+  float: left;
+  margin-top: 0;
+  padding-top: 0;
+}
+.right-column-wide {
+  width: 60%;
+  float: right;
+  margin-top: 0;
+  padding-top: 0;
+}
+
 .center {
   text-align:center;
 }
@@ -356,4 +369,10 @@ div.my-footer a {
  font-size: 400%;
  font-weight: bold;
  color: #F26BAA;
+}
+
+
+/* Highlight */
+.highlight {
+    font-weight: bold;
 }

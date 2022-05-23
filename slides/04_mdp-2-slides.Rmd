@@ -1,0 +1,411 @@
+---
+title: "Policies and value functions for MDPs"
+author: "Lars Relund Nielsen"
+output:
+  xaringan::moon_reader:
+    css: "./libs/slides.css"
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+      slideNumberFormat: ""
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, child = "setup.Rmd", echo=FALSE}
+```
+
+```{r include=FALSE, eval=FALSE}
+# to preview
+xaringan::inf_mr(cast_from = ".")
+```
+
+layout: true
+  
+```{r, echo=FALSE}
+module_name <- "mdp-2"
+module_number <- "04"
+here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
+library(htmltools)
+footerHtml <- withTags({
+   div(class="my-footer",
+      span(
+         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Book"), 
+         " | ",
+         a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
+         " | ",
+         a(href=str_c("https://github.com/bss-osca/rl/blob/master/slides/", module_number, "_", module_name, "-slides.Rmd"), target="_blank", "Source"),  
+      )
+   )
+})
+footerHtml
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
+```
+
+
+
+<!-- Templates -->
+<!-- .pull-left[] .pull-right[] -->
+<!-- knitr::include_graphics("img/bandit.png") -->
+<!-- .left-column-wide[]  .right-column-small[] -->
+
+---
+
+## Learning outcomes
+
+* Identify a policy as a distribution over actions for each possible state.
+* Define value functions for a state and action. 
+* Derive the Bellman equation for a value function.
+* Understand how Bellman equations relate current and future values.
+* Define an optimal policy.
+* Derive the Bellman optimality equation for a value function.
+
+---
+
+## Policies 
+
+A *policy* $\pi$ is a distribution over actions, given some state:
+
+$$\pi(a | s) = \Pr(A_t = a | S_t = s).$$
+
+* Since the MDP is stationary the policy is time-independent, i.e. given a state, we choose the same action no matter the time-step. 
+* The policy is *deterministic* if $\pi(a | s) = 1$ for a single state, i.e. an action is chosen with probability one always.
+* The policy is *stochastic* if $\pi(a | s) < 1$ for some state.
+
+---
+
+## Value functions
+
+* The *state-value function* $v_\pi(s)$ (expected return given state $s$ and policy $\pi$):
+$$
+\begin{align}
+  v_\pi(s) &= \mathbb{E}_\pi[G_t | S_t = s] \\
+  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
+\end{align}
+$$
+   Note the last equal sign comes from $G_t = R_{t+1} + \gamma G_{t+1}$.
+* The *action-value function* $q_\pi(s, a)$ (expected return given $s$, action $a$ and policy $\pi$):
+$$
+\begin{align}
+  q_\pi(s, a) &= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
+\end{align}
+$$
+* Combining above, the state-value function becomes an average over the q-values: 
+$$v_\pi(s) = \sum_{a \in \mathcal{A}(s)}\pi(a|s)q_\pi(s, a)$$
+
+---
+
+## Belman equations
+
+The value functions can be transformed into recursive equations (Bellman equations).
+
+Bellman equations (state-value): 
+$$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right)$$
+
+Bellman equations (action-value): 
+$$q_\pi(s, a) = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s' | s, a) \sum_{a' \in \mathcal{A(s')}} \pi(a'|s')q_\pi(s',a')$$
+Let us have a closer look on the derivation blackboard.
+
+---
+
+layout: true
+
+## Visualization of Bellman equations
+
+```{r echo=FALSE}
+library(diagram)
+plotHypergraphV2<-function(gridDim, states=NULL, actions=NULL, showGrid=FALSE,
+                           showTime = FALSE,
+                         radx = 0.03, rady=0.05, cex=1, marX=0.035, marY=0.15, ...)
+{
+   # internal functions
+   gMap<-function(sId) return(states$gId[states$sId %in% sId])		# return gId given sId
+   sMap<-function(gId) return(states$sId[states$gId %in% gId])		# return sId given gId
+
+   pos <- coordinates(rep(gridDim[1], gridDim[2]), hor = F)  # coordinates of each point in the grid
+   posT <- matrix(c(unique(pos[,1]), rep(0, gridDim[2])), ncol = 2)
+   colnames(posT) <- colnames(pos)
+   
+   par(oma=c(0,0,0,0), mar = c(0,0,0,0))
+   openplotmat(xlim=c(min(pos[,1])-marX,max(pos[,1])+marX), 
+               ylim=c(0-marY,max(pos[,2])+marY) )  #main = "State expanded hypergraph"
+   
+   # plot time index
+   if (showTime) for (i in 1:gridDim[2] - 1) textempty(posT[i+1, ], lab = parse(text = str_c("italic(t == ", i, ")")), cex=cex)
+   
+   # plot actions
+   if (!is.null(actions)) {
+      for (i in seq_along(actions)) {
+         head <- actions[[i]]$state
+         tails <- actions[[i]]$trans
+         lwd <- if_else(is.null(actions[[i]]$lwd), 1, actions[[i]]$lwd)
+         lty <- if_else(is.null(actions[[i]]$lty), 1, actions[[i]]$lty)
+         col <- if_else(is.null(actions[[i]]$col), "black", actions[[i]]$col)
+         label <- if_else(is.null(actions[[i]]$label), "", actions[[i]]$label)
+         parseLabel <- if_else(is.null(actions[[i]]$parseLabel), T, actions[[i]]$parseLabel)
+         if (str_length(label) != 0 & parseLabel) label <- parse(text = str_c("italic(", label, ")"))
+         highlight <- if_else(is.null(actions[[i]]$highlight), F, actions[[i]]$highlight)
+         if (highlight) lwd <- lwd + 1
+         pt <- splitarrow(to = pos[gMap(tails), ], from = pos[gMap(head),], lwd=lwd, lty=lty, arr.type = "none",
+                          # arr.side = 1, arr.pos = 0.7, arr.type="curved", arr.lwd = 0.5, arr.length = 0.25, arr.width = 0.2, 
+                          lcol=col)
+         # misc coordinates
+         meanFrom <- colMeans(matrix(ncol = 2, data = pos[gMap(head),]))  # head coord
+         meanTo <- colMeans(matrix(ncol = 2, data = pos[gMap(tails),]))   # mean coord of tails
+         centre <- meanFrom + 0.5 * (meanTo - meanFrom)  # centre point where split
+         meanFT <- colMeans(matrix(c(meanFrom,centre), ncol = 2, byrow = T))  # coord between from and centre
+         # add centre point
+         textellipse(centre, radx = 0.2*radx, rady = 0.2*rady, shadow.size = 0, box.col = "black")
+         # add label
+         textempty(meanFT, lab=label, adj=c(0, 0), cex=cex, ...)
+         # add rewards
+         if (!is.null(actions[[i]]$reward)) {
+            rew <- actions[[i]]$reward
+            idx <- which(rew != "")
+            for (j in idx) {
+               label <- parse(text = str_c("italic(", rew[j], ")"))
+               meanCT <- meanFT <- colMeans(matrix(c(pos[gMap(tails[j]), ],centre), ncol = 2, byrow = T))  # coord middle
+               textempty(meanCT, lab=label, adj=c(0, 0), cex=cex, ...)
+            }
+         }
+      }
+   }	
+   
+   # plot states
+   if (!is.null(states)) {
+      for (i in 1:length(states$gId)) { 
+         label <- ""
+         if (str_length(states$label[i]) != 0) label <- parse(text = str_c("italic(", states$label[i], ")"))
+         if (states$draw[i]) textellipse(pos[states$gId[i], ], lab = label, radx = radx, rady=rady, shadow.size = 0, lwd=0.5, cex=cex) 
+      }
+   }
+   
+   # visual view of the point numbers (for figuring out how to map stateId to gridId)
+   if (showGrid) {
+      for (i in 1:dim(pos)[1]) textrect(pos[i, ], lab = i, radx = 0.0, cex=cex)
+   }
+   return(invisible(NULL))
+}
+```
+
+---
+
+$$\phantom{v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)}\phantom{(} r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\phantom{)}$$
+.left-column-small[
+* Policy $\pi$ given.
+* Calc. $q_\pi(s, a)$.
+<!-- * Multiply with $\pi(a | s)$. -->
+]
+
+.right-column-wide[
+```{r echo=FALSE, fig.width=6, fig.height=5}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 2   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "v[pi](s[0])"
+states$label[6:10] <- str_c("v[pi](s[", 6:10-5, "])")
+# path <- c(3, 7, 13, 19, 22, 27) 
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = 8:10,
+   label = "r(s, a[1])",
+   reward = c("p['03']^a[1]", "p['04']^a[1]", "p['05']^a[1]"),
+   lwd = 1
+))
+# actions <- addHArc(actions, list(
+#    state = 3,
+#    trans = 6:8,
+#    label = "r(s,a[2])",
+#    reward = c("", ""),
+#    lwd = 1
+# ))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+]
+
+---
+
+$$\phantom{v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)}\phantom{(} r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\phantom{)}$$
+.left-column-small[
+* Policy $\pi$ given.
+* Calc. $q_\pi(s, a)$ for each $a$.
+<!-- * Multiply with $\pi(a | s)$. -->
+]
+
+.right-column-wide[
+```{r echo=FALSE, fig.width=6, fig.height=5}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 2   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "v[pi](s[0])"
+states$label[6:10] <- str_c("v[pi](s[", 6:10-5, "])")
+# path <- c(3, 7, 13, 19, 22, 27) 
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = 8:10,
+   label = "r(s, a[1])",
+   reward = c("p['03']^a[1]", "p['04']^a[1]", "p['05']^a[1]"),
+   lwd = 1
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = 6:8,
+   label = "r(s,a[2])",
+   reward = c("", ""),
+   lwd = 1
+))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+]
+
+---
+
+$$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s'))$$
+.left-column-small[
+* Policy $\pi$ given.
+* Calc. $q_\pi(s, a)$ for each $a$.
+* Multiply with $\pi(a | s)$.
+]
+
+.right-column-wide[
+```{r echo=FALSE, fig.width=6, fig.height=5}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 2   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "v[pi](s[0])"
+states$label[6:10] <- str_c("v[pi](s[", 6:10-5, "])")
+# path <- c(3, 7, 13, 19, 22, 27) 
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = 8:10,
+   label = "π(a1|s)",
+   parseLabel = F,
+   # reward = c("p['03']^a[1]", "p['04']^a[1]", "p['05']^a[1]"),
+   lwd = 1
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = 6:8,
+   label = "π(a2|s)",
+   parseLabel = F,
+   reward = c("", ""),
+   lwd = 1
+))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+]
+
+
+
+
+
+---
+
+layout: false
+
+## Optimal policies and value functions
+
+* The objective function of an MDP which is to find an optimal policy $\pi_*$ with state-value function:
+
+$$v_*(s) = \max_\pi v_\pi(s).$$
+* A policy $\pi'$ is better than policy $\pi$ if its expected return is higher for all states. 
+* But the objective is not a scalar, but if the agent start in state $s_0$: 
+$$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$
+That is, maximize the expected return given starting state $s_0$.
+* If the MDP has the right properties, there exists an optimal deterministic policy $\pi_*$ which is better than or just as good as all other policies.
+
+---
+
+## Bellman optimality equations
+
+* The Bellman equations define the recursive equations.
+* Bellman optimality equations define how to find the optimal value functions. 
+* Bellman optimality action-value function $q_*$:
+
+\begin{align}
+q_*(s, a) &= \max_\pi q_\pi(s, a) \\
+          &= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) \max_{a'} q_*(s', a').
+\end{align}
+
+* *Bellman optimality equation* for $v_*$:
+
+\begin{align}
+  v_*(s) &= \max_\pi v_\pi(s) = \max_a q_*(s, a) \\
+         &= \max_a \left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s') \right)
+\end{align}
+
+* Let us have a look at the derivations on the blackboard.
+
+
+---
+
+## Optimality vs approximation
+
+* Using the Bellman optimality equations optimal policies and value functions can be found
+* May though be expensive to solve the equations if the number of states is huge. 
+* *Curse of dimensionality*: Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables. 
+* Large state or action spaces may happen in practice; moreover, they may also be continuous. 
+* In such cases we approximate the value functions instead. 
+* In RL we approximate the value functions if state stace is high or parameters unknown (e.g. transition probabilities). 
+* In RL we often focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
+---
+
+## Semi-MDPs (non-fixed time length)
+
+* finite MDPs consider a fixed length between each time-step. 
+* Semi-MDPs consider non-fixed time-lengths. 
+* Let $l(s'|s,a)$ denote the length of a time-step given that the system is in state $s$, action $a$ is chosen and makes a transition to state $s'$. 
+* The discount rate over a time-step with length $l(s'|s,a)$ is 
+
+$$\gamma(s'|s,a) = \gamma^{l(s'|s,a)},$$ 
+
+* The Bellman optimality equations becomes:
+$$v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s')$$
+$$q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a')$$
+
+
+<!-- # References -->
+
+<!-- ```{r, results='asis', echo=FALSE} -->
+<!-- PrintBibliography(bib) -->
+<!-- ``` -->
+
+
+```{r links, child="../book/links.md"}
+```
+
+```{r postprocess, include=FALSE}
+system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
+file.copy("./slides.css", "./libs/", overwrite = T)
+```

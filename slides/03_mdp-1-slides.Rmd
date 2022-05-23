@@ -1,0 +1,653 @@
+---
+title: "Markov Decision Processes (MDPs)"
+author: "Lars Relund Nielsen"
+output:
+  xaringan::moon_reader:
+    css: "./libs/slides.css"
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+      slideNumberFormat: ""
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, child = "setup.Rmd", echo=FALSE}
+```
+
+```{r include=FALSE, eval=FALSE}
+# to preview
+xaringan::inf_mr(cast_from = ".")
+```
+
+layout: true
+  
+```{r, echo=FALSE}
+module_name <- "mdp-1"
+module_number <- "03"
+here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
+library(htmltools)
+footerHtml <- withTags({
+   div(class="my-footer",
+      span(
+         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Book"), 
+         " | ",
+         a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
+         " | ",
+         a(href=str_c("https://github.com/bss-osca/rl/blob/master/slides/", module_number, "_", module_name, "-slides.Rmd"), target="_blank", "Source"),  
+      )
+   )
+})
+footerHtml
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
+```
+
+
+
+<!-- Templates -->
+<!-- .pull-left[] .pull-right[] -->
+<!-- knitr::include_graphics("img/bandit.png") -->
+<!-- .left-column-wide[]  .right-column-small[] -->
+
+---
+
+## Learning outcomes
+
+* Identify the different elements of a Markov Decision Processes (MDP).
+* Describe how the dynamics of an MDP are defined.
+* Understand how the agent-environment RL description relates to an MDP.
+* Interpret the graphical representation of a Markov Decision Process.
+* Describe how rewards are used to define the objective function (expected return).
+* Interpret the discount factor and its effect on the objective function.
+* Identify episodes and how to formulate an MDP by adding an absorbing state. 
+
+---
+
+## Markov Decision Processes
+
+* A mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found.
+* Often in a RL problem some parts of this description is unknown (in the bandit problem e.g. the rewards). This is not the case for an MDP.
+* In a finite MDP, the sets of states, actions, and rewards all have a finite number of elements.
+* The random variables have well defined discrete probability distributions dependent only on the preceding state and action.
+
+---
+
+```{r, include=FALSE}
+## plot an RL (agent/environment relation)
+library(ggraph)
+library(tidygraph)
+library(tidyverse)
+
+plotRL <- function(active = c('F', 'T', 'F'), label = c("A[0]", "O[0]", "R[1]"), lblAgent = "") {
+   nodes <- tibble(name = c('Environment', 'Agent', lblAgent))
+   # lbl <- str_c(c("A[", "O[", "R["), t, c("]", "]", "]"))
+   edges <-tibble(
+       from = c(2, 1, 1),
+       to =   c(1, 2, 2),
+       label = label,
+       active = active,
+       cap = c(circle(20, 'mm'), circle(20, 'mm'), circle(10, 'mm')))
+   gr <- tbl_graph(nodes, edges) 
+   p <- ggraph(gr, layout = "manual", x = c(1, 1, 1), y = c(1, 2, 2.1)) +
+      geom_edge_fan2(
+         aes(label = label, end_cap = cap, col = active), 
+         arrow = arrow(length = unit(4, 'mm')),
+         hjust = 1.5, 
+         label_parse = TRUE,
+         strength = -1,
+         fontface = "bold",
+         show.legend = F, 
+         label_colour = NA,
+         label_size = 8
+      ) +
+      scale_edge_color_manual(values = c('T' = "black", 'F' = NA)) +
+      geom_node_label(aes(filter = name != lblAgent, label = name), label.padding = unit(1, "lines"), fontface = "bold", size = 10) +
+      geom_node_text(aes(filter = name == lblAgent, label = name), parse = TRUE, size = 7) +
+      theme_graph(base_size = 30, background = NA, border = T, plot_margin = margin(30,30,10,50)) + 
+      coord_cartesian(clip = "off")
+   return(p)
+}
+```
+
+## An MDP as a model for the agent-environment
+
+.left-column-wide[
+- Agent: The one who takes the action, i.e. the decision making component of a system. A general rule is that anything that the agent does not have absolute control over forms part of the environment. 
+- Environment: The system/world where observations and rewards are found. 
+- We assume that we can observe the full state of the system.
+- *Markov property* satisfied. Given the present state the future is independent of the past: $$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$
+]
+
+.right-column-small[
+```{r, echo=FALSE, fig.cap = "Agent-environment representation."}
+plotRL(active = c('T', 'T', 'T'), label = c("A[t]", "S[t+1]", "R[t+1]"), lblAgent = "S[t]")
+```
+]
+
+---
+
+layout: true
+
+## MDP visualization (state-expanded hypergraph)
+
+```{r echo=FALSE}
+library(diagram)
+plotHypergraphV2<-function(gridDim, states=NULL, actions=NULL, showGrid=FALSE, 
+                         radx = 0.03, rady=0.05, cex=1, marX=0.035, marY=0.15, ...)
+{
+   # internal functions
+   gMap<-function(sId) return(states$gId[states$sId %in% sId])		# return gId given sId
+   sMap<-function(gId) return(states$sId[states$gId %in% gId])		# return sId given gId
+
+   pos <- coordinates(rep(gridDim[1], gridDim[2]), hor = F)  # coordinates of each point in the grid
+   posT <- matrix(c(unique(pos[,1]), rep(0, gridDim[2])), ncol = 2)
+   colnames(posT) <- colnames(pos)
+   
+   par(oma=c(0,0,0,0), mar = c(0,0,0,0))
+   openplotmat(xlim=c(min(pos[,1])-marX,max(pos[,1])+marX), 
+               ylim=c(0-marY,max(pos[,2])+marY) )  #main = "State expanded hypergraph"
+   # plot time index
+   for (i in 1:gridDim[2] - 1) textempty(posT[i+1, ], lab = parse(text = str_c("italic(t == ", i, ")")), cex=cex)
+   
+   # plot actions
+   if (!is.null(actions)) {
+      for (i in seq_along(actions)) {
+         head <- actions[[i]]$state
+         tails <- actions[[i]]$trans
+         lwd <- if_else(is.null(actions[[i]]$lwd), 1, actions[[i]]$lwd)
+         lty <- if_else(is.null(actions[[i]]$lty), 1, actions[[i]]$lty)
+         col <- if_else(is.null(actions[[i]]$col), "black", actions[[i]]$col)
+         label <- if_else(is.null(actions[[i]]$label), "", actions[[i]]$label)
+         if (str_length(label) != 0) label <- parse(text = str_c("italic(", label, ")"))
+         highlight <- if_else(is.null(actions[[i]]$highlight), F, actions[[i]]$highlight)
+         if (highlight) lwd <- lwd + 1
+         pt <- splitarrow(to = pos[gMap(tails), ], from = pos[gMap(head),], lwd=lwd, lty=lty, arr.type = "none",
+                          # arr.side = 1, arr.pos = 0.7, arr.type="curved", arr.lwd = 0.5, arr.length = 0.25, arr.width = 0.2, 
+                          lcol=col)
+         # misc coordinates
+         meanFrom <- colMeans(matrix(ncol = 2, data = pos[gMap(head),]))  # head coord
+         meanTo <- colMeans(matrix(ncol = 2, data = pos[gMap(tails),]))   # mean coord of tails
+         centre <- meanFrom + 0.5 * (meanTo - meanFrom)  # centre point where split
+         meanFT <- colMeans(matrix(c(meanFrom,centre), ncol = 2, byrow = T))  # coord between from and centre
+         # add centre point
+         textellipse(centre, radx = 0.2*radx, rady = 0.2*rady, shadow.size = 0, box.col = "black")
+         # add label
+         textempty(meanFT, lab=label, adj=c(0, 0), cex=cex, ...)
+         # add rewards
+         if (!is.null(actions[[i]]$reward)) {
+            rew <- actions[[i]]$reward
+            idx <- which(rew != "")
+            for (j in idx) {
+               label <- parse(text = str_c("italic(", rew[j], ")"))
+               meanCT <- meanFT <- colMeans(matrix(c(pos[gMap(tails[j]), ],centre), ncol = 2, byrow = T))  # coord middle
+               textempty(meanCT, lab=label, adj=c(0, 0), cex=cex, ...)
+            }
+         }
+      }
+   }	
+   
+   # plot states
+   if (!is.null(states)) {
+      for (i in 1:length(states$gId)) { 
+         label <- ""
+         if (str_length(states$label[i]) != 0) label <- parse(text = str_c("italic(", states$label[i], ")"))
+         if (states$draw[i]) textellipse(pos[states$gId[i], ], lab = label, radx = radx, rady=rady, shadow.size = 0, lwd=0.5, cex=cex) 
+      }
+   }
+   
+   # visual view of the point numbers (for figuring out how to map stateId to gridId)
+   if (showGrid) {
+      for (i in 1:dim(pos)[1]) textrect(pos[i, ], lab = i, radx = 0.0, cex=cex)
+   }
+   return(invisible(NULL))
+}
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+states$label[3] <- "s[0]"
+actions <- list()
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+# states$label[9] <- "s[1]"
+# states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("", ""),
+   lwd = 1
+))
+# actions <- addHArc(actions, list(
+#    state = 3,
+#    trans = c(6,7,8,9),
+#    label = "a[2]"
+# ))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(13,12,15),
+#    label = "a[1]"
+# ))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(11,12),
+#    label = "a[2]",
+#    reward = c("", "r[2]"),
+#    lwd = 2
+# ))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+# states$label[9] <- "s[1]"
+# states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("", ""),
+   lwd = 1
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(13,12,15),
+#    label = "a[1]"
+# ))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(11,12),
+#    label = "a[2]",
+#    reward = c("", "r[2]"),
+#    lwd = 2
+# ))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+# states$label[9] <- "s[1]"
+# states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("", ""),
+   lwd = 2
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(13,12,15),
+#    label = "a[1]"
+# ))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(11,12),
+#    label = "a[2]",
+#    reward = c("", "r[2]"),
+#    lwd = 2
+# ))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+states$label[9] <- "s[1]"
+# states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("r[1]", ""),
+   lwd = 2
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(13,12,15),
+#    label = "a[1]"
+# ))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(11,12),
+#    label = "a[2]",
+#    reward = c("", "r[2]"),
+#    lwd = 2
+# ))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+states$label[9] <- "s[1]"
+# states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("r[1]", ""),
+   lwd = 2
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(13,12,15),
+   label = "a[1]"
+))
+# actions <- addHArc(actions, list(
+#    state = 9,
+#    trans = c(11,12),
+#    label = "a[2]",
+#    reward = c("", "r[2]"),
+#    lwd = 2
+# ))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+states$label[9] <- "s[1]"
+# states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("r[1]", ""),
+   lwd = 2
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(13,12,15),
+   label = "a[1]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(11,12),
+   label = "a[2]",
+   reward = c("", ""),
+   lwd = 1
+))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+```{r echo=FALSE, fig.width=6, fig.height=3}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+states$label[9] <- "s[1]"
+states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("r[1]", ""),
+   lwd = 2
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(13,12,15),
+   label = "a[1]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(11,12),
+   label = "a[2]",
+   reward = c("", "r[2]"),
+   lwd = 2
+))
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+---
+
+layout:false
+
+## Mathematical description of the MDP 
+
+- At time-step $t$: states $S_t \in \mathcal{S}$, actions $A_t \in \mathcal{A}(s)$ and rewards $R_t \in \mathcal{R} \subset \mathbb{R}.$
+- Since a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. 
+- The random variables have well defined discrete probability distributions which defines the dynamics of the system:
+\begin{equation}
+    p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
+\end{equation}
+which can be used to find the *transition probabilities*:
+\begin{equation}
+    p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
+\end{equation}
+and the *expected reward*:
+\begin{equation}
+    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
+\end{equation}
+
+---
+
+## Parameters need for defining an MDP
+
+That is, to define an MDP the following are needed:
+
+* All states and actions are assumed known. 
+* A finite number of states and actions. That is, we can store values using tabular methods. 
+* The transition probabilities and expected rewards are given (or $p(s', r | s, a)$).
+
+Assume a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.
+
+---
+
+## Reward hypothesis
+
+A central assumption in reinforcement learning:
+
+> All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
+
+- The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
+- This assumption can be questioned (e.g. risk-adverse behaviour) but in this course we assume it holds.
+
+---
+
+## Rewards and the objective function (goal)
+
+The return $G_t$ (discounted sum of future rewards):
+
+\begin{equation}
+	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
+\end{equation}
+
+Note we use a *discount factor* $0 \leq \gamma \leq 1$ so an infinite time-horizon do not give problems. 
+
+- If $\gamma < 1$ and the reward is bounded, then the return is always finite (see backboard).
+- Discounting allows us to work with finite returns.
+- A $\gamma$ close to 1 put weight on future rewards.
+- A $\gamma$ close to 0 put weight on present rewards. 
+
+*Objective function*: choose actions so the expected return is maximized. 
+
+---
+
+## MDPs with a finite time-horizon
+
+- Finite time-horizon MDP: there is an upper bound on the number of time-steps need before finishes (e.g playing a board game).
+- Playing one game or going trough the MDP once is an *episode*. Afterwards a new game is started (a new episode).
+- Here we do not need a discount factor (can set $\gamma = 1$). 
+
+But how can we transform it into an MDP with infinite time-horizon?
+
+   1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
+   2. When a game stops a transition to the absorbing state happen.
+
+Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (are called (*continuing tasks*). 
+
+<!-- ## Policies and value functions -->
+
+<!-- --- -->
+
+<!-- ## Optimal policies and value functions  -->
+
+<!-- --- -->
+
+<!-- ## Optimality vs approximation  -->
+
+<!-- --- -->
+
+<!-- ## semi-MDPs (non-fixed time length) -->
+
+<!-- --- -->
+
+
+
+<!-- # References -->
+
+<!-- ```{r, results='asis', echo=FALSE} -->
+<!-- PrintBibliography(bib) -->
+<!-- ``` -->
+
+
+```{r links, child="../book/links.md"}
+```
+
+```{r postprocess, include=FALSE}
+system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
+file.copy("./slides.css", "./libs/", overwrite = T)
+```

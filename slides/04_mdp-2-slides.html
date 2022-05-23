@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Policies and value functions for MDPs</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lars Relund Nielsen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Policies and value functions for MDPs
+### Lars Relund Nielsen
+
+---
+
+
+
+
+
+
+
+layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Book</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/04_mdp-2-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
+
+---
+
+## Learning outcomes
+
+* Identify a policy as a distribution over actions for each possible state.
+* Define value functions for a state and action. 
+* Derive the Bellman equation for a value function.
+* Understand how Bellman equations relate current and future values.
+* Define an optimal policy.
+* Derive the Bellman optimality equation for a value function.
+
+---
+
+## Policies 
+
+A *policy* `\(\pi\)` is a distribution over actions, given some state:
+
+`$$\pi(a | s) = \Pr(A_t = a | S_t = s).$$`
+
+* Since the MDP is stationary the policy is time-independent, i.e. given a state, we choose the same action no matter the time-step. 
+* The policy is *deterministic* if `\(\pi(a | s) = 1\)` for a single state, i.e. an action is chosen with probability one always.
+* The policy is *stochastic* if `\(\pi(a | s) &lt; 1\)` for some state.
+
+---
+
+## Value functions
+
+* The *state-value function* `\(v_\pi(s)\)` (expected return given state `\(s\)` and policy `\(\pi\)`):
+$$
+`\begin{align}
+  v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
+\end{align}`
+$$
+   Note the last equal sign comes from `\(G_t = R_{t+1} + \gamma G_{t+1}\)`.
+* The *action-value function* `\(q_\pi(s, a)\)` (expected return given `\(s\)`, action `\(a\)` and policy `\(\pi\)`):
+$$
+`\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
+\end{align}`
+$$
+* Combining above, the state-value function becomes an average over the q-values: 
+`$$v_\pi(s) = \sum_{a \in \mathcal{A}(s)}\pi(a|s)q_\pi(s, a)$$`
+
+---
+
+## Belman equations
+
+The value functions can be transformed into recursive equations (Bellman equations).
+
+Bellman equations (state-value): 
+`$$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right)$$`
+
+Bellman equations (action-value): 
+`$$q_\pi(s, a) = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s' | s, a) \sum_{a' \in \mathcal{A(s')}} \pi(a'|s')q_\pi(s',a')$$`
+Let us have a closer look on the derivation blackboard.
+
+---
+
+layout: true
+
+## Visualization of Bellman equations
+
+
+
+---
+
+`$$\phantom{v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)}\phantom{(} r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\phantom{)}$$`
+.left-column-small[
+* Policy `\(\pi\)` given.
+* Calc. `\(q_\pi(s, a)\)`.
+&lt;!-- * Multiply with `\(\pi(a | s)\)`. --&gt;
+]
+
+.right-column-wide[
+&lt;img src="img/mdp-2-unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+`$$\phantom{v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)}\phantom{(} r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\phantom{)}$$`
+.left-column-small[
+* Policy `\(\pi\)` given.
+* Calc. `\(q_\pi(s, a)\)` for each `\(a\)`.
+&lt;!-- * Multiply with `\(\pi(a | s)\)`. --&gt;
+]
+
+.right-column-wide[
+&lt;img src="img/mdp-2-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+`$$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s'))$$`
+.left-column-small[
+* Policy `\(\pi\)` given.
+* Calc. `\(q_\pi(s, a)\)` for each `\(a\)`.
+* Multiply with `\(\pi(a | s)\)`.
+]
+
+.right-column-wide[
+&lt;img src="img/mdp-2-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+
+
+
+
+---
+
+layout: false
+
+## Optimal policies and value functions
+
+* The objective function of an MDP which is to find an optimal policy `\(\pi_*\)` with state-value function:
+
+`$$v_*(s) = \max_\pi v_\pi(s).$$`
+* A policy `\(\pi'\)` is better than policy `\(\pi\)` if its expected return is higher for all states. 
+* But the objective is not a scalar, but if the agent start in state `\(s_0\)`: 
+`$$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$`
+That is, maximize the expected return given starting state `\(s_0\)`.
+* If the MDP has the right properties, there exists an optimal deterministic policy `\(\pi_*\)` which is better than or just as good as all other policies.
+
+---
+
+## Bellman optimality equations
+
+* The Bellman equations define the recursive equations.
+* Bellman optimality equations define how to find the optimal value functions. 
+* Bellman optimality action-value function `\(q_*\)`:
+
+`\begin{align}
+q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+          &amp;= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) \max_{a'} q_*(s', a').
+\end{align}`
+
+* *Bellman optimality equation* for `\(v_*\)`:
+
+`\begin{align}
+  v_*(s) &amp;= \max_\pi v_\pi(s) = \max_a q_*(s, a) \\
+         &amp;= \max_a \left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s') \right)
+\end{align}`
+
+* Let us have a look at the derivations on the blackboard.
+
+
+---
+
+## Optimality vs approximation
+
+* Using the Bellman optimality equations optimal policies and value functions can be found
+* May though be expensive to solve the equations if the number of states is huge. 
+* *Curse of dimensionality*: Consider a state `\(s = (x_1,\ldots,x_n)\)` with state variables `\(x_i\)` each taking two possible values, then the number of states is `\(|\mathcal{S}| = 2^n\)`. That is, the state space grows exponentially with the number of state variables. 
+* Large state or action spaces may happen in practice; moreover, they may also be continuous. 
+* In such cases we approximate the value functions instead. 
+* In RL we approximate the value functions if state stace is high or parameters unknown (e.g. transition probabilities). 
+* In RL we often focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
+---
+
+## Semi-MDPs (non-fixed time length)
+
+* finite MDPs consider a fixed length between each time-step. 
+* Semi-MDPs consider non-fixed time-lengths. 
+* Let `\(l(s'|s,a)\)` denote the length of a time-step given that the system is in state `\(s\)`, action `\(a\)` is chosen and makes a transition to state `\(s'\)`. 
+* The discount rate over a time-step with length `\(l(s'|s,a)\)` is 
+
+`$$\gamma(s'|s,a) = \gamma^{l(s'|s,a)},$$` 
+
+* The Bellman optimality equations becomes:
+`$$v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s')$$`
+`$$q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a')$$`
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
+
+
+
+[BSS]: https://bss.au.dk/en/
+[bi-programme]: https://kandidat.au.dk/en/businessintelligence/
+
+[course-help]: https://github.com/bss-osca/rl/issues
+[cran]: https://cloud.r-project.org
+[cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
+[course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+
+[DataCamp]: https://www.datacamp.com/
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/cbaee6c73e7d78549a9e32a900793b2d5491ace1824efc1760a6729735948215
+[datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
+[datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
+[datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
+[datacamp-r-communicating-chap3]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/introduction-to-rmarkdown
+[datacamp-r-communicating-chap4]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/customizing-your-rmarkdown-report
+[datacamp-r-intermediate]: https://learn.datacamp.com/courses/intermediate-r
+[datacamp-r-intermediate-chap1]: https://campus.datacamp.com/courses/intermediate-r/chapter-1-conditionals-and-control-flow
+[datacamp-r-intermediate-chap2]: https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops
+[datacamp-r-intermediate-chap3]: https://campus.datacamp.com/courses/intermediate-r/chapter-3-functions
+[datacamp-r-intermediate-chap4]: https://campus.datacamp.com/courses/intermediate-r/chapter-4-the-apply-family
+[datacamp-r-functions]: https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r
+[datacamp-r-tidyverse]: https://learn.datacamp.com/courses/introduction-to-the-tidyverse
+[datacamp-r-strings]: https://learn.datacamp.com/courses/string-manipulation-with-stringr-in-r
+[datacamp-r-dplyr]: https://learn.datacamp.com/courses/data-manipulation-with-dplyr
+[datacamp-r-dplyr-bakeoff]: https://learn.datacamp.com/courses/working-with-data-in-the-tidyverse
+[datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
+[datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
+[dplyr-cran]: https://CRAN.R-project.org/package=dplyr
+[debug-in-r]: https://rstats.wtf/debugging-r-code.html
+
+[google-form]: https://forms.gle/s39GeDGV9AzAXUo18
+[google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
+[GitHub]: https://github.com/
+[git-install]: https://git-scm.com/downloads
+[github-actions]: https://github.com/features/actions
+[github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
+
+[happy-git]: https://happygitwithr.com
+[hg-install-git]: https://happygitwithr.com/install-git.html
+[hg-why]: https://happygitwithr.com/big-picture.html#big-picture
+[hg-github-reg]: https://happygitwithr.com/github-acct.html#github-acct
+[hg-git-install]: https://happygitwithr.com/install-git.html#install-git
+[hg-exist-github-first]: https://happygitwithr.com/existing-github-first.html
+[hg-exist-github-last]: https://happygitwithr.com/existing-github-last.html
+[hg-credential-helper]: https://happygitwithr.com/credential-caching.html
+[hypothes.is]: https://web.hypothes.is/
+
+[osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
+
+[Peergrade]: https://peergrade.io
+[peergrade-signup]: https://app.peergrade.io/join
+[point-and-click]: https://en.wikipedia.org/wiki/Point_and_click
+[pkg-bookdown]: https://bookdown.org/yihui/bookdown/
+[pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
+[pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
+[pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+
+[R]: https://www.r-project.org
+[RStudio]: https://rstudio.com
+[rstudio-cloud]: https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz
+[r-cloud-mod12]: https://rstudio.cloud/spaces/176810/project/2963819
+[r-cloud-mod13]: https://rstudio.cloud/spaces/176810/project/3020139
+[r-cloud-mod14]: https://rstudio.cloud/spaces/176810/project/3020322
+[r-cloud-mod15]: https://rstudio.cloud/spaces/176810/project/3020509
+[r-cloud-mod16]: https://rstudio.cloud/spaces/176810/project/3026754
+[r-cloud-mod17]: https://rstudio.cloud/spaces/176810/project/3034015
+[r-cloud-mod18]: https://rstudio.cloud/spaces/176810/project/3130795
+[r-cloud-mod19]: https://rstudio.cloud/spaces/176810/project/3266132
+[rstudio-download]: https://rstudio.com/products/rstudio/download/#download
+[rstudio-customizing]: https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio
+[rstudio-key-shortcuts]: https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts
+[rstudio-workbench]: https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png
+[r-markdown]: https://rmarkdown.rstudio.com/
+[ropensci-writexl]: https://docs.ropensci.org/writexl/
+[r4ds-pipes]: https://r4ds.had.co.nz/pipes.html
+[r4ds-factors]: https://r4ds.had.co.nz/factors.html
+[r4ds-strings]: https://r4ds.had.co.nz/strings.html
+[r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
+
+[stat-545]: https://stat545.com
+[stat-545-functions-part1]: https://stat545.com/functions-part1.html
+[stat-545-functions-part2]: https://stat545.com/functions-part2.html
+[stat-545-functions-part3]: https://stat545.com/functions-part3.html
+[slides-welcome]: https://bss-osca.github.io/rl/slides/00-rl_welcome.html
+[slides-m1-3]: https://bss-osca.github.io/rl/slides/01-welcome_r_part.html
+[slides-m4-5]: https://bss-osca.github.io/rl/slides/02-programming.html
+[slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
+[slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
+[slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
+
+[tidyverse-main-page]: https://www.tidyverse.org
+[tidyverse-packages]: https://www.tidyverse.org/packages/
+[tidyverse-core]: https://www.tidyverse.org/packages/#core-tidyverse
+[tidyverse-ggplot2]: https://ggplot2.tidyverse.org/
+[tidyverse-dplyr]: https://dplyr.tidyverse.org/
+[tidyverse-tidyr]: https://tidyr.tidyverse.org/
+[tidyverse-readr]: https://readr.tidyverse.org/
+[tidyverse-purrr]: https://purrr.tidyverse.org/
+[tidyverse-tibble]: https://tibble.tidyverse.org/
+[tidyverse-stringr]: https://stringr.tidyverse.org/
+[tidyverse-forcats]: https://forcats.tidyverse.org/
+[tidyverse-readxl]: https://readxl.tidyverse.org
+[tidyverse-googlesheets4]: https://googlesheets4.tidyverse.org/index.html
+[tutorial-markdown]: https://commonmark.org/help/tutorial/
+[tfa-course]: https://bss-osca.github.io/tfa/
+
+[Udemy]: https://www.udemy.com/
+
+[vba-yt-course1]: https://www.youtube.com/playlist?list=PLpOAvcoMay5S_hb2D7iKznLqJ8QG_pde0
+[vba-course1-hello]: https://youtu.be/f42OniDWaIo
+
+[vba-yt-course2]: https://www.youtube.com/playlist?list=PL3A6U40JUYCi4njVx59-vaUxYkG0yRO4m
+[vba-course2-devel-tab]: https://youtu.be/awEOUaw9q58
+[vba-course2-devel-editor]: https://youtu.be/awEOUaw9q58
+[vba-course2-devel-project]: https://youtu.be/fp6PTbU7bXo
+[vba-course2-devel-properties]: https://youtu.be/ks2QYKAd9Xw
+[vba-course2-devel-hello]: https://youtu.be/EQ6tDWBc8G4
+
+[video-install]: https://vimeo.com/415501284
+[video-rstudio-intro]: https://vimeo.com/416391353
+[video-packages]: https://vimeo.com/416743698
+[video-projects]: https://vimeo.com/319318233
+[video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
+[video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
+[video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10&amp;t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10
+[video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
+[video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
+[video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
+[video-tibble-vs-df]: https://www.youtube.com/watch?v=EBk6PnvE1R4
+[video-dplyr]: https://www.youtube.com/watch?v=aywFompr1F4
+
+[wiki-snake-case]: https://en.wikipedia.org/wiki/Snake_case
+[wiki-camel-case]: https://en.wikipedia.org/wiki/Camel_case
+[wiki-interpreted]: https://en.wikipedia.org/wiki/Interpreted_language
+[wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
+[wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
+[wiki-json]: https://en.wikipedia.org/wiki/JSON
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": false,
+"slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
