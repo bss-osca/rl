@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 ```
 
 
-# Monte Carlo methods for prediction and control {#mod-mc}
+# Monte Carlo methods for evaluation and control {#mod-mc}
 
-The term "Monte Carlo" (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different sample-paths (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience. 
+The term "Monte Carlo" (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different sample-paths (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to evaluate/predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience. 
 
 MC methods can be used for processes with episodes, i.e. where there is a terminal state. This reduces the length of the sample-path and the value of the states visited on the path can be updated based on the reward received.
 
@@ -62,7 +62,7 @@ By the end of this module, you are expected to:
 For this week, you will need to read Chapter 5-5.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
 
-## MC prediction (evaluation)
+## MC evaluation (prediction)
 
 Given a policy $\pi$, we want to estimate the state-value function. Recall that the state value function is 
 \[
@@ -87,18 +87,18 @@ An algorithm for first visit MC is given in Figure \@ref(fig:mc-prediction-alg).
 knitr::include_graphics("img/mc-prediction.png")
 ```
 
-The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of $V$ is better. Adapting Equation \@ref(eq:avg), we have that the sample average can be updated using: 
+The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of $V$ can be done. Adapting Equation \@ref(eq:avg), we have that the sample average can be updated using: 
 
 $$
   V(s) \leftarrow V(s) + \frac{1}{n} \left[G - V(s)\right].
 $$
-where $n$ denote the number of realized returns found for state $s$. The state-value vector must be initialized to zero and a vector counting the number of returns found must be stored.
+where $n$ denote the number of realized returns found for state $s$ and $G$ the current realized return. The state-value vector must be initialized to zero and a vector counting the number of returns found for each state must be stored.
 
 
-<!-- ### Blackjack - MC prediction -->
+<!-- ### Blackjack - MC evaluation -->
 
 
-### MC prediction of action-values
+### MC evaluation of action-values
 
 With a model of the environment we only need to estimate the state-value function, since it is easy to determine the policy from the state-values using the Bellman optimality equations \@ref(eq:bell-opt-state-policy). However, if we do not know the expected reward and transition probabilities state values are not enough. In that case, it is useful to estimate action-values since the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). To find $q_*$, we first need to predict action-values for a policy $\pi$. This is essentially the same as for state-values, only we now talk about state-action pairs being visited, i.e. taking action $a$ in state $s$ instead. 
 
@@ -110,8 +110,57 @@ If $\pi$ is deterministic, then we will only estimate the values of actions that
 
 ## MC control (improvement)
 
-We are now ready to consider how Monte Carlo estimation can be used in control, that
-is, to approximate optimal policies.
+We are now ready to formulate a generalized policy iteration (GPI) algorithm using MC to predict the action-values $q(s,a)$. Policy improvement is done by selecting the next policy greedy with respect to the action-value function:
+\[
+    \pi(s) = \arg\max_a q(s, a).
+\]
+That is, we generate a sequence of policies and action-value functions
+$$\pi_0 \xrightarrow[]{E} q_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} q_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} q_{\pi_2} \xrightarrow[]{I} \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} q_{*}.$$
+Hence the policy improvement theorem applies for all $s \in \mathcal{S}$:
+\begin{align}
+    q_{\pi_k}(s, a=\pi_{k+1}(s)) &= q_{\pi_k}(s, \arg\max_a q_\pi_k(s, a)) \\
+                    &= \max_a q_{\pi_k}(s, a) \\
+                    &\geq q_{\pi_k}(s, \pi_k(s))\\
+                    &= v_{\pi_k}(s)
+\end{align}
+That is, $\pi_{k+1}$ is better than $\pi_k$ or optimal. 
+
+It is important to understand the major difference between model-based GPI (remember that a model means the transition probability matrix and reward distribution are known) and model-free GPI. We cannot simply use a 100% greedy strategy all the time, since all our action-values are estimates. As such, we now need to introduce an element of exploration into our algorithm to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:
+
+1. *Infinite exploration*: all state-action $(s,a)$ pairs should be explored infinitely many times as the number of iterations go to infinity (in the limit), i.e. as the number of iterations $k$ goes to infinity the number of visits $n_k$ does too $$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$
+2. *Greedy in the limit*: while we maintain infinite exploration, we do eventually need to converge to the optimal policy:
+  $$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$
+
+### GPI with exploring starts
+
+An algorithm using exploring starts and first visit MC is given in Figure \@ref(fig:mc-gpi-es-alg). It satisfies the convergence properties and and incremental implementation can be used to update $Q$. Note that to predict the action-values for a policy, we in general need a large number of episodes. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many episodes we may stop the algorithm once the $q_{\pi_k}$ stop moving within a certain error.
+
+```{r mc-gpi-es-alg, echo=FALSE, fig.cap="GPI using MC policy prediction with exploring starts [@Sutton18]."}
+knitr::include_graphics("img/mc-gpi-es.png")
+```
+
+<!-- ### Blackjack - MC control -->
+
+Note by using exploring starts in Algorithm \@ref(fig:mc-gpi-es-alg), the 'infinite exploration' convergence assumption is satisfied. However exploring starts may be hard to use in practice. Two other methods avoiding exploring starts are:
+
+* *on-policy* methods: evaluate or improve the policy that is used to make decisions. 
+* *off-policy* methods: evaluate or improve a policy that is different than the policy used to generate the data (sample-path).
+
+### On-policy GPI using $\epsilon$-soft policies
+
+Let us consider on-policy control methods first. To ensure infinite exploration a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using $\epsilon$-greedy policies is given in Figure \@ref(fig:mc-gpi-on-policy-alg). Here we put probability $1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}$ on the maximal action and $\frac{\varepsilon}{|\mathcal{A}(s)|}$ on each of the others. Note using $\epsilon$-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the $\epsilon$-soft policies. If we want to find the optimal policy we have to ensure the 'greedy in the limit' convergence assumption. This can be done by decreasing $\epsilon$ as the number of iterations increase (e.g. $\epsilon = 1/k$).
+
+```{r mc-gpi-on-policy-alg, echo=FALSE, fig.cap="On-policy GPI using MC policy prediction [@Sutton18]."}
+knitr::include_graphics("img/mc-gpi-on-policy.png")
+```
+
+
+### Off-policy GPI
+
+
+
+
+
 
 
 ## Summary 
