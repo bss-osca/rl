@@ -112,7 +112,7 @@ Skills to
    7.	describe the mathematical framework of Markov decision processes
    8.	formulate and solve Markov and semi-Markov decision processes for realistic problems with finite state space under different objectives
    9.	apply fundamental techniques, results and concepts of RL on selected RL problems.
-   10.	given an application problem, decide if it should be formulated as a RL problem and define it formally (in terms of the state space, action space, dynamics and reward model)
+   10. given an application problem, decide if it should be formulated as a RL problem and define it formally (in terms of the state space, action space, dynamics and reward model)
 
 Competences to
 

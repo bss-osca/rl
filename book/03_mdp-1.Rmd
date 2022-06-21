@@ -291,7 +291,8 @@ The *objective function* is to choose actions such that the expected return is m
 
 * MDPs formalize the problem of an agent interacting with an environment. 
 * The agent and environment interact at discrete time steps. 
-* At each time, the agent observes the current state of the environment. Then selects an action and the the environment transitions to a new state with a reward. * An agent's choices have long-term consequences (delayed reward). 
+* At each time, the agent observes the current state of the environment. Then selects an action and the the environment transitions to a new state with a reward. 
+* An agent's choices have long-term consequences (delayed reward). 
 * Selected actions influences future states and rewards. 
 * The objective is to maximize the expected discounted return. 
 * With a discount factor less than one, we can guarantee the return remains finite. 

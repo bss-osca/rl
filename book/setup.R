@@ -44,7 +44,8 @@ options(
   knitr.kable.NA = '',
   crayon.enabled = FALSE,
   rlang_trace_top_env = rlang::current_env(),
-  rlang__backtrace_on_error = "none"
+  rlang__backtrace_on_error = "none",
+  tz="CET"
 )
 
 # if (knitr::is_latex_output()) {
@@ -198,7 +199,7 @@ addIcon <- function(name, attrib = NULL, lib = "font-awesome")
 
 strLPath <- "We are all different and you may like different learning styles compared to others. You may prefer a different learning path than suggested. Here is a list of possible different learning paths that may be useful for you. Note these suggestions are not a part of syllabus!"
 
-strExercises <- "Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!"
+strExercises <- "Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!"
 
 ctrSol <- 0
 addSolution <- function(code = "", text = "", title = "Solution", evalCode = TRUE) {

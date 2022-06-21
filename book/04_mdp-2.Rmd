@@ -146,13 +146,25 @@ $$
 0 \text { otherwise.}
 \end{cases}
 $$
+Or we may define a deterministic policy as 
+$$
+\begin{align}
+\pi_*(s) &= \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
+         &= \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).
+\end{align}
+(\#eq:bell-opt-state-policy)
+$$
+
 
 Similar we can write the *Bellman optimality equation* for $v_*$:
 
+$$
 \begin{align}
   v_*(s) &= \max_a q_*(s, a) \\
          &= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
 \end{align}
+(\#eq:bell-opt-state)
+$$
 
 Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal
 value functions. Using \(v_*\), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store $v_*$, we can find $v_*$ by a one-step-ahead search using $q_*$, acting greedy.

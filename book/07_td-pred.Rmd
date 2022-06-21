@@ -1,0 +1,60 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+
+# Temporal difference methods for prediction {#mod-td-pred}
+
+
+
+## Learning outcomes 
+
+By the end of this module, you are expected to:
+
+
+
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings
+
+For this week, you will need to read Chapter 5-5.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
+
+
+## MC prediction
+
+
+## MC control
+
+
+## 
+
+## Summary 
+
+Read Chapter 5.10 in @Sutton18.
+
+
+## Exercises
+
+`r strExercises`
+
+
+
+```{r links, child="links.md", include=FALSE}
+```
