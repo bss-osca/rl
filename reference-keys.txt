@@ -20,6 +20,8 @@ thm:unlabeled-div-1
 fig:policy-ite-alg
 fig:value-ite-alg
 fig:mc-prediction-alg
+fig:mc-gpi-es-alg
+fig:mc-gpi-on-policy-alg
 mod-rl-intro
 mod-rl-intro-lo
 textbook-readings
@@ -90,9 +92,12 @@ exercise---car-rental
 mod-mc
 learning-outcomes-5
 textbook-readings-5
-mc-prediction-evaluation
-mc-prediction-of-action-values
+mc-evaluation-prediction
+mc-evaluation-of-action-values
 mc-control-improvement
+gpi-with-exploring-starts
+on-policy-gpi-using-epsilon-soft-policies
+off-policy-gpi
 summary-5
 exercises-1
 mod-td-pred

@@ -322,15 +322,20 @@ div.csl-indent {
 <li class="chapter" data-level="5.9.2" data-path="mod-dp.html"><a href="mod-dp.html#exercise---car-rental"><i class="fa fa-check"></i><b>5.9.2</b> Exercise - Car rental<span></span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control<span></span></a>
+<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for evaluation and control<span></span></a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="mod-mc.html"><a href="mod-mc.html#learning-outcomes-5"><i class="fa fa-check"></i><b>6.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="6.2" data-path="mod-mc.html"><a href="mod-mc.html#textbook-readings-5"><i class="fa fa-check"></i><b>6.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-evaluation"><i class="fa fa-check"></i><b>6.3</b> MC prediction (evaluation)<span></span></a>
+<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-prediction"><i class="fa fa-check"></i><b>6.3</b> MC evaluation (prediction)<span></span></a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC prediction of action-values<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC evaluation of action-values<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-control-improvement"><i class="fa fa-check"></i><b>6.4</b> MC control (improvement)<span></span></a></li>
+<li class="chapter" data-level="6.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-control-improvement"><i class="fa fa-check"></i><b>6.4</b> MC control (improvement)<span></span></a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="mod-mc.html"><a href="mod-mc.html#gpi-with-exploring-starts"><i class="fa fa-check"></i><b>6.4.1</b> GPI with exploring starts<span></span></a></li>
+<li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#on-policy-gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> On-policy GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<span></span></a></li>
+<li class="chapter" data-level="6.4.3" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-gpi"><i class="fa fa-check"></i><b>6.4.3</b> Off-policy GPI<span></span></a></li>
+</ul></li>
 <li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#summary-5"><i class="fa fa-check"></i><b>6.5</b> Summary<span></span></a></li>
 <li class="chapter" data-level="6.6" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.6</b> Exercises<span></span></a></li>
 </ul></li>
@@ -605,14 +610,14 @@ Figure 4.1: A simple MDP.
 <p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>
 <p>Formulate the problem as an finite MDP where the time-steps are days.</p>
 <!-- Q1 -->
-<div id="kYYvpYuqRACG8aW5gpCh" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="kYYvpYuqRACG8aW5gpCh-title">
+<div id="ZrV48Xleci5tUbuaWQwD" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ZrV48Xleci5tUbuaWQwD-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="kYYvpYuqRACG8aW5gpCh-title">
+<h4 class="modal-title" id="ZrV48Xleci5tUbuaWQwD-title">
 Solution
 </h4>
 </div>
@@ -629,21 +634,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#kYYvpYuqRACG8aW5gpCh">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#ZrV48Xleci5tUbuaWQwD">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space (with states <span class="math inline">\((x,y)\)</span>) equal the number of cars at each location at the end of the day.</li>
 </ol>
 <!-- Q2 -->
-<div id="SwjOKZglno2cvapPkqnV" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="SwjOKZglno2cvapPkqnV-title">
+<div id="rBte0c3tcgzlSefIQbkL" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="rBte0c3tcgzlSefIQbkL-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="SwjOKZglno2cvapPkqnV-title">
+<h4 class="modal-title" id="rBte0c3tcgzlSefIQbkL-title">
 Solution
 </h4>
 </div>
@@ -660,21 +665,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#SwjOKZglno2cvapPkqnV">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#rBte0c3tcgzlSefIQbkL">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1.</li>
 </ol>
 <!-- Q3 -->
-<div id="A6AW4gnsiiXJXpkSzy8e" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="A6AW4gnsiiXJXpkSzy8e-title">
+<div id="VhTZ5GdSJ4Qr7ngyWESo" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="VhTZ5GdSJ4Qr7ngyWESo-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="A6AW4gnsiiXJXpkSzy8e-title">
+<h4 class="modal-title" id="VhTZ5GdSJ4Qr7ngyWESo-title">
 Solution
 </h4>
 </div>
@@ -691,7 +696,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#A6AW4gnsiiXJXpkSzy8e">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#VhTZ5GdSJ4Qr7ngyWESo">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
@@ -699,14 +704,14 @@ Solution
 </ol>
 <p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x&#39;\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x&#39; - a\)</span> and after rental requests <span class="math inline">\(\max(0, x&#39; - a - D_1)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(\max(0, x&#39; - a - D_1) + H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20, \max(0, x&#39; - a - D_1) + H_1))).\]</span></p>
 <!-- Q4 -->
-<div id="tceRaWpEzYTDMo9cNGOd" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="tceRaWpEzYTDMo9cNGOd-title">
+<div id="Q4o3RuFvLdQy9csqpdOA" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Q4o3RuFvLdQy9csqpdOA-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="tceRaWpEzYTDMo9cNGOd-title">
+<h4 class="modal-title" id="Q4o3RuFvLdQy9csqpdOA-title">
 Solution
 </h4>
 </div>
@@ -723,7 +728,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#tceRaWpEzYTDMo9cNGOd">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Q4o3RuFvLdQy9csqpdOA">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
