@@ -33,7 +33,7 @@ library(htmltools)
 footerHtml <- withTags({
    div(class="my-footer",
       span(
-         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Book"), 
+         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Notes"), 
          " | ",
          a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
          " | ",

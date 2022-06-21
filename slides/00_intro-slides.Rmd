@@ -30,7 +30,7 @@ library(htmltools)
 withTags({
    div(class="my-footer",
       span(
-         a(href=str_c("https://bss-osca.github.io/rl/index.html"), target="_blank", "Book"), 
+         a(href=str_c("https://bss-osca.github.io/rl/index.html"), target="_blank", "Notes"), 
          " | ",
          a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
          " | ",

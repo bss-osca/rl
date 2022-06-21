@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Markov Decision Processes (MDPs)</title>
+    <title>Dynamic Programming</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -13,7 +13,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Markov Decision Processes (MDPs)
+# Dynamic Programming
 ### Lars Relund Nielsen
 
 ---
@@ -28,11 +28,11 @@ layout: true
   
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/mod-dp.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/03_mdp-1-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/05_dp-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/03_mdp-1-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/05_dp-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -47,178 +47,192 @@ layout: true
 
 ## Learning outcomes
 
-* Identify the different elements of a Markov Decision Processes (MDP).
-* Describe how the dynamics of an MDP are defined.
-* Understand how the agent-environment RL description relates to an MDP.
-* Interpret the graphical representation of a Markov Decision Process.
-* Describe how rewards are used to define the objective function (expected return).
-* Interpret the discount factor and its effect on the objective function.
-* Identify episodes and how to formulate an MDP by adding an absorbing state. 
+* Describe the distinction between policy evaluation and control.
+* Identify when DP can be applied, as well as its limitations.
+* Explain and apply iterative policy evaluation for estimating state-values given a policy.
+* Interpret the policy improvement theorem.
+* Explain and apply policy iteration for finding an optimal policy.
+* Explain and apply value iteration for finding an optimal policy.
+* Describe the ideas behind generalized policy iteration.
+* Interpret the distinction between synchronous and asynchronous dynamic programming methods.
 
 ---
 
-## Markov Decision Processes
+## Dynamic Programming
 
-* A mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found.
-* Often in a RL problem some parts of this description is unknown (in the bandit problem e.g. the rewards). This is not the case for an MDP.
-* In a finite MDP, the sets of states, actions, and rewards all have a finite number of elements.
-* The random variables have well defined discrete probability distributions dependent only on the preceding state and action.
+* Algorithms for computing optimal policies given full information about the dynamics. 
+* Must satisfy the *principle of optimality*: 
+   - An optimal policy must consist for optimal sub-polices 
+   - The optimal value function in a state can be calculated using optimal value functions in future states. 
+* Two main problems arise with DP: 
+   - Not full information, e.g. the rewards or transition probabilities are unknown. 
+   - Need to calculate the value function in all states using the rewards, actions, and transition probabilities. 
+* Note the term programming in DP have nothing to do with a computer program but comes from that the mathematical model is called a "program". 
 
 ---
 
+## Policy evaluation vs control
 
+.pull-left[
+* Policy evaluation: Given a policy `\(\pi\)`, find the value function `\(v_\pi\)`
+`$$\pi \xrightarrow[]{E} v_\pi$$`
+Recall that
+`$$v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s]$$`
+where the return (discounted reward) is
+`$$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots$$`
+]  
 
-## An MDP as a model for the agent-environment
+--
+
+.pull-right[
+* Control: Find the best policy or optimize the value function (using the Bellman optimality equations).
+
+&lt;img src="img/control.png" width="100%" style="display: block; margin: auto;" /&gt;
+] 
+
+---
+
+## Policy evaluation
+
+We can find the state-value function by solving the system of Bellman equations:
+`\begin{equation}
+v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).
+\end{equation}`
+However, can be computationally expensive. Instead we use an iterative method:
+
+* Use an initial approximation `\(v_0\)` chosen arbitrarily e.g. `\(v_0(s) = 0 \:  \forall s\)` (terminal state = 0).
+* Update the value function using sweeps:
+`\begin{equation}
+v_{k+1}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_k(s')\right) 
+\end{equation}`
+Until the value function converge to `\(v_\pi\)` after a number of sweeps (the change in the value function is below a certain threshold).
+
+---
+
+## Policy evaluation - visualization
+
+.pull-left[.midi[
+
+Sweep 1:
+`$$v_{1}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_0(s')\right)$$`
+Sweep 2:
+`$$v_{2}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_1(s')\right)$$`
+`$$\vdots$$`
+Sweep k:
+`$$v_{k}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_{k-1}(s')\right)$$`
+]] 
+
+.pull-right[.vertical-center[ 
+&lt;img src="img/policy-eval-ite.png" width="90%" style="display: block; margin: auto;" /&gt;
+]]
+
+---
+
+## Policy Improvement (control)
+
+* Given the optimal value function we find the optimal deterministic policy by choosing *greedy* the best action: 
+
+`$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).$$`
+* What if we apply greedy action selection to the value function for a policy `\(\pi\)`:
+
+`$$\pi'(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),$$`
+then 
+
+`$$q_\pi(s, \pi'(s)) \geq q_\pi(s, \pi(s)) = v_\pi(s) \quad \forall s \in \mathcal{S}.$$`
+
+---
+
+## Policy improvement theorem (control)
+
+.question[
+Let `\(\pi\)`, `\(\pi'\)` be any pair of deterministic policies, such that
+
+`\begin{equation}
+    q_\pi(s, \pi'(s)) \geq v_\pi(s) \quad \forall s \in \mathcal{S}.
+\end{equation}`
+
+That is, `\(\pi'\)` is as least as good as `\(\pi\)`.
+]
+
+Implications:
+
+* If we find policy `\(\pi'\)` by applying greedy action selection on policy `\(\pi\)` then `\(\pi'\)` is as least as good as `\(\pi\)`. 
+* If `\(\pi'(s) = \pi(s), \forall s\in\mathcal{S}\)` then `\(\pi\)` must be optimal.
+* If `\(\pi'(s) \neq \pi(s)\)`, then policy `\(\pi'\)` is strictly better than policy `\(\pi\)` since there is at least one state `\(s\)` for which `\(v_{\pi'}(s) &gt; v_\pi(s)\)`.
+
+---
+
+## Policy iteration (control)
 
 .left-column-wide[
-- Agent: The one who takes the action, i.e. the decision making component of a system. A general rule is that anything that the agent does not have absolute control over forms part of the environment. 
-- Environment: The system/world where observations and rewards are found. 
-- We assume that we can observe the full state of the system.
-- *Markov property* satisfied. Given the present state the future is independent of the past: `$$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$`
-]
+Given the policy improvement theorem we can now improve policies iteratively: 
+
+1. Pick an arbitrary initial policy `\(\pi\)`.
+2. Given a policy `\(\pi\)`, estimate `\(v_\pi(s)\)` via the policy evaluation algorithm.
+3. Generate a new, improved policy `\(\pi' \geq \pi\)` using *greedy* action selection. If `\(\pi'=\pi\)` then stop (found optimal policy); otherwise go to Step 2.
+
+The sequence of calculations will be: 
+`$$\pi_0 \xrightarrow[]{E} v_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} v_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} v_{\pi_2}  \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} v_{\pi_*}$$`
+The number of steps needed are often low.
+]  
 
 .right-column-small[
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/mdp-1-unnamed-chunk-5-1.png" alt="Agent-environment representation." width="100%" /&gt;
-&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
-&lt;/div&gt;
+&lt;img src="img/policy-ite-pen.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="img/policy-ite-path.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
 
-layout: true
+## Value iteration (control)
 
-## MDP visualization (state-expanded hypergraph)
+.left-column-wide[.midi[
+Value iteration do one sweep of policy evaluation and one sweep of policy improvement by updating the Bellman optimality equation:
 
+`$$v_{k+1}(s) = \arg\max_a \left(r(s,a) + \gamma\sum_{s',r} p(s'|s, a)v_k(s')\right)$$`
+VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy `\(\pi^\star\)` is found:
 
+`$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right)$$`
+The sequence of calculations will be: 
+`$$v_{0} \xrightarrow[]{EI} v_{1} \xrightarrow[]{EI} v_{2}  \ldots \xrightarrow[]{EI} v_{*} \xrightarrow[]{G} \pi_{*}$$`
+]]
 
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+.right-column-small[
+&lt;img src="img/value-ite-path.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
 
 ---
 
-&lt;img src="img/mdp-1-unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+## Generalized policy iteration
+
+.left-column-wide[.midi[
+Generalised Policy Iteration (GPI) consider different policy evaluation and improvement strategies. For instance partly policy evaluation
+
+* Value iteration: improve the state-value using a single sweep of the state space. 
+
+Asynchronous state-value updates:
+
+* In-place DP: Just one array of state-values.
+* Prioritized sweeping: Update "significant" state-values using a priority queue. 
+
+GPI works if explore the whole state space.
+]]
+
+.right-column-small[
+&lt;img src="img/policy-ite-general.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
 
 ---
 
-&lt;img src="img/mdp-1-unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+## Policy iteration in R (control)
+
+&lt;img src="img/policy-iteration.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="img/mdp-1-unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+## Value iteration in R (control)
 
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-layout:false
-
-## Mathematical description of the MDP 
-
-- At time-step `\(t\)`: states `\(S_t \in \mathcal{S}\)`, actions `\(A_t \in \mathcal{A}(s)\)` and rewards `\(R_t \in \mathcal{R} \subset \mathbb{R}.\)`
-- Since a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. 
-- The random variables have well defined discrete probability distributions which defines the dynamics of the system:
-`\begin{equation}
-    p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
-\end{equation}`
-which can be used to find the *transition probabilities*:
-`\begin{equation}
-    p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
-\end{equation}`
-and the *expected reward*:
-`\begin{equation}
-    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
-\end{equation}`
-
----
-
-## Parameters need for defining an MDP
-
-That is, to define an MDP the following are needed:
-
-* All states and actions are assumed known. 
-* A finite number of states and actions. That is, we can store values using tabular methods. 
-* The transition probabilities and expected rewards are given (or `\(p(s', r | s, a)\)`).
-
-Assume a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.
-
----
-
-## Reward hypothesis
-
-A central assumption in reinforcement learning:
-
-&gt; All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
-
-- The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
-- This assumption can be questioned (e.g. risk-adverse behaviour) but in this course we assume it holds.
-
----
-
-## Rewards and the objective function (goal)
-
-The return `\(G_t\)` (discounted sum of future rewards):
-
-`\begin{equation}
-	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
-\end{equation}`
-
-Note we use a *discount factor* `\(0 \leq \gamma \leq 1\)` so an infinite time-horizon do not give problems. 
-
-- If `\(\gamma &lt; 1\)` and the reward is bounded, then the return is always finite (see backboard).
-- Discounting allows us to work with finite returns.
-- A `\(\gamma\)` close to 1 put weight on future rewards.
-- A `\(\gamma\)` close to 0 put weight on present rewards. 
-
-*Objective function*: choose actions so the expected return is maximized. 
-
----
-
-## MDPs with a finite time-horizon
-
-- Finite time-horizon MDP: there is an upper bound on the number of time-steps need before finishes (e.g playing a board game).
-- Playing one game or going trough the MDP once is an *episode*. Afterwards a new game is started (a new episode).
-- Here we do not need a discount factor (can set `\(\gamma = 1\)`). 
-
-But how can we transform it into an MDP with infinite time-horizon?
-
-   1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
-   2. When a game stops a transition to the absorbing state happen.
-
-Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (are called (*continuing tasks*). 
-
-&lt;!-- ## Policies and value functions --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## Optimal policies and value functions  --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## Optimality vs approximation  --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## semi-MDPs (non-fixed time length) --&gt;
-
-&lt;!-- --- --&gt;
-
-
+&lt;img src="img/value-iteration.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 &lt;!-- # References --&gt;
 
