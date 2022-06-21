@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A Setting up R | Reinforcement Learning for Business (RL)</title>
+  <title>Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Setting up R | Reinforcement Learning for Business (RL)" />
+  <meta property="og:title" content="Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://bss-osca.github.io/rl/" />
   <meta property="og:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="bss-osca/rl" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Setting up R | Reinforcement Learning for Business (RL)" />
+  <meta name="twitter:title" content="Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)" />
   
   <meta name="twitter:description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="twitter:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="mod-td-control.html"/>
-<link rel="next" href="groups.html"/>
+<link rel="prev" href="mod-dp.html"/>
+<link rel="next" href="mod-td-pred.html"/>
 <script src="libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -393,16 +393,103 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="mod-r-setup" class="section level1 hasAnchor" number="9">
-<h1><span class="header-section-number">A</span> Setting up R<a href="mod-r-setup.html#mod-r-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p><a href="https://www.r-project.org">R</a> is a programming language and free software environment. The R language is widely used among statisticians and data miners for developing statistical software and data analysis. For a further overview and description of the history of R see <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html">Chapter 2</a> in <span class="citation">Peng (<a href="#ref-rdpeng" role="doc-biblioref">2018</a>)</span>. R can be run from a terminal but in general you use an IDE (integrated development environment) <a href="https://rstudio.com">RStudio</a> for running R and to saving your work.</p>
-<p>R and RStudio can either be run from your laptop or using <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> which run R in the cloud using your browser. During this course <strong>it is recommend to use RStudio on your laptop</strong> since there is no limit on CPU usage. If you need to install R and RStudio on your laptop <a href="https://bss-osca.github.io/tfa/mod-r-install.html#r-install">check this out</a>.</p>
-<p>If you need a brushup on R have a look at the free online course <a href="https://learn.datacamp.com/courses/free-introduction-to-r">Introduction to R</a> at DataCamp. <a href="https://www.datacamp.com/">DataCamp</a> is an online platform for learning data science. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here.</p>
+<div id="mod-mc" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Module 6</span> Monte Carlo methods for prediction and control<a href="mod-mc.html#mod-mc" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The term “Monte Carlo” (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different sample-paths (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience.</p>
+<p>MC methods can be used for processes with episodes, i.e. where there is a terminal state. This reduces the length of the sample-path and the value of the states visited on the path can be updated based on the reward received.</p>
+<div id="learning-outcomes-5" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Learning outcomes<a href="mod-mc.html#learning-outcomes-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>By the end of this module, you are expected to:</p>
+<!-- Lesson 1: Introduction to Monte Carlo Methods -->
+<!-- Understand how Monte-Carlo methods can be used to estimate value functions from -->
+<!-- sampled interaction -->
+<!-- Identify problems that can be solved using Monte-Carlo methods -->
+<!-- Use Monte Carlo prediction to estimate the value function for a given policy. -->
+<!-- Lesson 2: Monte Carlo for Control -->
+<!-- Estimate action-value functions using Monte Carlo -->
+<!-- Understand the importance of maintaining exploration in Monte Carlo algorithms -->
+<!-- Understand how to use monte carlo methods to implement a GPI algorithm. -->
+<!-- Apply Monte Carlo with exploring starts to solve an MDP -->
+<!-- Lesson 3: Exploration Methods for Monte Carlo -->
+<!-- Understand why Exploring Starts can be problematic in real problems -->
+<!-- Describe an alternative exploration method for Monte Carlo control -->
+<!-- Lesson 4: Off-policy learning for prediction -->
+<!-- Understand how off-policy learning can help deal with the exploration problem -->
+<!-- Produce examples of target policies and examples of behavior policies. -->
+<!-- Understand importance sampling -->
+<!-- Use importance sampling to estimate the expected value of a target distribution using -->
+<!-- samples from a different distribution. -->
+<!-- Understand how to use importance sampling to correct returns -->
+<!-- Understand how to modify the monte carlo prediction algorithm for off-policy learning. -->
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+</div>
+<div id="textbook-readings-5" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Textbook readings<a href="mod-mc.html#textbook-readings-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For this week, you will need to read Chapter 5-5.5 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
+</div>
+<div id="mc-prediction-evaluation" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> MC prediction (evaluation)<a href="mod-mc.html#mc-prediction-evaluation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Given a policy <span class="math inline">\(\pi\)</span>, we want to estimate the state-value function. Recall that the state value function is
+<span class="math display">\[
+v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].
+\]</span>
+where the return is
+<span class="math display">\[
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
+\]</span>
+Now given policy <span class="math inline">\(\pi\)</span> and a sample-path (episode) <span class="math inline">\(S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-l}, R_T\)</span> ending in the terminal state at time <span class="math inline">\(T\)</span>, we can calculate the realized return for each state in the sample-path. Each time we have a new sample-path a new realized return for the states is given and the average for the returns in a state is an estimate of the state-value. With enough observations, the sample average converges to the true state-value under the policy <span class="math inline">\(\pi\)</span>.</p>
+<p>Given a policy <span class="math inline">\(\pi\)</span> and a set of sample-paths, there are two ways to estimate the state values <span class="math inline">\(v_\pi(s)\)</span>:</p>
+<ul>
+<li>First visit MC: average returns from first visit to state <span class="math inline">\(s\)</span>.</li>
+<li>Every visit MC: average returns following every visit to state <span class="math inline">\(s\)</span>.</li>
+</ul>
+<p>First visit MC generates iid estimates of <span class="math inline">\(v_\pi(s)\)</span> with finite variance, so the sequence of estimates converges to the expected value by the law of large numbers as the number of observations grow. Every visit MC does not generate independent estimates, but still converges.</p>
+<p>An algorithm for first visit MC is given in Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a>. The state-value estimate is stored in a vector <span class="math inline">\(V\)</span> and the returns for each state in a list. Given a sample-path we add the return to the states on the path by scanning the path backwards and updating <span class="math inline">\(G\)</span>. Note since the algorithm considers first visit MC, a check of occurrence of the state earlier in the path done. If this check is dropped, we have a every visit MC algorithm instead. Moreover, the computation needed to update the state-value does not depend on the size of the process/MDP but only of the length of the sample-path.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-prediction-alg"></span>
+<img src="img/mc-prediction.png" alt="MC policy evaluation [@Sutton18]."  />
+<p class="caption">
+Figure 6.1: MC policy evaluation <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</p>
+</div>
+<p>The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of <span class="math inline">\(V\)</span> is better. Adapting Equation <a href="mod-bandit.html#eq:avg">(2.1)</a>, we have that the sample average can be updated using:</p>
+<p><span class="math display">\[
+  V(s) \leftarrow V(s) + \frac{1}{n} \left[G - V(s)\right].
+\]</span>
+where <span class="math inline">\(n\)</span> denote the number of realized returns found for state <span class="math inline">\(s\)</span>. The state-value vector must be initialized to zero and a vector counting the number of returns found must be stored.</p>
+<!-- ### Blackjack - MC prediction -->
+<div id="mc-prediction-of-action-values" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> MC prediction of action-values<a href="mod-mc.html#mc-prediction-of-action-values" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With a model of the environment we only need to estimate the state-value function, since it is easy to determine the policy from the state-values using the Bellman optimality equations <a href="mod-mdp-2.html#eq:bell-opt-state-policy">(4.3)</a>. However, if we do not know the expected reward and transition probabilities state values are not enough. In that case, it is useful to estimate action-values since the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see Eq. <a href="mod-mdp-2.html#eq:bell-opt-state-policy">(4.3)</a>). To find <span class="math inline">\(q_*\)</span>, we first need to predict action-values for a policy <span class="math inline">\(\pi\)</span>. This is essentially the same as for state-values, only we now talk about state-action pairs being visited, i.e. taking action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span> instead.</p>
+<p>If <span class="math inline">\(\pi\)</span> is deterministic, then we will only estimate the values of actions that <span class="math inline">\(\pi\)</span> dictates. Therefore some exploration are needed in order to have estimates for all action-values. Two possibilities are:</p>
+<ol style="list-style-type: decimal">
+<li>Make <span class="math inline">\(\pi\)</span> stochastic, e.g. <span class="math inline">\(\varepsilon\)</span>-soft that that have non-zero probability of selecting each state-action pair.</li>
+<li>Use <em>exploring starts</em>, which specifies that ever state-action pair has non-zero probability of being selected as the starting state of an sample-path.</li>
+</ol>
+</div>
+</div>
+<div id="mc-control-improvement" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> MC control (improvement)<a href="mod-mc.html#mc-control-improvement" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We are now ready to consider how Monte Carlo estimation can be used in control, that
+is, to approximate optimal policies.</p>
+</div>
+<div id="summary-5" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Summary<a href="mod-mc.html#summary-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Read Chapter 5.10 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+</div>
+<div id="exercises-1" class="section level2 hasAnchor" number="6.6">
+<h2><span class="header-section-number">6.6</span> Exercises<a href="mod-mc.html#exercises-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+
+</div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-rdpeng" class="csl-entry">
-Peng, R. D. 2018. <em>R Programming for Data Science</em>. <a href="https://bookdown.org/rdpeng/rprogdatascience/">https://bookdown.org/rdpeng/rprogdatascience/</a>.
+<div id="ref-Sutton18" class="csl-entry">
+Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
 </div>
 </div>
             </section>
@@ -410,8 +497,8 @@ Peng, R. D. 2018. <em>R Programming for Data Science</em>. <a href="https://book
           </div>
         </div>
       </div>
-<a href="mod-td-control.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="groups.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mod-dp.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mod-td-pred.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -432,7 +519,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/bss-osca/rl/edit/master/book/99_appdx.Rmd",
+"link": "https://github.com/bss-osca/rl/edit/master/book/06_mc.Rmd",
 "text": "Edit"
 },
 "history": {

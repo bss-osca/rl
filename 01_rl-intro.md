@@ -728,7 +728,7 @@ Read Chapter 1.6 in @Sutton18.
 
 ## Exercises {#sec-rl-intro-ex}
 
-Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
+Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
 ### Exercise - Self-Play {#ex-r-intro-self}
 

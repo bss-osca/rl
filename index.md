@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
 favicon: assets/favicon.ico
-date: "2022-05-23"
+date: "2022-06-21"
 editor_options: 
   chunk_output_type: console
 ---
@@ -29,7 +29,7 @@ editor_options:
 
 
 
-This site contains course notes for the course "Reinforcement Learning for Business" held at [Aarhus BSS][BSS]. It consists of a set of modules containing learning path for the course modules. The course is an elective course mainly for the [Operations and Supply Chain Analytics][osca-programme] and [Business Intelligence][bi-programme] programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.
+This site contains course notes for the course "Reinforcement Learning for Business" held at [Aarhus BSS][BSS]. It consists of a set of learning modules. The course is an elective course mainly for the [Operations and Supply Chain Analytics][osca-programme] and [Business Intelligence][bi-programme] programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.
 
 
 ## Learning outcomes {-}
@@ -157,17 +157,18 @@ The appendix contains different modules that may be helpful for you including hi
 
 We use [R] as programming software and it is assumed that you are familiar with using R. [R] is a programming language and free software environment. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work. R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. 
 
-It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module \@ref(mod-r-setup))  in the appendix. 
+It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module \@ref(mod-r-setup)  in the appendix. 
 
 
 ## Acknowledgements and license {- #ack} 
 
-Materials in this book are taken from various places
+Materials in this book are taken from various places:
 
 * The notes are based on @Sutton18.
 * The bookdown skeleton and some notes are based on the [Tools for Analytics][tfa-course] course.
 * Some notes are adopted from [Scott Jeen](https://github.com/enjeeneer/sutton_and_barto), 
 [Bryn Elesedy](https://github.com/brynhayder/reinforcement_learning_an_introduction) and [Peter Goldsborough](https://github.com/peter-can-write/david-silver-rl-notes).
+* Some slides are inspired by the [RL specialization](https://www.coursera.org/specializations/reinforcement-learning) at Coursera.
 * Some exercises are taken from @Sutton18 and modified slightly. 
 
 <!-- * Some parts in Module \@ref(mod-intro) are inspired by [Chapter 1](https://r4ds.had.co.nz/introduction.html) in @r4ds. -->
@@ -193,7 +194,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 
 ## Exercises {#sec-intro-ex -}
 
-Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Some of the solutions to each exercise can be seen by pressing the button at each question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
+Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
 ### Exercise - How to annotate {#sec-intro-ex-annotate -}
 
@@ -204,6 +205,7 @@ The online course notes can be annotated using [hypothes.is]. You can create bot
    1) Sign-up at [hypothes.is]. If you are using Chrome you may also install the [Chrome extension](https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek).
    2) Go back to this page and login in the upper right corner (there should be some icons e.g. `<`).
    3) Select some text and try to annotate it using both a private and public annotation (you may delete it again afterwards). 
+   4) Go to the [slides for this module](https://bss-osca.github.io/rl/slides/00_intro-slides.html#6) and try to annotate the page with a private comment. 
 
 
 ### Exercise - Templates {#sec-intro-ex-templates -}

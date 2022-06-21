@@ -1,21 +1,7 @@
-<!DOCTYPE html>
-<html lang="" xml:lang="">
-  <head>
-    <title>Welcome to Reinforcement Learning for Business</title>
-    <meta charset="utf-8" />
-    <meta name="author" content="Lars Relund Nielsen" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
-    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
-  </head>
-  <body>
-    <textarea id="source">
-class: center, middle, inverse, title-slide
-
-# Welcome to Reinforcement Learning for Business
-### Lars Relund Nielsen
-
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -23,102 +9,47 @@ class: center, middle, inverse, title-slide
 
 
 
-
-layout: true
-
-<div class="my-footer">
-<span>
-<a href="https://bss-osca.github.io/rl/index.html" target="_blank">Notes</a>
- | 
-<a href="https://bss-osca.github.io/rl/slides/00_intro-slides.html" target="_blank">Slides</a>
- | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/00_intro-slides.Rmd" target="_blank">Source</a>
-</span>
-</div>
-
----
-
-## About Me 
-
-- Lars Relund Nielsen (larsrn@econ.au.dk)
-- Professor at Dept. of Economics and Business Economics, Aarhus Universitet. 
-- I do research in algorithms for optimization, multiobjective optimization, stochastic dynamic programming
-- Have been programming in many languages such as C, C++, VBA, R, SQL, Javascript …
-- For more information see my [research page]( http://www.research.relund.dk/).
-
----
-
-## Who are you?
-
-Let us have a look at [what you answered](https://docs.google.com/forms/d/1Cmc5bXlNiJnU8FbCF3TIi_SL8X-Wm0wqlkYGV3SBxpM/edit#responses). 
+# Temporal difference methods for control {#mod-td-control}
 
 
 
----
 
-## Course overview 
+## Learning outcomes 
 
-- The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).
-- RL refers to:
-  * An approach of modelling sequential decision making problems.
-  * An approach for learning decision making form experience.
-  * Mathematical models for learning-based decision making.
-- Lectures/tutorials each week.
-- Exercises are given to support your learning.
-
----
-
-## Teaching form and style 
-
-- A combination of lectures and tutorials. 
-  - Before: Read the suggested material (you may start with the exercises).
-  - Lecture or tutorial. Not all material will be covered here.
-  - Continue with exercises (group work).
-- It is strongly recommended that you solve the exercises for each week during the course. This is the best way to prepare for the exam. 
-
----
-
-## Course notes 
-
-EDIT WHEN ONLINE!!
-
-The course notes are given [online](https://bss-osca.github.io/rl/). You may annotate the notes and slides using [hypothes.is](https://bss-osca.github.io/rl/annotate.html). Link to slides are given under the **Recap** section in each learning module.
+By the end of this module, you are expected to:
 
 
 
----
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
 
-## Groups 
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 
-- You have been asked to form study groups of 3-6 persons which will be used in the whole course. 
-- It is up to you how to meet in these groups (on-line or physical). 
-- Use the groups when you 
-  * solve the exercises. 
-  * hand in the project report.
 
----
+## Textbook readings
 
-## Project report
+For this week, you will need to read Chapter 5-5.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
-- A project report must be written during the course focussing on solving a RL problem.
-- The report may be used as a starting point for discussion at the individual exam.
-- You must hand in the reports in groups and do individual peer grading using the on-line platform [Peergrade].
-- For sign-up see Brightspace.
 
----
+## MC prediction
 
-## Exam
 
-- A 20 min oral individual exam without any preparation. 
-- Curriculum include all material such as book chapters, course notes, videos, interactive tutorials, exercises and project reports.
-- The report may be used as a starting point for discussion at the individual exam.
+## MC control
 
----
 
-layout: false
-class: inverse, middle, center
+## 
 
-# Looking forward to working with you!
+## Summary 
+
+Read Chapter 5.10 in @Sutton18.
+
+
+## Exercises
+
+Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
+
 
 
 
@@ -251,8 +182,8 @@ class: inverse, middle, center
 [video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
 [video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
 [video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
-[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10&amp;t=0s
-[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&index=10&t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&index=10
 [video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
 [video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
 [video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
@@ -265,129 +196,3 @@ class: inverse, middle, center
 [wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
 [wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
 [wiki-json]: https://en.wikipedia.org/wiki/JSON
-
-
-    </textarea>
-<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
-<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
-<script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"highlightStyle": "solarized-light",
-"countIncrementalSlides": false
-});
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
-  window.dispatchEvent(new Event('resize'));
-});
-(function(d) {
-  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
-  if (!r) return;
-  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
-  d.head.appendChild(s);
-})(document);
-
-(function(d) {
-  var el = d.getElementsByClassName("remark-slides-area");
-  if (!el) return;
-  var slide, slides = slideshow.getSlides(), els = el[0].children;
-  for (var i = 1; i < slides.length; i++) {
-    slide = slides[i];
-    if (slide.properties.continued === "true" || slide.properties.count === "false") {
-      els[i - 1].className += ' has-continuation';
-    }
-  }
-  var s = d.createElement("style");
-  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
-  d.head.appendChild(s);
-})(document);
-// delete the temporary CSS (for displaying all slides initially) when the user
-// starts to view slides
-(function() {
-  var deleted = false;
-  slideshow.on('beforeShowSlide', function(slide) {
-    if (deleted) return;
-    var sheets = document.styleSheets, node;
-    for (var i = 0; i < sheets.length; i++) {
-      node = sheets[i].ownerNode;
-      if (node.dataset["target"] !== "print-only") continue;
-      node.parentNode.removeChild(node);
-    }
-    deleted = true;
-  });
-})();
-(function() {
-  "use strict"
-  // Replace <script> tags in slides area to make them executable
-  var scripts = document.querySelectorAll(
-    '.remark-slides-area .remark-slide-container script'
-  );
-  if (!scripts.length) return;
-  for (var i = 0; i < scripts.length; i++) {
-    var s = document.createElement('script');
-    var code = document.createTextNode(scripts[i].textContent);
-    s.appendChild(code);
-    var scriptAttrs = scripts[i].attributes;
-    for (var j = 0; j < scriptAttrs.length; j++) {
-      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
-    }
-    scripts[i].parentElement.replaceChild(s, scripts[i]);
-  }
-})();
-(function() {
-  var links = document.getElementsByTagName('a');
-  for (var i = 0; i < links.length; i++) {
-    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
-      links[i].target = '_blank';
-    }
-  }
-})();
-// adds .remark-code-has-line-highlighted class to <pre> parent elements
-// of code chunks containing highlighted lines with class .remark-code-line-highlighted
-(function(d) {
-  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
-  const preParents = [];
-  const findPreParent = function(line, p = 0) {
-    if (p > 1) return null; // traverse up no further than grandparent
-    const el = line.parentElement;
-    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
-  };
-
-  for (let line of hlines) {
-    let pre = findPreParent(line);
-    if (pre && !preParents.includes(pre)) preParents.push(pre);
-  }
-  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
-})(document);</script>
-
-<script>
-slideshow._releaseMath = function(el) {
-  var i, text, code, codes = el.getElementsByTagName('code');
-  for (i = 0; i < codes.length;) {
-    code = codes[i];
-    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
-      text = code.textContent;
-      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
-          /^\$\$(.|\s)+\$\$$/.test(text) ||
-          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
-        code.outerHTML = code.innerHTML;  // remove <code></code>
-        continue;
-      }
-    }
-    i++;
-  }
-};
-slideshow._releaseMath(document);
-</script>
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-(function () {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
-  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
-    script.src  = script.src.replace(/^https?:/, '');
-  document.getElementsByTagName('head')[0].appendChild(script);
-})();
-</script>
-  </body>
-</html>

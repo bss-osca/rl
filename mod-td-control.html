@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A Setting up R | Reinforcement Learning for Business (RL)</title>
+  <title>Module 8 Temporal difference methods for control | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Setting up R | Reinforcement Learning for Business (RL)" />
+  <meta property="og:title" content="Module 8 Temporal difference methods for control | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://bss-osca.github.io/rl/" />
   <meta property="og:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="bss-osca/rl" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Setting up R | Reinforcement Learning for Business (RL)" />
+  <meta name="twitter:title" content="Module 8 Temporal difference methods for control | Reinforcement Learning for Business (RL)" />
   
   <meta name="twitter:description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="twitter:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="mod-td-control.html"/>
-<link rel="next" href="groups.html"/>
+<link rel="prev" href="mod-td-pred.html"/>
+<link rel="next" href="mod-r-setup.html"/>
 <script src="libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -393,16 +393,47 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="mod-r-setup" class="section level1 hasAnchor" number="9">
-<h1><span class="header-section-number">A</span> Setting up R<a href="mod-r-setup.html#mod-r-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p><a href="https://www.r-project.org">R</a> is a programming language and free software environment. The R language is widely used among statisticians and data miners for developing statistical software and data analysis. For a further overview and description of the history of R see <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html">Chapter 2</a> in <span class="citation">Peng (<a href="#ref-rdpeng" role="doc-biblioref">2018</a>)</span>. R can be run from a terminal but in general you use an IDE (integrated development environment) <a href="https://rstudio.com">RStudio</a> for running R and to saving your work.</p>
-<p>R and RStudio can either be run from your laptop or using <a href="https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz">RStudio Cloud</a> which run R in the cloud using your browser. During this course <strong>it is recommend to use RStudio on your laptop</strong> since there is no limit on CPU usage. If you need to install R and RStudio on your laptop <a href="https://bss-osca.github.io/tfa/mod-r-install.html#r-install">check this out</a>.</p>
-<p>If you need a brushup on R have a look at the free online course <a href="https://learn.datacamp.com/courses/free-introduction-to-r">Introduction to R</a> at DataCamp. <a href="https://www.datacamp.com/">DataCamp</a> is an online platform for learning data science. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here.</p>
+<div id="mod-td-control" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Module 8</span> Temporal difference methods for control<a href="mod-td-control.html#mod-td-control" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="learning-outcomes-7" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Learning outcomes<a href="mod-td-control.html#learning-outcomes-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>By the end of this module, you are expected to:</p>
+<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 </div>
+<div id="textbook-readings-7" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Textbook readings<a href="mod-td-control.html#textbook-readings-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For this week, you will need to read Chapter 5-5.5 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
+</div>
+<div id="mc-prediction-1" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> MC prediction<a href="mod-td-control.html#mc-prediction-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="mc-control-1" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> MC control<a href="mod-td-control.html#mc-control-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="section-1" class="section level2" number="8.5">
+<h2><span class="header-section-number">8.5</span> </h2>
+</div>
+<div id="summary-7" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Summary<a href="mod-td-control.html#summary-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Read Chapter 5.10 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+</div>
+<div id="exercises-3" class="section level2 hasAnchor" number="8.7">
+<h2><span class="header-section-number">8.7</span> Exercises<a href="mod-td-control.html#exercises-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+
+</div>
+</div>
+
+
+
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-rdpeng" class="csl-entry">
-Peng, R. D. 2018. <em>R Programming for Data Science</em>. <a href="https://bookdown.org/rdpeng/rprogdatascience/">https://bookdown.org/rdpeng/rprogdatascience/</a>.
+<div id="ref-Sutton18" class="csl-entry">
+Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
 </div>
 </div>
             </section>
@@ -410,8 +441,8 @@ Peng, R. D. 2018. <em>R Programming for Data Science</em>. <a href="https://book
           </div>
         </div>
       </div>
-<a href="mod-td-control.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="groups.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mod-td-pred.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mod-r-setup.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -432,7 +463,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/bss-osca/rl/edit/master/book/99_appdx.Rmd",
+"link": "https://github.com/bss-osca/rl/edit/master/book/08_td-control.Rmd",
 "text": "Edit"
 },
 "history": {
