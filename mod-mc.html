@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-06-21" />
+<meta name="date" content="2022-06-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -333,11 +333,15 @@ div.csl-indent {
 <li class="chapter" data-level="6.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-control-improvement"><i class="fa fa-check"></i><b>6.4</b> MC control (improvement)<span></span></a>
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="mod-mc.html"><a href="mod-mc.html#gpi-with-exploring-starts"><i class="fa fa-check"></i><b>6.4.1</b> GPI with exploring starts<span></span></a></li>
-<li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#on-policy-gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> On-policy GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<span></span></a></li>
-<li class="chapter" data-level="6.4.3" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-gpi"><i class="fa fa-check"></i><b>6.4.3</b> Off-policy GPI<span></span></a></li>
+<li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#summary-5"><i class="fa fa-check"></i><b>6.5</b> Summary<span></span></a></li>
-<li class="chapter" data-level="6.6" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.6</b> Exercises<span></span></a></li>
+<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-mc-evaluation"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC evaluation<span></span></a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="mod-mc.html"><a href="mod-mc.html#weighted-importance-sampling"><i class="fa fa-check"></i><b>6.5.1</b> Weighted importance sampling<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-control-improvement"><i class="fa fa-check"></i><b>6.6</b> Off-policy control (improvement)<span></span></a></li>
+<li class="chapter" data-level="6.7" data-path="mod-mc.html"><a href="mod-mc.html#summary-5"><i class="fa fa-check"></i><b>6.7</b> Summary<span></span></a></li>
+<li class="chapter" data-level="6.8" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.8</b> Exercises<span></span></a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="mod-td-pred.html"><a href="mod-td-pred.html"><i class="fa fa-check"></i><b>7</b> Temporal difference methods for prediction<span></span></a>
 <ul>
@@ -446,7 +450,7 @@ where the return is
 <span class="math display">\[
 G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
 \]</span>
-Now given policy <span class="math inline">\(\pi\)</span> and a sample-path (episode) <span class="math inline">\(S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-l}, R_T\)</span> ending in the terminal state at time <span class="math inline">\(T\)</span>, we can calculate the realized return for each state in the sample-path. Each time we have a new sample-path a new realized return for the states is given and the average for the returns in a state is an estimate of the state-value. With enough observations, the sample average converges to the true state-value under the policy <span class="math inline">\(\pi\)</span>.</p>
+Now given policy <span class="math inline">\(\pi\)</span> and a sample-path (episode) <span class="math inline">\(S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-1}, R_T\)</span> ending in the terminal state at time <span class="math inline">\(T\)</span>, we can calculate the realized return for each state in the sample-path. Each time we have a new sample-path a new realized return for the states is given and the average for the returns in a state is an estimate of the state-value. With enough observations, the sample average converges to the true state-value under the policy <span class="math inline">\(\pi\)</span>.</p>
 <p>Given a policy <span class="math inline">\(\pi\)</span> and a set of sample-paths, there are two ways to estimate the state values <span class="math inline">\(v_\pi(s)\)</span>:</p>
 <ul>
 <li>First visit MC: average returns from first visit to state <span class="math inline">\(s\)</span>.</li>
@@ -484,14 +488,14 @@ where <span class="math inline">\(n\)</span> denote the number of realized retur
 \]</span>
 That is, we generate a sequence of policies and action-value functions
 <span class="math display">\[\pi_0 \xrightarrow[]{E} q_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} q_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} q_{\pi_2} \xrightarrow[]{I} \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} q_{*}.\]</span>
-Hence the policy improvement theorem applies for all <span class="math inline">\(s \in \mathcal{S}\)</span>:
-<span class="math display">\[\begin{align}
-    q_{\pi_k}(s, a=\pi_{k+1}(s)) &amp;= q_{\pi_k}(s, \arg\max_a q_\pi_k(s, a)) \\
+Hence the policy improvement theorem applies for all <span class="math inline">\(s \in \mathcal{S}\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+    q_{\pi_k}(s, a=\pi_{k+1}(s)) &amp;= q_{\pi_k}(s, \arg\max_a q_{\pi_k}(s, a)) \\
                     &amp;= \max_a q_{\pi_k}(s, a) \\
                     &amp;\geq q_{\pi_k}(s, \pi_k(s))\\
                     &amp;= v_{\pi_k}(s)
-\end{align}\]</span>
-That is, <span class="math inline">\(\pi_{k+1}\)</span> is better than <span class="math inline">\(\pi_k\)</span> or optimal.</p>
+\end{align}\]</span></p>
+<p>That is, <span class="math inline">\(\pi_{k+1}\)</span> is better than <span class="math inline">\(\pi_k\)</span> or optimal.</p>
 <p>It is important to understand the major difference between model-based GPI (remember that a model means the transition probability matrix and reward distribution are known) and model-free GPI. We cannot simply use a 100% greedy strategy all the time, since all our action-values are estimates. As such, we now need to introduce an element of exploration into our algorithm to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:</p>
 <ol style="list-style-type: decimal">
 <li><em>Infinite exploration</em>: all state-action <span class="math inline">\((s,a)\)</span> pairs should be explored infinitely many times as the number of iterations go to infinity (in the limit), i.e. as the number of iterations <span class="math inline">\(k\)</span> goes to infinity the number of visits <span class="math inline">\(n_k\)</span> does too <span class="math display">\[\lim_{k\rightarrow\infty} n_k(s, a) = \infty.\]</span></li>
@@ -508,15 +512,10 @@ Figure 6.2: GPI using MC policy prediction with exploring starts <span class="ci
 </p>
 </div>
 <!-- ### Blackjack - MC control -->
-<p>Note by using exploring starts in Algorithm <a href="mod-mc.html#fig:mc-gpi-es-alg">6.2</a>, the ‘infinite exploration’ convergence assumption is satisfied. However exploring starts may be hard to use in practice. Two other methods avoiding exploring starts are:</p>
-<ul>
-<li><em>on-policy</em> methods: evaluate or improve the policy that is used to make decisions.</li>
-<li><em>off-policy</em> methods: evaluate or improve a policy that is different than the policy used to generate the data (sample-path).</li>
-</ul>
 </div>
-<div id="on-policy-gpi-using-epsilon-soft-policies" class="section level3 hasAnchor" number="6.4.2">
-<h3><span class="header-section-number">6.4.2</span> On-policy GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<a href="mod-mc.html#on-policy-gpi-using-epsilon-soft-policies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Let us consider on-policy control methods first. To ensure infinite exploration a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using <span class="math inline">\(\epsilon\)</span>-greedy policies is given in Figure <a href="mod-mc.html#fig:mc-gpi-on-policy-alg">6.3</a>. Here we put probability <span class="math inline">\(1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}\)</span> on the maximal action and <span class="math inline">\(\frac{\varepsilon}{|\mathcal{A}(s)|}\)</span> on each of the others. Note using <span class="math inline">\(\epsilon\)</span>-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the <span class="math inline">\(\epsilon\)</span>-soft policies. If we want to find the optimal policy we have to ensure the ‘greedy in the limit’ convergence assumption. This can be done by decreasing <span class="math inline">\(\epsilon\)</span> as the number of iterations increase (e.g. <span class="math inline">\(\epsilon = 1/k\)</span>).</p>
+<div id="gpi-using-epsilon-soft-policies" class="section level3 hasAnchor" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<a href="mod-mc.html#gpi-using-epsilon-soft-policies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Note by using exploring starts in Algorithm <a href="mod-mc.html#fig:mc-gpi-es-alg">6.2</a>, the ‘infinite exploration’ convergence assumption is satisfied. However exploring starts may be hard to use in practice. Another approach to ensure infinite exploration is to use a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using <span class="math inline">\(\epsilon\)</span>-greedy policies is given in Figure <a href="mod-mc.html#fig:mc-gpi-on-policy-alg">6.3</a>. Here we put probability <span class="math inline">\(1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}\)</span> on the maximal action and <span class="math inline">\(\frac{\varepsilon}{|\mathcal{A}(s)|}\)</span> on each of the others. Note using <span class="math inline">\(\epsilon\)</span>-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the <span class="math inline">\(\epsilon\)</span>-soft policies. If we want to find the optimal policy we have to ensure the ‘greedy in the limit’ convergence assumption. This can be done by decreasing <span class="math inline">\(\epsilon\)</span> as the number of iterations increase (e.g. <span class="math inline">\(\epsilon = 1/k\)</span>).</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-gpi-on-policy-alg"></span>
 <img src="img/mc-gpi-on-policy.png" alt="On-policy GPI using MC policy prediction [@Sutton18]."  />
 <p class="caption">
@@ -524,16 +523,114 @@ Figure 6.3: On-policy GPI using MC policy prediction <span class="citation">(<a 
 </p>
 </div>
 </div>
-<div id="off-policy-gpi" class="section level3 hasAnchor" number="6.4.3">
-<h3><span class="header-section-number">6.4.3</span> Off-policy GPI<a href="mod-mc.html#off-policy-gpi" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="off-policy-mc-evaluation" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Off-policy MC evaluation<a href="mod-mc.html#off-policy-mc-evaluation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Until now we have only considered what is denoted <em>on-policy</em> algorithms for finding the optimal policy. Here we both evaluate or improve the policy that is used to make decisions. To ensure infinite exploration we use for instance exploring starts or <span class="math inline">\(\epsilon\)</span>-soft policies. <em>Off-policy</em> methods use a different approach by considering two policies: a policy <span class="math inline">\(b\)</span> used to generate the sample-path (behaviour policy) and a policy <span class="math inline">\(\pi\)</span> that is learned for control (target policy). We update the target policy using the sample-paths from the behaviour policy. The behaviour policy explores the environment for us during training and must ensure infinite exploration. Moreover, the <em>coverage</em> assumption must be satisfied: <span class="math display">\[\pi(a|s) &gt; 0 \rightarrow b(a|s) &gt; 0\]</span> That is, every action in <span class="math inline">\(\pi\)</span> must also be taken, at least occasionally, by <span class="math inline">\(b\)</span>. Put differently, to learn <span class="math inline">\(\pi\)</span> we must sample paths that occur when using <span class="math inline">\(\pi\)</span>. Note target policy <span class="math inline">\(\pi\)</span> may be deterministic by using greedy selection with respect to action-value estimates (greedy in the limit satisfied).</p>
+<p>Off-policy learning methods are powerful and more general than on-policy methods (on-policy methods being a special case of off-policy where target and behaviour policies are the same). They can be used to learn from data generated by a conventional non-learning controller or from a human expert.</p>
+<p>By how do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? For this we need to introduce <em>importance sampling</em>, a general technique for estimating expected values under one distribution given samples from another. Let us first explain it using two distributions <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> where we want to estimated the mean of <span class="math inline">\(a\)</span> given data/samples from <span class="math inline">\(b\)</span>, then
+<span class="math display">\[
+\begin{align}
+  \mathbb{E}_{a}[X] &amp;= \sum_{x\in X} a(x)x \\
+  &amp;= \sum_{x\in X} a(x)\frac{b(x)}{b(x)}x \\
+  &amp;= \sum_{x\in X} b(x)\frac{a(x)}{b(x)}x \\
+  &amp;= \sum_{x\in X} b(x)\rho(x)x \\
+  &amp;= \mathbb{E}_{b}\left[\rho(X)X\right].
+\end{align}
+\]</span>
+Hence to the mean of <span class="math inline">\(a\)</span> can be found by finding the mean of <span class="math inline">\(\rho(X)X\)</span> where <span class="math inline">\(X\)</span> is has a <span class="math inline">\(b\)</span> distribution and <span class="math inline">\(\rho(x) = a(x)/b(x)\)</span> denote the <em>importance sampling ratio</em>. Note given samples <span class="math inline">\((x_1,\ldots,x_n)\)</span> from <span class="math inline">\(b\)</span> we then can calculate the sample average using
+<span class="math display" id="eq:is-approx">\[
+\begin{align}
+  \mathbb{E}_{a}[X] &amp;= \mathbb{E}_{b}\left[\rho(X)X\right] \\
+  &amp;\approx \frac{1}{n}\sum_{i = 1}^n \rho(x_i)x_i \\
+\end{align}
+\tag{6.1}
+\]</span></p>
+<!-- Example with two distributions -->
+<p>Now let us use importance sampling on the target policy <span class="math inline">\(\pi\)</span> and behaviour policy <span class="math inline">\(b\)</span>. Given state <span class="math inline">\(S_t\)</span> and sample path, we want to find
+<span class="math display">\[v_\pi(s) = \mathbb{E}_{\pi}[G_t|S_t = s] = \mathbb{E}_{b}[\rho(G_t)G_t|S_t = s],\]</span>
+or since we base our estimates on sample-paths, we are in fact interested in estimating the action-values
+<span class="math display">\[q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] = \mathbb{E}_{b}[\rho(G_t)G_t|S_t = s, A_t = a].\]</span>
+For this we need the importance sampling ratio given a certain sample-path <span class="math inline">\(S_t, A_t, R_{t+1}, \ldots, R_T, S_T\)</span> with return <span class="math inline">\(G_t\)</span>:
+<span class="math display" id="eq:isr">\[
+\begin{align}
+    \rho(G_t) &amp;= \frac{\Pr{}(S_t, A_t, \dots S_T| S_t = s, A_t = a, \pi)}{\Pr{}(S_t, A_t, \dots, S_T)| S_t = s, A_t = a, b)} \\
+                 &amp;= \frac{\prod_{k=t}^{T-1}\pi(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}{\prod_{k=t}^{T-1}b(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}\\
+                 &amp;=\prod_{k=t}^{T-1}\frac{\pi(A_k|S_k)}{b(A_k|S_k)}.
+\end{align}
+\tag{6.2}
+\]</span>
+Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy <span class="math inline">\(b\)</span>. So, if the behaviour policy takes 10 steps in an episode, each of these 10 steps have to have been possible by the target policy, else <span class="math inline">\(\pi(a|s) = 0\)</span> and <span class="math inline">\(\rho_{t:T-1} = 0\)</span>.</p>
+<p>We can now approx. <span class="math inline">\(q_\pi(s,a)\)</span> by rewriting Eq. <a href="mod-mc.html#eq:is-approx">(6.1)</a> for <span class="math inline">\(\pi\)</span> given returns from <span class="math inline">\(b\)</span> to
+<span class="math display" id="eq:ois">\[
+    q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i,
+    \tag{6.3}
+\]</span>
+where we assume that given the sample-paths (episodes), have <span class="math inline">\(n\)</span> observations of the return <span class="math inline">\((G_1, \ldots, G_n)\)</span> in state <span class="math inline">\(s\)</span> taking action <span class="math inline">\(a\)</span> with the importance sampling ratio <span class="math inline">\(\rho_i\)</span> calculated using Eq. <a href="mod-mc.html#eq:isr">(6.2)</a>. As a result if we consider the prediction algorithm in Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a> it must be modified by:</p>
+<ul>
+<li>Generate an episode using policy <span class="math inline">\(b\)</span> instead of <span class="math inline">\(\pi\)</span>.</li>
+<li>Add a variable W representing the importance sampling ratio which must be set to 1 on line containing <span class="math inline">\(G \leftarrow 0\)</span>.</li>
+<li>Modify line <span class="math inline">\(G \leftarrow \gamma G + R_{t+1}\)</span> to <span class="math inline">\(G \leftarrow \gamma WG + R_{t+1}\)</span> since we now need to multiply with the importance sampling ratio.</li>
+<li>Add a line after the last with <span class="math inline">\(W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)\)</span>, i.e. we update the importance sampling ratio.</li>
+<li>Note if <span class="math inline">\(\pi(A_t|S_t) = 0\)</span> then we may stop the inner loop earlier (<span class="math inline">\(W=0\)</span> for the remaining <span class="math inline">\(t\)</span>).</li>
+<li>Finally, an incremental update of <span class="math inline">\(V\)</span> can be done having a vector counting the number of of returns found for each state. Then the incremental update is
+<span class="math display" id="eq:upd">\[
+V(s) \leftarrow V(s) + \frac{1}{n} \left[WG - V(s)\right].
+\tag{6.4}
+\]</span>
+where <span class="math inline">\(n\)</span> denote the number of realized returns found for state <span class="math inline">\(s\)</span> and <span class="math inline">\(G\)</span> the current realized return.</li>
+</ul>
+<div id="weighted-importance-sampling" class="section level3 hasAnchor" number="6.5.1">
+<h3><span class="header-section-number">6.5.1</span> Weighted importance sampling<a href="mod-mc.html#weighted-importance-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When using a sample average the importance sampling method is called <em>ordinary importance sampling</em>. Ordinary importance sampling may result in a high variance which is not good. As a result we may use other weights and instead of Eq. <a href="mod-mc.html#eq:ois">(6.3)</a> use the estimate (<em>weighted importance sampling</em>):
+<span class="math display">\[
+    q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i.
+\]</span>
+An incremental update then becomes:</p>
+<p><span class="math display" id="eq:wpd" id="eq:wpd">\[
+\begin{align}
+    q_\pi(s,a) &amp;\approx V_{n+1} \\
+    &amp;= \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i \\
+    &amp;= \frac{1}{C_n} \sum_{i = 1}^n W_iG_i \\
+    &amp;= \frac{1}{C_n} (W_nG_n + C_{n-1}\frac{1}{C_{n-1}} \sum_{i = 1}^{n-1} W_iG_i) \\
+    &amp;= \frac{1}{C_n} (W_nG_n + C_{n-1}V_n) \\
+    &amp;= \frac{1}{C_n} (W_nG_n + (C_{n} - W_{n}) V_n) \\
+    &amp;= \frac{1}{C_n} (W_nG_n + C_{n}V_n - W_{n} V_n) \\
+    &amp;= V_n + \frac{W_n}{C_n} (G_n  - V_n),
+\end{align}
+\tag{6.5}
+\]</span>
+where <span class="math inline">\(C_n = \sum_{i = 1}^n \rho_i\)</span> is the sum of the ratios and and <span class="math inline">\(W_n\)</span> the ratio for the n’th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy evaluation algorithm using weighted importance sampling and incremental updates is given in Figure <a href="mod-mc.html#fig:mc-pred-off-policy-alg">6.4</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-pred-off-policy-alg"></span>
+<img src="img/mc-off-policy-prediction.png" alt="Off-policy MC prediction [@Sutton18]."  />
+<p class="caption">
+Figure 6.4: Off-policy MC prediction <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</p>
+</div>
+<p>Note both Eq. <a href="mod-mc.html#eq:upd">(6.4)</a> and Eq. @ref\tag{6.5} follows the general incremental formula:
+<span class="math display">\[\begin{equation}
+New Estimate \leftarrow Old Estimate + Step Size \left[Observation - Old Estimate \right].
+\end{equation}\]</span>
+For ordinary importance sampling the step-size is <span class="math inline">\(1/n\)</span> and for weighted importance sampling the step-size is <span class="math inline">\(W_n/C_n\)</span>.</p>
 </div>
 </div>
-<div id="summary-5" class="section level2 hasAnchor" number="6.5">
-<h2><span class="header-section-number">6.5</span> Summary<a href="mod-mc.html#summary-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="off-policy-control-improvement" class="section level2 hasAnchor" number="6.6">
+<h2><span class="header-section-number">6.6</span> Off-policy control (improvement)<a href="mod-mc.html#off-policy-control-improvement" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate <span class="math inline">\(\pi_*\)</span> and <span class="math inline">\(q_*\)</span> by using rewards obtained through behaviour policy <span class="math inline">\(b\)</span>. We will focus on using weighted importance sampling with incremental updates. The algorthm is given in Figure <a href="mod-mc.html#fig:mc-gpi-off-policy-alg">6.5</a>. The target policy <span class="math inline">\(\pi\)</span> is the greedy policy with respect to <span class="math inline">\(Q\)</span>, which is an estimate of <span class="math inline">\(q_\pi\)</span>. This algorithm converges to <span class="math inline">\(q_\pi\)</span> as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making <span class="math inline">\(b\)</span> <span class="math inline">\(\varepsilon\)</span>-soft. The policy <span class="math inline">\(\pi\)</span> converges to <span class="math inline">\(\pi_*\)</span> at all encountered states even if <span class="math inline">\(b\)</span> changes (to another <span class="math inline">\(\varepsilon\)</span>-soft policy) between or within episodes. Note we exit the inner loop if <span class="math inline">\(A_t \neq \pi(S_t)\)</span> which is that same as saying <span class="math inline">\(W=0\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-gpi-off-policy-alg"></span>
+<img src="img/mc-off-policy-gpi.png" alt="Off-policy GPI [@Sutton18]."  />
+<p class="caption">
+Figure 6.5: Off-policy GPI <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</p>
+</div>
+<p>Notice that this policy only learns from episodes in which <span class="math inline">\(b\)</span> selects only greedy actions after some timestep. This can greatly slow learning.</p>
+</div>
+<div id="summary-5" class="section level2 hasAnchor" number="6.7">
+<h2><span class="header-section-number">6.7</span> Summary<a href="mod-mc.html#summary-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Read Chapter 5.10 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
 </div>
-<div id="exercises-1" class="section level2 hasAnchor" number="6.6">
-<h2><span class="header-section-number">6.6</span> Exercises<a href="mod-mc.html#exercises-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="exercises-1" class="section level2 hasAnchor" number="6.8">
+<h2><span class="header-section-number">6.8</span> Exercises<a href="mod-mc.html#exercises-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
 
 </div>

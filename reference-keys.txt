@@ -22,6 +22,13 @@ fig:value-ite-alg
 fig:mc-prediction-alg
 fig:mc-gpi-es-alg
 fig:mc-gpi-on-policy-alg
+eq:is-approx
+eq:isr
+eq:ois
+eq:upd
+eq:wpd
+fig:mc-pred-off-policy-alg
+fig:mc-gpi-off-policy-alg
 mod-rl-intro
 mod-rl-intro-lo
 textbook-readings
@@ -96,8 +103,10 @@ mc-evaluation-prediction
 mc-evaluation-of-action-values
 mc-control-improvement
 gpi-with-exploring-starts
-on-policy-gpi-using-epsilon-soft-policies
-off-policy-gpi
+gpi-using-epsilon-soft-policies
+off-policy-mc-evaluation
+weighted-importance-sampling
+off-policy-control-improvement
 summary-5
 exercises-1
 mod-td-pred
