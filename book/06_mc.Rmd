@@ -72,7 +72,7 @@ where the return is
 \[
 G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
 \]
-Now given policy $\pi$ and a sample-path (episode) $S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-l}, R_T$ ending in the terminal state at time $T$, we can calculate the realized return for each state in the sample-path. Each time we have a new sample-path a new realized return for the states is given and the average for the returns in a state is an estimate of the state-value. With enough observations, the sample average converges to the true state-value under the policy $\pi$.
+Now given policy $\pi$ and a sample-path (episode) $S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-1}, R_T$ ending in the terminal state at time $T$, we can calculate the realized return for each state in the sample-path. Each time we have a new sample-path a new realized return for the states is given and the average for the returns in a state is an estimate of the state-value. With enough observations, the sample average converges to the true state-value under the policy $\pi$.
 
 Given a policy $\pi$ and a set of sample-paths, there are two ways to estimate the state values $v_\pi(s)$:
 
@@ -117,12 +117,14 @@ We are now ready to formulate a generalized policy iteration (GPI) algorithm usi
 That is, we generate a sequence of policies and action-value functions
 $$\pi_0 \xrightarrow[]{E} q_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} q_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} q_{\pi_2} \xrightarrow[]{I} \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} q_{*}.$$
 Hence the policy improvement theorem applies for all $s \in \mathcal{S}$:
+
 \begin{align}
-    q_{\pi_k}(s, a=\pi_{k+1}(s)) &= q_{\pi_k}(s, \arg\max_a q_\pi_k(s, a)) \\
+    q_{\pi_k}(s, a=\pi_{k+1}(s)) &= q_{\pi_k}(s, \arg\max_a q_{\pi_k}(s, a)) \\
                     &= \max_a q_{\pi_k}(s, a) \\
                     &\geq q_{\pi_k}(s, \pi_k(s))\\
                     &= v_{\pi_k}(s)
 \end{align}
+
 That is, $\pi_{k+1}$ is better than $\pi_k$ or optimal. 
 
 It is important to understand the major difference between model-based GPI (remember that a model means the transition probability matrix and reward distribution are known) and model-free GPI. We cannot simply use a 100% greedy strategy all the time, since all our action-values are estimates. As such, we now need to introduce an element of exploration into our algorithm to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:
@@ -141,26 +143,120 @@ knitr::include_graphics("img/mc-gpi-es.png")
 
 <!-- ### Blackjack - MC control -->
 
-Note by using exploring starts in Algorithm \@ref(fig:mc-gpi-es-alg), the 'infinite exploration' convergence assumption is satisfied. However exploring starts may be hard to use in practice. Two other methods avoiding exploring starts are:
+### GPI using $\epsilon$-soft policies
 
-* *on-policy* methods: evaluate or improve the policy that is used to make decisions. 
-* *off-policy* methods: evaluate or improve a policy that is different than the policy used to generate the data (sample-path).
-
-### On-policy GPI using $\epsilon$-soft policies
-
-Let us consider on-policy control methods first. To ensure infinite exploration a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using $\epsilon$-greedy policies is given in Figure \@ref(fig:mc-gpi-on-policy-alg). Here we put probability $1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}$ on the maximal action and $\frac{\varepsilon}{|\mathcal{A}(s)|}$ on each of the others. Note using $\epsilon$-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the $\epsilon$-soft policies. If we want to find the optimal policy we have to ensure the 'greedy in the limit' convergence assumption. This can be done by decreasing $\epsilon$ as the number of iterations increase (e.g. $\epsilon = 1/k$).
+Note by using exploring starts in Algorithm \@ref(fig:mc-gpi-es-alg), the 'infinite exploration' convergence assumption is satisfied. However exploring starts may be hard to use in practice. Another approach to ensure infinite exploration is to use a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using $\epsilon$-greedy policies is given in Figure \@ref(fig:mc-gpi-on-policy-alg). Here we put probability $1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}$ on the maximal action and $\frac{\varepsilon}{|\mathcal{A}(s)|}$ on each of the others. Note using $\epsilon$-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the $\epsilon$-soft policies. If we want to find the optimal policy we have to ensure the 'greedy in the limit' convergence assumption. This can be done by decreasing $\epsilon$ as the number of iterations increase (e.g. $\epsilon = 1/k$).
 
 ```{r mc-gpi-on-policy-alg, echo=FALSE, fig.cap="On-policy GPI using MC policy prediction [@Sutton18]."}
 knitr::include_graphics("img/mc-gpi-on-policy.png")
 ```
 
 
-### Off-policy GPI
+## Off-policy MC evaluation
+
+Until now we have only considered what is denoted *on-policy* algorithms for finding the optimal policy. Here we both evaluate or improve the policy that is used to make decisions. To ensure infinite exploration we use for instance exploring starts or $\epsilon$-soft policies. *Off-policy* methods use a different approach by considering two policies: a policy $b$ used to generate the sample-path (behaviour policy) and a policy $\pi$ that is learned for control (target policy). We update the target policy using the sample-paths from the behaviour policy. The behaviour policy explores the environment for us during training and must ensure infinite exploration. Moreover, the *coverage* assumption must be satisfied: $$\pi(a|s) > 0 \rightarrow b(a|s) > 0$$ That is, every action in $\pi$ must also be taken, at least occasionally, by $b$. Put differently, to learn $\pi$ we must sample paths that occur when using $\pi$. Note target policy $\pi$ may be deterministic by using greedy selection with respect to action-value estimates (greedy in the limit satisfied).
+
+Off-policy learning methods are powerful and more general than on-policy methods (on-policy methods being a special case of off-policy where target and behaviour policies are the same). They can be used to learn from data generated by a conventional non-learning controller or from a human expert.
+
+By how do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? For this we need to introduce *importance sampling*, a general technique for estimating expected values under one distribution given samples from another. Let us first explain it using two distributions $a$ and $b$ where we want to estimated the mean of $a$ given data/samples from $b$, then
+$$
+\begin{align}
+  \mathbb{E}_{a}[X] &= \sum_{x\in X} a(x)x \\
+  &= \sum_{x\in X} a(x)\frac{b(x)}{b(x)}x \\
+  &= \sum_{x\in X} b(x)\frac{a(x)}{b(x)}x \\
+  &= \sum_{x\in X} b(x)\rho(x)x \\
+  &= \mathbb{E}_{b}\left[\rho(X)X\right].
+\end{align}
+$$
+Hence to the mean of $a$ can be found by finding the mean of $\rho(X)X$ where $X$ is has a $b$ distribution and $\rho(x) = a(x)/b(x)$ denote the *importance sampling ratio*. Note given samples $(x_1,\ldots,x_n)$ from $b$ we then can calculate the sample average using
+$$
+\begin{align}
+  \mathbb{E}_{a}[X] &= \mathbb{E}_{b}\left[\rho(X)X\right] \\
+  &\approx \frac{1}{n}\sum_{i = 1}^n \rho(x_i)x_i \\
+\end{align}
+(\#eq:is-approx)
+$$
 
 
+<!-- Example with two distributions -->
+
+Now let us use importance sampling on the target policy $\pi$ and behaviour policy $b$. Given state $S_t$ and sample path, we want to find 
+$$v_\pi(s) = \mathbb{E}_{\pi}[G_t|S_t = s] = \mathbb{E}_{b}[\rho(G_t)G_t|S_t = s],$$
+or since we base our estimates on sample-paths, we are in fact interested in estimating the action-values 
+$$q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] = \mathbb{E}_{b}[\rho(G_t)G_t|S_t = s, A_t = a].$$
+For this we need the importance sampling ratio given a certain sample-path $S_t, A_t, R_{t+1}, \ldots, R_T, S_T$ with return $G_t$:
+$$
+\begin{align}
+    \rho(G_t) &= \frac{\Pr{}(S_t, A_t, \dots S_T| S_t = s, A_t = a, \pi)}{\Pr{}(S_t, A_t, \dots, S_T)| S_t = s, A_t = a, b)} \\
+                 &= \frac{\prod_{k=t}^{T-1}\pi(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}{\prod_{k=t}^{T-1}b(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}\\
+                 &=\prod_{k=t}^{T-1}\frac{\pi(A_k|S_k)}{b(A_k|S_k)}.
+\end{align}
+(\#eq:isr)
+$$
+Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy $b$. So, if the behaviour policy takes 10 steps in an episode, each of these 10 steps have to have been possible by the target policy, else $\pi(a|s) = 0$ and $\rho_{t:T-1} = 0$.
+
+We can now approx. $q_\pi(s,a)$ by rewriting Eq. \@ref(eq:is-approx) for $\pi$ given returns from $b$ to
+$$
+    q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i,
+    (\#eq:ois)
+$$
+where we assume that given the sample-paths (episodes), have $n$ observations of the return $(G_1, \ldots, G_n)$ in state $s$ taking action $a$ with the  importance sampling ratio $\rho_i$ calculated using Eq. \@ref(eq:isr). As a result if we consider the prediction algorithm in Figure \@ref(fig:mc-prediction-alg) it must be modified by:
+
+* Generate an episode using policy $b$ instead of $\pi$.
+* Add a variable W representing the importance sampling ratio which must be set to 1 on line containing $G \leftarrow 0$.
+* Modify line $G \leftarrow \gamma G + R_{t+1}$ to $G \leftarrow \gamma WG + R_{t+1}$ since we now need to multiply with the importance sampling ratio.
+* Add a line after the last with $W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)$, i.e. we update the importance sampling ratio.
+* Note if $\pi(A_t|S_t) = 0$ then we may stop the inner loop earlier ($W=0$ for the remaining $t$). 
+* Finally, an incremental update of $V$ can be done having a vector counting the number of of returns found for each state. Then the incremental update is 
+$$
+  V(s) \leftarrow V(s) + \frac{1}{n} \left[WG - V(s)\right].
+  (\#eq:upd)
+$$
+where $n$ denote the number of realized returns found for state $s$ and $G$ the current realized return. 
+
+### Weighted importance sampling 
+
+When using a sample average the importance sampling method is called *ordinary importance sampling*. Ordinary importance sampling may result in a high variance which is not good. As a result we may use other weights and instead of Eq. \@ref(eq:ois) use the estimate (*weighted importance sampling*):
+$$
+    q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i.
+$$
+An incremental update then becomes:
+
+$$
+\begin{align}
+    q_\pi(s,a) &\approx V_{n+1} \\
+    &= \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i \\
+    &= \frac{1}{C_n} \sum_{i = 1}^n W_iG_i \\
+    &= \frac{1}{C_n} (W_nG_n + C_{n-1}\frac{1}{C_{n-1}} \sum_{i = 1}^{n-1} W_iG_i) \\
+    &= \frac{1}{C_n} (W_nG_n + C_{n-1}V_n) \\
+    &= \frac{1}{C_n} (W_nG_n + (C_{n} - W_{n}) V_n) \\
+    &= \frac{1}{C_n} (W_nG_n + C_{n}V_n - W_{n} V_n) \\
+    &= V_n + \frac{W_n}{C_n} (G_n  - V_n),
+\end{align}
+(\#eq:wpd)
+$$
+where $C_n = \sum_{i = 1}^n \rho_i$ is the sum of the ratios and and $W_n$ the ratio for the n'th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy evaluation algorithm using weighted importance sampling and incremental updates is given in Figure \@ref(fig:mc-pred-off-policy-alg). 
+
+```{r mc-pred-off-policy-alg, echo=FALSE, fig.cap="Off-policy MC prediction [@Sutton18]."}
+knitr::include_graphics("img/mc-off-policy-prediction.png")
+```
+
+Note both Eq. \@ref(eq:upd) and Eq. \@ref(\#eq:wpd) follows the general incremental formula: 
+\begin{equation}
+New Estimate \leftarrow Old Estimate + Step Size \left[Observation - Old Estimate \right].
+\end{equation}
+For ordinary importance sampling the step-size is $1/n$ and for weighted importance sampling the step-size is $W_n/C_n$.
 
 
+## Off-policy control (improvement)
 
+Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate $\pi_*$ and $q_*$ by using rewards obtained through behaviour policy $b$. We will focus on using weighted importance sampling with incremental updates. The algorthm is given in Figure \@ref(fig:mc-gpi-off-policy-alg). The target policy $\pi$ is the greedy policy with respect to $Q$, which is an estimate of $q_\pi$. This algorithm converges to $q_\pi$ as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making $b$ $\varepsilon$-soft. The policy $\pi$ converges to $\pi_*$ at all encountered states even if $b$ changes (to another $\varepsilon$-soft policy) between or within episodes. Note we exit the inner loop if $A_t \neq \pi(S_t)$ which is that same as saying $W=0$.
+
+```{r mc-gpi-off-policy-alg, echo=FALSE, fig.cap="Off-policy GPI [@Sutton18]."}
+knitr::include_graphics("img/mc-off-policy-gpi.png")
+```
+
+Notice that this policy only learns from episodes in which $b$ selects only greedy actions after some timestep. This can greatly slow learning.
 
 
 ## Summary 
