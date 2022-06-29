@@ -12,6 +12,7 @@ body {
 p {
   padding: 0;
   margin-bottom: 5px;
+  margin-top: 0;
 }
 h2 {
   font-family: 'Source Sans Pro', sans-serif;
@@ -131,10 +132,14 @@ a, a > code {
 .pull-left {
   float: left;
   width: 47%;
+  margin-top: 0;
+  padding-top: 0;
 }
 .pull-right {
   float: right;
   width: 47%;
+  margin-top: 0;
+  padding-top: 0;
 }
 .pull-right ~ * {
   clear: both;
@@ -142,6 +147,14 @@ a, a > code {
 
 
 /* Custom boxes */
+
+.frame {
+   border: solid 1px black;
+   overflow: hidden;
+   padding-left: 10px;
+   margin-top: 0;
+   padding-top: 0;
+}
 
 .question {
   border-left: solid 5px #1E5C65;
@@ -215,6 +228,14 @@ a, a > code {
   font-weight: bold;
   color: #F26BAA;
   margin-bottom: 5px;
+}
+
+/* phantom box*/
+.phantom
+{
+  display: block;
+  visibility:hidden;
+  clear: both;
 }
 
 
@@ -383,4 +404,13 @@ div.my-footer a {
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.vertical-bottom-in-box {
+  /*margin: 0;
+  display: block;
+  position: relative;
+  top: 100%;
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);*/
 }

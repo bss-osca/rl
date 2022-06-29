@@ -1,0 +1,194 @@
+---
+title: "Temporal difference (TD) methods for control"
+author: "Lars Relund Nielsen"
+output:
+  xaringan::moon_reader:
+    css: "./libs/slides.css"
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+      slideNumberFormat: ""
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, child = "setup.Rmd", echo=FALSE}
+```
+
+```{r include=FALSE, eval=FALSE}
+# to preview
+xaringan::inf_mr(cast_from = ".", quiet = T)
+```
+
+layout: true
+  
+```{r, echo=FALSE}
+module_name <- "td-pred"
+module_number <- "07"
+here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
+library(htmltools)
+footerHtml <- withTags({
+   div(class="my-footer",
+      span(
+         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Notes"), 
+         " | ",
+         a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
+         " | ",
+         a(href=str_c("https://github.com/bss-osca/rl/blob/master/slides/", module_number, "_", module_name, "-slides.Rmd"), target="_blank", "Source"),  
+      )
+   )
+})
+footerHtml
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
+```
+
+
+
+<!-- Templates -->
+<!-- .pull-left[] .pull-right[] -->
+<!-- knitr::include_graphics("img/bandit.png") -->
+<!-- .left-column-wide[]  .right-column-small[] -->
+
+---
+
+## Learning outcomes
+
+<!-- * Describe what Temporal Difference (TD) learning is. -->
+<!-- * Formulate the incremental update formula for TD learning. -->
+<!-- * Define the temporal-difference error. -->
+<!-- * Interpret the role of a fixed step-size. -->
+<!-- * Identify key advantages of TD methods over DP and MC methods. -->
+<!-- * Explain the TD(0) prediction algorithm. -->
+<!-- * Understand the benefits of learning online with TD compared to MC methods. -->
+
+---
+
+## GPI using TD
+
+* Last week: TD methods for prediction. This week: TD for control (improve the policy).
+* Use generalized policy iteration (GPI) with TD methods (policy evaluation, policy improvement, repeat). 
+* Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. 
+* An element of exploration are needed to estimate the action-values. 
+* For convergence to the optimal policy a model-free GPI algorithm must satisfy:
+  - *Infinite exploration*: state-action pairs should be explored infinitely many times: $$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$
+  - *Greedy in the limit*: we do eventually need to converge to the optimal policy: $$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$
+  
+---
+
+## SARSA - On-policy GPI using TD
+
+* No model imply has to estimate action-values
+* The incremental update equation for state-values $$V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],$$must be modified to use $Q$ values: $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$
+* Need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA before you can make an update. 
+* Convergence:
+  * Infinite exploration: use an $\epsilon$-greedy policy. 
+  * Greedy in the limit: use a decreasing epsilon (e.g. $\epsilon = 1/t$).
+
+---
+
+## SARSA Algorithm
+
+```{r td-sarsa-alg, echo=FALSE}
+knitr::include_graphics("img/td-gpi-sarsa.png")
+```
+
+Can also be applied for processes with continuing tasks. 
+
+---
+
+## Q-learning - Off-policy GPI using TD
+
+```{r td-q-learning-alg, echo=FALSE}
+knitr::include_graphics("img/td-gpi-q-learning.png")
+```
+
+Use another incremental update of $Q(S_t, A_t)$ where the next action used to update $Q$ is selected greedy.
+
+---
+
+## Bellman equations and incremental updates
+
+The Bellman equations used in DP for action-values are:
+
+.small[
+.pull-left[
+**Bellman equation**:
+$$
+\begin{align}
+  q_\pi(s, a) &= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a] \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &= \sum_{s',r} p(s', r | s, a)\left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right)
+\end{align}
+$$
+Used in the DP policy iteration algorithm.
+]]
+
+--
+
+.small[
+.pull-right[
+**Bellman optimality equation**:
+$$
+\begin{align}
+  q_*(s, a) &= \max_\pi q_\pi(s, a) \\
+  &= \max_\pi \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_\pi v_\pi(s')\right) \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_\pi(s', a')\right) 
+\end{align}
+$$
+Used in the DP value iteration algorithm.
+]]
+
+.phantom[]
+
+--
+
+.small[
+.pull-left[
+**Incremental update:** $$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]\end{multline*}$$
+SARSA is a sample based version of policy iteration in DP.
+]]
+
+--
+
+.small[
+.pull-right[
+**Incremental update:** $$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]\end{multline*}$$
+Q-learning is a sample based version of value iteration in DP.
+]]
+
+
+---
+
+## Q-learning vs SARSA
+
+* SARSA: an on-policy algorithm (behavioural and target policy is the same).
+  * Use e.g. an $\epsilon$-greedy policy to ensure exploration. 
+  * For fixed $\epsilon$ the greedy in the limit assumption is not fulfilled. 
+* SARSA is a sample based version of policy iteration in DP.
+* Q-learning: an off-policy algorithm 
+  * The behavioural policy is $\epsilon$-greedy.
+  * The target policy is the (deterministic) greedy policy. T
+* Q-learning fulfil both the 'infinite exploration' and 'greedy in the limit' assumptions. 
+* Q-learning is a sample based version of value iteration in DP.
+
+---
+
+<!-- # References -->
+
+<!-- ```{r, results='asis', echo=FALSE} -->
+<!-- PrintBibliography(bib) -->
+<!-- ``` -->
+
+
+```{r links, child="../book/links.md"}
+```
+
+```{r postprocess, include=FALSE}
+system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
+file.copy("./slides.css", "./libs/", overwrite = T)
+```
