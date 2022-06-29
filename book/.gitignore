@@ -7,3 +7,4 @@ TFA.Rmd
 TFA_files
 *_book/
 rl.rds
+render*.rds
