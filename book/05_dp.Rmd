@@ -54,9 +54,10 @@ For this week, you will need to read Chapter 4-4.7 in @Sutton18. Read it before 
 ## Policy evaluation {#sec-dp-pe}
 
 The state-value function can be represented using the Bellman equation \@ref(eq:bell-state):
-\begin{equation}
+$$
 v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).            
-\end{equation}
+(\#eq:bm-pol-eval)
+$$
 
 If the dynamics are known perfectly, this becomes a system of $|\mathcal{S}|$ simultaneous linear equations in $|\mathcal{S}|$ unknowns $v_\pi(s), s \in \mathcal{S}$. This linear system can be solved using e.g. some software. However, inverting the matrix can be computationally expensive for a large state space. Instead we consider an iterative method and a sequence of value function approximations $v_0, v_1, v_2, \ldots$, with initial approximation $v_0$ chosen arbitrarily e.g. $v_0(s) = 0 \:  \forall s$ (ensuring terminal state = 0). We can use *a sweep* with the Bellman equation to update the values:
 
@@ -122,7 +123,7 @@ Given the policy improvement theorem we can now improve policies iteratively unt
 
 1. Pick an arbitrary initial policy $\pi$.
 2. Given a policy $\pi$, estimate $v_\pi(s)$ via the policy evaluation algorithm.
-3. Generate a new, improved policy $\pi' \geq \pi$ by *greedily* picking $\pi' = \text{greedy}(v_\pi)$ using Equation \@ref(eq:pi-mark-det). If $\pi'=\pi$ then stop ($\pi_*$ has been found); otherwise go to Step 2.
+3. Generate a new, improved policy $\pi' \geq \pi$ by *greedily* picking $\pi' = \text{greedy}(v_\pi)$ using Eq. \@ref(eq:pi-mark-det). If $\pi'=\pi$ then stop ($\pi_*$ has been found); otherwise go to Step 2.
 
 The algorithm is given in Figure \@ref(fig:policy-ite-alg). The sequence of calculations will be: 
 $$\pi_0 \xrightarrow[]{E} v_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} v_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} v_{\pi_2}  \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} v_{*}$$
@@ -137,7 +138,7 @@ knitr::include_graphics("img/policy-iteration.png")
 
 Policy iteration requires full policy evaluation at each iteration step. This could be an computationally expensive process which requires may sweeps of the state space. In *value iteration*, the policy evaluation is stopped after one sweep of the state space. Value iteration is achieved by turning the Bellman optimality equation into an update rule:
 $$
-v_{k+1}(s) = \arg\max_a \left(r(s,a) + \gamma\sum_{s',r} p(s'|s, a)v_k(s')\right)
+v_{k+1}(s) = \max_a \left(r(s,a) + \gamma\sum_{s'} p(s'|s, a)v_k(s')\right)
 $$
 Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement, since it performs a greedy update while also evaluating the current policy. Also, it is important to understand that the value-iteration algorithm does not require a policy to work. No actions have to be chosen. Rather, the state-values are updated and after the last step of value-iteration the optimal policy $\pi_*$ is found:
 

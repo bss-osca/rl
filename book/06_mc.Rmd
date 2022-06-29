@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 ```
 
 
-# Monte Carlo methods for evaluation and control {#mod-mc}
+# Monte Carlo methods for prediction and control {#mod-mc}
 
-The term "Monte Carlo" (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different sample-paths (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to evaluate/predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience. 
+The term "Monte Carlo" (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different *sample-paths* (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to evaluate/predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience. 
 
 MC methods can be used for processes with episodes, i.e. where there is a terminal state. This reduces the length of the sample-path and the value of the states visited on the path can be updated based on the reward received.
 
@@ -25,31 +25,19 @@ MC methods can be used for processes with episodes, i.e. where there is a termin
 
 By the end of this module, you are expected to:
 
-<!-- Lesson 1: Introduction to Monte Carlo Methods -->
-<!-- Understand how Monte-Carlo methods can be used to estimate value functions from -->
-<!-- sampled interaction -->
-<!-- Identify problems that can be solved using Monte-Carlo methods -->
-<!-- Use Monte Carlo prediction to estimate the value function for a given policy. -->
-<!-- Lesson 2: Monte Carlo for Control -->
-<!-- Estimate action-value functions using Monte Carlo -->
-<!-- Understand the importance of maintaining exploration in Monte Carlo algorithms -->
-<!-- Understand how to use monte carlo methods to implement a GPI algorithm. -->
-<!-- Apply Monte Carlo with exploring starts to solve an MDP -->
-<!-- Lesson 3: Exploration Methods for Monte Carlo -->
-<!-- Understand why Exploring Starts can be problematic in real problems -->
-<!-- Describe an alternative exploration method for Monte Carlo control -->
-<!-- Lesson 4: Off-policy learning for prediction -->
-<!-- Understand how off-policy learning can help deal with the exploration problem -->
-<!-- Produce examples of target policies and examples of behavior policies. -->
-<!-- Understand importance sampling -->
-<!-- Use importance sampling to estimate the expected value of a target distribution using -->
-<!-- samples from a different distribution. -->
-<!-- Understand how to use importance sampling to correct returns -->
-<!-- Understand how to modify the monte carlo prediction algorithm for off-policy learning. -->
+* Identify the difference between model-based and model-free RL.
+* Identify problems that can be solved using Monte-Carlo methods.
+* Describe how MC methods can be used to estimate value functions from sample data.
+* Do MC prediction to estimate the value function for a given policy.
+* Explain why it is important to maintain exploration in MC algorithms.
+* Do policy improvement (control) using MC in a generalized policy improvement algorithm.
+* Compare different ways of exploring the state-action space.
+* Argue why off-policy learning can help deal with the exploration problem.
+* Use importance sampling to estimate the expected value of a target distribution using samples from a different distribution.
+* Use importance sampling in off-policy learning to predict the value-function of a target policy.
+* Explain how to modify the MC prediction and improvement algorithm for off-policy learning.
 
-
-
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 9 and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -59,10 +47,10 @@ By the end of this module, you are expected to:
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 5-5.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
+For this week, you will need to read Chapter 5-5.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
 
-## MC evaluation (prediction)
+## MC prediction (evaluation)
 
 Given a policy $\pi$, we want to estimate the state-value function. Recall that the state value function is 
 \[
@@ -83,11 +71,11 @@ First visit MC generates iid estimates of $v_\pi(s)$ with finite variance, so th
 
 An algorithm for first visit MC is given in Figure \@ref(fig:mc-prediction-alg). The state-value estimate is stored in a vector $V$ and the returns for each state in a list. Given a sample-path we add the return to the states on the path by scanning the path backwards and updating $G$. Note since the algorithm considers first visit MC, a check of occurrence of the state earlier in the path done. If this check is dropped, we have a every visit MC algorithm instead. Moreover, the computation needed to update the state-value does not depend on the size of the process/MDP but only of the length of the sample-path.
 
-```{r mc-prediction-alg, echo=FALSE, fig.cap="MC policy evaluation [@Sutton18]."}
+```{r mc-prediction-alg, echo=FALSE, fig.cap="MC policy prediction [@Sutton18]."}
 knitr::include_graphics("img/mc-prediction.png")
 ```
 
-The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of $V$ can be done. Adapting Equation \@ref(eq:avg), we have that the sample average can be updated using: 
+The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of $V$ can be done. Adapting Eq. \@ref(eq:avg), we have that the sample average can be updated using: 
 
 $$
   V(s) \leftarrow V(s) + \frac{1}{n} \left[G - V(s)\right].
@@ -95,10 +83,10 @@ $$
 where $n$ denote the number of realized returns found for state $s$ and $G$ the current realized return. The state-value vector must be initialized to zero and a vector counting the number of returns found for each state must be stored.
 
 
-<!-- ### Blackjack - MC evaluation -->
+<!-- ### Blackjack - MC prediction -->
 
 
-### MC evaluation of action-values
+### MC prediction of action-values
 
 With a model of the environment we only need to estimate the state-value function, since it is easy to determine the policy from the state-values using the Bellman optimality equations \@ref(eq:bell-opt-state-policy). However, if we do not know the expected reward and transition probabilities state values are not enough. In that case, it is useful to estimate action-values since the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). To find $q_*$, we first need to predict action-values for a policy $\pi$. This is essentially the same as for state-values, only we now talk about state-action pairs being visited, i.e. taking action $a$ in state $s$ instead. 
 
@@ -135,7 +123,7 @@ It is important to understand the major difference between model-based GPI (reme
 
 ### GPI with exploring starts
 
-An algorithm using exploring starts and first visit MC is given in Figure \@ref(fig:mc-gpi-es-alg). It satisfies the convergence properties and and incremental implementation can be used to update $Q$. Note that to predict the action-values for a policy, we in general need a large number of episodes. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many episodes we may stop the algorithm once the $q_{\pi_k}$ stop moving within a certain error.
+An algorithm using exploring starts and first visit MC is given in Figure \@ref(fig:mc-gpi-es-alg). It satisfies the convergence properties and and incremental implementation can be used to update $Q$. Note that to predict the action-values for a policy, we in general need a large number of sample-paths. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many sample-paths we may stop the algorithm once the $q_{\pi_k}$ stop moving within a certain error.
 
 ```{r mc-gpi-es-alg, echo=FALSE, fig.cap="GPI using MC policy prediction with exploring starts [@Sutton18]."}
 knitr::include_graphics("img/mc-gpi-es.png")
@@ -152,13 +140,13 @@ knitr::include_graphics("img/mc-gpi-on-policy.png")
 ```
 
 
-## Off-policy MC evaluation
+## Off-policy MC prediction {#sec-mc-off-policy}
 
 Until now we have only considered what is denoted *on-policy* algorithms for finding the optimal policy. Here we both evaluate or improve the policy that is used to make decisions. To ensure infinite exploration we use for instance exploring starts or $\epsilon$-soft policies. *Off-policy* methods use a different approach by considering two policies: a policy $b$ used to generate the sample-path (behaviour policy) and a policy $\pi$ that is learned for control (target policy). We update the target policy using the sample-paths from the behaviour policy. The behaviour policy explores the environment for us during training and must ensure infinite exploration. Moreover, the *coverage* assumption must be satisfied: $$\pi(a|s) > 0 \rightarrow b(a|s) > 0$$ That is, every action in $\pi$ must also be taken, at least occasionally, by $b$. Put differently, to learn $\pi$ we must sample paths that occur when using $\pi$. Note target policy $\pi$ may be deterministic by using greedy selection with respect to action-value estimates (greedy in the limit satisfied).
 
 Off-policy learning methods are powerful and more general than on-policy methods (on-policy methods being a special case of off-policy where target and behaviour policies are the same). They can be used to learn from data generated by a conventional non-learning controller or from a human expert.
 
-By how do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? For this we need to introduce *importance sampling*, a general technique for estimating expected values under one distribution given samples from another. Let us first explain it using two distributions $a$ and $b$ where we want to estimated the mean of $a$ given data/samples from $b$, then
+But how do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? For this we need to introduce *importance sampling*, a general technique for estimating expected values under one distribution given samples from another. Let us first explain it using two distributions $a$ and $b$ where we want to estimated the mean of $a$ given data/samples from $b$, then
 $$
 \begin{align}
   \mathbb{E}_{a}[X] &= \sum_{x\in X} a(x)x \\
@@ -193,7 +181,7 @@ $$
 \end{align}
 (\#eq:isr)
 $$
-Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy $b$. So, if the behaviour policy takes 10 steps in an episode, each of these 10 steps have to have been possible by the target policy, else $\pi(a|s) = 0$ and $\rho_{t:T-1} = 0$.
+Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy $b$. So, if the behaviour policy takes 10 steps in an sample-path, each of these 10 steps have to have been possible by the target policy, else $\pi(a|s) = 0$ and $\rho_{t:T-1} = 0$.
 
 We can now approx. $q_\pi(s,a)$ by rewriting Eq. \@ref(eq:is-approx) for $\pi$ given returns from $b$ to
 $$
@@ -202,7 +190,7 @@ $$
 $$
 where we assume that given the sample-paths (episodes), have $n$ observations of the return $(G_1, \ldots, G_n)$ in state $s$ taking action $a$ with the  importance sampling ratio $\rho_i$ calculated using Eq. \@ref(eq:isr). As a result if we consider the prediction algorithm in Figure \@ref(fig:mc-prediction-alg) it must be modified by:
 
-* Generate an episode using policy $b$ instead of $\pi$.
+* Generate an sample-path using policy $b$ instead of $\pi$.
 * Add a variable W representing the importance sampling ratio which must be set to 1 on line containing $G \leftarrow 0$.
 * Modify line $G \leftarrow \gamma G + R_{t+1}$ to $G \leftarrow \gamma WG + R_{t+1}$ since we now need to multiply with the importance sampling ratio.
 * Add a line after the last with $W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)$, i.e. we update the importance sampling ratio.
@@ -235,13 +223,13 @@ $$
 \end{align}
 (\#eq:wpd)
 $$
-where $C_n = \sum_{i = 1}^n \rho_i$ is the sum of the ratios and and $W_n$ the ratio for the n'th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy evaluation algorithm using weighted importance sampling and incremental updates is given in Figure \@ref(fig:mc-pred-off-policy-alg). 
+where $C_n = \sum_{i = 1}^n \rho_i$ is the sum of the ratios and and $W_n$ the ratio for the n'th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy prediction algorithm using weighted importance sampling and incremental updates is given in Figure \@ref(fig:mc-pred-off-policy-alg). 
 
 ```{r mc-pred-off-policy-alg, echo=FALSE, fig.cap="Off-policy MC prediction [@Sutton18]."}
 knitr::include_graphics("img/mc-off-policy-prediction.png")
 ```
 
-Note both Eq. \@ref(eq:upd) and Eq. \@ref(\#eq:wpd) follows the general incremental formula: 
+Note both Eq. \@ref(eq:upd) and Eq. \@ref(eq:wpd) follows the general incremental formula: 
 \begin{equation}
 New Estimate \leftarrow Old Estimate + Step Size \left[Observation - Old Estimate \right].
 \end{equation}
@@ -250,13 +238,13 @@ For ordinary importance sampling the step-size is $1/n$ and for weighted importa
 
 ## Off-policy control (improvement)
 
-Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate $\pi_*$ and $q_*$ by using rewards obtained through behaviour policy $b$. We will focus on using weighted importance sampling with incremental updates. The algorthm is given in Figure \@ref(fig:mc-gpi-off-policy-alg). The target policy $\pi$ is the greedy policy with respect to $Q$, which is an estimate of $q_\pi$. This algorithm converges to $q_\pi$ as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making $b$ $\varepsilon$-soft. The policy $\pi$ converges to $\pi_*$ at all encountered states even if $b$ changes (to another $\varepsilon$-soft policy) between or within episodes. Note we exit the inner loop if $A_t \neq \pi(S_t)$ which is that same as saying $W=0$.
+Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate $\pi_*$ and $q_*$ by using rewards obtained through behaviour policy $b$. We will focus on using weighted importance sampling with incremental updates. The algorithm is given in Figure \@ref(fig:mc-gpi-off-policy-alg). The target policy $\pi$ is the greedy policy with respect to $Q$, which is an estimate of $q_\pi$. This algorithm converges to $q_\pi$ as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making $b$ $\varepsilon$-soft. The policy $\pi$ converges to $\pi_*$ at all encountered states even if $b$ changes (to another $\varepsilon$-soft policy) between or within sample-paths. Note we exit the inner loop if $A_t \neq \pi(S_t)$ which implies $W=0$.
 
 ```{r mc-gpi-off-policy-alg, echo=FALSE, fig.cap="Off-policy GPI [@Sutton18]."}
 knitr::include_graphics("img/mc-off-policy-gpi.png")
 ```
 
-Notice that this policy only learns from episodes in which $b$ selects only greedy actions after some timestep. This can greatly slow learning.
+Notice that this policy only learns from sample-paths in which $b$ selects only greedy actions after some timestep. This can greatly slow learning.
 
 
 ## Summary 
