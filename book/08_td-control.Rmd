@@ -26,29 +26,20 @@ In Module \@ref(mod-td-pred) temporal difference (TD) was used to estimate state
 
 By the end of this module, you are expected to:
 
-<!-- Lesson 1: TD for Control -->
-<!-- Explain how generalized policy iteration can be used with TD to find improved policies -->
-<!-- Describe the Sarsa Control algorithm -->
-<!-- Understand how the Sarsa control algorithm operates in an example MDP -->
-<!-- Analyze the performance of a learning algorithm -->
-<!-- Lesson 2: Off-policy TD Control: Q-learning -->
-<!-- Describe the Q-learning algorithm -->
-<!-- Explain the relationship between q-learning and the Bellman optimality equations. -->
-<!-- Apply q-learning to an MDP to find the optimal policy -->
-<!-- Understand how Q-learning performs in an example MDP -->
-<!-- Understand the differences between Q-learning and Sarsa -->
-<!-- Understand how Q-learning can be off-policy without using importance sampling -->
-<!-- Describe how the on-policy nature of SARSA and the off-policy nature of Q-learning -->
-<!-- affect their relative performance -->
-<!-- Lesson 3: Expected Sarsa -->
-<!-- Describe the Expected Sarsa algorithm -->
-<!-- Describe Expected Sarsa’s behaviour in an example MDP -->
-<!-- Understand how Expected Sarsa compares to Sarsa control -->
-<!-- Understand how Expected Sarsa can do off-policy learning without using importance -->
-<!-- sampling -->
-<!-- Explain how Expected Sarsa generalizes Q-learning -->
+* Describe how generalized policy iteration (GPI) can be used with TD to find improved policies.
+* Identify the properties that must the satisfied for GPI to converge to the optimal policy.
+* Derive and explain SARSA an on-policy GPI algorithm using TD.
+* Describe the relationship between SARSA and the Bellman equations.
+* Derive and explain Q-learning an off-policy GPI algorithm using TD.
+* Argue how Q-learning can be off-policy without using importance sampling.
+* Describe the relationship between Q-learning and the Bellman optimality equations.
+* Derive and explain expected SARSA an on/off-policy GPI algorithm using TD.
+* Describe the relationship between expected SARSA and the Bellman equations.
+*  Explain how expected SARSA generalizes Q-learning.
+* List the differences between Q-learning, SARSA and expected SARSA.
+* Apply the algorithms to an MDP to find the optimal policy.
 
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 6, 9, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

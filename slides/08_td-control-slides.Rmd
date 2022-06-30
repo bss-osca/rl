@@ -56,13 +56,18 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 
 ## Learning outcomes
 
-<!-- * Describe what Temporal Difference (TD) learning is. -->
-<!-- * Formulate the incremental update formula for TD learning. -->
-<!-- * Define the temporal-difference error. -->
-<!-- * Interpret the role of a fixed step-size. -->
-<!-- * Identify key advantages of TD methods over DP and MC methods. -->
-<!-- * Explain the TD(0) prediction algorithm. -->
-<!-- * Understand the benefits of learning online with TD compared to MC methods. -->
+* Describe how GPI can be used with TD to find improved policies.
+* Identify the properties that must the satisfied for GPI to converge to the optimal policy.
+* Derive and explain SARSA an on-policy GPI algorithm using TD.
+* Describe the relationship between SARSA and the Bellman equations.
+* Derive and explain Q-learning an off-policy GPI algorithm using TD.
+* Argue how Q-learning can be off-policy without using importance sampling.
+* Describe the relationship between Q-learning and the Bellman optimality equations.
+* Derive and explain expected SARSA an on/off-policy GPI algorithm using TD.
+* Describe the relationship between expected SARSA and the Bellman equations.
+*  Explain how expected SARSA generalizes Q-learning.
+* List the differences between Q-learning, SARSA and expected SARSA.
+* Apply the algorithms to an MDP to find the optimal policy.
 
 ---
 
