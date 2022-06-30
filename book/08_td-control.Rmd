@@ -87,7 +87,7 @@ Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_
 That is, the next action used to update $Q$ is selected greedy. That is, we are no longer following an $\epsilon$-greedy policy for our updates. 
 
 ```{r td-q-learning-alg, echo=FALSE, fig.cap="Q-learning - Off-policy GPI using TD [@Sutton18]."}
-knitr::include_graphics("img/td-gpi-q-learning.png")
+knitr::include_graphics("img/td-gpi-q-learn.png")
 ```
 
 SARSA is an on-policy algorithm, meaning that the behavioural and target policy is the same, e.g. an $\epsilon$-greedy policy to ensure exploration. That is, for fixed $\epsilon$ the greedy in the limit assumption is not fulfilled. Q-learning, on the other hand, is an off-policy algorithm where the behavioural policy is an $\epsilon$-greedy and the target policy is the (deterministic) greedy policy. That is, Q-learning fulfil both the 'infinite exploration' and 'greedy in the limit' assumptions. 
