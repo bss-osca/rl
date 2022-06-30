@@ -80,7 +80,7 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 
 ## SARSA - On-policy GPI using TD
 
-* No model imply has to estimate action-values
+* Have to estimate action-values since no model.
 * The incremental update equation for state-values $$V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],$$must be modified to use $Q$ values: $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$
 * Need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA before you can make an update. 
 * Convergence:
@@ -137,7 +137,7 @@ $$
   q_*(s, a) &= \max_\pi q_\pi(s, a) \\
   &= \max_\pi \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
   &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_\pi v_\pi(s')\right) \\
-  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_\pi(s', a')\right) 
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_*(s', a')\right) 
 \end{align}
 $$
 Used in the DP value iteration algorithm.
@@ -149,7 +149,7 @@ Used in the DP value iteration algorithm.
 
 .small[
 .pull-left[
-**Incremental update:** $$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]\end{multline*}$$
+**SARSA incremental update:** $$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]\end{multline*}$$
 SARSA is a sample based version of policy iteration in DP.
 ]]
 
@@ -157,7 +157,7 @@ SARSA is a sample based version of policy iteration in DP.
 
 .small[
 .pull-right[
-**Incremental update:** $$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]\end{multline*}$$
+**Q-learning incremental update:** $$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]\end{multline*}$$
 Q-learning is a sample based version of value iteration in DP.
 ]]
 
@@ -172,11 +172,53 @@ Q-learning is a sample based version of value iteration in DP.
 * SARSA is a sample based version of policy iteration in DP.
 * Q-learning: an off-policy algorithm 
   * The behavioural policy is $\epsilon$-greedy.
-  * The target policy is the (deterministic) greedy policy. T
+  * The target policy is the (deterministic) greedy policy. 
 * Q-learning fulfil both the 'infinite exploration' and 'greedy in the limit' assumptions. 
 * Q-learning is a sample based version of value iteration in DP.
 
 ---
+
+## Expected SARSA - GPI using TD
+
+.midi[
+* Expected SARSA, as SARSA, focus on the Bellman equation:
+$$q_\pi(s, a) = \sum_{s',r} p(s', r | s, a)\left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right)$$
+* SARSA: generate action $A_{t+1}$ and use the estimated action-value of $(S_{t+1},A_{t+1})$: $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$
+* Expected SARSA: Know policy $\pi$ and might update based on the expected value instead:
+$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \right]$$
+* Use a better (deterministic) estimate of the Bellman equation by not sampling $A_{t+1}$ but using the expectation over all actions instead. 
+<!-- * Reduces the variance induced by selecting random actions according to an $\epsilon$-greedy policy.  -->
+* Given the same amount of experiences, expected SARSA generally performs better than SARSA, but has a higher computational cost.
+]
+
+---
+
+## Asymptotic behaviour 
+
+.midi[
+* The incremental update formula can be written as (with step-size $\alpha$ and target $T_t$):
+$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = (1-\alpha)Q(S_t, A_t) + \alpha T_t,$$
+* SARSA: $$T_t = R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}),$$
+* Expected SARSA: $$T_t = R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a).$$ 
+* Over many time-steps (in the limit), the estimates $Q(S_t, A_t)$ are close to $q_*(S_t, A_t)$. 
+* Expected SARSA: Calc the exception deterministic (we do not sample $A_{t+1}$), the target $T_t \approx Q(S_t, A_t)$ and no matter the step-size $Q(S_t, A_t)$ will be updated to the same value. 
+* SARSA: uses a sample action $A_{t+1}$ that might have an action-value far from the expectation. Hence for large step-sizes $Q(S_t, A_t)$ will be updated to the target which is wrong. 
+* SARSA is more sensitive to large step-sizes compared to expected SARSA.
+]
+
+---
+
+## Is expected SARSA on-policy or off-policy?
+
+* Expected SARSA can be both on-policy and off-policy. 
+* Off-policy: Behavioural policy and the target policy different. 
+* On-policy: Behavioural policy and the target policy the same.  
+* Example on-policy: The target policy and the behavioural policy is $\epsilon$-greedy.
+* Example off-policy: The target policy is greedy and the behavioural policy is $\epsilon$-greedy. 
+  * Expected SARSA becomes Q-learning since the expectation of a greedy policy is $$\sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) = \max_{a} Q(S_{t+1}, a).$$
+* Expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
+ 
+
 
 <!-- # References -->
 
