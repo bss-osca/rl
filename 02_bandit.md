@@ -295,7 +295,7 @@ pts$ptO
 The solid line shows averages over all the runs from $t=1$ to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an $\epsilon$-greedy approach is better ($\epsilon = 0.1 is best). That is, exploration is beneficial.
 
 
-## The role of the step-size
+## The role of the step-size {#sec-bandit-step-size}
 
 In general we update the reward estimate of an action using 
 

@@ -11,16 +11,30 @@ editor_options:
 
 # Temporal difference methods for control {#mod-td-control}
 
+In Module \@ref(mod-td-pred) temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:
 
-
+1. *Infinite exploration*: all state-action $(s,a)$ pairs should be explored infinitely many times as the number of iterations go to infinity (in the limit), i.e. as the number of iterations $k$ goes to infinity the number of visits $n_k$ does too $$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$
+2. *Greedy in the limit*: while we maintain infinite exploration, we do eventually need to converge to the optimal policy:
+  $$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$
 
 ## Learning outcomes 
 
 By the end of this module, you are expected to:
 
+* Describe how generalized policy iteration (GPI) can be used with TD to find improved policies.
+* Identify the properties that must the satisfied for GPI to converge to the optimal policy.
+* Derive and explain SARSA an on-policy GPI algorithm using TD.
+* Describe the relationship between SARSA and the Bellman equations.
+* Derive and explain Q-learning an off-policy GPI algorithm using TD.
+* Argue how Q-learning can be off-policy without using importance sampling.
+* Describe the relationship between Q-learning and the Bellman optimality equations.
+* Derive and explain expected SARSA an on/off-policy GPI algorithm using TD.
+* Describe the relationship between expected SARSA and the Bellman equations.
+*  Explain how expected SARSA generalizes Q-learning.
+* List the differences between Q-learning, SARSA and expected SARSA.
+* Apply the algorithms to an MDP to find the optimal policy.
 
-
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 6, 9, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -30,27 +44,114 @@ By the end of this module, you are expected to:
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 5-5.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
+For this week, you will need to read Chapter 6.4-6.6 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
 
-## MC prediction
+## SARSA - On-policy GPI using TD
+
+The first GPI algorithm we will consider is SARSA. Since we do not have a model we need to estimate action-values so the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). Hence to predict action-values for a policy $\pi$, the incremental update Eq. \@ref(eq:td0) must be modified to use $Q$ values: 
+$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]
+$$
+Note given a policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA before you can make an update. This acronym is used to name the algorithm.
+
+The algorithm is given in Figure \@ref(fig:td-sarsa-alg). To ensure infinite exploration of all action-values, we need e.g. an $\epsilon$-greedy policy. The algorithm can also be applied for processes with continuing tasks. To ensure greedy in the limit a decreasing epsilon can be used (e.g. $\epsilon = 1/t$). No stopping criterion is given but could stop when small differences in action-values are observed. 
+
+<div class="figure" style="text-align: center">
+<img src="img/td-gpi-sarsa.png" alt="SARSA - On-policy GPI using TD [@Sutton18]."  />
+<p class="caption">(\#fig:td-sarsa-alg)SARSA - On-policy GPI using TD [@Sutton18].</p>
+</div>
+
+SARSA is a sample based algorithm that do updates based on the Bellman equation for action-values ($q$):
+$$
+\begin{align}
+  q_\pi(s, a) &= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a] \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right).
+\end{align}
+$$
+That is, we update the estimate based on samples $r$ and the estimate $q_\pi$ in $s'$. This is the same approach as policy iteration in DP: we first calculate new estimates of $q_\pi$ given the current policy $\pi$ and then improve. Hence SARSA is a sample based version of policy iteration in DP.
 
 
-## MC control
+## Q-learning - Off-policy GPI using TD
+
+Q-learning resembles SARSA; however there are some differences. The algorithm is given in Figure \@ref(fig:td-q-learning-alg). Note the incremental update equation is now: 
+\begin{equation}
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]
+\end{equation}
+That is, the next action used to update $Q$ is selected greedy. That is, we are no longer following an $\epsilon$-greedy policy for our updates. 
+
+<div class="figure" style="text-align: center">
+<img src="img/td-gpi-q-learn.png" alt="Q-learning - Off-policy GPI using TD [@Sutton18]."  />
+<p class="caption">(\#fig:td-q-learning-alg)Q-learning - Off-policy GPI using TD [@Sutton18].</p>
+</div>
+
+SARSA is an on-policy algorithm, meaning that the behavioural and target policy is the same, e.g. an $\epsilon$-greedy policy to ensure exploration. That is, for fixed $\epsilon$ the greedy in the limit assumption is not fulfilled. Q-learning, on the other hand, is an off-policy algorithm where the behavioural policy is an $\epsilon$-greedy and the target policy is the (deterministic) greedy policy. That is, Q-learning fulfil both the 'infinite exploration' and 'greedy in the limit' assumptions. 
+
+Note under MC prediction an off-policy algorithm needed to use importance sampling to estimate the action-value of the target policy (see Section \@ref(sec-mc-off-policy)). This is not necessary for one-step TD, since 
+$$
+\begin{align}
+q_\pi(s,a) &= \mathbb{E}_{\pi}[R_t + \gamma G_{t+1}|S_t = s, A_t = a] \\
+           &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right) \\
+           &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_\pi(s', a')\right) \\
+\end{align}
+(\#eq:bellman-q)
+$$ 
+
+That is, because the target policy is greedy and deterministic expectation the $G_{t+1}$ becomes a maximum. Hence we can update the action-value estimates $Q$ for the target policy $\pi$ even though we sample from an $\epsilon$-greedy behavioural policy.
+
+Q-learning is a sample based algorithm that do updates based on the Bellman optimality equation for action-values ($q_*$):
+$$
+\begin{align}
+  q_*(s, a) &= \max_\pi q_\pi(s, a) \\
+  &= \max_\pi \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_\pi v_\pi(s')\right) \\
+  &= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_*(s', a')\right) 
+\end{align}
+$$
+That is, we update the estimate based on samples $r$ and the estimate $q_*$ in $s'$. This is the same approach as value iteration in DP: we update the estimates of $q_\pi$ and improve the policy in one operation. Hence Q-learning is a sample based version of value iteration in DP.
 
 
-## 
+## Expected SARSA - GPI using TD
+
+The expected SARSA, as SARSA, focus on the Bellman equation \@ref(eq:bellman-q). SARSA generate action $A_{t+1}$ from the policy $\pi$ and use the estimated action-value of $(S_{t+1},A_{t+1})$. However, since we know the current policy $\pi$, we might update based on the expected value instead:
+$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \right] \\
+$$
+That is, we use a better estimate of the Bellman equation \@ref(eq:bellman-q) by not sampling $A_{t+1}$ but using the (deterministic) expectation over all actions instead. Doing so reduces the variance induced by selecting random actions according to an $\epsilon$-greedy policy. As a result, given the same amount of experiences, expected SARSA generally performs better than SARSA, but has a higher computational cost.
+
+Expected SARSA is more robust to different step-size values. The incremental update formula can be written as
+$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = (1-\alpha)Q(S_t, A_t) + \alpha T_t,
+$$
+with step-size $\alpha$ and target $T_t$. For SARSA the target is
+$$T_t = R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}),$$
+and for expected SARSA the target is: $$T_t = R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a).$$ Now assume that we have run the algorithm over many time-steps so that our estimates $Q(S_t, A_t)$ are close to $q_*(S_t, A_t)$. Since the target in expected SARSA is deterministic (we do not sample $A_{t+1}$), the target $T_t \approx Q(S_t, A_t)$ and no matter the step-size $Q(S_t, A_t)$ will be updated to the same value. On the other hand, the target in SARSA uses a sample action $A_{t+1}$ that might have an action-value far from the expectation. This implies that for large step-sizes $Q(S_t, A_t)$ will be updated to the target which is wrong. Hence SARSA is more sensitive to large step-sizes.
+
+Expected SARSA can be both on-policy and off-policy. If the behavioural policy and the target policy are different it is off-policy. If they are the same it is on-policy. For instance, expected SARSA is off-policy if the target policy is greedy and the behavioural policy $\epsilon$-greedy. In which case expected SARSA becomes Q-learning since the expectation of a greedy policy is the maximum value ($\pi(s|a) = 1$ here). Hence expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
+
+
+<!-- ## Maximization bias and double learning   -->
+
+<!-- Many control algorithms use a maximisation operator to select actions (either $\epsilon$-greedy or greedy action selection). Hence we implicitly favour positive numbers. If the values of $q_\pi(s,a)$ are near zero and estimates $Q$ have values distributed around zero (both negative and positive) then the maximisation operator will select the positive estimates, despite the true value being near zero. This bias is a so-called \textit{maximisation bias}. -->
+
+<!-- If you consider a RL problem where $q_*(s,a)$ may be near zero then \emph{double learning} may be used in which we learn two independent sets of value estimates $Q_1$ and $Q_2$, then at each time step we choose one of them at random and update it using the other as a target. This produces two unbiased estimates of the action-values (which could be averaged). Below we show an algorithm for \emph{double Q-learning}.  -->
+
+
+
+
 
 ## Summary 
 
-Read Chapter 5.10 in @Sutton18.
+Read Chapter 6.9 in @Sutton18.
 
 
 ## Exercises
 
 Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
-
+<!-- An inventory problem that compares the algorithms -->
 
 
 [BSS]: https://bss.au.dk/en/

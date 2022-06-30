@@ -11,15 +11,22 @@ editor_options:
 
 # Temporal difference methods for prediction {#mod-td-pred}
 
+One of the most fundamental concepts in reinforcement learning is temporal difference (TD) learning. TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas: Like MC, TD can predict using a model-free environment and learn from experience. Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrap). That is, TD can learn on-line and do not need to wait until the whole sample-path is found. TD is in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered. 
 
 
 ## Learning outcomes 
 
 By the end of this module, you are expected to:
 
+* Describe what Temporal Difference (TD) learning is.
+* Formulate the incremental update formula for TD learning.
+* Define the temporal-difference error.
+* Interpret the role of a fixed step-size.
+* Identify key advantages of TD methods over DP and MC methods.
+* Explain the TD(0) prediction algorithm.
+* Understand the benefits of learning online with TD compared to MC methods.
 
-
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 6, 9, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -29,27 +36,164 @@ By the end of this module, you are expected to:
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 5-5.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
+For this week, you will need to read Chapter 6-6.3 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation). 
 
 
-## MC prediction
+## What is TD learning?
+
+Given a policy $\pi$, we want to estimate the state-value function. Recall that the state value function is 
+\[
+v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].
+\]
+where the return is 
+\[
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
+\]
+
+Let $V$ denote the state-value estimate. Under MC prediction we used an incremental update formula:
+$$
+  V(S_t) \leftarrow V(S_t) + \alpha_n\left[G_t - V(S_t)\right],
+$$
+where $n$ denote the number of observations and $\alpha_n$ the step-size. Different values of $\alpha_n$ was discussed in Module \@ref(mod-mc). Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage $t$) e.g. for the sample average $\alpha_n = 1/n$. If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size:
+$$
+  V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],
+$$
+
+Note as pointed out in Section \@ref(sec-bandit-step-size), a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of $S_t$:
+$$
+\begin{align}
+V_{n+1} &= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
+&= \alpha G_n + (1 - \alpha)V_n \nonumber \\
+&= \alpha G_n + (1 - \alpha)[\alpha G_{n-1} + (1 - \alpha)V_{n-1}] \nonumber \\
+&= \alpha G_n + (1 - \alpha)\alpha G_{n-1} + (1 - \alpha)^2 V_{n-1}  \nonumber \\
+& \vdots \nonumber \\
+&= (1-\alpha)^n V_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} G_i \\
+\end{align}
+$$
+That is, a larger weight is used for recent observations compared to old observations. 
+
+For MC prediction we needed the sample path to get the realized return $G_t$. However, since 
+$$
+\begin{align}
+v_\pi(s) &= \mathbb{E}_\pi[G_t | S_t = s] \\
+         &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s] \\
+         &= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma \mathbb{E}_\pi[G_{t+1} | S_t = s] \\
+         &= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma v_\pi(S_{t+1}),
+\end{align}
+$$ 
+then, given a realized reward $R_{t+1}$, an estimate for the return $G_t$ is $R_{t+1} + \gamma V(S_{t+1})$ and the incremental update becomes:
+$$
+  V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right].
+  (\#eq:td0)
+$$
+As a result, we do not have to generate a whole sample-path (as for MC) for updating the state-value estimate of $s = S_t$ to $V(S_t)$. Instead we only have to wait until the next state is observed and update the estimate of $S_t$ given the estimate of the next state $S_{t+1}$. As the estimate of $S_{t+1}$ improve the estimate of $S_t$ also improve. The incremental update in Eq. \@ref(eq:td0) is called *TD(0)* or one-step TD because it use a one-step lookahead to update the estimate. Note updating the estimates using TD resembles the way we did for DP:
+$$
+V(s = S_t) \leftarrow \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) V(s')\right) 
+$$
+Here we updated the value by considering the expectation of all the next states. This was possible since we had a model. Now, by using TD, we do not need a model to estimate the state-value. 
+
+The term 
+$$
+\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t),
+$$
+is denoted the *temporal difference error* (*TD error*) since it is the difference between the current estimate $V(S_t)$ and the better estimate $R_{t+1} + \gamma V(S_{t+1})$.
 
 
-## MC control
+## TD prediction
+
+We can now formulate a TD(0) algorithm for predicting state-values of a policy (see Figure \@ref(fig:td0-pred-alg)). No stopping criterion is given but could stop when small differences in state-values are observed. 
+
+<div class="figure" style="text-align: center">
+<img src="img/td0-pred.png" alt="TD(0) policy prediction [@Sutton18]."  />
+<p class="caption">(\#fig:td0-pred-alg)TD(0) policy prediction [@Sutton18].</p>
+</div>
+
+The algorithm is given for a process with episodes; however, also works for continuing processes. In this case the inner loop runs over an infinite number of time-steps.
+
+### TD prediction for action-values
+
+Later we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). To find $q_*$, we first need to predict action-values for a policy $\pi$ and the incremental update Eq. \@ref(eq:td0) must be modified to use $Q$ values: 
+$$
+  Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\right].
+$$
+
+Note given a policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in Module \@ref(mod-td-control). Note to ensure exploration of all action-values we need e.g. an $\epsilon$-soft behavioural policy.  
 
 
-## 
+## Benefits of TD methods
 
-## Summary 
+Let us try to summarize the benefits of TD prediction
 
-Read Chapter 5.10 in @Sutton18.
+* TD methods do not require a model of the environment (compared to DP).
+* TD methods can be implemented online, which can speed convergence (compared to MC methods which must wait until the end of the sample-path).
+* TD methods learn from all actions, whereas MC methods require the sample-path to have a tail equal to the target policy. 
+* TD methods do converge on the value function with a sufficiently small step-size parameter, or with a decreasing step-size.
+* TD methods generally converge faster than MC methods, although this has not been formally proven.
+* TD methods are extremely useful for continuing tasks that cannot be broken down into episodes as required by MC methods.
+* TD can be seen as a method for *prediction learning* where you try to predict what happens next given you current action, get new information and make a new prediction. That is, you do not need a training set (as in supervised learning) instead the reward signal is observed as time goes by. 
+* TD methods are good for sequential decision problems (multi-step prediction).
+* TD methods are scalable in the sense that computations do not grow exponentially with the problem size.       
+
+An example illustrating that TD methods converge faster than MC methods is given in Exercise \@ref(sec-td-pred-ex-random)
+
+
+
+
+
+
+
+<!-- ## Summary  -->
+
+<!-- Read Chapter 5.10 in @Sutton18. -->
 
 
 ## Exercises
 
 Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
+### Exercise - A randow walk {#sec-td-pred-ex-random}
 
+Consider a MDP with states A-E and two terminal states. Possible transitions are given in Figure \@ref(fig:rw-trans). All episodes start in the centre state, C, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (T1) or the right (T2). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
+
+<div class="figure" style="text-align: center">
+<img src="07_td-pred_files/figure-html/rw-trans-1.png" alt="Possible transitions between states and rewards." width="80%" />
+<p class="caption">(\#fig:rw-trans)Possible transitions between states and rewards.</p>
+</div>
+
+
+<!-- Q1 -->
+
+
+<div class="modal fade bs-example-modal-lg" id="8v8F2TVGs60PkCZrNWze" tabindex="-1" role="dialog" aria-labelledby="8v8F2TVGs60PkCZrNWze-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="8v8F2TVGs60PkCZrNWze-title">Solution</h4></div><div class="modal-body">
+
+<p>The state space is \(\mathcal{S} = \{ T1, A, \ldots, E, T2 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states which have no actions (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(A) &= 0.5v_\pi(T1) + 0.5v_\pi(B) = 0.5v_\pi(B) \\ v_\pi(B) &= 0.5v_\pi(A) + 0.5v_\pi( C ) \\ v_\pi( C ) &= 0.5v_\pi(B) + 0.5v_\pi(D) \\ v_\pi(D) &= 0.5v_\pi( C ) + 0.5v_\pi(E) \\ v_\pi(E) &= 0.5v_\pi(D) + 0.5(1 + v_\pi(T2)) = 0.5v_\pi(D) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 (you may also use that by symmetry \(v_\pi(C ) = 0.5\)) for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for A-E, respectively.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#8v8F2TVGs60PkCZrNWze">Solution</button>
+
+1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval).
+
+2) Consider an episode with sequence $C, 0, B, 0, C, 0, D, 0, E, 1$. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(A)$ change. What does this tell you about what happened on the first episode? Why was only the estimate for this one state changed? By exactly how much was it changed?
+
+3) Generate 100 episodes and run the TD(0) prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:td0-pred-alg)). Make a plot of the state-value estimate (y-axis) given state A-E (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.
+
+
+```r
+set.seed(875)
+```
+
+
+4) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes.
+
+5) The results are dependent on the value of the step-size parameter. Try estimating the state-values using TD(0) and MC for $\alpha = 0.2, 0.1, 0.05$ and 0.025. Plot the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=A}^E(V(s)-v_\pi(s))^2}$$ (y-axis) given the number of episodes (x-axis).Do you think the conclusions about that TD(0) is better than MC is affected by different  values? 
+
+6) In the right graph of the random walk example, the RMS error of the TD method seems to go down and then up again, particularly at high $\alpha$’s. What could have caused this? Do you think this always occurs, or might it be a function of how the approximate value function was initialized?
+
+<!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
+
+
+### Exercise - Off-policy TD {#sec-td-pred-off-policy}
+
+Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}.
 
 
 [BSS]: https://bss.au.dk/en/

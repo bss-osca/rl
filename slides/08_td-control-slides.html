@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Monte Carlo methods for prediction and control</title>
+    <title>Temporal difference (TD) methods for control</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -13,7 +13,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Monte Carlo methods for prediction and control
+# Temporal difference (TD) methods for control
 ### Lars Relund Nielsen
 
 ---
@@ -28,11 +28,11 @@ layout: true
   
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mc.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/mod-td-pred.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/06_mc-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/07_td-pred-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/06_mc-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/07_td-pred-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -47,276 +47,169 @@ layout: true
 
 ## Learning outcomes
 
-* Identify the difference between model-based and model-free RL.
-* Describe how MC methods can be used to estimate value functions from sample data.
-* Do MC prediction to estimate the value function for a given policy.
-* Explain why it is important to maintain exploration in MC algorithms.
-* Do policy improvement (control) using MC in a GPI algorithm.
-* Compare different ways of exploring the state-action space.
-* Argue why off-policy learning can help deal with the exploration problem.
-* Use importance sampling to estimate the expected value of a target distribution using samples from a different distribution.
-* Use importance sampling in off-policy learning to predict the value-function.
-* Explain how to modify the MC GPI algorithm for off-policy learning.
+* Describe how GPI can be used with TD to find improved policies.
+* Identify the properties that must the satisfied for GPI to converge to the optimal policy.
+* Derive and explain SARSA an on-policy GPI algorithm using TD.
+* Describe the relationship between SARSA and the Bellman equations.
+* Derive and explain Q-learning an off-policy GPI algorithm using TD.
+* Argue how Q-learning can be off-policy without using importance sampling.
+* Describe the relationship between Q-learning and the Bellman optimality equations.
+* Derive and explain expected SARSA an on/off-policy GPI algorithm using TD.
+* Describe the relationship between expected SARSA and the Bellman equations.
+*  Explain how expected SARSA generalizes Q-learning.
+* List the differences between Q-learning, SARSA and expected SARSA.
+* Apply the algorithms to an MDP to find the optimal policy.
 
 ---
 
-## Monte Carlo methods for RL
+## GPI using TD
 
-* Monte Carlo (MC) is an estimation method which involves a random component. 
-* Use MC methods to learn state and action values by sampling and averaging returns. 
-* MC do not use dynamics (current state-value estimated using next state-value). 
-* Estimate values by considering different sample-paths (state, action and reward realizations). 
-* MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment).
-* MC methods learn the value function directly from experience. 
-* The sample-path can be generated using simulation (some environment knowledge).
-* Consider MC methods for processes with episodes, i.e. where there is a terminal state.
-* Example: Blackjack (calculating transition probabilities may be tedious and error-prone). Instead we can simulate a game (a sample-path).
-* Use generalised policy iteration, but learn the value function from experience. 
+* Last week: TD methods for prediction. This week: TD for control (improve the policy).
+* Use generalized policy iteration (GPI) with TD methods (policy evaluation, policy improvement, repeat). 
+* Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. 
+* An element of exploration are needed to estimate the action-values. 
+* For convergence to the optimal policy a model-free GPI algorithm must satisfy:
+  - *Infinite exploration*: state-action pairs should be explored infinitely many times: `$$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$`
+  - *Greedy in the limit*: we do eventually need to converge to the optimal policy: `$$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$`
+  
+---
 
+## SARSA - On-policy GPI using TD
+
+* Have to estimate action-values since no model.
+* The incremental update equation for state-values `$$V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],$$`must be modified to use `\(Q\)` values: `$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$`
+* Need to know `\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)` or short SARSA before you can make an update. 
+* Convergence:
+  * Infinite exploration: use an `\(\epsilon\)`-greedy policy. 
+  * Greedy in the limit: use a decreasing epsilon (e.g. `\(\epsilon = 1/t\)`).
 
 ---
 
-## MC prediction (evaluation)
+## SARSA Algorithm
 
-Given policy `\(\pi\)`, we want to estimate the state-value function:
-`$$v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].$$`
-where the return is 
-`$$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$`
+&lt;img src="img/td-gpi-sarsa.png" width="100%" style="display: block; margin: auto;" /&gt;
 
-Procedure:
-
-1. Generate sample-paths `\(S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-l}, R_T\)`.
-2. Calculate `\(G_t\)` for each state in the sample-path.
-3. Use the average of the realized returns for each state as an estimate. 
-
-With enough observations, the average converges to the true state-value under the policy `\(\pi\)`.
+Can also be applied for processes with continuing tasks. 
 
 ---
 
-## First and every visit MC
+## Q-learning - Off-policy GPI using TD
 
-Given a policy `\(\pi\)` and a set of sample-paths, there are two ways to estimate the state values `\(v_\pi(s)\)`:
+&lt;img src="img/td-gpi-q-learning.png" width="100%" style="display: block; margin: auto;" /&gt;
 
-* First visit MC: average returns from first visit to state `\(s\)`.
-  - Generates iid (independent and identically distributed) estimates of `\(v_\pi(s)\)` with finite variance.
-  - Converges to the expected value by the law of large numbers.
-* Every visit MC: average returns following every visit to state `\(s\)`.
-  - Does not generate independent estimates, but still converges.
-  - Easier to use since we don't have to check if visited already.
-
-We mostly focus on first visit but in practice often use every visit.
+Use another incremental update of `\(Q(S_t, A_t)\)` where the next action used to update `\(Q\)` is selected greedy.
 
 ---
 
-## MC prediction algorithm
+## Bellman equations and incremental updates
 
-&lt;img src="img/mc-prediction.png" width="100%" style="display: block; margin: auto;" /&gt;
+The Bellman equations used in DP for action-values are:
 
----
-
-## MC prediction of action-values
-
-* With a model of the environment we only need to estimate the state-value function (use Bellman optimality equations).
-* Without a model it is useful to estimate action-values since the optimal policy can be found using: 
-`$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} q_*(s, a).$$`
-* To find `\(q_*\)`, we first need to predict action-values for a policy `\(\pi\)`. 
-* Problem: If `\(\pi\)` is deterministic, we only estimate one action-value. 
-* Some exploration are needed:
-  - Make `\(\pi\)` stochastic with non-zero probability of each state-action pair (e.g. `\(\epsilon\)`-soft). 
-  - Exploring starts: Use a non-zero probability for each state-action pair of being selected as the starting state of an sample-path.
-
----
-
-## Generalized policy iteration
-
-.left-column-wide[.midi[
-Generalised Policy Iteration (GPI) consider different policy evaluation and improvement strategies. The idea is to generate a sequence of policies and action-value functions
-`$$\pi_0 \xrightarrow[]{E} q_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} q_{\pi_1} \xrightarrow[]{I} \pi_2  \xrightarrow[]{E} \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} q_{*}.$$`
-The algorithm repeatedly considers steps:
-
-* Evaluation (E): Here we use MC evaluation. Note we don't have to evaluate the action-values precisely.
-* Improvement (I): Select the next policy greedy `$$\pi(s) = \arg\max_a q(s, a).$$` By using greedy action selection, the policy improvement theorem applies, i.e. `\(\pi_{k+1}\)` is not worse than `\(\pi_{k}\)`.
+.small[
+.pull-left[
+**Bellman equation**:
+$$
+`\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a] \\
+  &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &amp;= \sum_{s',r} p(s', r | s, a)\left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right)
+\end{align}`
+$$
+Used in the DP policy iteration algorithm.
 ]]
 
-.right-column-small[
-&lt;img src="img/policy-ite-general.png" width="100%" style="display: block; margin: auto;" /&gt;
-]
+--
 
----
-
-## GPI convergence 
-
-* Model-based GPI (transition probability matrix and reward distribution are known): GPI converge if all states are visited during the algorithm. 
-* Model-free GPI: We cannot simply use a 100% greedy strategy all the time, since all our action-values are estimates. An element of exploration must be used to estimate the action-values. 
-
-For convergence to the optimal policy a model-free GPI algorithm must satisfy:
-
-1. Infinite exploration: all state-action `\((s,a)\)` pairs should be explored infinitely many times as the number of iterations go to infinity, i.e. `\(\lim_{k\rightarrow\infty} n_k(s, a) = \infty\)`.
-2. Greedy in the limit: while we maintain infinite exploration, we do eventually need to converge to the optimal policy:
-  `$$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$`
-
----
-
-## GPI with exploring starts
-
-&lt;img src="img/mc-gpi-es.png" width="90%" style="display: block; margin: auto;" /&gt;
-
----
-
-## GPI using `\(\epsilon\)`-soft policies
-
-.left-column-wide[
-* Use an `\(\epsilon\)`-soft policy to ensure infinite exploration.
-* An `\(\epsilon\)`-soft policy satisfy: `$$\pi(a|s) \geq \epsilon/|\mathcal{A}(s)|$$` 
-* Put probability `\(1 - \epsilon + \frac{\epsilon}{|\mathcal{A}(s)|}\)` on the maximal action and `\(\frac{\epsilon}{|\mathcal{A}(s)|}\)` on each of the others. 
-* Note `\(\epsilon\)`-soft policies are always stochastic and hence ensure infinite exploration of the `\((s,a)\)` pairs.
-* The best `\(\epsilon\)`-soft policy is found.
-* To ensure the 'greedy in the limit' convergence (find the optimal policy) one may decrease `\(\epsilon\)` as the number of iterations increase (e.g. `\(\epsilon = 1/k\)`). 
-
-]
-
-.right-column-small[
-&lt;img src="img/mc-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-## An `\(\epsilon\)`-soft GPI algorithm 
-
-&lt;img src="img/mc-gpi-on-policy.png" width="80%" style="display: block; margin: auto;" /&gt;
-
----
-
-## On-policy vs off-policy
-
-* Until now *on-policy* algorithms: both evaluate or improve the policy that is used to make decisions. 
-* To ensure infinite exploration used exploring starts and `\(\epsilon\)`-soft policies. 
-* Another approach *Off-policy* algorithms that consider two policies: 
-  - A policy `\(b\)` used to generate the sample-path (behaviour policy) 
-  - A policy `\(\pi\)` that is learned for control (target policy). 
-* We update the target policy using the sample-paths from the behaviour policy. 
-* To ensure infinite exploration the behaviour policy can be e.g. `\(\epsilon\)`-soft.
-* The target policy `\(\pi\)` may be deterministic by using greedy selection with respect to action-value estimates (greedy in the limit satisfied).
-* Off-policy learning methods are powerful and can be used to learn from data generated by a conventional non-learning controller or from a human expert.
-
----
-
-## Importance sampling
-
-How do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? Importance sampling: estimate expected values under one distribution given samples from another. 
-.pull-left[
-Two distributions `\(a\)` and `\(b\)` with samples from `\(b\)`: 
-$$
-`\begin{align}
-  \mathbb{E}_{a}[X] &amp;= \sum_{x\in X} a(x)x \\
-  &amp;= \sum_{x\in X} b(x)\frac{a(x)}{b(x)}x \\
-  &amp;= \sum_{x\in X} b(x)\rho(x)x \\
-  &amp;= \mathbb{E}_{b}\left[\rho(X)X\right]
-\end{align}`
-$$
-] 
-
-.pull-right[ 
-* `\(\rho(x) = a(x)/b(x)\)` denote the *importance sampling ratio*. 
-* Now given samples `\((x_1,\ldots,x_n)\)` from `\(b\)` we then can calculate the sample average using
-
-$$
-`\begin{align}
-  \mathbb{E}_{a}[X] &amp;= \mathbb{E}_{b}\left[\rho(X)X\right] \\
-  &amp;\approx \frac{1}{n}\sum_{i = 1}^n \rho(x_i)x_i \\
-\end{align}`
-$$
-] 
-
----
-
-## Off-policy importance sampling
-
-* Given a target policy `\(\pi\)` and behaviour policy `\(b\)` want to estimate action-values: `$$q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] = \mathbb{E}_{b}[\rho(G_t)G_t|S_t = s, A_t = a] \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i$$`
-where given the sample-paths, have `\(n\)` observations of the return `\((G_1, \ldots, G_n)\)` in `\((s,a)\)`.
-* Need to find `\(\rho_i\)` for a given sample-path `\(S_t, A_t, R_{t+1}, \ldots, R_T, S_T\)` with return `\(G_t\)`:
-
-$$
-`\begin{align}
-    \rho(G_t) &amp;= \frac{\Pr{}(S_t, A_t, \dots S_T| S_t = s, A_t = a, \pi)}{\Pr{}(S_t, A_t, \dots, S_T)| S_t = s, A_t = a, b)} \\
-                 &amp;= \frac{\prod_{k=t}^{T-1}\pi(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}{\prod_{k=t}^{T-1}b(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}\\
-                 &amp;=\prod_{k=t}^{T-1}\frac{\pi(A_k|S_k)}{b(A_k|S_k)}.
-\end{align}`
-$$
-&lt;!-- * Note the transition probabilities cancel out (ratio independent of MDP dynamics).  --&gt;
-
----
-
-## MC prediction algorithm
-
-We can now modify the MC prediction algorithm to use off-policy learning:
-
-&lt;img src="img/mc-prediction.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-##  Off-policy MC prediction (changes)
-
-* Generate an sample-path using policy `\(b\)` instead of `\(\pi\)`.
-* Add a variable W representing the importance sampling ratio which must be set to 1 on line containing `\(G \leftarrow 0\)`.
-* Modify line `\(G \leftarrow \gamma G + R_{t+1}\)` to `\(G \leftarrow \gamma WG + R_{t+1}\)` since we now need to multiply with the importance sampling ratio.
-* Add a line after the last with `\(W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)\)`, i.e. we update the importance sampling ratio.
-* If `\(\pi(A_t|S_t) = 0\)` then we may stop the inner loop earlier ( `\(W=0\)` for the remaining `\(t\)`). 
-* An incremental update of `\(V\)` can be done
-$$
-  V(s) \leftarrow V(s) + \frac{1}{n} \left[WG - V(s)\right].
-$$
-where `\(n\)` denote the number of realized returns and `\(G\)` the current realized return. 
-
----
-
-## Weighted importance sampling 
-
-Different importance sampling methods:
-
-.frame[
-.pull-left[
-Ordinary importance sampling: 
-`$$q_\pi(s,a) \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i$$`
-Higher variance.
-] 
-
+.small[
 .pull-right[
-Weighted importance sampling:
-
-`$$q_\pi(s,a) \approx \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i.$$`
-Smaller variance (faster convergence). 
-]]
-
-Incremental update for weighted importance sampling: 
-
+**Bellman optimality equation**:
 $$
 `\begin{align}
-    q_\pi(s,a) &amp;\approx V_{n+1} = \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i \\
-    &amp;= \frac{1}{C_n} \sum_{i = 1}^n W_iG_i = V_n + \frac{W_n}{C_n} (G_n  - V_n),
+  q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+  &amp;= \max_\pi \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_\pi v_\pi(s')\right) \\
+  &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_*(s', a')\right) 
 \end{align}`
 $$
+Used in the DP value iteration algorithm.
+]]
+
+.phantom[]
+
+--
+
+.small[
+.pull-left[
+**SARSA incremental update:** `$$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]\end{multline*}$$`
+SARSA is a sample based version of policy iteration in DP.
+]]
+
+--
+
+.small[
+.pull-right[
+**Q-learning incremental update:** `$$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]\end{multline*}$$`
+Q-learning is a sample based version of value iteration in DP.
+]]
+
 
 ---
 
-## Off-policy prediction algorithm
+## Q-learning vs SARSA
 
-&lt;img src="img/mc-off-policy-prediction.png" width="90%" style="display: block; margin: auto;" /&gt;
+* SARSA: an on-policy algorithm (behavioural and target policy is the same).
+  * Use e.g. an `\(\epsilon\)`-greedy policy to ensure exploration. 
+  * For fixed `\(\epsilon\)` the greedy in the limit assumption is not fulfilled. 
+* SARSA is a sample based version of policy iteration in DP.
+* Q-learning: an off-policy algorithm 
+  * The behavioural policy is `\(\epsilon\)`-greedy.
+  * The target policy is the (deterministic) greedy policy. 
+* Q-learning fulfil both the 'infinite exploration' and 'greedy in the limit' assumptions. 
+* Q-learning is a sample based version of value iteration in DP.
 
 ---
 
-## Off-policy control (improvement)
+## Expected SARSA - GPI using TD
 
-Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate `\(\pi_*\)` and `\(q_*\)` by using rewards obtained through behaviour policy `\(b\)`. We will focus on using weighted importance sampling with incremental updates. The algorthm is given in Figure \@ref(fig:mc-gpi-off-policy-alg). The target policy `\(\pi\)` is the greedy policy with respect to `\(Q\)`, which is an estimate of `\(q_\pi\)`. This algorithm converges to `\(q_\pi\)` as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making `\(b\)` `\(\varepsilon\)`-soft. The policy `\(\pi\)` converges to `\(\pi_*\)` at all encountered states even if `\(b\)` changes (to another `\(\varepsilon\)`-soft policy) between or within sample-paths. Note we exit the inner loop if `\(A_t \neq \pi(S_t)\)` which is that same as saying `\(W=0\)`.
-
-Notice that this policy only learns from sample-paths in which `\(b\)` selects only greedy actions after some timestep. This can greatly slow learning.
+.midi[
+* Expected SARSA, as SARSA, focus on the Bellman equation:
+`$$q_\pi(s, a) = \sum_{s',r} p(s', r | s, a)\left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right)$$`
+* SARSA: generate action `\(A_{t+1}\)` and use the estimated action-value of `\((S_{t+1},A_{t+1})\)`: `$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$`
+* Expected SARSA: Know policy `\(\pi\)` and might update based on the expected value instead:
+`$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \right]$$`
+* Use a better (deterministic) estimate of the Bellman equation by not sampling `\(A_{t+1}\)` but using the expectation over all actions instead. 
+&lt;!-- * Reduces the variance induced by selecting random actions according to an `\(\epsilon\)`-greedy policy.  --&gt;
+* Given the same amount of experiences, expected SARSA generally performs better than SARSA, but has a higher computational cost.
+]
 
 ---
 
-## Off-policy GPI
+## Asymptotic behaviour 
 
-&lt;img src="img/mc-off-policy-gpi.png" width="85%" style="display: block; margin: auto;" /&gt;
+.midi[
+* The incremental update formula can be written as (with step-size `\(\alpha\)` and target `\(T_t\)`):
+`$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = (1-\alpha)Q(S_t, A_t) + \alpha T_t,$$`
+* SARSA: `$$T_t = R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}),$$`
+* Expected SARSA: `$$T_t = R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a).$$` 
+* Over many time-steps (in the limit), the estimates `\(Q(S_t, A_t)\)` are close to `\(q_*(S_t, A_t)\)`. 
+* Expected SARSA: Calc the exception deterministic (we do not sample `\(A_{t+1}\)`), the target `\(T_t \approx Q(S_t, A_t)\)` and no matter the step-size `\(Q(S_t, A_t)\)` will be updated to the same value. 
+* SARSA: uses a sample action `\(A_{t+1}\)` that might have an action-value far from the expectation. Hence for large step-sizes `\(Q(S_t, A_t)\)` will be updated to the target which is wrong. 
+* SARSA is more sensitive to large step-sizes compared to expected SARSA.
+]
 
+---
+
+## Is expected SARSA on-policy or off-policy?
+
+* Expected SARSA can be both on-policy and off-policy. 
+* Off-policy: Behavioural policy and the target policy different. 
+* On-policy: Behavioural policy and the target policy the same.  
+* Example on-policy: The target policy and the behavioural policy is `\(\epsilon\)`-greedy.
+* Example off-policy: The target policy is greedy and the behavioural policy is `\(\epsilon\)`-greedy. 
+  * Expected SARSA becomes Q-learning since the expectation of a greedy policy is `$$\sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) = \max_{a} Q(S_{t+1}, a).$$`
+* Expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
+ 
 
 
 &lt;!-- # References --&gt;

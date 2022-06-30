@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
 favicon: assets/favicon.ico
-date: "2022-06-22"
+date: "2022-06-30"
 editor_options: 
   chunk_output_type: console
 ---
@@ -117,7 +117,7 @@ This module gives a short introduction to the course. Next, the site consists of
 
    * [Part I](#mod-rl-intro) gives you a general introduction to RL and the bandit problem. 
 
-   * [Part II](#mod-bandit) consider RL sequential decision problems where the state and state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes are considered as a general modelling framework (Module \@ref(mod-mdp))
+   * [Part II](#mod-bandit) consider RL sequential decision problems where the state and state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module \@ref(mod-mdp1)) and the concept of policies and value functions are discussed (Module \@ref(mod-mdp2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module  \@ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module \@ref(mod-mc) and ...
    
 
 <!-- The next three chapters describe three fundamental classes of methods for solving finite -->

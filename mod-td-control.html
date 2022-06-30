@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-06-22" />
+<meta name="date" content="2022-06-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,7 +266,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
 <li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
 <li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
-<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
 <li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.6</b> Optimistic initial values<span></span></a></li>
 <li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#upper-confidence-bound-action-selection"><i class="fa fa-check"></i><b>2.7</b> Upper-Confidence Bound Action Selection<span></span></a></li>
 <li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#summary-1"><i class="fa fa-check"></i><b>2.8</b> Summary<span></span></a></li>
@@ -322,20 +322,20 @@ div.csl-indent {
 <li class="chapter" data-level="5.9.2" data-path="mod-dp.html"><a href="mod-dp.html#exercise---car-rental"><i class="fa fa-check"></i><b>5.9.2</b> Exercise - Car rental<span></span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for evaluation and control<span></span></a>
+<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control<span></span></a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="mod-mc.html"><a href="mod-mc.html#learning-outcomes-5"><i class="fa fa-check"></i><b>6.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="6.2" data-path="mod-mc.html"><a href="mod-mc.html#textbook-readings-5"><i class="fa fa-check"></i><b>6.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-prediction"><i class="fa fa-check"></i><b>6.3</b> MC evaluation (prediction)<span></span></a>
+<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-evaluation"><i class="fa fa-check"></i><b>6.3</b> MC prediction (evaluation)<span></span></a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC evaluation of action-values<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC prediction of action-values<span></span></a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-control-improvement"><i class="fa fa-check"></i><b>6.4</b> MC control (improvement)<span></span></a>
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="mod-mc.html"><a href="mod-mc.html#gpi-with-exploring-starts"><i class="fa fa-check"></i><b>6.4.1</b> GPI with exploring starts<span></span></a></li>
 <li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-mc-evaluation"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC evaluation<span></span></a>
+<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#sec-mc-off-policy"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC prediction<span></span></a>
 <ul>
 <li class="chapter" data-level="6.5.1" data-path="mod-mc.html"><a href="mod-mc.html#weighted-importance-sampling"><i class="fa fa-check"></i><b>6.5.1</b> Weighted importance sampling<span></span></a></li>
 </ul></li>
@@ -347,20 +347,26 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="7.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#learning-outcomes-6"><i class="fa fa-check"></i><b>7.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="7.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#textbook-readings-6"><i class="fa fa-check"></i><b>7.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="7.3" data-path="mod-td-pred.html"><a href="mod-td-pred.html#mc-prediction"><i class="fa fa-check"></i><b>7.3</b> MC prediction<span></span></a></li>
-<li class="chapter" data-level="7.4" data-path="mod-td-pred.html"><a href="mod-td-pred.html#mc-control"><i class="fa fa-check"></i><b>7.4</b> MC control<span></span></a></li>
-<li class="chapter" data-level="7.5" data-path="mod-td-pred.html"><a href="mod-td-pred.html#section"><i class="fa fa-check"></i><b>7.5</b> </a></li>
-<li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#summary-6"><i class="fa fa-check"></i><b>7.6</b> Summary<span></span></a></li>
-<li class="chapter" data-level="7.7" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.7</b> Exercises<span></span></a></li>
+<li class="chapter" data-level="7.3" data-path="mod-td-pred.html"><a href="mod-td-pred.html#what-is-td-learning"><i class="fa fa-check"></i><b>7.3</b> What is TD learning?<span></span></a></li>
+<li class="chapter" data-level="7.4" data-path="mod-td-pred.html"><a href="mod-td-pred.html#td-prediction"><i class="fa fa-check"></i><b>7.4</b> TD prediction<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#td-prediction-for-action-values"><i class="fa fa-check"></i><b>7.4.1</b> TD prediction for action-values<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="mod-td-pred.html"><a href="mod-td-pred.html#benefits-of-td-methods"><i class="fa fa-check"></i><b>7.5</b> Benefits of TD methods<span></span></a></li>
+<li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.6</b> Exercises<span></span></a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#sec-td-pred-ex-random"><i class="fa fa-check"></i><b>7.6.1</b> Exercise - A randow walk<span></span></a></li>
+<li class="chapter" data-level="7.6.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#sec-td-pred-off-policy"><i class="fa fa-check"></i><b>7.6.2</b> Exercise - Off-policy TD<span></span></a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mod-td-control.html"><a href="mod-td-control.html"><i class="fa fa-check"></i><b>8</b> Temporal difference methods for control<span></span></a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="mod-td-control.html"><a href="mod-td-control.html#learning-outcomes-7"><i class="fa fa-check"></i><b>8.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="8.2" data-path="mod-td-control.html"><a href="mod-td-control.html#textbook-readings-7"><i class="fa fa-check"></i><b>8.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="8.3" data-path="mod-td-control.html"><a href="mod-td-control.html#mc-prediction-1"><i class="fa fa-check"></i><b>8.3</b> MC prediction<span></span></a></li>
-<li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#mc-control-1"><i class="fa fa-check"></i><b>8.4</b> MC control<span></span></a></li>
-<li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#section-1"><i class="fa fa-check"></i><b>8.5</b> </a></li>
-<li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-7"><i class="fa fa-check"></i><b>8.6</b> Summary<span></span></a></li>
+<li class="chapter" data-level="8.3" data-path="mod-td-control.html"><a href="mod-td-control.html#sarsa---on-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.3</b> SARSA - On-policy GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#q-learning---off-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.4</b> Q-learning - Off-policy GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#expected-sarsa---gpi-using-td"><i class="fa fa-check"></i><b>8.5</b> Expected SARSA - GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-6"><i class="fa fa-check"></i><b>8.6</b> Summary<span></span></a></li>
 <li class="chapter" data-level="8.7" data-path="mod-td-control.html"><a href="mod-td-control.html#exercises-3"><i class="fa fa-check"></i><b>8.7</b> Exercises<span></span></a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
@@ -404,10 +410,30 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="mod-td-control" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Module 8</span> Temporal difference methods for control<a href="mod-td-control.html#mod-td-control" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In Module <a href="mod-td-pred.html#mod-td-pred">7</a> temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:</p>
+<ol style="list-style-type: decimal">
+<li><em>Infinite exploration</em>: all state-action <span class="math inline">\((s,a)\)</span> pairs should be explored infinitely many times as the number of iterations go to infinity (in the limit), i.e. as the number of iterations <span class="math inline">\(k\)</span> goes to infinity the number of visits <span class="math inline">\(n_k\)</span> does too <span class="math display">\[\lim_{k\rightarrow\infty} n_k(s, a) = \infty.\]</span></li>
+<li><em>Greedy in the limit</em>: while we maintain infinite exploration, we do eventually need to converge to the optimal policy:
+<span class="math display">\[\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).\]</span></li>
+</ol>
 <div id="learning-outcomes-7" class="section level2 hasAnchor" number="8.1">
 <h2><span class="header-section-number">8.1</span> Learning outcomes<a href="mod-td-control.html#learning-outcomes-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>By the end of this module, you are expected to:</p>
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+<ul>
+<li>Describe how generalized policy iteration (GPI) can be used with TD to find improved policies.</li>
+<li>Identify the properties that must the satisfied for GPI to converge to the optimal policy.</li>
+<li>Derive and explain SARSA an on-policy GPI algorithm using TD.</li>
+<li>Describe the relationship between SARSA and the Bellman equations.</li>
+<li>Derive and explain Q-learning an off-policy GPI algorithm using TD.</li>
+<li>Argue how Q-learning can be off-policy without using importance sampling.</li>
+<li>Describe the relationship between Q-learning and the Bellman optimality equations.</li>
+<li>Derive and explain expected SARSA an on/off-policy GPI algorithm using TD.</li>
+<li>Describe the relationship between expected SARSA and the Bellman equations.</li>
+<li>Explain how expected SARSA generalizes Q-learning.</li>
+<li>List the differences between Q-learning, SARSA and expected SARSA.</li>
+<li>Apply the algorithms to an MDP to find the optimal policy.</li>
+</ul>
+<p>The learning outcomes relate to the <a href="mod-lg-course.html#mod-lg-course">overall learning goals</a> number 3, 4, 6, 9, and 12 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
@@ -415,24 +441,95 @@ div.csl-indent {
 </div>
 <div id="textbook-readings-7" class="section level2 hasAnchor" number="8.2">
 <h2><span class="header-section-number">8.2</span> Textbook readings<a href="mod-td-control.html#textbook-readings-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>For this week, you will need to read Chapter 5-5.5 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
+<p>For this week, you will need to read Chapter 6.4-6.6 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
 </div>
-<div id="mc-prediction-1" class="section level2 hasAnchor" number="8.3">
-<h2><span class="header-section-number">8.3</span> MC prediction<a href="mod-td-control.html#mc-prediction-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="sarsa---on-policy-gpi-using-td" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> SARSA - On-policy GPI using TD<a href="mod-td-control.html#sarsa---on-policy-gpi-using-td" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The first GPI algorithm we will consider is SARSA. Since we do not have a model we need to estimate action-values so the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see Eq. <a href="mod-mdp-2.html#eq:bell-opt-state-policy">(4.3)</a>). Hence to predict action-values for a policy <span class="math inline">\(\pi\)</span>, the incremental update Eq. <a href="mod-td-pred.html#eq:td0">(7.1)</a> must be modified to use <span class="math inline">\(Q\)</span> values:
+<span class="math display">\[
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]
+\]</span>
+Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the algorithm.</p>
+<p>The algorithm is given in Figure <a href="mod-td-control.html#fig:td-sarsa-alg">8.1</a>. To ensure infinite exploration of all action-values, we need e.g. an <span class="math inline">\(\epsilon\)</span>-greedy policy. The algorithm can also be applied for processes with continuing tasks. To ensure greedy in the limit a decreasing epsilon can be used (e.g. <span class="math inline">\(\epsilon = 1/t\)</span>). No stopping criterion is given but could stop when small differences in action-values are observed.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:td-sarsa-alg"></span>
+<img src="img/td-gpi-sarsa.png" alt="SARSA - On-policy GPI using TD [@Sutton18]."  />
+<p class="caption">
+Figure 8.1: SARSA - On-policy GPI using TD <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</p>
 </div>
-<div id="mc-control-1" class="section level2 hasAnchor" number="8.4">
-<h2><span class="header-section-number">8.4</span> MC control<a href="mod-td-control.html#mc-control-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>SARSA is a sample based algorithm that do updates based on the Bellman equation for action-values (<span class="math inline">\(q\)</span>):
+<span class="math display">\[
+\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a] \\
+  &amp;= \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma v_\pi(s&#39;)\right) \\
+  &amp;= \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma \sum_{a&#39;} \pi(a&#39;|s) q_\pi(s&#39;, a&#39;)\right).
+\end{align}
+\]</span>
+That is, we update the estimate based on samples <span class="math inline">\(r\)</span> and the estimate <span class="math inline">\(q_\pi\)</span> in <span class="math inline">\(s&#39;\)</span>. This is the same approach as policy iteration in DP: we first calculate new estimates of <span class="math inline">\(q_\pi\)</span> given the current policy <span class="math inline">\(\pi\)</span> and then improve. Hence SARSA is a sample based version of policy iteration in DP.</p>
 </div>
-<div id="section-1" class="section level2" number="8.5">
-<h2><span class="header-section-number">8.5</span> </h2>
+<div id="q-learning---off-policy-gpi-using-td" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Q-learning - Off-policy GPI using TD<a href="mod-td-control.html#q-learning---off-policy-gpi-using-td" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Q-learning resembles SARSA; however there are some differences. The algorithm is given in Figure <a href="mod-td-control.html#fig:td-q-learning-alg">8.2</a>. Note the incremental update equation is now:
+<span class="math display">\[\begin{equation}
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]
+\end{equation}\]</span>
+That is, the next action used to update <span class="math inline">\(Q\)</span> is selected greedy. That is, we are no longer following an <span class="math inline">\(\epsilon\)</span>-greedy policy for our updates.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:td-q-learning-alg"></span>
+<img src="img/td-gpi-q-learn.png" alt="Q-learning - Off-policy GPI using TD [@Sutton18]."  />
+<p class="caption">
+Figure 8.2: Q-learning - Off-policy GPI using TD <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</p>
 </div>
-<div id="summary-7" class="section level2 hasAnchor" number="8.6">
-<h2><span class="header-section-number">8.6</span> Summary<a href="mod-td-control.html#summary-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Read Chapter 5.10 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+<p>SARSA is an on-policy algorithm, meaning that the behavioural and target policy is the same, e.g. an <span class="math inline">\(\epsilon\)</span>-greedy policy to ensure exploration. That is, for fixed <span class="math inline">\(\epsilon\)</span> the greedy in the limit assumption is not fulfilled. Q-learning, on the other hand, is an off-policy algorithm where the behavioural policy is an <span class="math inline">\(\epsilon\)</span>-greedy and the target policy is the (deterministic) greedy policy. That is, Q-learning fulfil both the ‘infinite exploration’ and ‘greedy in the limit’ assumptions.</p>
+<p>Note under MC prediction an off-policy algorithm needed to use importance sampling to estimate the action-value of the target policy (see Section <a href="mod-mc.html#sec-mc-off-policy">6.5</a>). This is not necessary for one-step TD, since
+<span class="math display" id="eq:bellman-q">\[
+\begin{align}
+q_\pi(s,a) &amp;= \mathbb{E}_{\pi}[R_t + \gamma G_{t+1}|S_t = s, A_t = a] \\
+           &amp;= \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma \sum_{a&#39;} \pi(a&#39;|s) q_\pi(s&#39;, a&#39;)\right) \\
+           &amp;= \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma \max_{a&#39;} q_\pi(s&#39;, a&#39;)\right) \\
+\end{align}
+\tag{8.1}
+\]</span></p>
+<p>That is, because the target policy is greedy and deterministic expectation the <span class="math inline">\(G_{t+1}\)</span> becomes a maximum. Hence we can update the action-value estimates <span class="math inline">\(Q\)</span> for the target policy <span class="math inline">\(\pi\)</span> even though we sample from an <span class="math inline">\(\epsilon\)</span>-greedy behavioural policy.</p>
+<p>Q-learning is a sample based algorithm that do updates based on the Bellman optimality equation for action-values (<span class="math inline">\(q_*\)</span>):
+<span class="math display">\[
+\begin{align}
+  q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+  &amp;= \max_\pi \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma v_\pi(s&#39;)\right) \\
+  &amp;= \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma \max_\pi v_\pi(s&#39;)\right) \\
+  &amp;= \sum_{s&#39;,r} p(s&#39;, r | s, a) \left(r + \gamma \max_{a&#39;} q_*(s&#39;, a&#39;)\right) 
+\end{align}
+\]</span>
+That is, we update the estimate based on samples <span class="math inline">\(r\)</span> and the estimate <span class="math inline">\(q_*\)</span> in <span class="math inline">\(s&#39;\)</span>. This is the same approach as value iteration in DP: we update the estimates of <span class="math inline">\(q_\pi\)</span> and improve the policy in one operation. Hence Q-learning is a sample based version of value iteration in DP.</p>
+</div>
+<div id="expected-sarsa---gpi-using-td" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> Expected SARSA - GPI using TD<a href="mod-td-control.html#expected-sarsa---gpi-using-td" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The expected SARSA, as SARSA, focus on the Bellman equation <a href="mod-td-control.html#eq:bellman-q">(8.1)</a>. SARSA generate action <span class="math inline">\(A_{t+1}\)</span> from the policy <span class="math inline">\(\pi\)</span> and use the estimated action-value of <span class="math inline">\((S_{t+1},A_{t+1})\)</span>. However, since we know the current policy <span class="math inline">\(\pi\)</span>, we might update based on the expected value instead:
+<span class="math display">\[
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \right] \\
+\]</span>
+That is, we use a better estimate of the Bellman equation <a href="mod-td-control.html#eq:bellman-q">(8.1)</a> by not sampling <span class="math inline">\(A_{t+1}\)</span> but using the (deterministic) expectation over all actions instead. Doing so reduces the variance induced by selecting random actions according to an <span class="math inline">\(\epsilon\)</span>-greedy policy. As a result, given the same amount of experiences, expected SARSA generally performs better than SARSA, but has a higher computational cost.</p>
+<p>Expected SARSA is more robust to different step-size values. The incremental update formula can be written as
+<span class="math display">\[
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = (1-\alpha)Q(S_t, A_t) + \alpha T_t,
+\]</span>
+with step-size <span class="math inline">\(\alpha\)</span> and target <span class="math inline">\(T_t\)</span>. For SARSA the target is
+<span class="math display">\[T_t = R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}),\]</span>
+and for expected SARSA the target is: <span class="math display">\[T_t = R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a).\]</span> Now assume that we have run the algorithm over many time-steps so that our estimates <span class="math inline">\(Q(S_t, A_t)\)</span> are close to <span class="math inline">\(q_*(S_t, A_t)\)</span>. Since the target in expected SARSA is deterministic (we do not sample <span class="math inline">\(A_{t+1}\)</span>), the target <span class="math inline">\(T_t \approx Q(S_t, A_t)\)</span> and no matter the step-size <span class="math inline">\(Q(S_t, A_t)\)</span> will be updated to the same value. On the other hand, the target in SARSA uses a sample action <span class="math inline">\(A_{t+1}\)</span> that might have an action-value far from the expectation. This implies that for large step-sizes <span class="math inline">\(Q(S_t, A_t)\)</span> will be updated to the target which is wrong. Hence SARSA is more sensitive to large step-sizes.</p>
+<p>Expected SARSA can be both on-policy and off-policy. If the behavioural policy and the target policy are different it is off-policy. If they are the same it is on-policy. For instance, expected SARSA is off-policy if the target policy is greedy and the behavioural policy <span class="math inline">\(\epsilon\)</span>-greedy. In which case expected SARSA becomes Q-learning since the expectation of a greedy policy is the maximum value (<span class="math inline">\(\pi(s|a) = 1\)</span> here). Hence expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.</p>
+<!-- ## Maximization bias and double learning   -->
+<!-- Many control algorithms use a maximisation operator to select actions (either $\epsilon$-greedy or greedy action selection). Hence we implicitly favour positive numbers. If the values of $q_\pi(s,a)$ are near zero and estimates $Q$ have values distributed around zero (both negative and positive) then the maximisation operator will select the positive estimates, despite the true value being near zero. This bias is a so-called \textit{maximisation bias}. -->
+<!-- If you consider a RL problem where $q_*(s,a)$ may be near zero then \emph{double learning} may be used in which we learn two independent sets of value estimates $Q_1$ and $Q_2$, then at each time step we choose one of them at random and update it using the other as a target. This produces two unbiased estimates of the action-values (which could be averaged). Below we show an algorithm for \emph{double Q-learning}.  -->
+</div>
+<div id="summary-6" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Summary<a href="mod-td-control.html#summary-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Read Chapter 6.9 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
 </div>
 <div id="exercises-3" class="section level2 hasAnchor" number="8.7">
 <h2><span class="header-section-number">8.7</span> Exercises<a href="mod-td-control.html#exercises-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<!-- An inventory problem that compares the algorithms -->
 
 </div>
 </div>

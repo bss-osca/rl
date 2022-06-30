@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-06-22" />
+<meta name="date" content="2022-06-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,7 +266,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
 <li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
 <li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
-<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
 <li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.6</b> Optimistic initial values<span></span></a></li>
 <li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#upper-confidence-bound-action-selection"><i class="fa fa-check"></i><b>2.7</b> Upper-Confidence Bound Action Selection<span></span></a></li>
 <li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#summary-1"><i class="fa fa-check"></i><b>2.8</b> Summary<span></span></a></li>
@@ -322,20 +322,20 @@ div.csl-indent {
 <li class="chapter" data-level="5.9.2" data-path="mod-dp.html"><a href="mod-dp.html#exercise---car-rental"><i class="fa fa-check"></i><b>5.9.2</b> Exercise - Car rental<span></span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for evaluation and control<span></span></a>
+<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control<span></span></a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="mod-mc.html"><a href="mod-mc.html#learning-outcomes-5"><i class="fa fa-check"></i><b>6.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="6.2" data-path="mod-mc.html"><a href="mod-mc.html#textbook-readings-5"><i class="fa fa-check"></i><b>6.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-prediction"><i class="fa fa-check"></i><b>6.3</b> MC evaluation (prediction)<span></span></a>
+<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-evaluation"><i class="fa fa-check"></i><b>6.3</b> MC prediction (evaluation)<span></span></a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC evaluation of action-values<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC prediction of action-values<span></span></a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-control-improvement"><i class="fa fa-check"></i><b>6.4</b> MC control (improvement)<span></span></a>
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="mod-mc.html"><a href="mod-mc.html#gpi-with-exploring-starts"><i class="fa fa-check"></i><b>6.4.1</b> GPI with exploring starts<span></span></a></li>
 <li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-mc-evaluation"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC evaluation<span></span></a>
+<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#sec-mc-off-policy"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC prediction<span></span></a>
 <ul>
 <li class="chapter" data-level="6.5.1" data-path="mod-mc.html"><a href="mod-mc.html#weighted-importance-sampling"><i class="fa fa-check"></i><b>6.5.1</b> Weighted importance sampling<span></span></a></li>
 </ul></li>
@@ -347,20 +347,26 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="7.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#learning-outcomes-6"><i class="fa fa-check"></i><b>7.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="7.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#textbook-readings-6"><i class="fa fa-check"></i><b>7.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="7.3" data-path="mod-td-pred.html"><a href="mod-td-pred.html#mc-prediction"><i class="fa fa-check"></i><b>7.3</b> MC prediction<span></span></a></li>
-<li class="chapter" data-level="7.4" data-path="mod-td-pred.html"><a href="mod-td-pred.html#mc-control"><i class="fa fa-check"></i><b>7.4</b> MC control<span></span></a></li>
-<li class="chapter" data-level="7.5" data-path="mod-td-pred.html"><a href="mod-td-pred.html#section"><i class="fa fa-check"></i><b>7.5</b> </a></li>
-<li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#summary-6"><i class="fa fa-check"></i><b>7.6</b> Summary<span></span></a></li>
-<li class="chapter" data-level="7.7" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.7</b> Exercises<span></span></a></li>
+<li class="chapter" data-level="7.3" data-path="mod-td-pred.html"><a href="mod-td-pred.html#what-is-td-learning"><i class="fa fa-check"></i><b>7.3</b> What is TD learning?<span></span></a></li>
+<li class="chapter" data-level="7.4" data-path="mod-td-pred.html"><a href="mod-td-pred.html#td-prediction"><i class="fa fa-check"></i><b>7.4</b> TD prediction<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#td-prediction-for-action-values"><i class="fa fa-check"></i><b>7.4.1</b> TD prediction for action-values<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="mod-td-pred.html"><a href="mod-td-pred.html#benefits-of-td-methods"><i class="fa fa-check"></i><b>7.5</b> Benefits of TD methods<span></span></a></li>
+<li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.6</b> Exercises<span></span></a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#sec-td-pred-ex-random"><i class="fa fa-check"></i><b>7.6.1</b> Exercise - A randow walk<span></span></a></li>
+<li class="chapter" data-level="7.6.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#sec-td-pred-off-policy"><i class="fa fa-check"></i><b>7.6.2</b> Exercise - Off-policy TD<span></span></a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mod-td-control.html"><a href="mod-td-control.html"><i class="fa fa-check"></i><b>8</b> Temporal difference methods for control<span></span></a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="mod-td-control.html"><a href="mod-td-control.html#learning-outcomes-7"><i class="fa fa-check"></i><b>8.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="8.2" data-path="mod-td-control.html"><a href="mod-td-control.html#textbook-readings-7"><i class="fa fa-check"></i><b>8.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="8.3" data-path="mod-td-control.html"><a href="mod-td-control.html#mc-prediction-1"><i class="fa fa-check"></i><b>8.3</b> MC prediction<span></span></a></li>
-<li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#mc-control-1"><i class="fa fa-check"></i><b>8.4</b> MC control<span></span></a></li>
-<li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#section-1"><i class="fa fa-check"></i><b>8.5</b> </a></li>
-<li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-7"><i class="fa fa-check"></i><b>8.6</b> Summary<span></span></a></li>
+<li class="chapter" data-level="8.3" data-path="mod-td-control.html"><a href="mod-td-control.html#sarsa---on-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.3</b> SARSA - On-policy GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#q-learning---off-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.4</b> Q-learning - Off-policy GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#expected-sarsa---gpi-using-td"><i class="fa fa-check"></i><b>8.5</b> Expected SARSA - GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-6"><i class="fa fa-check"></i><b>8.6</b> Summary<span></span></a></li>
 <li class="chapter" data-level="8.7" data-path="mod-td-control.html"><a href="mod-td-control.html#exercises-3"><i class="fa fa-check"></i><b>8.7</b> Exercises<span></span></a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
@@ -412,19 +418,19 @@ thisIsCamelCase      # you start each word with a capital letter (except the fir
 <div id="commenting-your-code" class="section level2 hasAnchor" number="11.1">
 <h2><span class="header-section-number">C.1</span> Commenting your code<a href="coding-convention.html#commenting-your-code" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use <a href="https://roxygen2.r-lib.org/">roxygen documentation</a> comments which are widely known.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="coding-convention.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Subtract two vectors</span></span>
-<span id="cb26-2"><a href="coding-convention.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb26-3"><a href="coding-convention.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param x First vector.</span></span>
-<span id="cb26-4"><a href="coding-convention.html#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param y Vector to be subtracted.</span></span>
-<span id="cb26-5"><a href="coding-convention.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb26-6"><a href="coding-convention.html#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return The difference.</span></span>
-<span id="cb26-7"><a href="coding-convention.html#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb26-8"><a href="coding-convention.html#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb26-9"><a href="coding-convention.html#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
-<span id="cb26-10"><a href="coding-convention.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; subtract(x = c(5,5), y = c(2,3))</span></span>
-<span id="cb26-11"><a href="coding-convention.html#cb26-11" aria-hidden="true" tabindex="-1"></a>subtract <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
-<span id="cb26-12"><a href="coding-convention.html#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">-</span>y)</span>
-<span id="cb26-13"><a href="coding-convention.html#cb26-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="coding-convention.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Subtract two vectors</span></span>
+<span id="cb27-2"><a href="coding-convention.html#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb27-3"><a href="coding-convention.html#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param x First vector.</span></span>
+<span id="cb27-4"><a href="coding-convention.html#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param y Vector to be subtracted.</span></span>
+<span id="cb27-5"><a href="coding-convention.html#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb27-6"><a href="coding-convention.html#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return The difference.</span></span>
+<span id="cb27-7"><a href="coding-convention.html#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb27-8"><a href="coding-convention.html#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb27-9"><a href="coding-convention.html#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
+<span id="cb27-10"><a href="coding-convention.html#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; subtract(x = c(5,5), y = c(2,3))</span></span>
+<span id="cb27-11"><a href="coding-convention.html#cb27-11" aria-hidden="true" tabindex="-1"></a>subtract <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
+<span id="cb27-12"><a href="coding-convention.html#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">-</span>y)</span>
+<span id="cb27-13"><a href="coding-convention.html#cb27-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>You can add a roxygen skeleton automatically using <strong>Code &gt; Insert Roxygen Skeleton</strong> in RStudio.</p>
 </div>
 </div>

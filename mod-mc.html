@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Module 6 Monte Carlo methods for evaluation and control | Reinforcement Learning for Business (RL)</title>
+  <title>Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Module 6 Monte Carlo methods for evaluation and control | Reinforcement Learning for Business (RL)" />
+  <meta property="og:title" content="Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://bss-osca.github.io/rl/" />
   <meta property="og:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="bss-osca/rl" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Module 6 Monte Carlo methods for evaluation and control | Reinforcement Learning for Business (RL)" />
+  <meta name="twitter:title" content="Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)" />
   
   <meta name="twitter:description" content="Course notes for ‘Reinforcement Learning for Business’" />
   <meta name="twitter:image" content="https://bss-osca.github.io/rl//img/logo.png" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-06-22" />
+<meta name="date" content="2022-06-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,7 +266,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.2" data-path="mod-bandit.html"><a href="mod-bandit.html#textbook-readings-1"><i class="fa fa-check"></i><b>2.2</b> Textbook readings<span></span></a></li>
 <li class="chapter" data-level="2.3" data-path="mod-bandit.html"><a href="mod-bandit.html#the-k-armed-bandit-problem"><i class="fa fa-check"></i><b>2.3</b> The k-armed bandit problem<span></span></a></li>
 <li class="chapter" data-level="2.4" data-path="mod-bandit.html"><a href="mod-bandit.html#estimating-the-value-of-an-action"><i class="fa fa-check"></i><b>2.4</b> Estimating the value of an action<span></span></a></li>
-<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#the-role-of-the-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="mod-bandit.html"><a href="mod-bandit.html#sec-bandit-step-size"><i class="fa fa-check"></i><b>2.5</b> The role of the step-size<span></span></a></li>
 <li class="chapter" data-level="2.6" data-path="mod-bandit.html"><a href="mod-bandit.html#optimistic-initial-values"><i class="fa fa-check"></i><b>2.6</b> Optimistic initial values<span></span></a></li>
 <li class="chapter" data-level="2.7" data-path="mod-bandit.html"><a href="mod-bandit.html#upper-confidence-bound-action-selection"><i class="fa fa-check"></i><b>2.7</b> Upper-Confidence Bound Action Selection<span></span></a></li>
 <li class="chapter" data-level="2.8" data-path="mod-bandit.html"><a href="mod-bandit.html#summary-1"><i class="fa fa-check"></i><b>2.8</b> Summary<span></span></a></li>
@@ -322,20 +322,20 @@ div.csl-indent {
 <li class="chapter" data-level="5.9.2" data-path="mod-dp.html"><a href="mod-dp.html#exercise---car-rental"><i class="fa fa-check"></i><b>5.9.2</b> Exercise - Car rental<span></span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for evaluation and control<span></span></a>
+<li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control<span></span></a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="mod-mc.html"><a href="mod-mc.html#learning-outcomes-5"><i class="fa fa-check"></i><b>6.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="6.2" data-path="mod-mc.html"><a href="mod-mc.html#textbook-readings-5"><i class="fa fa-check"></i><b>6.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-prediction"><i class="fa fa-check"></i><b>6.3</b> MC evaluation (prediction)<span></span></a>
+<li class="chapter" data-level="6.3" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-evaluation"><i class="fa fa-check"></i><b>6.3</b> MC prediction (evaluation)<span></span></a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-evaluation-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC evaluation of action-values<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="mod-mc.html"><a href="mod-mc.html#mc-prediction-of-action-values"><i class="fa fa-check"></i><b>6.3.1</b> MC prediction of action-values<span></span></a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-control-improvement"><i class="fa fa-check"></i><b>6.4</b> MC control (improvement)<span></span></a>
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="mod-mc.html"><a href="mod-mc.html#gpi-with-exploring-starts"><i class="fa fa-check"></i><b>6.4.1</b> GPI with exploring starts<span></span></a></li>
 <li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> GPI using <span class="math inline">\(\epsilon\)</span>-soft policies<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-mc-evaluation"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC evaluation<span></span></a>
+<li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#sec-mc-off-policy"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC prediction<span></span></a>
 <ul>
 <li class="chapter" data-level="6.5.1" data-path="mod-mc.html"><a href="mod-mc.html#weighted-importance-sampling"><i class="fa fa-check"></i><b>6.5.1</b> Weighted importance sampling<span></span></a></li>
 </ul></li>
@@ -347,20 +347,26 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="7.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#learning-outcomes-6"><i class="fa fa-check"></i><b>7.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="7.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#textbook-readings-6"><i class="fa fa-check"></i><b>7.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="7.3" data-path="mod-td-pred.html"><a href="mod-td-pred.html#mc-prediction"><i class="fa fa-check"></i><b>7.3</b> MC prediction<span></span></a></li>
-<li class="chapter" data-level="7.4" data-path="mod-td-pred.html"><a href="mod-td-pred.html#mc-control"><i class="fa fa-check"></i><b>7.4</b> MC control<span></span></a></li>
-<li class="chapter" data-level="7.5" data-path="mod-td-pred.html"><a href="mod-td-pred.html#section"><i class="fa fa-check"></i><b>7.5</b> </a></li>
-<li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#summary-6"><i class="fa fa-check"></i><b>7.6</b> Summary<span></span></a></li>
-<li class="chapter" data-level="7.7" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.7</b> Exercises<span></span></a></li>
+<li class="chapter" data-level="7.3" data-path="mod-td-pred.html"><a href="mod-td-pred.html#what-is-td-learning"><i class="fa fa-check"></i><b>7.3</b> What is TD learning?<span></span></a></li>
+<li class="chapter" data-level="7.4" data-path="mod-td-pred.html"><a href="mod-td-pred.html#td-prediction"><i class="fa fa-check"></i><b>7.4</b> TD prediction<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#td-prediction-for-action-values"><i class="fa fa-check"></i><b>7.4.1</b> TD prediction for action-values<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="mod-td-pred.html"><a href="mod-td-pred.html#benefits-of-td-methods"><i class="fa fa-check"></i><b>7.5</b> Benefits of TD methods<span></span></a></li>
+<li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.6</b> Exercises<span></span></a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#sec-td-pred-ex-random"><i class="fa fa-check"></i><b>7.6.1</b> Exercise - A randow walk<span></span></a></li>
+<li class="chapter" data-level="7.6.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#sec-td-pred-off-policy"><i class="fa fa-check"></i><b>7.6.2</b> Exercise - Off-policy TD<span></span></a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mod-td-control.html"><a href="mod-td-control.html"><i class="fa fa-check"></i><b>8</b> Temporal difference methods for control<span></span></a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="mod-td-control.html"><a href="mod-td-control.html#learning-outcomes-7"><i class="fa fa-check"></i><b>8.1</b> Learning outcomes<span></span></a></li>
 <li class="chapter" data-level="8.2" data-path="mod-td-control.html"><a href="mod-td-control.html#textbook-readings-7"><i class="fa fa-check"></i><b>8.2</b> Textbook readings<span></span></a></li>
-<li class="chapter" data-level="8.3" data-path="mod-td-control.html"><a href="mod-td-control.html#mc-prediction-1"><i class="fa fa-check"></i><b>8.3</b> MC prediction<span></span></a></li>
-<li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#mc-control-1"><i class="fa fa-check"></i><b>8.4</b> MC control<span></span></a></li>
-<li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#section-1"><i class="fa fa-check"></i><b>8.5</b> </a></li>
-<li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-7"><i class="fa fa-check"></i><b>8.6</b> Summary<span></span></a></li>
+<li class="chapter" data-level="8.3" data-path="mod-td-control.html"><a href="mod-td-control.html#sarsa---on-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.3</b> SARSA - On-policy GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#q-learning---off-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.4</b> Q-learning - Off-policy GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#expected-sarsa---gpi-using-td"><i class="fa fa-check"></i><b>8.5</b> Expected SARSA - GPI using TD<span></span></a></li>
+<li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-6"><i class="fa fa-check"></i><b>8.6</b> Summary<span></span></a></li>
 <li class="chapter" data-level="8.7" data-path="mod-td-control.html"><a href="mod-td-control.html#exercises-3"><i class="fa fa-check"></i><b>8.7</b> Exercises<span></span></a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix<span></span></b></span></li>
@@ -403,34 +409,26 @@ div.csl-indent {
 
             <section class="normal" id="section-">
 <div id="mod-mc" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">Module 6</span> Monte Carlo methods for evaluation and control<a href="mod-mc.html#mod-mc" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The term “Monte Carlo” (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different sample-paths (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to evaluate/predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience.</p>
+<h1><span class="header-section-number">Module 6</span> Monte Carlo methods for prediction and control<a href="mod-mc.html#mod-mc" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The term “Monte Carlo” (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different <em>sample-paths</em> (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to evaluate/predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience.</p>
 <p>MC methods can be used for processes with episodes, i.e. where there is a terminal state. This reduces the length of the sample-path and the value of the states visited on the path can be updated based on the reward received.</p>
 <div id="learning-outcomes-5" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> Learning outcomes<a href="mod-mc.html#learning-outcomes-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>By the end of this module, you are expected to:</p>
-<!-- Lesson 1: Introduction to Monte Carlo Methods -->
-<!-- Understand how Monte-Carlo methods can be used to estimate value functions from -->
-<!-- sampled interaction -->
-<!-- Identify problems that can be solved using Monte-Carlo methods -->
-<!-- Use Monte Carlo prediction to estimate the value function for a given policy. -->
-<!-- Lesson 2: Monte Carlo for Control -->
-<!-- Estimate action-value functions using Monte Carlo -->
-<!-- Understand the importance of maintaining exploration in Monte Carlo algorithms -->
-<!-- Understand how to use monte carlo methods to implement a GPI algorithm. -->
-<!-- Apply Monte Carlo with exploring starts to solve an MDP -->
-<!-- Lesson 3: Exploration Methods for Monte Carlo -->
-<!-- Understand why Exploring Starts can be problematic in real problems -->
-<!-- Describe an alternative exploration method for Monte Carlo control -->
-<!-- Lesson 4: Off-policy learning for prediction -->
-<!-- Understand how off-policy learning can help deal with the exploration problem -->
-<!-- Produce examples of target policies and examples of behavior policies. -->
-<!-- Understand importance sampling -->
-<!-- Use importance sampling to estimate the expected value of a target distribution using -->
-<!-- samples from a different distribution. -->
-<!-- Understand how to use importance sampling to correct returns -->
-<!-- Understand how to modify the monte carlo prediction algorithm for off-policy learning. -->
-<!-- The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course. -->
+<ul>
+<li>Identify the difference between model-based and model-free RL.</li>
+<li>Identify problems that can be solved using Monte-Carlo methods.</li>
+<li>Describe how MC methods can be used to estimate value functions from sample data.</li>
+<li>Do MC prediction to estimate the value function for a given policy.</li>
+<li>Explain why it is important to maintain exploration in MC algorithms.</li>
+<li>Do policy improvement (control) using MC in a generalized policy improvement algorithm.</li>
+<li>Compare different ways of exploring the state-action space.</li>
+<li>Argue why off-policy learning can help deal with the exploration problem.</li>
+<li>Use importance sampling to estimate the expected value of a target distribution using samples from a different distribution.</li>
+<li>Use importance sampling in off-policy learning to predict the value-function of a target policy.</li>
+<li>Explain how to modify the MC prediction and improvement algorithm for off-policy learning.</li>
+</ul>
+<p>The learning outcomes relate to the <a href="mod-lg-course.html#mod-lg-course">overall learning goals</a> number 3, 4, 9 and 12 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
@@ -438,10 +436,10 @@ div.csl-indent {
 </div>
 <div id="textbook-readings-5" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Textbook readings<a href="mod-mc.html#textbook-readings-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>For this week, you will need to read Chapter 5-5.5 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
+<p>For this week, you will need to read Chapter 5-5.7 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
 </div>
-<div id="mc-evaluation-prediction" class="section level2 hasAnchor" number="6.3">
-<h2><span class="header-section-number">6.3</span> MC evaluation (prediction)<a href="mod-mc.html#mc-evaluation-prediction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="mc-prediction-evaluation" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> MC prediction (evaluation)<a href="mod-mc.html#mc-prediction-evaluation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Given a policy <span class="math inline">\(\pi\)</span>, we want to estimate the state-value function. Recall that the state value function is
 <span class="math display">\[
 v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].
@@ -459,19 +457,19 @@ Now given policy <span class="math inline">\(\pi\)</span> and a sample-path (epi
 <p>First visit MC generates iid estimates of <span class="math inline">\(v_\pi(s)\)</span> with finite variance, so the sequence of estimates converges to the expected value by the law of large numbers as the number of observations grow. Every visit MC does not generate independent estimates, but still converges.</p>
 <p>An algorithm for first visit MC is given in Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a>. The state-value estimate is stored in a vector <span class="math inline">\(V\)</span> and the returns for each state in a list. Given a sample-path we add the return to the states on the path by scanning the path backwards and updating <span class="math inline">\(G\)</span>. Note since the algorithm considers first visit MC, a check of occurrence of the state earlier in the path done. If this check is dropped, we have a every visit MC algorithm instead. Moreover, the computation needed to update the state-value does not depend on the size of the process/MDP but only of the length of the sample-path.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-prediction-alg"></span>
-<img src="img/mc-prediction.png" alt="MC policy evaluation [@Sutton18]."  />
+<img src="img/mc-prediction.png" alt="MC policy prediction [@Sutton18]."  />
 <p class="caption">
-Figure 6.1: MC policy evaluation <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+Figure 6.1: MC policy prediction <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
 </p>
 </div>
-<p>The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of <span class="math inline">\(V\)</span> can be done. Adapting Equation <a href="mod-bandit.html#eq:avg">(2.1)</a>, we have that the sample average can be updated using:</p>
+<p>The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of <span class="math inline">\(V\)</span> can be done. Adapting Eq. <a href="mod-bandit.html#eq:avg">(2.1)</a>, we have that the sample average can be updated using:</p>
 <p><span class="math display">\[
   V(s) \leftarrow V(s) + \frac{1}{n} \left[G - V(s)\right].
 \]</span>
 where <span class="math inline">\(n\)</span> denote the number of realized returns found for state <span class="math inline">\(s\)</span> and <span class="math inline">\(G\)</span> the current realized return. The state-value vector must be initialized to zero and a vector counting the number of returns found for each state must be stored.</p>
-<!-- ### Blackjack - MC evaluation -->
-<div id="mc-evaluation-of-action-values" class="section level3 hasAnchor" number="6.3.1">
-<h3><span class="header-section-number">6.3.1</span> MC evaluation of action-values<a href="mod-mc.html#mc-evaluation-of-action-values" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<!-- ### Blackjack - MC prediction -->
+<div id="mc-prediction-of-action-values" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> MC prediction of action-values<a href="mod-mc.html#mc-prediction-of-action-values" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>With a model of the environment we only need to estimate the state-value function, since it is easy to determine the policy from the state-values using the Bellman optimality equations <a href="mod-mdp-2.html#eq:bell-opt-state-policy">(4.3)</a>. However, if we do not know the expected reward and transition probabilities state values are not enough. In that case, it is useful to estimate action-values since the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see Eq. <a href="mod-mdp-2.html#eq:bell-opt-state-policy">(4.3)</a>). To find <span class="math inline">\(q_*\)</span>, we first need to predict action-values for a policy <span class="math inline">\(\pi\)</span>. This is essentially the same as for state-values, only we now talk about state-action pairs being visited, i.e. taking action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span> instead.</p>
 <p>If <span class="math inline">\(\pi\)</span> is deterministic, then we will only estimate the values of actions that <span class="math inline">\(\pi\)</span> dictates. Therefore some exploration are needed in order to have estimates for all action-values. Two possibilities are:</p>
 <ol style="list-style-type: decimal">
@@ -504,7 +502,7 @@ Hence the policy improvement theorem applies for all <span class="math inline">\
 </ol>
 <div id="gpi-with-exploring-starts" class="section level3 hasAnchor" number="6.4.1">
 <h3><span class="header-section-number">6.4.1</span> GPI with exploring starts<a href="mod-mc.html#gpi-with-exploring-starts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>An algorithm using exploring starts and first visit MC is given in Figure <a href="mod-mc.html#fig:mc-gpi-es-alg">6.2</a>. It satisfies the convergence properties and and incremental implementation can be used to update <span class="math inline">\(Q\)</span>. Note that to predict the action-values for a policy, we in general need a large number of episodes. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many episodes we may stop the algorithm once the <span class="math inline">\(q_{\pi_k}\)</span> stop moving within a certain error.</p>
+<p>An algorithm using exploring starts and first visit MC is given in Figure <a href="mod-mc.html#fig:mc-gpi-es-alg">6.2</a>. It satisfies the convergence properties and and incremental implementation can be used to update <span class="math inline">\(Q\)</span>. Note that to predict the action-values for a policy, we in general need a large number of sample-paths. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many sample-paths we may stop the algorithm once the <span class="math inline">\(q_{\pi_k}\)</span> stop moving within a certain error.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-gpi-es-alg"></span>
 <img src="img/mc-gpi-es.png" alt="GPI using MC policy prediction with exploring starts [@Sutton18]."  />
 <p class="caption">
@@ -524,11 +522,11 @@ Figure 6.3: On-policy GPI using MC policy prediction <span class="citation">(<a 
 </div>
 </div>
 </div>
-<div id="off-policy-mc-evaluation" class="section level2 hasAnchor" number="6.5">
-<h2><span class="header-section-number">6.5</span> Off-policy MC evaluation<a href="mod-mc.html#off-policy-mc-evaluation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="sec-mc-off-policy" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Off-policy MC prediction<a href="mod-mc.html#sec-mc-off-policy" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Until now we have only considered what is denoted <em>on-policy</em> algorithms for finding the optimal policy. Here we both evaluate or improve the policy that is used to make decisions. To ensure infinite exploration we use for instance exploring starts or <span class="math inline">\(\epsilon\)</span>-soft policies. <em>Off-policy</em> methods use a different approach by considering two policies: a policy <span class="math inline">\(b\)</span> used to generate the sample-path (behaviour policy) and a policy <span class="math inline">\(\pi\)</span> that is learned for control (target policy). We update the target policy using the sample-paths from the behaviour policy. The behaviour policy explores the environment for us during training and must ensure infinite exploration. Moreover, the <em>coverage</em> assumption must be satisfied: <span class="math display">\[\pi(a|s) &gt; 0 \rightarrow b(a|s) &gt; 0\]</span> That is, every action in <span class="math inline">\(\pi\)</span> must also be taken, at least occasionally, by <span class="math inline">\(b\)</span>. Put differently, to learn <span class="math inline">\(\pi\)</span> we must sample paths that occur when using <span class="math inline">\(\pi\)</span>. Note target policy <span class="math inline">\(\pi\)</span> may be deterministic by using greedy selection with respect to action-value estimates (greedy in the limit satisfied).</p>
 <p>Off-policy learning methods are powerful and more general than on-policy methods (on-policy methods being a special case of off-policy where target and behaviour policies are the same). They can be used to learn from data generated by a conventional non-learning controller or from a human expert.</p>
-<p>By how do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? For this we need to introduce <em>importance sampling</em>, a general technique for estimating expected values under one distribution given samples from another. Let us first explain it using two distributions <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> where we want to estimated the mean of <span class="math inline">\(a\)</span> given data/samples from <span class="math inline">\(b\)</span>, then
+<p>But how do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? For this we need to introduce <em>importance sampling</em>, a general technique for estimating expected values under one distribution given samples from another. Let us first explain it using two distributions <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> where we want to estimated the mean of <span class="math inline">\(a\)</span> given data/samples from <span class="math inline">\(b\)</span>, then
 <span class="math display">\[
 \begin{align}
   \mathbb{E}_{a}[X] &amp;= \sum_{x\in X} a(x)x \\
@@ -560,7 +558,7 @@ For this we need the importance sampling ratio given a certain sample-path <span
 \end{align}
 \tag{6.2}
 \]</span>
-Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy <span class="math inline">\(b\)</span>. So, if the behaviour policy takes 10 steps in an episode, each of these 10 steps have to have been possible by the target policy, else <span class="math inline">\(\pi(a|s) = 0\)</span> and <span class="math inline">\(\rho_{t:T-1} = 0\)</span>.</p>
+Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy <span class="math inline">\(b\)</span>. So, if the behaviour policy takes 10 steps in an sample-path, each of these 10 steps have to have been possible by the target policy, else <span class="math inline">\(\pi(a|s) = 0\)</span> and <span class="math inline">\(\rho_{t:T-1} = 0\)</span>.</p>
 <p>We can now approx. <span class="math inline">\(q_\pi(s,a)\)</span> by rewriting Eq. <a href="mod-mc.html#eq:is-approx">(6.1)</a> for <span class="math inline">\(\pi\)</span> given returns from <span class="math inline">\(b\)</span> to
 <span class="math display" id="eq:ois">\[
     q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i,
@@ -568,7 +566,7 @@ Note the transition probabilities cancel out, i.e. the ratio does not depend on
 \]</span>
 where we assume that given the sample-paths (episodes), have <span class="math inline">\(n\)</span> observations of the return <span class="math inline">\((G_1, \ldots, G_n)\)</span> in state <span class="math inline">\(s\)</span> taking action <span class="math inline">\(a\)</span> with the importance sampling ratio <span class="math inline">\(\rho_i\)</span> calculated using Eq. <a href="mod-mc.html#eq:isr">(6.2)</a>. As a result if we consider the prediction algorithm in Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a> it must be modified by:</p>
 <ul>
-<li>Generate an episode using policy <span class="math inline">\(b\)</span> instead of <span class="math inline">\(\pi\)</span>.</li>
+<li>Generate an sample-path using policy <span class="math inline">\(b\)</span> instead of <span class="math inline">\(\pi\)</span>.</li>
 <li>Add a variable W representing the importance sampling ratio which must be set to 1 on line containing <span class="math inline">\(G \leftarrow 0\)</span>.</li>
 <li>Modify line <span class="math inline">\(G \leftarrow \gamma G + R_{t+1}\)</span> to <span class="math inline">\(G \leftarrow \gamma WG + R_{t+1}\)</span> since we now need to multiply with the importance sampling ratio.</li>
 <li>Add a line after the last with <span class="math inline">\(W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)\)</span>, i.e. we update the importance sampling ratio.</li>
@@ -587,7 +585,7 @@ where <span class="math inline">\(n\)</span> denote the number of realized retur
     q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i.
 \]</span>
 An incremental update then becomes:</p>
-<p><span class="math display" id="eq:wpd" id="eq:wpd">\[
+<p><span class="math display" id="eq:wpd">\[
 \begin{align}
     q_\pi(s,a) &amp;\approx V_{n+1} \\
     &amp;= \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i \\
@@ -600,14 +598,14 @@ An incremental update then becomes:</p>
 \end{align}
 \tag{6.5}
 \]</span>
-where <span class="math inline">\(C_n = \sum_{i = 1}^n \rho_i\)</span> is the sum of the ratios and and <span class="math inline">\(W_n\)</span> the ratio for the n’th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy evaluation algorithm using weighted importance sampling and incremental updates is given in Figure <a href="mod-mc.html#fig:mc-pred-off-policy-alg">6.4</a>.</p>
+where <span class="math inline">\(C_n = \sum_{i = 1}^n \rho_i\)</span> is the sum of the ratios and and <span class="math inline">\(W_n\)</span> the ratio for the n’th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy prediction algorithm using weighted importance sampling and incremental updates is given in Figure <a href="mod-mc.html#fig:mc-pred-off-policy-alg">6.4</a>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-pred-off-policy-alg"></span>
 <img src="img/mc-off-policy-prediction.png" alt="Off-policy MC prediction [@Sutton18]."  />
 <p class="caption">
 Figure 6.4: Off-policy MC prediction <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
 </p>
 </div>
-<p>Note both Eq. <a href="mod-mc.html#eq:upd">(6.4)</a> and Eq. @ref\tag{6.5} follows the general incremental formula:
+<p>Note both Eq. <a href="mod-mc.html#eq:upd">(6.4)</a> and Eq. <a href="mod-mc.html#eq:wpd">(6.5)</a> follows the general incremental formula:
 <span class="math display">\[\begin{equation}
 New Estimate \leftarrow Old Estimate + Step Size \left[Observation - Old Estimate \right].
 \end{equation}\]</span>
@@ -616,14 +614,14 @@ For ordinary importance sampling the step-size is <span class="math inline">\(1/
 </div>
 <div id="off-policy-control-improvement" class="section level2 hasAnchor" number="6.6">
 <h2><span class="header-section-number">6.6</span> Off-policy control (improvement)<a href="mod-mc.html#off-policy-control-improvement" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate <span class="math inline">\(\pi_*\)</span> and <span class="math inline">\(q_*\)</span> by using rewards obtained through behaviour policy <span class="math inline">\(b\)</span>. We will focus on using weighted importance sampling with incremental updates. The algorthm is given in Figure <a href="mod-mc.html#fig:mc-gpi-off-policy-alg">6.5</a>. The target policy <span class="math inline">\(\pi\)</span> is the greedy policy with respect to <span class="math inline">\(Q\)</span>, which is an estimate of <span class="math inline">\(q_\pi\)</span>. This algorithm converges to <span class="math inline">\(q_\pi\)</span> as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making <span class="math inline">\(b\)</span> <span class="math inline">\(\varepsilon\)</span>-soft. The policy <span class="math inline">\(\pi\)</span> converges to <span class="math inline">\(\pi_*\)</span> at all encountered states even if <span class="math inline">\(b\)</span> changes (to another <span class="math inline">\(\varepsilon\)</span>-soft policy) between or within episodes. Note we exit the inner loop if <span class="math inline">\(A_t \neq \pi(S_t)\)</span> which is that same as saying <span class="math inline">\(W=0\)</span>.</p>
+<p>Having a discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate <span class="math inline">\(\pi_*\)</span> and <span class="math inline">\(q_*\)</span> by using rewards obtained through behaviour policy <span class="math inline">\(b\)</span>. We will focus on using weighted importance sampling with incremental updates. The algorithm is given in Figure <a href="mod-mc.html#fig:mc-gpi-off-policy-alg">6.5</a>. The target policy <span class="math inline">\(\pi\)</span> is the greedy policy with respect to <span class="math inline">\(Q\)</span>, which is an estimate of <span class="math inline">\(q_\pi\)</span>. This algorithm converges to <span class="math inline">\(q_\pi\)</span> as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making <span class="math inline">\(b\)</span> <span class="math inline">\(\varepsilon\)</span>-soft. The policy <span class="math inline">\(\pi\)</span> converges to <span class="math inline">\(\pi_*\)</span> at all encountered states even if <span class="math inline">\(b\)</span> changes (to another <span class="math inline">\(\varepsilon\)</span>-soft policy) between or within sample-paths. Note we exit the inner loop if <span class="math inline">\(A_t \neq \pi(S_t)\)</span> which implies <span class="math inline">\(W=0\)</span>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mc-gpi-off-policy-alg"></span>
 <img src="img/mc-off-policy-gpi.png" alt="Off-policy GPI [@Sutton18]."  />
 <p class="caption">
 Figure 6.5: Off-policy GPI <span class="citation">(<a href="#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
 </p>
 </div>
-<p>Notice that this policy only learns from episodes in which <span class="math inline">\(b\)</span> selects only greedy actions after some timestep. This can greatly slow learning.</p>
+<p>Notice that this policy only learns from sample-paths in which <span class="math inline">\(b\)</span> selects only greedy actions after some timestep. This can greatly slow learning.</p>
 </div>
 <div id="summary-5" class="section level2 hasAnchor" number="6.7">
 <h2><span class="header-section-number">6.7</span> Summary<a href="mod-mc.html#summary-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
