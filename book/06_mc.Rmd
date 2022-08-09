@@ -49,6 +49,9 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 For this week, you will need to read Chapter 5-5.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
+```{r, echo=FALSE}
+link_slide_file_text("06", "mc")
+```
 
 ## MC prediction (evaluation)
 

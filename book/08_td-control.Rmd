@@ -51,6 +51,9 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 For this week, you will need to read Chapter 6.4-6.6 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
+```{r, echo=FALSE}
+link_slide_file_text("08", "td-control")
+```
 
 ## SARSA - On-policy GPI using TD
 

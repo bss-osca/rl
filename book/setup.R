@@ -372,3 +372,28 @@ plotHypergraph<-function(gridDim, states=NULL, actions=NULL, showGrid=FALSE,
 }
 
 
+
+link_slide_file_text <- function(module_number_prefix, module_name) {
+   module_number <- as.numeric(module_number_prefix)
+   excel_file <- str_c(module_number_prefix, "-", module_name, "-template.xlsm")
+   module_name_underscore <- str_replace_all(module_name, "-", "_")
+   return(withTags({
+      div(
+         "Slides for this module can be seen",
+         a(
+            href = str_c(
+               "https://bss-osca.github.io/rl/slides/",
+               module_number_prefix,
+               "_",
+               module_name,
+               "-slides.html"
+            ),
+            target = "_blank",
+            "here."
+         ),
+         "You do not have to look at them before the lecture!"
+      )
+   })
+   )
+}
+

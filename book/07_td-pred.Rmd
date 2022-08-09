@@ -43,6 +43,9 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 For this week, you will need to read Chapter 6-6.3 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation). 
 
+```{r, echo=FALSE}
+link_slide_file_text("07", "td-pred")
+```
 
 ## What is TD learning?
 
@@ -138,7 +141,7 @@ Let us try to summarize the benefits of TD prediction
 * TD methods are good for sequential decision problems (multi-step prediction).
 * TD methods are scalable in the sense that computations do not grow exponentially with the problem size.       
 
-An example illustrating that TD methods converge faster than MC methods is given in Exercise \@ref(sec-td-pred-ex-random)
+An example illustrating that TD methods converge faster than MC methods is given in Exercise \@ref(ex-td-pred-random)
 
 
 

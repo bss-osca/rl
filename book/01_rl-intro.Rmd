@@ -39,7 +39,12 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 1-1.5 in @Sutton18. Read it before continuing this module.
+For this week, you will need to read Chapter 1-1.5 in @Sutton18. Read it before continuing this module. 
+
+```{r, echo=FALSE}
+link_slide_file_text("01", "rl-intro")
+```
+
 
 
 ## What is reinforcement learning
