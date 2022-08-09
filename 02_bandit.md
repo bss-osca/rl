@@ -356,7 +356,7 @@ Read Chapter 2.10 in @Sutton18.
 
 Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
-### Exercise - Advertising
+### Exercise - Advertising {#ex-bandit-adv}
 
 Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:
 
@@ -663,7 +663,7 @@ testUCB(20)
    4) Test the UCB algorithm for $c$ values $(0.1, 5, 10, 20)$. Which algorithm seems to find the best average reward?
 
 
-### Exercise - A coin game
+### Exercise - A coin game {#ex-bandit-coin}
 
 Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.
 

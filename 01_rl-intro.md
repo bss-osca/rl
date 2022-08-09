@@ -743,7 +743,7 @@ Consider Tic-Tac-Toe and assume that instead of an RL player against a random op
 played against itself. What do you think would happen in this case? Would it learn a different way of playing?
 
 
-### Exercise - Symmetries   
+### Exercise - Symmetries {#ex-r-intro-sym}
 
 Many tic-tac-toe positions appear different but are really the same because of symmetries. 
 
@@ -772,7 +772,7 @@ Many tic-tac-toe positions appear different but are really the same because of s
    3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
 
 
-### Exercise - Greedy Play   
+### Exercise - Greedy Play {#ex-r-intro-greedy}
 
 
 <div class="modal fade bs-example-modal-lg" id="IIRPKknZ89OkYuHcNaWd" tabindex="-1" role="dialog" aria-labelledby="IIRPKknZ89OkYuHcNaWd-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="IIRPKknZ89OkYuHcNaWd-title">Solution</h4></div><div class="modal-body">
@@ -783,7 +783,7 @@ Many tic-tac-toe positions appear different but are really the same because of s
 Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
 
 
-### Exercise - Learning from Exploration   
+### Exercise - Learning from Exploration {#ex-r-intro-exploit} 
 
 Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
 
@@ -804,7 +804,7 @@ Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent wi
    2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
 
 
-### Exercise - Other Improvements   
+### Exercise - Other Improvements {#ex-r-intro-other}
 
 
 <div class="modal fade bs-example-modal-lg" id="BTGvBeNRyOGjZmjI1gW3" tabindex="-1" role="dialog" aria-labelledby="BTGvBeNRyOGjZmjI1gW3-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BTGvBeNRyOGjZmjI1gW3-title">Solution</h4></div><div class="modal-body">
