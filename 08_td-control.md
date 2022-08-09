@@ -44,7 +44,7 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 6.4-6.6 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
+For this week, you will need to read Chapter 6.4-6.6 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
 
 
 ```{=html}
