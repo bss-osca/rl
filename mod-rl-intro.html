@@ -429,6 +429,11 @@ div.csl-indent {
 <div id="textbook-readings" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Textbook readings<a href="mod-rl-intro.html#textbook-readings" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For this week, you will need to read Chapter 1-1.5 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/01_rl-intro-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
 </div>
 <div id="what-is-reinforcement-learning" class="section level2 hasAnchor" number="1.3">
 <h2><span class="header-section-number">1.3</span> What is reinforcement learning<a href="mod-rl-intro.html#what-is-reinforcement-learning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -492,7 +497,7 @@ Figure 1.1: Business Analytics and competive advantage.
 <li><em>Neuro-dynamic programming</em> (when states are represented using a neural network).</li>
 <li>RL is closely related to <em>Markov decision processes</em> (a mathematical model for a sequential decision problem).</li>
 </ul>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
 <img src="img/rl-names.png" alt="Adopted from @Silver15." width="70%" />
 <p class="caption">
 Figure 1.2: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" role="doc-biblioref">2015</a>)</span>.
@@ -512,7 +517,7 @@ Figure 1.2: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" 
 <li>Your goal is to find a policy that optimize the total reward function.</li>
 </ul></li>
 </ul>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
 <img src="img/rl-ml.png" alt="Adopted from @Silver15." width="70%" />
 <p class="caption">
 Figure 1.3: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" role="doc-biblioref">2015</a>)</span>.
@@ -527,8 +532,8 @@ Figure 1.3: Adopted from <span class="citation">Silver (<a href="#ref-Silver15" 
 <li>Environment: The system/world where observations and rewards are found.</li>
 </ul>
 <p>Data are revealed sequentially as you take actions <span class="math display">\[(O_0, A_0, R_1, O_1, A_1, R_2, O_2, \ldots).\]</span> At time <span class="math inline">\(t\)</span> the agent have been taken action <span class="math inline">\(A_{t-1}\)</span> and observed observation <span class="math inline">\(O_t\)</span> and reward <span class="math inline">\(R_t\)</span>:</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-6-1.png" alt="Agent-environment representation." width="672" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" alt="Agent-environment representation." width="672" />
 <p class="caption">
 Figure 1.4: Agent-environment representation.
 </p>
@@ -538,8 +543,8 @@ Figure 1.4: Agent-environment representation.
 <div id="states-actions-rewards-and-policies" class="section level2 hasAnchor" number="1.8">
 <h2><span class="header-section-number">1.8</span> States, actions, rewards and policies<a href="mod-rl-intro.html#states-actions-rewards-and-policies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The (agent) state <span class="math inline">\(S_t\)</span> is the information used to take the next action <span class="math inline">\(A_t\)</span>:</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" alt="State and action." width="672" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-8-1.png" alt="State and action." width="672" />
 <p class="caption">
 Figure 1.5: State and action.
 </p>
@@ -1087,20 +1092,20 @@ Figure 1.6: A draw.
 <span id="cb11-2"><a href="mod-rl-intro.html#cb11-2" aria-hidden="true" tabindex="-1"></a>playerR <span class="ot">&lt;-</span> PlayerRandom<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;R&quot;</span>)</span>
 <span id="cb11-3"><a href="mod-rl-intro.html#cb11-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">playGames</span>(playerA, playerR, <span class="at">games =</span> <span class="dv">2000</span>)</span>
 <span id="cb11-4"><a href="mod-rl-intro.html#cb11-4" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>plot</span></code></pre></div>
-<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>The black curve is the moving average of winning with a trend line. Note the values of the parameters have an effect on our learning:</p>
 <p><img src="01_rl-intro_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The black curve is the moving average of winning with a trend line. Note the values of the parameters have an effect on our learning:</p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In general we do not need to explore (<span class="math inline">\(\epsilon = 0\)</span>) (the other player explore enough for us) and a high explore probability (<span class="math inline">\(\epsilon = 0.9\)</span>) make us loose. Moreover, using a high step size seems to work best.</p>
 <p>Other players may give different results. If the RL player play against a player which always move to first free field index:</p>
-<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Here a high step size and a low exploration probability is good and the RL player will soon figure out how to win all the time.</p>
 <p>This is different if the RL player A play against another clever (RL) player B.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mod-rl-intro.html#cb12-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;A&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span>
 <span id="cb12-2"><a href="mod-rl-intro.html#cb12-2" aria-hidden="true" tabindex="-1"></a>playerB <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">&quot;B&quot;</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span></code></pre></div>
 <p>If both players play using the same control parameters, one would expect that they after learning should win/loose with probability 0.5. However if there is no exploration (<span class="math inline">\(\epsilon = 0\)</span>) this is not always true:</p>
-<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Depending on how the game starts a player may learn a better strategy and win/loose more. That is, exploration is important. Finally let us play against a player B with fixed control parameters.</p>
 <p><img src="01_rl-intro_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Depending on how the game starts a player may learn a better strategy and win/loose more. That is, exploration is important. Finally let us play against a player B with fixed control parameters.</p>
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In general it is best to explore using the same probability otherwise you loose more and a higher step size than your opponent will make you win.</p>
 </div>
 </div>

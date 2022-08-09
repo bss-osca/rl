@@ -39,6 +39,14 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 For this week, you will need to read Chapter 6-6.3 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation). 
 
 
+```{=html}
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/07_td-pred-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+```
+
 ## What is TD learning?
 
 Given a policy $\pi$, we want to estimate the state-value function. Recall that the state value function is 
@@ -134,7 +142,7 @@ Let us try to summarize the benefits of TD prediction
 * TD methods are good for sequential decision problems (multi-step prediction).
 * TD methods are scalable in the sense that computations do not grow exponentially with the problem size.       
 
-An example illustrating that TD methods converge faster than MC methods is given in Exercise \@ref(sec-td-pred-ex-random)
+An example illustrating that TD methods converge faster than MC methods is given in Exercise \@ref(ex-td-pred-random)
 
 
 
@@ -164,11 +172,11 @@ Consider a MDP with states A-E and two terminal states. Possible transitions are
 <!-- Q1 -->
 
 
-<div class="modal fade bs-example-modal-lg" id="cFo0uLGd7tBe0glL7IeI" tabindex="-1" role="dialog" aria-labelledby="cFo0uLGd7tBe0glL7IeI-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="cFo0uLGd7tBe0glL7IeI-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="ecfvuBsMBOK0jbmJHok9" tabindex="-1" role="dialog" aria-labelledby="ecfvuBsMBOK0jbmJHok9-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="ecfvuBsMBOK0jbmJHok9-title">Solution</h4></div><div class="modal-body">
 
 <p>The state space is \(\mathcal{S} = \{ T1, A, \ldots, E, T2 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states which have no actions (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(A) &= 0.5v_\pi(T1) + 0.5v_\pi(B) = 0.5v_\pi(B) \\ v_\pi(B) &= 0.5v_\pi(A) + 0.5v_\pi( C ) \\ v_\pi( C ) &= 0.5v_\pi(B) + 0.5v_\pi(D) \\ v_\pi(D) &= 0.5v_\pi( C ) + 0.5v_\pi(E) \\ v_\pi(E) &= 0.5v_\pi(D) + 0.5(1 + v_\pi(T2)) = 0.5v_\pi(D) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 (you may also use that by symmetry \(v_\pi(C ) = 0.5\)) for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for A-E, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cFo0uLGd7tBe0glL7IeI">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#ecfvuBsMBOK0jbmJHok9">Solution</button>
 
 1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval).
 

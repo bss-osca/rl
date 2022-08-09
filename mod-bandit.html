@@ -433,6 +433,11 @@ div.csl-indent {
 <div id="textbook-readings-1" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Textbook readings<a href="mod-bandit.html#textbook-readings-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For this week, you will need to read Chapter 2 - 2.7 in <span class="citation">Sutton and Barto (<a href="#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="sutton-notation">here</a>.</p>
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/02_bandit-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
 </div>
 <div id="the-k-armed-bandit-problem" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> The k-armed bandit problem<a href="mod-bandit.html#the-k-armed-bandit-problem" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -643,7 +648,7 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="mod-bandit.html#cb16-1" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">performance</span>(<span class="at">runs =</span> <span class="dv">2000</span>, <span class="at">steps =</span> <span class="dv">1000</span>)</span>
 <span id="cb16-2"><a href="mod-bandit.html#cb16-2" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>ptR</span>
 <span id="cb16-3"><a href="mod-bandit.html#cb16-3" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>ptO</span></code></pre></div>
-<p><img src="02_bandit_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="02_bandit_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The solid line shows averages over all the runs from <span class="math inline">\(t=1\)</span> to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an <span class="math inline">\(\epsilon\)</span>-greedy approach is better ($= 0.1 is best). That is, exploration is beneficial.</p>
 </div>
 <div id="sec-bandit-step-size" class="section level2 hasAnchor" number="2.5">
@@ -844,7 +849,7 @@ Solution
 <span id="cb19-24"><a href="mod-bandit.html#cb19-24" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb19-25"><a href="mod-bandit.html#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)<span class="sc">$</span>plt</span>
 <span id="cb19-26"><a href="mod-bandit.html#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)<span class="sc">$</span>plt</span></code></pre></div>
-<img src="02_bandit_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
 <p>
 As epsilon grows we estimate the true values better for all actions.
 </p>

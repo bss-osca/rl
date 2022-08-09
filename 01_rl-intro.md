@@ -36,7 +36,17 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 1-1.5 in @Sutton18. Read it before continuing this module.
+For this week, you will need to read Chapter 1-1.5 in @Sutton18. Read it before continuing this module. 
+
+
+```{=html}
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/01_rl-intro-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+```
+
 
 
 ## What is reinforcement learning
@@ -110,7 +120,7 @@ RL is used in many research fields using different names:
 
 <div class="figure" style="text-align: center">
 <img src="img/rl-names.png" alt="Adopted from @Silver15." width="70%" />
-<p class="caption">(\#fig:unnamed-chunk-3)Adopted from @Silver15.</p>
+<p class="caption">(\#fig:unnamed-chunk-4)Adopted from @Silver15.</p>
 </div>
 
 
@@ -127,7 +137,7 @@ Different ways of learning:
 
 <div class="figure" style="text-align: center">
 <img src="img/rl-ml.png" alt="Adopted from @Silver15." width="70%" />
-<p class="caption">(\#fig:unnamed-chunk-4)Adopted from @Silver15.</p>
+<p class="caption">(\#fig:unnamed-chunk-5)Adopted from @Silver15.</p>
 </div>
 
 
@@ -145,8 +155,8 @@ RL considers an agent in an environment:
 Data are revealed sequentially as you take actions $$(O_0, A_0, R_1, O_1, A_1, R_2, O_2, \ldots).$$ At time $t$ the agent have been taken action $A_{t-1}$ and observed observation $O_t$ and reward $R_t$: 
 
 <div class="figure" style="text-align: center">
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-6-1.png" alt="Agent-environment representation." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-6)Agent-environment representation.</p>
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" alt="Agent-environment representation." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-7)Agent-environment representation.</p>
 </div>
   
 This gives us the *history* at time $t$ is the sequence of observations, actions and rewards $$H_t = (O_0, A_0, R_1, O_1, \ldots, A_{t-1}, R_t, O_t).$$
@@ -156,8 +166,8 @@ This gives us the *history* at time $t$ is the sequence of observations, actions
 The (agent) state $S_t$ is the information used to take the next action $A_t$:
 
 <div class="figure" style="text-align: center">
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" alt="State and action." width="672" />
-<p class="caption">(\#fig:unnamed-chunk-7)State and action.</p>
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-8-1.png" alt="State and action." width="672" />
+<p class="caption">(\#fig:unnamed-chunk-8)State and action.</p>
 </div>
 
 A state depends on the history, i.e. a state is a function of the history $S_t = f(H_t)$. Different strategies for defining a state may be considered. Choosing $S_t = H_t$ is bad since the size of a state representation grows very fast. A better strategy is to just store the information needed for taking the next action. Moreover, it is good to have Markov states where given the present state the future is independent of the past. That is, the current state holds just as much information as the history, i.e. it holds all useful information of the history. Symbolically, we call a state $S_t$ Markov iff
@@ -687,17 +697,17 @@ res <- playGames(playerA, playerR, games = 2000)
 res$plot
 ```
 
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" />
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" />
 
 The black curve is the moving average of winning with a trend line. Note the values of the parameters have an effect on our learning:
 
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" />
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" />
 
 In general we do not need to explore ($\epsilon = 0$) (the other player explore enough for us) and a high explore probability ($\epsilon = 0.9$) make us loose. Moreover, using a high step size seems to work best. 
 
 Other players may give different results. If the RL player play against a player which always move to first free field index:
 
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" />
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" />
 
 Here a high step size and a low exploration probability is good and the RL player will soon figure out how to win all the time.
 
@@ -711,11 +721,11 @@ playerB <- PlayerRL$new(pfx = "B", control = list(epsilon = 0, alpha = 0.1))
 
 If both players play using the same control parameters, one would expect that they after learning should win/loose with probability 0.5. However if there is no exploration ($\epsilon = 0$) this is not always true: 
 
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" />
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" />
 
 Depending on how the game starts a player may learn a better strategy and win/loose more. That is, exploration is important. Finally let us play against a player B with fixed control parameters.
 
-<img src="01_rl-intro_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" />
+<img src="01_rl-intro_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" />
 
 In general it is best to explore using the same probability otherwise you loose more and a higher step size than your opponent will make you win. 
 

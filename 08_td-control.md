@@ -47,6 +47,14 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 For this week, you will need to read Chapter 6.4-6.6 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
 
+```{=html}
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/08_td-control-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+```
+
 ## SARSA - On-policy GPI using TD
 
 The first GPI algorithm we will consider is SARSA. Since we do not have a model we need to estimate action-values so the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). Hence to predict action-values for a policy $\pi$, the incremental update Eq. \@ref(eq:td0) must be modified to use $Q$ values: 

@@ -46,6 +46,14 @@ The learning outcomes relate to the [overall learning goals](#mod-lg-course) num
 For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here](sutton-notation).
 
 
+```{=html}
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/02_bandit-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+```
+
 ## The k-armed bandit problem
 
 Multi-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work. 
@@ -290,7 +298,7 @@ pts$ptR
 pts$ptO
 ```
 
-<img src="02_bandit_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" />
 
 The solid line shows averages over all the runs from $t=1$ to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an $\epsilon$-greedy approach is better ($\epsilon = 0.1 is best). That is, exploration is beneficial.
 
@@ -488,7 +496,7 @@ testEG(0.01)$plt
 testEG(0.5)$plt
 ```
 
-<img src="02_bandit_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
 <p>As epsilon grows we estimate the true values better for all actions.</p>
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">Solution</button>
