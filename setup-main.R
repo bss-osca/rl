@@ -1,4 +1,4 @@
-#### How to install the package ####
-devtools::install("package/rl/", quick = T, force = T)   # local
-remotes::install_github("bss-osca/rl/package/rl", upgrade = FALSE)      # github
-renv::snapshot(prompt = FALSE, force = TRUE)
+
+remotes::install_github("gadenbuie/countdown")
+remotes::install_github("mitchelloharawild/icons")
+remotes::install_github("ROpenSci/bibtex")
