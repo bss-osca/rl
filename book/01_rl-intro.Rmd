@@ -736,7 +736,7 @@ Consider Tic-Tac-Toe and assume that instead of an RL player against a random op
 played against itself. What do you think would happen in this case? Would it learn a different way of playing?
 
 
-### Exercise - Symmetries   
+### Exercise - Symmetries {#ex-r-intro-sym}
 
 Many tic-tac-toe positions appear different but are really the same because of symmetries. 
 
@@ -753,14 +753,14 @@ Many tic-tac-toe positions appear different but are really the same because of s
    3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
 
 
-### Exercise - Greedy Play   
+### Exercise - Greedy Play {#ex-r-intro-greedy}
 
 ```{r, solution=TRUE, text="As seen in Section \\@ref(rl-intro-tic-learn) using $\\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behaviour over time."}
 ```
 Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
 
 
-### Exercise - Learning from Exploration   
+### Exercise - Learning from Exploration {#ex-r-intro-exploit} 
 
 Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
 
@@ -773,7 +773,7 @@ Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent wi
    2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
 
 
-### Exercise - Other Improvements   
+### Exercise - Other Improvements {#ex-r-intro-other}
 
 ```{r, solution=TRUE, text="Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state."}
 ```

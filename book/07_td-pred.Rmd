@@ -155,7 +155,7 @@ An example illustrating that TD methods converge faster than MC methods is given
 
 `r strExercises`
 
-### Exercise - A randow walk {#sec-td-pred-ex-random}
+### Exercise - A randow walk {#ex-td-pred-random}
 
 Consider a MDP with states A-E and two terminal states. Possible transitions are given in Figure \@ref(fig:rw-trans). All episodes start in the centre state, C, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (T1) or the right (T2). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
 
@@ -204,7 +204,7 @@ set.seed(875)
 <!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
 
 
-### Exercise - Off-policy TD {#sec-td-pred-off-policy}
+### Exercise - Off-policy TD {#ex-td-pred-off-policy}
 
 Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}.
 

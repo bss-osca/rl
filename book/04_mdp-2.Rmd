@@ -220,7 +220,7 @@ Read Chapter 3.8 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Optimal policy {#mdp-2-ex-policy}
+### Exercise - Optimal policy {#ex-mdp-2-policy}
 
 ```{r simple, echo=FALSE,fig.cap="A simple MDP.", out.width="50%"}
 knitr::include_graphics("img/simple-mdp.png")
@@ -268,7 +268,7 @@ Consider the transition diagram for an MDP shown in Figure \@ref(fig:simple) wit
 
 <!-- So both polices are optimal. -->
 
-### Exercise - Car rental {#mdp-2-ex-car}
+### Exercise - Car rental {#ex-mdp-2-car}
 
 Consider a rental company with two locations, each with a capacity of 20 cars. Each day, customers arrive at each location to rent cars. If a car is available, it is rented out with a reward of $10. Otherwise the opportunity is lost. Cars become available for renting the day after they are returned. 
 
