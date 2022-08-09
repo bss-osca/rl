@@ -37,11 +37,12 @@ library(here)
 
 ## load_refs
 library(RefManageR)
+library(bibtex)
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
            cite.style = "authoryear",
            style = "markdown",
            hyperlink = FALSE,
            dashed = FALSE)
-bib <- ReadBib("../book/rl.bib", check = FALSE)
+bib <- ReadBib(here("book/rl.bib"), check = FALSE)
 ```

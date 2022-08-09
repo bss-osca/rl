@@ -13,8 +13,12 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Welcome to Reinforcement Learning for Business
+]
+.author[
 ### Lars Relund Nielsen
+]
 
 ---
 
@@ -52,7 +56,7 @@ layout: true
 
 Let us have a look at [what you answered](https://docs.google.com/forms/d/1Cmc5bXlNiJnU8FbCF3TIi_SL8X-Wm0wqlkYGV3SBxpM/edit#responses). 
 
-
+&lt;img src="./img/responses.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -80,17 +84,15 @@ Let us have a look at [what you answered](https://docs.google.com/forms/d/1Cmc5b
 
 ## Course notes 
 
-EDIT WHEN ONLINE!!
-
 The course notes are given [online](https://bss-osca.github.io/rl/). You may annotate the notes and slides using [hypothes.is](https://bss-osca.github.io/rl/annotate.html). Link to slides are given under the **Recap** section in each learning module.
 
-
+&lt;img src="./img/online-site.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Groups 
 
-- You have been asked to form study groups of 3-6 persons which will be used in the whole course. 
+- I recommend that you form groups of 3-6 persons that you use throughout the whole course. 
 - It is up to you how to meet in these groups (on-line or physical). 
 - Use the groups when you 
   * solve the exercises. 
@@ -103,7 +105,6 @@ The course notes are given [online](https://bss-osca.github.io/rl/). You may ann
 - A project report must be written during the course focussing on solving a RL problem.
 - The report may be used as a starting point for discussion at the individual exam.
 - You must hand in the reports in groups and do individual peer grading using the on-line platform [Peergrade].
-- For sign-up see Brightspace.
 
 ---
 
@@ -315,6 +316,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
