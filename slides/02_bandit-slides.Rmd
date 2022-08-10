@@ -47,6 +47,20 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 
 ---
 
+## Learning outcomes 
+
+* Define a k-armed bandit and understand the nature of the problem. 
+* Define the reward of a action (action-reward).
+* Describe different methods for estimating the action-reward.
+* Explain the differences between exploration and exploitation.
+* Formulate an $\epsilon$-greedy algorithm for selecting the next action.
+* Interpret the sample-average (variable step-size) versus exponential recency-weighted average (constant step-size) action-reward estimation.
+* Argue why we might use a constant stepsize in the case of non-stationarity. 
+* Understand the effect of optimistic initial values.
+* Formulate an upper confidence bound action selection algorithm.
+
+---
+
 ## The k-armed bandit problem
 
 .pull-left[

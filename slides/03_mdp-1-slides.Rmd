@@ -617,31 +617,7 @@ But how can we transform it into an MDP with infinite time-horizon?
    1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
    2. When a game stops a transition to the absorbing state happen.
 
-Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (are called (*continuing tasks*). 
-
-<!-- ## Policies and value functions -->
-
-<!-- --- -->
-
-<!-- ## Optimal policies and value functions  -->
-
-<!-- --- -->
-
-<!-- ## Optimality vs approximation  -->
-
-<!-- --- -->
-
-<!-- ## semi-MDPs (non-fixed time length) -->
-
-<!-- --- -->
-
-
-
-<!-- # References -->
-
-<!-- ```{r, results='asis', echo=FALSE} -->
-<!-- PrintBibliography(bib) -->
-<!-- ``` -->
+Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (*continuing tasks*). 
 
 
 ```{r links, child="../book/links.md"}

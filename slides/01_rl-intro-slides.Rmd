@@ -47,6 +47,17 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 
 ---
 
+## Learning outcomes 
+
+* Describe what RL is. 
+* Be able to identify different sequential decision problems.
+* Know what Business Analytics are and identify RL in that framework.
+* Memorise different names for RL and how it fits in a Machine Learning framework.
+* Formulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).
+* Run your first RL algorithm and evaluate on its solution.
+
+---
+
 ## What is reinforcement learning
 
 RL can be seen as
