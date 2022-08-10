@@ -13,8 +13,12 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Markov Decision Processes (MDPs)
+]
+.author[
 ### Lars Relund Nielsen
+]
 
 ---
 
@@ -200,31 +204,7 @@ But how can we transform it into an MDP with infinite time-horizon?
    1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
    2. When a game stops a transition to the absorbing state happen.
 
-Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (are called (*continuing tasks*). 
-
-&lt;!-- ## Policies and value functions --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## Optimal policies and value functions  --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## Optimality vs approximation  --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## semi-MDPs (non-fixed time length) --&gt;
-
-&lt;!-- --- --&gt;
-
-
-
-&lt;!-- # References --&gt;
-
-&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
-&lt;!-- PrintBibliography(bib) --&gt;
-&lt;!-- ``` --&gt;
+Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (*continuing tasks*). 
 
 
 
@@ -422,6 +402,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
