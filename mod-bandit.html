@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-08-09" />
+<meta name="date" content="2022-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -448,7 +448,7 @@ You do not have to look at them before the lecture!
 Figure 2.1: A 4-armed bandit.
 </p>
 </div>
-<p>Imagine you are facing a wall with <span class="math inline">\(k\)</span> slot machines (see Figure <a href="mod-bandit.html#fig:bandit">2.1</a>), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state at time <span class="math inline">\(t\)</span> and have to choose among <span class="math inline">\(k\)</span> actions given the environment representing the <span class="math inline">\(k\)</span> bandits. Only the rewards from the <span class="math inline">\(k\)</span> bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy <span class="math inline">\(\pi^*(s) = \pi^* = a^*\)</span> that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.</p>
+<p>Imagine you are facing a wall with <span class="math inline">\(k\)</span> slot machines (see Figure <a href="mod-bandit.html#fig:bandit">2.1</a>), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state <span class="math inline">\(s\)</span> at time <span class="math inline">\(t\)</span> and have to choose among <span class="math inline">\(k\)</span> actions given the environment representing the <span class="math inline">\(k\)</span> bandits. Only the rewards from the <span class="math inline">\(k\)</span> bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy <span class="math inline">\(\pi^*(s) = \pi^* = a^*\)</span> that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.</p>
 <!-- For finding the optimal action a learning strategy that balance the exploration vs. exploitation trade-off. -->
 <!-- To summarize: -->
 <!-- * The agent are faced repeatedly with a choice of $k$ actions. -->
@@ -485,7 +485,7 @@ That is, we can update the estimate of the value of <span class="math inline">\(
 <span class="math display">\[\begin{equation}
 A_t =\arg \max_a Q_t(a).
 \end{equation}\]</span>
-Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span class="math inline">\(a\)</span> for which <span class="math inline">\(Q_t(a)\)</span> is maximised. A pure greedy approach do not explore other actions. Instead an <span class="math inline">\(\varepsilon\)</span>-greedy ppproach is used in which with probability <span class="math inline">\(\varepsilon\)</span> we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.</p>
+Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span class="math inline">\(a\)</span> for which <span class="math inline">\(Q_t(a)\)</span> is maximised. A pure greedy approach do not explore other actions. Instead an <span class="math inline">\(\varepsilon\)</span>-greedy approach is used in which with probability <span class="math inline">\(\varepsilon\)</span> we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.</p>
 <!-- \begin{itemize} -->
 <!--    \item Simplest action selection rule is to select the action with the highest estimated value. -->
 <!--    \item \(\epsilon\)-greedy methods are where the agent selects the greedy option most of the time, and selects a random action with probability \(\epsilon\). -->
@@ -499,7 +499,7 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <!-- \begin{equation} -->
 <!-- NewEstimate \leftarrow OldEstimate + StepSize \left[Target - OldEstimate \right] -->
 <!-- \end{equation} -->
-<p>Let us try to implement the algorithm using an R6 agent and environment class. First we define the agent that do actions based on an <span class="math inline">\(\epsilon\)</span>-greedy strategy, stores the estimated <span class="math inline">\(Q\)</span> values and the number of times an action has been chosen:</p>
+<p>Let us try to implement the algorithm using an agent and environment class. First we define the agent that do actions based on an <span class="math inline">\(\epsilon\)</span>-greedy strategy, stores the estimated <span class="math inline">\(Q\)</span> values and the number of times an action has been chosen:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="mod-bandit.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL agent</span></span>
 <span id="cb13-2"><a href="mod-bandit.html#cb13-2" aria-hidden="true" tabindex="-1"></a>RLAgent <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;RLAgent&quot;</span>,</span>
 <span id="cb13-3"><a href="mod-bandit.html#cb13-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
@@ -541,7 +541,7 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <span id="cb13-39"><a href="mod-bandit.html#cb13-39" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>self<span class="sc">$</span>k, <span class="dv">1</span>)</span>
 <span id="cb13-40"><a href="mod-bandit.html#cb13-40" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
 <span id="cb13-41"><a href="mod-bandit.html#cb13-41" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">which</span>(self<span class="sc">$</span>qV <span class="sc">==</span> <span class="fu">max</span>(self<span class="sc">$</span>qV))</span>
-<span id="cb13-42"><a href="mod-bandit.html#cb13-42" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> a[<span class="fu">sample</span>(<span class="fu">length</span>(a), <span class="dv">1</span>)]</span>
+<span id="cb13-42"><a href="mod-bandit.html#cb13-42" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> a[<span class="fu">sample</span>(<span class="fu">length</span>(a), <span class="dv">1</span>)]  <span class="co"># choose a action random if more than one</span></span>
 <span id="cb13-43"><a href="mod-bandit.html#cb13-43" aria-hidden="true" tabindex="-1"></a>         }</span>
 <span id="cb13-44"><a href="mod-bandit.html#cb13-44" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
 <span id="cb13-45"><a href="mod-bandit.html#cb13-45" aria-hidden="true" tabindex="-1"></a>      },</span>
@@ -557,7 +557,7 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <span id="cb13-55"><a href="mod-bandit.html#cb13-55" aria-hidden="true" tabindex="-1"></a>      }</span>
 <span id="cb13-56"><a href="mod-bandit.html#cb13-56" aria-hidden="true" tabindex="-1"></a>   )</span>
 <span id="cb13-57"><a href="mod-bandit.html#cb13-57" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p>Next, the environment generating rewards. The true mean reward <span class="math inline">\(q_*(a)\)</span> of an action were selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward was then generated using a normal distribution with mean <span class="math inline">\(q_*(a)\)</span> and variance 1:</p>
+<p>Next, the environment generating rewards. The true mean reward <span class="math inline">\(q_*(a)\)</span> of an action is selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward is then generated using a normal distribution with mean <span class="math inline">\(q_*(a)\)</span> and variance 1:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="mod-bandit.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL environment</span></span>
 <span id="cb14-2"><a href="mod-bandit.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; </span></span>
 <span id="cb14-3"><a href="mod-bandit.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Assume that bandits are normal distributed with a mean and std.dev of one. </span></span>
@@ -649,13 +649,13 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <span id="cb16-2"><a href="mod-bandit.html#cb16-2" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>ptR</span>
 <span id="cb16-3"><a href="mod-bandit.html#cb16-3" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>ptO</span></code></pre></div>
 <p><img src="02_bandit_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>The solid line shows averages over all the runs from <span class="math inline">\(t=1\)</span> to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an <span class="math inline">\(\epsilon\)</span>-greedy approach is better ($= 0.1 is best). That is, exploration is beneficial.</p>
+<p>The solid line shows averages over all the runs from <span class="math inline">\(t=1\)</span> to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an <span class="math inline">\(\epsilon\)</span>-greedy approach is better (<span class="math inline">\(\epsilon = 0.1\)</span> is best). That is, exploration is beneficial.</p>
 </div>
 <div id="sec-bandit-step-size" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> The role of the step-size<a href="mod-bandit.html#sec-bandit-step-size" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In general we update the reward estimate of an action using</p>
 <p><span class="math display">\[\begin{equation}
-    Q_{k+1} = Q_k +\alpha_n(a) \left[R_k - Q_k\right]
+    Q_{n+1} = Q_n +\alpha_n(a) \left[R_n - Q_n\right]
 \end{equation}\]</span></p>
 <p>Until now we have used the sample average <span class="math inline">\(\alpha_n(a)= 1/n\)</span>; however, other choices of <span class="math inline">\(\alpha_n(a)\)</span> is possible. In general we will converge to the true reward if</p>
 <p><span class="math display">\[\begin{equation}
@@ -670,7 +670,7 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 &amp;= \vdots \nonumber \\
 &amp;= (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} R_i \\
 \end{align}\]</span></p>
-<p>Because the weight given to each reward depends on how many rewards ago it was observed, we can see that more recent rewards are given more weight. Note the weights <span class="math inline">\(\alpha\)</span> sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since the weight given to each reward decays exponentially into the past. This sometimes called an <em>exponential recency-weighted average</em>.</p>
+<p>Because the weight given to each reward depends on how long ago it was observed, we can see that more recent rewards are given more weight. Note the weights <span class="math inline">\(\alpha\)</span> sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since the weight given to each reward decays exponentially into the past. This sometimes called an <em>exponential recency-weighted average</em>.</p>
 </div>
 <div id="optimistic-initial-values" class="section level2 hasAnchor" number="2.6">
 <h2><span class="header-section-number">2.6</span> Optimistic initial values<a href="mod-bandit.html#optimistic-initial-values" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -678,11 +678,11 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 </div>
 <div id="upper-confidence-bound-action-selection" class="section level2 hasAnchor" number="2.7">
 <h2><span class="header-section-number">2.7</span> Upper-Confidence Bound Action Selection<a href="mod-bandit.html#upper-confidence-bound-action-selection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>An <span class="math inline">\(\epsilon\)</span>-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the :
+<p>An <span class="math inline">\(\epsilon\)</span>-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the <em>upper-confidence bound</em>:
 <span class="math display">\[\begin{equation}
     A_t = \arg\max_a \left(Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right),
 \end{equation}\]</span></p>
-<p>Note the square root term is a measure of the uncertainty in our estimate.</p>
+<p>Note the square root term is a measure of the uncertainty in our estimate (see Figure <a href="mod-bandit.html#fig:srt">2.3</a>).</p>
 <ul>
 <li>It is proportional to <span class="math inline">\(t\)</span> i.e. how many time-steps have passed and inversely proportional to <span class="math inline">\(N_t(a)\)</span> i.e. how many times that action has been visited.</li>
 <li>The more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound.</li>
@@ -692,6 +692,12 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 <li>The parameter <span class="math inline">\(c&gt;0\)</span> controls the degree of exploration. Higher <span class="math inline">\(c\)</span> results in more weight on the uncertainty.</li>
 </ul>
 <p>Since upper-confidence bound action selection select actions according to their potential, it is expected to perform better than <span class="math inline">\(\epsilon\)</span>-greedy methods.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:srt"></span>
+<img src="02_bandit_files/figure-html/srt-1.png" alt="Square root term for an action using different $c$-values." width="672" />
+<p class="caption">
+Figure 2.3: Square root term for an action using different <span class="math inline">\(c\)</span>-values.
+</p>
+</div>
 </div>
 <div id="summary-1" class="section level2 hasAnchor" number="2.8">
 <h2><span class="header-section-number">2.8</span> Summary<a href="mod-bandit.html#summary-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -736,17 +742,17 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 <span id="cb17-26"><a href="mod-bandit.html#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
 <span id="cb17-27"><a href="mod-bandit.html#cb17-27" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span>mV  <span class="co"># true CTRs</span></span>
 <span id="cb17-28"><a href="mod-bandit.html#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.10 0.83 0.85 0.50 0.70</span></span></code></pre></div>
-<p>In the class the true CTRs can be observed but in practice this is hidden from the agent.</p>
+<p>In the class the true CTRs can be observed but in practice this is hidden from the agent (you).</p>
 <p>Consider an <span class="math inline">\(\epsilon\)</span>-greedy algorithm to find the best ad. Assume the webpage is visited by 10000 users per day.</p>
 <!-- Q1 -->
-<div id="uqUutmgA4LlIz9yklEF6" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="uqUutmgA4LlIz9yklEF6-title">
+<div id="bBIs4ifgbS5F91wS3KgW" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="bBIs4ifgbS5F91wS3KgW-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="uqUutmgA4LlIz9yklEF6-title">
+<h4 class="modal-title" id="bBIs4ifgbS5F91wS3KgW-title">
 Solution
 </h4>
 </div>
@@ -793,7 +799,7 @@ Solution
 <span id="cb18-40"><a href="mod-bandit.html#cb18-40" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span>mV</span>
 <span id="cb18-41"><a href="mod-bandit.html#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.10 0.83 0.85 0.50 0.70</span></span></code></pre></div>
 <p>
-Epsilon = 0.01 seems to give the best average.
+Epsilon = 0.01 seems to give the best average number of clicks.
 </p>
 </div>
 <div class="modal-footer">
@@ -804,11 +810,11 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#uqUutmgA4LlIz9yklEF6">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bBIs4ifgbS5F91wS3KgW">
 Solution
 </button>
 <ol style="list-style-type: decimal">
-<li>Run the <span class="math inline">\(\epsilon\)</span>-greedy algorithm with <span class="math inline">\(\epsilon = 0.01, 0.1, 0.5\)</span> over the 10000 steps. What are the estimated CTRs? What is the average number of clicks per user?</li>
+<li>Run the <span class="math inline">\(\epsilon\)</span>-greedy algorithm with <span class="math inline">\(\epsilon = 0.01, 0.1, 0.5\)</span> over the 10000 steps. What are the estimated CTRs for each action (<span class="math inline">\(Q_t(a)\)</span>)? What is the average number of clicks per user?</li>
 </ol>
 <!-- Q2 -->
 <div id="9UNSaGJghbZYV0FR4kTI" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title">
@@ -827,7 +833,7 @@ Solution
 <span id="cb19-2"><a href="mod-bandit.html#cb19-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
 <span id="cb19-3"><a href="mod-bandit.html#cb19-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
 <span id="cb19-4"><a href="mod-bandit.html#cb19-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb19-5"><a href="mod-bandit.html#cb19-5" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">10000</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb19-5"><a href="mod-bandit.html#cb19-5" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> steps, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
 <span id="cb19-6"><a href="mod-bandit.html#cb19-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
 <span id="cb19-7"><a href="mod-bandit.html#cb19-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
 <span id="cb19-8"><a href="mod-bandit.html#cb19-8" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionEG</span>()</span>
@@ -837,7 +843,7 @@ Solution
 <span id="cb19-12"><a href="mod-bandit.html#cb19-12" aria-hidden="true" tabindex="-1"></a>      qVal[t,] <span class="ot">&lt;-</span> agent<span class="sc">$</span>qV</span>
 <span id="cb19-13"><a href="mod-bandit.html#cb19-13" aria-hidden="true" tabindex="-1"></a>   }</span>
 <span id="cb19-14"><a href="mod-bandit.html#cb19-14" aria-hidden="true" tabindex="-1"></a>   <span class="co"># make plot</span></span>
-<span id="cb19-15"><a href="mod-bandit.html#cb19-15" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-15"><a href="mod-bandit.html#cb19-15" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span>steps) <span class="sc">%&gt;%</span></span>
 <span id="cb19-16"><a href="mod-bandit.html#cb19-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_cols</span>(qVal) <span class="sc">%&gt;%</span>   <span class="co"># bind data together</span></span>
 <span id="cb19-17"><a href="mod-bandit.html#cb19-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">!</span>t, <span class="at">values_to =</span> <span class="st">&quot;ctr&quot;</span>, <span class="at">names_to =</span> <span class="st">&quot;action&quot;</span>) </span>
 <span id="cb19-18"><a href="mod-bandit.html#cb19-18" aria-hidden="true" tabindex="-1"></a>   pt <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
@@ -866,7 +872,7 @@ Close
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
-<li>Make a plot of the empirical CTRs for <span class="math inline">\(\epsilon = 0.01, 0.5\)</span> over the 10000 time-steps, i.e. plot <span class="math inline">\(Q_t(a)\)</span>.</li>
+<li>Make a plot of the empirical CTRs for <span class="math inline">\(\epsilon = 0.01, 0.5\)</span> over 10000 time-steps, i.e. plot <span class="math inline">\(Q_t(a)\)</span>.</li>
 </ol>
 <!-- Q3 -->
 <div id="cJNysHsWq0UWK5lQcvNQ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="cJNysHsWq0UWK5lQcvNQ-title">
@@ -1068,10 +1074,128 @@ Solution
 <div id="ex-bandit-coin" class="section level3 hasAnchor" number="2.9.2">
 <h3><span class="header-section-number">2.9.2</span> Exercise - A coin game<a href="mod-bandit.html#ex-bandit-coin" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.</p>
+<!-- Q1 -->
+<div id="UogJuRebD8e68uuMCu63" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="UogJuRebD8e68uuMCu63-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="UogJuRebD8e68uuMCu63-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+This is a 2-bandit problem with actions of choosing coin 1 or 2.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UogJuRebD8e68uuMCu63">
+Solution
+</button>
 <ol style="list-style-type: decimal">
 <li>Model this as a K-armed bandit problem: define the action set.</li>
+</ol>
+<!-- Q2 -->
+<div id="j7xBii6afnYS2GOohDOT" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="j7xBii6afnYS2GOohDOT-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="j7xBii6afnYS2GOohDOT-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+The reward is stochastic. If consider coin <span class="math inline">\(i\)</span> then <span class="math inline">\(\mathbb{E}[R_t | a_i] = \Pr(H)\cdot 1.\)</span>
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#j7xBii6afnYS2GOohDOT">
+Solution
+</button>
+<ol start="2" style="list-style-type: decimal">
 <li>Is the reward a deterministic or stochastic function of your action?</li>
+</ol>
+<!-- Q3 -->
+<div id="taUUQrBS46oTgD01U7Dm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="taUUQrBS46oTgD01U7Dm-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="taUUQrBS46oTgD01U7Dm-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+The estimates are <span class="math display">\[Q_t(a_1) = (0+1+1+0+0+0)/6 = 1/3\]</span> and <span class="math display">\[Q_t(a_2) = (1+0+1+1+1+0)/6 = 2/3\]</span>.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#taUUQrBS46oTgD01U7Dm">
+Solution
+</button>
+<ol start="3" style="list-style-type: decimal">
 <li>You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula <a href="mod-bandit.html#eq:avg">(2.1)</a> to compute the estimates of the value of each action.</li>
+</ol>
+<!-- Q4 -->
+<div id="nLBA4bBzteJ1obnKYNQ5" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="nLBA4bBzteJ1obnKYNQ5-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="nLBA4bBzteJ1obnKYNQ5-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Coin 2 is chosen since the best action-value.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nLBA4bBzteJ1obnKYNQ5">
+Solution
+</button>
+<ol start="4" style="list-style-type: decimal">
 <li>Decide on which coin to flip next assuming that you exploit.</li>
 </ol>
 

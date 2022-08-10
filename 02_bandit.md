@@ -63,7 +63,7 @@ Multi-armed bandits attempt to find the best option among a collection of altern
 <p class="caption">(\#fig:bandit)A 4-armed bandit.</p>
 </div>
 
-Imagine you are facing a wall with $k$ slot machines (see Figure \@ref(fig:bandit)), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state at time $t$ and have to choose among $k$ actions given the environment representing the $k$ bandits. Only the rewards from the $k$ bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy $\pi^*(s) = \pi^* = a^*$ that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.
+Imagine you are facing a wall with $k$ slot machines (see Figure \@ref(fig:bandit)), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state $s$ at time $t$ and have to choose among $k$ actions given the environment representing the $k$ bandits. Only the rewards from the $k$ bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy $\pi^*(s) = \pi^* = a^*$ that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.
 
 <!-- For finding the optimal action a learning strategy that balance the exploration vs. exploitation trade-off. -->
 
@@ -107,7 +107,7 @@ A greedy approach for selecting the next action is
 \begin{equation}
 A_t =\arg \max_a Q_t(a).
 \end{equation}
-Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure greedy approach do not explore other actions. Instead an $\varepsilon$-greedy ppproach is used in which with probability $\varepsilon$ we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.
+Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure greedy approach do not explore other actions. Instead an $\varepsilon$-greedy approach is used in which with probability $\varepsilon$ we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.
 
 <!-- \begin{itemize} -->
 <!-- 	\item Simplest action selection rule is to select the action with the highest estimated value. -->
@@ -126,7 +126,7 @@ Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure
 <!-- \end{equation} -->
 
 
-Let us try to implement the algorithm using an R6 agent and environment class. First we define the agent that do actions based on an $\epsilon$-greedy strategy, stores the estimated $Q$ values and the number of times an action has been chosen:
+Let us try to implement the algorithm using an agent and environment class. First we define the agent that do actions based on an $\epsilon$-greedy strategy, stores the estimated $Q$ values and the number of times an action has been chosen:
 
 
 ```r
@@ -171,7 +171,7 @@ RLAgent <- R6Class("RLAgent",
             a <- sample(1:self$k, 1)
          } else { # exploit
             a <- which(self$qV == max(self$qV))
-            a <- a[sample(length(a), 1)]
+            a <- a[sample(length(a), 1)]  # choose a action random if more than one
          }
          return(a)
       },
@@ -189,7 +189,7 @@ RLAgent <- R6Class("RLAgent",
 )
 ```
 
-Next, the environment generating rewards. The true mean reward $q_*(a)$ of an action were selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward was then generated using a normal distribution with mean $q_*(a)$ and variance 1:
+Next, the environment generating rewards. The true mean reward $q_*(a)$ of an action is selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward is then generated using a normal distribution with mean $q_*(a)$ and variance 1:
 
 
 ```r
@@ -300,7 +300,7 @@ pts$ptO
 
 <img src="02_bandit_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" />
 
-The solid line shows averages over all the runs from $t=1$ to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an $\epsilon$-greedy approach is better ($\epsilon = 0.1 is best). That is, exploration is beneficial.
+The solid line shows averages over all the runs from $t=1$ to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an $\epsilon$-greedy approach is better ($\epsilon = 0.1$ is best). That is, exploration is beneficial.
 
 
 ## The role of the step-size {#sec-bandit-step-size}
@@ -308,7 +308,7 @@ The solid line shows averages over all the runs from $t=1$ to the considered tim
 In general we update the reward estimate of an action using 
 
 \begin{equation}
-	Q_{k+1} = Q_k +\alpha_n(a) \left[R_k - Q_k\right]
+	Q_{n+1} = Q_n +\alpha_n(a) \left[R_n - Q_n\right]
 \end{equation}
 
 Until now we have used the sample average $\alpha_n(a)= 1/n$; however, other choices of $\alpha_n(a)$ is possible. In general we will converge to the true reward if
@@ -328,7 +328,7 @@ Q_{n+1} &= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 &= (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} R_i \\
 \end{align}
 
-Because the weight given to each reward depends on how many rewards ago it was observed, we can see that more recent rewards are given more weight. Note the weights \(\alpha\) sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since  the weight given to each reward decays exponentially into the past. This sometimes called an *exponential recency-weighted average*.
+Because the weight given to each reward depends on how long  ago it was observed, we can see that more recent rewards are given more weight. Note the weights \(\alpha\) sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since  the weight given to each reward decays exponentially into the past. This sometimes called an *exponential recency-weighted average*.
 
 
 ## Optimistic initial values
@@ -338,12 +338,12 @@ The methods discussed so far are dependent to some extent on the initial action-
 
 ## Upper-Confidence Bound Action Selection
 
-An $\epsilon$-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the \emph{upper-confidence bound}:
+An $\epsilon$-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the *upper-confidence bound*:
 \begin{equation}
 	A_t = \arg\max_a \left(Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right),
 \end{equation}
 
-Note the square root term is a measure of the uncertainty in our estimate. 
+Note the square root term is a measure of the uncertainty in our estimate (see Figure \@ref(fig:srt)). 
 
 * It is proportional to \(t\) i.e. how many time-steps have passed and inversely proportional to \(N_t(a)\) i.e. how many times that action has been visited. 
 * The more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound. 
@@ -353,6 +353,11 @@ Note the square root term is a measure of the uncertainty in our estimate.
 * The parameter $c>0$ controls the degree of exploration. Higher $c$ results in more weight on the uncertainty. 
 
 Since upper-confidence bound action selection select actions according to their potential, it is expected to perform better than $\epsilon$-greedy methods.
+
+<div class="figure" style="text-align: center">
+<img src="02_bandit_files/figure-html/srt-1.png" alt="Square root term for an action using different $c$-values." width="672" />
+<p class="caption">(\#fig:srt)Square root term for an action using different $c$-values.</p>
+</div>
 
 
 ## Summary 
@@ -404,13 +409,13 @@ env$mV  # true CTRs
 #> [1] 0.10 0.83 0.85 0.50 0.70
 ```
 
-In the class the true CTRs can be observed but in practice this is hidden from the agent.  
+In the class the true CTRs can be observed but in practice this is hidden from the agent (you).
 
 Consider an $\epsilon$-greedy algorithm to find the best ad. Assume the webpage is visited by 10000 users per day. 
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="uqUutmgA4LlIz9yklEF6" tabindex="-1" role="dialog" aria-labelledby="uqUutmgA4LlIz9yklEF6-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="uqUutmgA4LlIz9yklEF6-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="bBIs4ifgbS5F91wS3KgW" tabindex="-1" role="dialog" aria-labelledby="bBIs4ifgbS5F91wS3KgW-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="bBIs4ifgbS5F91wS3KgW-title">Solution</h4></div><div class="modal-body">
 
 ```{.r .fold-show}
 set.seed(327)  # to get same results 
@@ -457,11 +462,11 @@ env$mV
 ```
 
 
-<p>Epsilon = 0.01 seems to give the best average.</p>
+<p>Epsilon = 0.01 seems to give the best average number of clicks.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#uqUutmgA4LlIz9yklEF6">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bBIs4ifgbS5F91wS3KgW">Solution</button>
 
-   1) Run the $\epsilon$-greedy algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs? What is the average number of clicks per user?
+   1) Run the $\epsilon$-greedy algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs for each action ($Q_t(a)$)? What is the average number of clicks per user?
    
 <!-- Q2 -->
 
@@ -472,7 +477,7 @@ env$mV
 testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
    rew <- 0
-   qVal <- matrix(0, nrow = 10000, ncol = 5)
+   qVal <- matrix(0, nrow = steps, ncol = 5)
    colnames(qVal) = str_c("A", 1:5)
    for (t in 1:steps) {
       a <- agent$selectActionEG()
@@ -482,7 +487,7 @@ testEG <- function(epsilon, steps = 10000) {
       qVal[t,] <- agent$qV
    }
    # make plot
-   dat <- tibble(t = 1:10000) %>%
+   dat <- tibble(t = 1:steps) %>%
       bind_cols(qVal) %>%   # bind data together
       pivot_longer(!t, values_to = "ctr", names_to = "action") 
    pt <- dat %>% 
@@ -501,7 +506,7 @@ testEG(0.5)$plt
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">Solution</button>
 
-   2) Make a plot of the empirical CTRs for $\epsilon = 0.01, 0.5$ over the 10000 time-steps, i.e. plot $Q_t(a)$. 
+   2) Make a plot of the empirical CTRs for $\epsilon = 0.01, 0.5$ over 10000 time-steps, i.e. plot $Q_t(a)$. 
    
 <!-- Q3 -->
 
@@ -671,14 +676,54 @@ testUCB(20)
    4) Test the UCB algorithm for $c$ values $(0.1, 5, 10, 20)$. Which algorithm seems to find the best average reward?
 
 
+
 ### Exercise - A coin game {#ex-bandit-coin}
 
 Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.
 
-   1) Model this as a K-armed bandit problem: define the action set.
-   2) Is the reward a deterministic or stochastic function of your action?
-   3) You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula \@ref(eq:avg) to compute the estimates of the value of each action.
-   4) Decide on which coin to flip next assuming that you exploit.
+<!-- Q1 -->
+
+<div class="modal fade bs-example-modal-lg" id="UogJuRebD8e68uuMCu63" tabindex="-1" role="dialog" aria-labelledby="UogJuRebD8e68uuMCu63-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="UogJuRebD8e68uuMCu63-title">Solution</h4></div><div class="modal-body">
+
+<p>This is a 2-bandit problem with actions of choosing coin 1 or 2.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UogJuRebD8e68uuMCu63">Solution</button>
+
+   (1) Model this as a K-armed bandit problem: define the action set.
+   
+<!-- Q2 -->
+
+<div class="modal fade bs-example-modal-lg" id="j7xBii6afnYS2GOohDOT" tabindex="-1" role="dialog" aria-labelledby="j7xBii6afnYS2GOohDOT-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="j7xBii6afnYS2GOohDOT-title">Solution</h4></div><div class="modal-body">
+
+<p>The reward is stochastic. If consider coin \(i\) then \(\mathbb{E}[R_t | a_i] = \Pr(H)\cdot 1.\)</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#j7xBii6afnYS2GOohDOT">Solution</button>
+
+   (2) Is the reward a deterministic or stochastic function of your action?
+
+<!-- Q3 -->
+
+
+
+<div class="modal fade bs-example-modal-lg" id="taUUQrBS46oTgD01U7Dm" tabindex="-1" role="dialog" aria-labelledby="taUUQrBS46oTgD01U7Dm-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="taUUQrBS46oTgD01U7Dm-title">Solution</h4></div><div class="modal-body">
+
+<p>The estimates are \[Q_t(a_1) = (0+1+1+0+0+0)/6 = 1/3\] and \[Q_t(a_2) = (1+0+1+1+1+0)/6 = 2/3\].</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#taUUQrBS46oTgD01U7Dm">Solution</button>
+
+   (3) You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula \@ref(eq:avg) to compute the estimates of the value of each action.
+
+<!-- Q4 -->
+
+<div class="modal fade bs-example-modal-lg" id="nLBA4bBzteJ1obnKYNQ5" tabindex="-1" role="dialog" aria-labelledby="nLBA4bBzteJ1obnKYNQ5-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nLBA4bBzteJ1obnKYNQ5-title">Solution</h4></div><div class="modal-body">
+
+<p>Coin 2 is chosen since the best action-value.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nLBA4bBzteJ1obnKYNQ5">Solution</button>
+
+   (4) Decide on which coin to flip next assuming that you exploit.
+
+
 
 
 
