@@ -579,42 +579,54 @@ q_*(s, a) = r(s,a) + \sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) \gamma(s&#39
 <div id="ex-mdp-2-policy" class="section level3 hasAnchor" number="4.8.1">
 <h3><span class="header-section-number">4.8.1</span> Exercise - Optimal policy<a href="mod-mdp-2.html#ex-mdp-2-policy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:simple"></span>
-<img src="img/simple-mdp.png" alt="A simple MDP." width="50%" />
+<img src="img/simple-mdp.png" alt="A simple MDP." width="400px" />
 <p class="caption">
 Figure 4.1: A simple MDP.
 </p>
 </div>
-<p>Consider the transition diagram for an MDP shown in Figure <a href="mod-mdp-2.html#fig:simple">4.1</a> with 3 states. The only decision to be made is that in the top state, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and 0.5?</p>
-<!-- Let's first evaluate the simplest case of $\gamma = 0$. Recall that: -->
-<!-- \begin{equation} -->
-<!-- v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s] -->
-<!-- \end{equation} -->
-<!-- For $\pi_{left}$ we get: -->
-<!-- \begin{align} -->
-<!-- v_{\pi_{left}} &= 1 + \mathbb{E}_{\pi_{left}} \left[0 \times \gamma G_{t+1} \right] \\ -->
-<!-- v_{\pi_{left}} &= 1 \\ -->
-<!-- \end{align} -->
-<!-- And for $\pi_{right}$ we get: -->
-<!-- \begin{align} -->
-<!-- v_{\pi_{left}} &= 0 + \mathbb{E}_{\pi_{left}} \left[0 \times \gamma G_{t+1} \right] \\ -->
-<!-- v_{\pi_{left}} &= 0 \\\ -->
-<!-- \end{align} -->
-<!-- So the optimal policy for $\gamma = 0$ is $v_{\pi_{left}}$. If instead $\gamma = 0.9$, we get for $\pi_{left}$: -->
-<!-- \begin{align} -->
-<!-- v_{\pi_{left}} &= 1 + \mathbb{E}_{\pi_{left}} \left[0.9 \times G_{t+1} \right] \\ -->
-<!-- v_{\pi_{left}} &= 1 + \mathbb{E}_{\pi_{left}} \left[0.9 \times [r_{t+1} + \gamma G_{t+2}] \right],  \\ -->
-<!-- \end{align} -->
-<!-- where $G_{t+2}$ is our expected reward back at our current state. We can negate it and just look at the first loop, as max reward over first loop will create max reward in the limit. Therefore: -->
-<!-- \begin{align} -->
-<!-- v_{\pi_{left}} &= 1 + 0.9 \times 0 = 1,\\ -->
-<!-- v_{\pi_{right}} &= 0 + 0.9 \times 2 = 1.8  \\ -->
-<!-- \end{align} -->
-<!-- So the optimal policy for $\gamma = 0$ is $v_{\pi_{right}}$. If, finally, $\gamma = 0.5$, we get: -->
-<!-- \begin{align} -->
-<!-- v_{\pi_{left}} &= 1 + 0.5 \times 0 = 1,\\ -->
-<!-- v_{\pi_{right}} &= 0 + 0.5 \times 2 = 1  \\ -->
-<!-- \end{align} -->
-<!-- So both polices are optimal. -->
+<div id="Ot0dKoxhZKItMyZG49IW" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Ot0dKoxhZKItMyZG49IW-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="Ot0dKoxhZKItMyZG49IW-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Let <span class="math inline">\(\pi_L\)</span> and <span class="math inline">\(\pi_R\)</span> denote the left and right policy, respectively. Recall the Bellman equation: <span class="math display">\[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) v_\pi(s&#39;)\right).\]</span> For the left policy this reduces to <span class="math display">\[v_{\pi_L}(s) = 1 + \gamma(v_\pi(s&#39;)) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).\]</span> Isolating <span class="math inline">\(v_{\pi_L}(s)\)</span> gives us <span class="math display">\[v_{\pi_L}(s) = 1/(1-\gamma^2).\]</span> Similar for the right policy we get <span class="math display">\[v_{\pi_R}(s) = 0 + \gamma(v_\pi(s&#39;)) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).\]</span> Isolating <span class="math inline">\(v_{\pi_R}(s)\)</span> gives us <span class="math display">\[v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).\]</span> Now
+</p>
+<ul>
+<li>
+for <span class="math inline">\(\gamma=0\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 1\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 0\)</span>, i.e. left policy optimal.
+</li>
+<li>
+for <span class="math inline">\(\gamma=0.9\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 5.26\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 9.47\)</span>, i.e. right policy optimal.
+</li>
+<li>
+for <span class="math inline">\(\gamma=0.5\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 1.33\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 1.33\)</span>, i.e. both policies optimal.
+</li>
+</ul>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Ot0dKoxhZKItMyZG49IW">
+Solution
+</button>
+<p>Consider the transition diagram for an MDP shown in Figure <a href="mod-mdp-2.html#fig:simple">4.1</a> with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
+<!-- Let $\pi_L$ and $\pi_R$ denote the left and right policy, respectively. Recall the Bellman equation: $$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).$$ For the left policy this reduces to $$v_{\pi_L}(s) = 1 + \gamma(v_\pi(s')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).$$ Isolating $v_{\pi_L}(s)$ gives us $$v_{\pi_L}(s) = 1/(1-\gamma^2).$$ Similar for the right policy we get $$v_{\pi_R}(s) = 0 + \gamma(v_\pi(s')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).$$ Isolating $v_{\pi_R}(s)$ gives us $$v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).$$ Now  -->
+<!-- * for $\gamma=0$ we get $v_{\pi_L}(s) = 1$ and $v_{\pi_R}(s) = 0$, i.e. left policy optimal. -->
+<!-- * for $\gamma=0.9$ we get $v_{\pi_L}(s) = 5.26$ and $v_{\pi_R}(s) = 9.47$, i.e. right policy optimal. -->
+<!-- * for $\gamma=0.5$ we get $v_{\pi_L}(s) = 1.33$ and $v_{\pi_R}(s) = 1.33$, i.e. both policies optimal. -->
 </div>
 <div id="ex-mdp-2-car" class="section level3 hasAnchor" number="4.8.2">
 <h3><span class="header-section-number">4.8.2</span> Exercise - Car rental<a href="mod-mdp-2.html#ex-mdp-2-car" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -623,20 +635,20 @@ Figure 4.1: A simple MDP.
 <p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>
 <p>Formulate the problem as an finite MDP where the time-steps are days.</p>
 <!-- Q1 -->
-<div id="iaV40T7UeVmbfKzGA8Xl" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="iaV40T7UeVmbfKzGA8Xl-title">
+<div id="POEUCNRK3XGuADkzugfx" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="POEUCNRK3XGuADkzugfx-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="iaV40T7UeVmbfKzGA8Xl-title">
+<h4 class="modal-title" id="POEUCNRK3XGuADkzugfx-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-<span class="math display">\[\mathcal{S} = \{ (x,y) | 0 \leq x, y \leq 20 \}\]</span>
+<span class="math display">\[\mathcal{S} = \{ (x,y) | 0 \leq x \leq 20, 0 \leq y \leq 20 \}\]</span>
 </p>
 </div>
 <div class="modal-footer">
@@ -647,27 +659,27 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#iaV40T7UeVmbfKzGA8Xl">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#POEUCNRK3XGuADkzugfx">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space (with states <span class="math inline">\((x,y)\)</span>) equal the number of cars at each location at the end of the day.</li>
 </ol>
 <!-- Q2 -->
-<div id="NnfANP8pDS63HFdq54wE" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="NnfANP8pDS63HFdq54wE-title">
+<div id="FQbBUAHWbCki1wWT2xNT" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="FQbBUAHWbCki1wWT2xNT-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="NnfANP8pDS63HFdq54wE-title">
+<h4 class="modal-title" id="FQbBUAHWbCki1wWT2xNT-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-<span class="math display">\[\mathcal{A}(s) = \{ a | -\min(5,y) \leq a \leq min(5,x) \}\]</span>
+<span class="math display">\[\mathcal{A}(s) = \{ a | -\min(5,y,20-x) \leq a \leq min(5,x,20-y) \}\]</span>
 </p>
 </div>
 <div class="modal-footer">
@@ -678,27 +690,27 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#NnfANP8pDS63HFdq54wE">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#FQbBUAHWbCki1wWT2xNT">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1.</li>
 </ol>
 <!-- Q3 -->
-<div id="V63zQq9Nn0Vtwf9USkFf" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="V63zQq9Nn0Vtwf9USkFf-title">
+<div id="IHBn9JJUSXRX3NXACXIa" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="IHBn9JJUSXRX3NXACXIa-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="V63zQq9Nn0Vtwf9USkFf-title">
+<h4 class="modal-title" id="IHBn9JJUSXRX3NXACXIa-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-The reward equals the reward of rentals minus the cost of movements: <span class="math display">\[r(s,a) = \mathbb{E}[10(D_1+D_2)-2|a|] = 10(\lambda_{D_1}+\lambda_{D_2})-2|a|\]</span>
+The reward equals the reward of rentals minus the cost of movements. Note we have <span class="math inline">\(\tilde{x} = x - a\)</span> and <span class="math inline">\(\tilde{y} = x + a\)</span> after movement. Hence <span class="math display">\[r(s,a) = \mathbb{E}[10(\min(D_1, \tilde{x}) + \min(D_2, \tilde{y}) )-2\mid a \mid]\]</span> where <span class="math display">\[\mathbb{E}[\min(D, z)] = \sum_{i=0}^z ip(D = i) + (1-p(D\leq z))z.\]</span>
 </p>
 </div>
 <div class="modal-footer">
@@ -709,28 +721,28 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#V63zQq9Nn0Vtwf9USkFf">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IHBn9JJUSXRX3NXACXIa">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
 <li>Calculate the expected reward <span class="math inline">\(r(s,a)\)</span>.</li>
 </ol>
-<p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x&#39;\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x&#39; - a\)</span> and after rental requests <span class="math inline">\(\max(0, x&#39; - a - D_1)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(\max(0, x&#39; - a - D_1) + H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20, \max(0, x&#39; - a - D_1) + H_1))).\]</span></p>
+<p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x - a\)</span> and after rental requests <span class="math inline">\(x - a - \min(D_1, x-a)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(x - a - \min(D_1, x-a) + H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).\]</span></p>
 <!-- Q4 -->
-<div id="GhoBv6x2mx8nywpvDIOZ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="GhoBv6x2mx8nywpvDIOZ-title">
+<div id="q9k23hz9m3PczeQtXyFr" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="q9k23hz9m3PczeQtXyFr-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="GhoBv6x2mx8nywpvDIOZ-title">
+<h4 class="modal-title" id="q9k23hz9m3PczeQtXyFr-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-Only difference is that cars moved to Location 2 is <span class="math inline">\(a\)</span> (and not <span class="math inline">\(-a\)</span>): <span class="math display">\[Y = \min(20, \max(0, y&#39; + a - D_2) + H_2)))\]</span>
+Only difference is that cars moved to Location 2 is <span class="math inline">\(a\)</span> (and not <span class="math inline">\(-a\)</span>): <span class="math display">\[Y = \min(20, y + a - \min(D_2, y+a) + H_2)).\]</span>
 </p>
 </div>
 <div class="modal-footer">
@@ -741,7 +753,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#GhoBv6x2mx8nywpvDIOZ">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#q9k23hz9m3PczeQtXyFr">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
