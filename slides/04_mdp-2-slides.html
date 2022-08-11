@@ -109,6 +109,16 @@ Let us have a closer look on the derivation blackboard.
 
 layout: true
 
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/04_mdp-2-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
 ## Visualization of Bellman equations
 
 
@@ -123,7 +133,7 @@ layout: true
 ]
 
 .right-column-wide[
-&lt;img src="img/mdp-2-unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/mdp-2-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -136,7 +146,7 @@ layout: true
 ]
 
 .right-column-wide[
-&lt;img src="img/mdp-2-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/mdp-2-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -149,7 +159,7 @@ layout: true
 ]
 
 .right-column-wide[
-&lt;img src="img/mdp-2-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/mdp-2-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -159,6 +169,16 @@ layout: true
 ---
 
 layout: false
+
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/04_mdp-2-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
 
 ## Optimal policies and value functions
 
@@ -196,10 +216,22 @@ q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
 
 ---
 
+layout: true
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/04_mdp-2-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+---
 ## Optimality vs approximation
 
-* Using the Bellman optimality equations optimal policies and value functions can be found
-* May though be expensive to solve the equations if the number of states is huge. 
+* Using the Bellman optimality equations optimal policies and value functions can be found.
+* It may be expensive to solve the equations if the number of states is huge. 
 * *Curse of dimensionality*: Consider a state `\(s = (x_1,\ldots,x_n)\)` with state variables `\(x_i\)` each taking two possible values, then the number of states is `\(|\mathcal{S}| = 2^n\)`. That is, the state space grows exponentially with the number of state variables. 
 * Large state or action spaces may happen in practice; moreover, they may also be continuous. 
 * In such cases we approximate the value functions instead. 
@@ -217,7 +249,7 @@ q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
 `$$\gamma(s'|s,a) = \gamma^{l(s'|s,a)},$$` 
 
 * The Bellman optimality equations becomes:
-`$$v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s')$$`
+`$$v_*(s) = \max_a \left( r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s') \right)$$`
 `$$q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a')$$`
 
 

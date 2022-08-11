@@ -114,6 +114,10 @@ Let us have a closer look on the derivation blackboard.
 
 layout: true
 
+```{r, echo=FALSE}
+footerHtml
+```
+
 ## Visualization of Bellman equations
 
 ```{r echo=FALSE}
@@ -334,6 +338,10 @@ plotHypergraphV2(gridDim, states, actions, showGrid = F)
 
 layout: false
 
+```{r, echo=FALSE}
+footerHtml
+```
+
 ## Optimal policies and value functions
 
 * The objective function of an MDP which is to find an optimal policy $\pi_*$ with state-value function:
@@ -370,10 +378,16 @@ q_*(s, a) &= \max_\pi q_\pi(s, a) \\
 
 ---
 
+layout: true
+```{r, echo=FALSE}
+footerHtml
+```
+
+---
 ## Optimality vs approximation
 
-* Using the Bellman optimality equations optimal policies and value functions can be found
-* May though be expensive to solve the equations if the number of states is huge. 
+* Using the Bellman optimality equations optimal policies and value functions can be found.
+* It may be expensive to solve the equations if the number of states is huge. 
 * *Curse of dimensionality*: Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables. 
 * Large state or action spaces may happen in practice; moreover, they may also be continuous. 
 * In such cases we approximate the value functions instead. 
@@ -391,7 +405,7 @@ q_*(s, a) &= \max_\pi q_\pi(s, a) \\
 $$\gamma(s'|s,a) = \gamma^{l(s'|s,a)},$$ 
 
 * The Bellman optimality equations becomes:
-$$v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s')$$
+$$v_*(s) = \max_a \left( r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s') \right)$$
 $$q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a')$$
 
 
