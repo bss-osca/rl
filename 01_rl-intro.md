@@ -399,15 +399,15 @@ We start with an empty board and have at most 9 moves (a player may win before).
 
 Assume that we initially define a value $V(S)$ of each state $S$ to be 1 if we win, 0 if we loose and 0.5 otherwise. Most of the time we *exploit* our knowledge, i.e. choose the action which gives us the highest estimated reward (probability of winning). However, some times (with probability $\epsilon$) we *explore* and choose another action/move than what seems optimal. These moves make us experience states we may otherwise never see. If we exploit we update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$ where $\alpha$ is the *step-size* parameter which influences the rate of learning. 
 
-Let us implement a RL player using a [R6 class](https://adv-r.hadley.nz/r6.html) and store the values using a [hash list](https://github.com/decisionpatterns/r-hash). We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method `move` takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state and update the value function (if exploit). The player explore with probability `epsilon` if there is not a next state that makes us win. 
+Let us implement a RL player using a [R6 class](https://adv-r.hadley.nz/r6.html) and store the values using a [hash list](https://github.com/decisionpatterns/r-hash). We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method `move` takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state (after our move) and update the value function (if exploit). The player explore with probability `epsilon` if there is not a next state that makes us win. 
 
 
 ```r
 PlayerRL <- R6Class("PlayerRL",
    public = list(
-      pfx = "",
-      hV = NA,
-      control = list(epsilon = 0.2, alpha = 0.3),
+      pfx = "",  # player prefix
+      hV = NA,   # empty hash list (states are stored using a string key)
+      control = list(epsilon = 0.2, alpha = 0.3), 
       clearLearning = function() clear(self$hV),
       initialize = function(pfx = "", control = list(epsilon = 0.2, alpha = 0.3)) {
          self$pfx <- pfx
@@ -419,9 +419,10 @@ PlayerRL <- R6Class("PlayerRL",
          clear(self$hV)
       },
       move = function(sP, sV) { # previous state (before opponent move) and current state (before we move)
-         idx <- which(sV == ".")
-         state <- stateStr(sP)
-         if (!has.key(state, self$hV)) self$hV[[state]] <- 0.5
+         idx <- which(sV == ".")  # possible places to place our move
+         state <- stateStr(sP)    # state as a string
+         if (!has.key(state, self$hV)) self$hV[[state]] <- 0.5 # if the state hasn't a value then set it to 0.5 (default)
+         # find possible moves and add missing states
          keys <- c()
          keysV <- NULL
          for (i in idx) {  # find possible moves
@@ -429,9 +430,9 @@ PlayerRL <- R6Class("PlayerRL",
             str <- str_c(sV, collapse = "")
             keys <- c(keys, str)
             keysV <- rbind(keysV, sV)
-            sV[i] <- "."
+            sV[i] <- "."   # set the value back to default
          }
-         # add missing states
+         # add missing states of next sP
          idx <- which(!has.key(keys, self$hV))
          if (length(idx) > 0) {
             for (i in 1:nrow(keysV)) {
@@ -776,7 +777,7 @@ Many tic-tac-toe positions appear different but are really the same because of s
 
 <div class="modal fade bs-example-modal-lg" id="f5n1IWGphKaCpoeHkKdU" tabindex="-1" role="dialog" aria-labelledby="f5n1IWGphKaCpoeHkKdU-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="f5n1IWGphKaCpoeHkKdU-title">Solution</h4></div><div class="modal-body">
 
-<p>If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should now use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.</p>
+<p>If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.</p>
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#f5n1IWGphKaCpoeHkKdU">Solution</button>
    3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
