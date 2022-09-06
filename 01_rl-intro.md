@@ -238,7 +238,7 @@ The current state of the board is represented by a row-wise concatenation of the
   </tr>
 </tbody>
 </table>
-That is, we index the fields row-wise:
+That is, we index the fields row-wise:     
 <table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <tbody>
   <tr>
