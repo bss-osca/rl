@@ -236,6 +236,7 @@ Examples in the exploration and exploitation dilemma are for instance movie reco
 ## RL in action (Tic-Tac-Toe)
 
 ```{r}
+library(tidyverse)
 library(R6)
 library(hash)
 library(zoo)
@@ -273,7 +274,7 @@ plot_board_state <- function(state) {
 ```{r, message=FALSE, echo=FALSE}
 plot_board_state("......X.O")
 ```
-That is, we index the fields row-wise:
+That is, we index the fields row-wise:     
 ```{r, message=FALSE, echo=FALSE}
 plot_board_state("123456789")
 ```
