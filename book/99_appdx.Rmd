@@ -9,7 +9,7 @@
 
 R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. During this course **it is recommend to use RStudio on your laptop** since there is no limit on CPU usage. If you need to install R and RStudio on your laptop [check this out](https://bss-osca.github.io/tfa/mod-r-install.html#r-install).
 
-If you need a brushup on R have a look at the free online course [Introduction to R][datacamp-r-intro] at DataCamp. [DataCamp] is an online platform for learning data science. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here. 
+If you need a brushup on R have a look at DataCamp. First, signup for a [course group](https://www.datacamp.com/groups/shared_links/f0b49a9981de99c5822b7cbe9b90fc9f82f28774a33642896b39d59efe219eb9). Next, have a look at the free courses such as [Introduction to R][datacamp-r-intro]. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here. 
 
 
 # Working in groups {#groups}
