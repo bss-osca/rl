@@ -172,7 +172,7 @@ It is assumed as a prerequisite that you know how to use R. If you need a brush-
 
 ## Acknowledgements and license {- #ack} 
 
-Materials in this book are taken from various places:
+Materials are taken from various places:
 
 * The notes are based on @Sutton18.
 * The bookdown skeleton and some notes are based on the [Tools for Analytics][tfa-course] course.
@@ -180,19 +180,6 @@ Materials in this book are taken from various places:
 [Bryn Elesedy](https://github.com/brynhayder/reinforcement_learning_an_introduction) and [Peter Goldsborough](https://github.com/peter-can-write/david-silver-rl-notes).
 * Some slides are inspired by the [RL specialization](https://www.coursera.org/specializations/reinforcement-learning) at Coursera.
 * Some exercises are taken from @Sutton18 and modified slightly. 
-
-<!-- * Some parts in Module \@ref(mod-intro) are inspired by [Chapter 1](https://r4ds.had.co.nz/introduction.html) in @r4ds. -->
-<!-- * The VBA modules are inspired by the book @vba-book. This also holds for some of the exercises.  -->
-<!-- * Module \@ref(mod-r-install) is inspired by [Chapter 1](https://stat545.com/block000_r-rstudio-install.html) in @stat545. -->
-<!-- * Module \@ref(mod-r-workflow) is using some text and images from [Chapter 1](https://moderndive.netlify.app/1-getting-started.html) in @moderndrive and [Chapter 2](https://stat545.com/block002_hello-r-workspace-wd-project.html) in @stat545. A few exercises are inspired by [Chapter 2](https://rafalab.github.io/dsbook/r-basics.html) in @dsbook. -->
-<!-- * Notes about git and GitHub in the appendix are based on @hgit. -->
-<!-- * Exercise \@ref(ex-gapminder1) is a revision of Chapters 6-7 in @stat545. -->
-<!-- * Exercise \@ref(ex-babynames1) is a revision of [Session 3](https://github.com/rstudio-education/welcome-to-the-tidyverse/blob/master/03-Transform/03-Transform-Exercises.Rmd) in the [Welcome to the tidyverse][course-welcome-to-the-tidyverse] course. -->
-<!-- * Exercise \@ref(ex-gapminder2) is a revision of [Chapter 9](https://rafalab.github.io/dsbook/gapminder.html) in @dsbook. -->
-<!-- * Exercise \@ref(ex-covid19) is inspired by the COVID19 application [exercise](https://raw.githubusercontent.com/rstudio-education/datascience-box/master/course-materials/application-exercises/ae-01b-covid/covid.Rmd) at the [data science in a box](https://github.com/rstudio-education/datascience-box) course. -->
-<!-- * Exercise \@ref(ex-lego) is inspired by the Lego homework [exercise](https://github.com/rstudio-education/datascience-box/blob/master/course-materials/hw-instructions/hw-04/hw-04-legos-instructors.Rmd) at the [data science in a box](https://github.com/rstudio-education/datascience-box) course. -->
-<!-- * Exercise \@ref(ex-fish) is inspired by the Fisheries application [exercise](https://github.com/rstudio-education/datascience-box/blob/master/course-materials/application-exercises/ae-05-fisheries-datajoins/fisheries.Rmd) at the [data science in a box](https://github.com/rstudio-education/datascience-box) course. -->
-
 
 I would like to thank all for their inspiration. 
 
