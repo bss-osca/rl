@@ -126,7 +126,7 @@ Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure
 
 Let us try to implement the algorithm using an agent and environment class. First we define the agent that do actions based on an $\epsilon$-greedy strategy, stores the estimated $Q$ values and the number of times an action has been chosen:
 
-```{r, echo=TRUE}
+```{r bandit-agent, echo=TRUE}
 #' R6 Class representing the RL agent
 RLAgent <- R6Class("RLAgent",
    public = list(
@@ -145,17 +145,16 @@ RLAgent <- R6Class("RLAgent",
       #' @description Create an object (when call new).
       #' @param k Number of bandits.
       #' @param epsilon Epsilon used in epsilon greed action selection.
+      #' @param ini Initial qV values.
       #' @return The new object.
       initialize = function(k = 10, epsilon = 0.01, ini =  0) {
          self$epsilon <- epsilon
-         self$qV <- rep(ini, k)
-         self$nV <- rep(0, k)
+         self$qV <- rep(ini, k)  # k-length vector
+         self$nV <- rep(0, k)    # k-length vector
          self$k <- k
       },
       
       #' @description Clear learning.
-      #' @param eps Epsilon.
-      #' @return Action (index).
       clearLearning = function() {
          self$qV <- 0
          self$nV <- 0
@@ -188,7 +187,7 @@ RLAgent <- R6Class("RLAgent",
 
 Next, the environment generating rewards. The true mean reward $q_*(a)$ of an action is selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward is then generated using a normal distribution with mean $q_*(a)$ and variance 1:
 
-```{r, echo=TRUE}
+```{r bandit-env, echo=TRUE}
 #' R6 Class representing the RL environment
 #' 
 #' Assume that bandits are normal distributed with a mean and std.dev of one. 
@@ -204,14 +203,14 @@ RLEnvironment <- R6Class("RLEnvironment",
       #' @param k Number of bandits.
       #' @return The new object.
       initialize = function(k = 10) {
-         self$mV <- rnorm(k)
+         self$mV <- rnorm(k)  # means are from a N(0,1)
       },
       
       #' @description Sample reward of a bandit.
       #' @param a Bandit (index).
       #' @return The reward.
       reward = function(a) {
-         return(rnorm(1, self$mV[a]))
+         return(rnorm(1, self$mV[a]))   # pick a random value from N(self$mV[a],1)
       },
       
       #' @description Returns action with best mean.
@@ -227,7 +226,7 @@ set.seed(3276)
 ```
 
 
-```{r}
+```{r bandit-preform}
 #' Performance of the bandit algorithm using different epsilons.
 #'
 #' @param k Bandits.
@@ -388,7 +387,7 @@ Suppose you are an advertiser seeking to optimize which ads to show visitors on 
 #' R6 Class representing the RL advertising environment
 RLAdEnv <- R6Class("RLAdEnv",
    public = list(
-      #' @field mV Click trough rates
+      #' @field mV Click trough rates (unknown to you)
       mV = c(0.1, 0.83, 0.85, 0.5, 0.7),  
       
       #' @field k Number of ads.
@@ -443,6 +442,33 @@ testEG(0.5)
 env$optimalAction()
 env$mV
 ```
+```{r, hint=TRUE}
+set.seed(327)  # to get same results 
+
+#' Performance of the bandit algorithm.
+#' @param steps Steps (users).
+#' @param epsilon Epsilon to be tested.
+#' @return A list with statistics.
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(___)
+   rew <- 0
+   for (t in 1:steps) {
+      a <- agent$___
+      r <- env$___
+      rew <- rew + r
+      agent$updateQ(___)
+   }
+   return(list(qV = ___, avgReward = ___))
+}
+testEG(0.01)
+testEG(0.1)
+testEG(0.5)
+
+# True values
+env$optimalAction()
+env$mV
+```
+
 
    1) Run the $\epsilon$-greedy algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs for each action ($Q_t(a)$)? What is the average number of clicks per user?
    
@@ -452,7 +478,7 @@ env$mV
 testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
    rew <- 0
-   qVal <- matrix(0, nrow = steps, ncol = 5)
+   qVal <- matrix(0, nrow = steps, ncol = 5)  # store qV in a row for each t
    colnames(qVal) = str_c("A", 1:5)
    for (t in 1:steps) {
       a <- agent$selectActionEG()
@@ -475,6 +501,31 @@ testEG <- function(epsilon, steps = 10000) {
 testEG(0.01)$plt
 testEG(0.5)$plt
 ```
+```{r, hint=TRUE}
+## Test function modified with plot feature
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rew <- 0
+   qVal <- matrix(0, nrow = steps, ncol = 5)  # store qV in a row for each t
+   colnames(qVal) = str_c("A", 1:5)
+   for (t in 1:steps) {
+      ___
+   }
+   # make plot
+   dat <- tibble(t = 1:steps) %>%
+      bind_cols(qVal) %>%   # bind data together
+      pivot_longer(!t, values_to = "ctr", names_to = "action") 
+   pt <- dat %>% 
+      ggplot(aes(x = t, y = ctr, col = action)) +
+      geom_line() +
+      labs(y = "Empirical CTRs", x = "Time", title = str_c("CTRs eps = ", epsilon), col = "Action") +
+      theme(legend.position = "bottom")
+   return(list(qV = agent$qV, avgReward = rew/steps, plt = pt))
+}
+testEG(0.01)$plt
+testEG(0.5)$plt
+```
+
 
    2) Make a plot of the empirical CTRs for $\epsilon = 0.01, 0.5$ over 10000 time-steps, i.e. plot $Q_t(a)$. 
    
@@ -502,7 +553,30 @@ testEG(0.5)
 # True average reward values
 env$mV * c(10, 8, 5, 15, 2)
 ```
-   
+```{r, hint=TRUE}
+## Test function modified with rewards
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rewards <- ___
+   rew <- 0
+   qVal <- matrix(0, nrow = 10000, ncol = 5)
+   colnames(qVal) = str_c("A", 1:5)
+   for (t in 1:steps) {
+      a <- agent$selectActionEG()
+      r <- ___
+      rew <- rew + r
+      agent$updateQ(a, r)
+      qVal[t,] <- agent$qV
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+testEG(0.01)
+testEG(0.5)
+
+# True average reward values
+env$mV * c(10, 8, 5, 15, 2)
+```
+
    3) Assume that the rewards of ad clicks is equal to (10, 8, 5, 15, 2). Modify the algorithm so you look at rewards instead of CTRs. What is the best action to choose?
    
 <!-- Q4 -->
@@ -586,6 +660,21 @@ testUCB <- function(c = 2, steps = 10000) {
       r <- env$reward(a) * rewards[a]
       rew <- rew + r
       agent$updateQ(a, r)
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+testUCB(0.1)
+testUCB(5)
+testUCB(10)
+testUCB(20)
+```
+```{r, hint=TRUE}
+testUCB <- function(c = 2, steps = 10000) {
+   agent <- RLAgent$new(k = 5)
+   rewards <- c(10, 8, 5, 15, 2)
+   rew <- 0
+   for (t in 1:steps) {
+      ___
    }
    return(list(qV = agent$qV, avgReward = rew/steps))
 }

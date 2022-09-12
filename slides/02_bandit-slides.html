@@ -45,7 +45,7 @@ layout: true
 ## Learning outcomes 
 
 * Define a k-armed bandit and understand the nature of the problem. 
-* Define the reward of a action (action-reward).
+* Define the reward of an action (action-reward).
 * Describe different methods for estimating the action-reward.
 * Explain the differences between exploration and exploitation.
 * Formulate an `\(\epsilon\)`-greedy algorithm for selecting the next action.
@@ -78,7 +78,7 @@ layout: true
 ## Possible application
 
 * Multi-armed bandits can  be used in e.g. [digital advertising](https://research.facebook.com/blog/2021/4/auto-placement-of-ad-campaigns-using-multi-armed-bandits/). 
-* You are an advertiser seeking to optimize which ads ($k$ to choose among) to show a visitor on a particular website. 
+* You are an advertiser seeking to optimize which ads ( `\(k\)` to choose among) to show a visitor on a particular website. 
 * Your goal is to maximize the number of clicks over time. 
 
 &lt;img src="img/bandit-choose.png" width="80%" style="display: block; margin: auto;" /&gt;
@@ -158,7 +158,7 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 
 ## Upper-Confidence Bound Action Selection
 
-* `\(\epsilon\)`-greed algorithm: choose the action to explore with equal probability in an exploration step. 
+* `\(\epsilon\)`-greedy algorithm: choose the action to explore with equal probability in an exploration step. 
 * Better to select among non-greedy actions according to their potential.
 * This can be done by taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. 
 * One way to do this is to select actions using the *upper-confidence bound*:
