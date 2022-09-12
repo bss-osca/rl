@@ -148,17 +148,16 @@ RLAgent <- R6Class("RLAgent",
       #' @description Create an object (when call new).
       #' @param k Number of bandits.
       #' @param epsilon Epsilon used in epsilon greed action selection.
+      #' @param ini Initial qV values.
       #' @return The new object.
       initialize = function(k = 10, epsilon = 0.01, ini =  0) {
          self$epsilon <- epsilon
-         self$qV <- rep(ini, k)
-         self$nV <- rep(0, k)
+         self$qV <- rep(ini, k)  # k-length vector
+         self$nV <- rep(0, k)    # k-length vector
          self$k <- k
       },
       
       #' @description Clear learning.
-      #' @param eps Epsilon.
-      #' @return Action (index).
       clearLearning = function() {
          self$qV <- 0
          self$nV <- 0
@@ -208,14 +207,14 @@ RLEnvironment <- R6Class("RLEnvironment",
       #' @param k Number of bandits.
       #' @return The new object.
       initialize = function(k = 10) {
-         self$mV <- rnorm(k)
+         self$mV <- rnorm(k)  # means are from a N(0,1)
       },
       
       #' @description Sample reward of a bandit.
       #' @param a Bandit (index).
       #' @return The reward.
       reward = function(a) {
-         return(rnorm(1, self$mV[a]))
+         return(rnorm(1, self$mV[a]))   # pick a random value from N(self$mV[a],1)
       },
       
       #' @description Returns action with best mean.
@@ -298,7 +297,7 @@ pts$ptR
 pts$ptO
 ```
 
-<img src="02_bandit_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" />
 
 The solid line shows averages over all the runs from $t=1$ to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an $\epsilon$-greedy approach is better ($\epsilon = 0.1$ is best). That is, exploration is beneficial.
 
@@ -382,7 +381,7 @@ Suppose you are an advertiser seeking to optimize which ads to show visitors on 
 #' R6 Class representing the RL advertising environment
 RLAdEnv <- R6Class("RLAdEnv",
    public = list(
-      #' @field mV Click trough rates
+      #' @field mV Click trough rates (unknown to you)
       mV = c(0.1, 0.83, 0.85, 0.5, 0.7),  
       
       #' @field k Number of ads.
@@ -466,18 +465,51 @@ env$mV
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bBIs4ifgbS5F91wS3KgW">Solution</button>
 
+<div class="modal fade bs-example-modal-lg" id="9UNSaGJghbZYV0FR4kTI" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="9UNSaGJghbZYV0FR4kTI-title">Hint</h4></div><div class="modal-body">
+
+```r
+set.seed(327)  # to get same results 
+
+#' Performance of the bandit algorithm.
+#' @param steps Steps (users).
+#' @param epsilon Epsilon to be tested.
+#' @return A list with statistics.
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(___)
+   rew <- 0
+   for (t in 1:steps) {
+      a <- agent$___
+      r <- env$___
+      rew <- rew + r
+      agent$updateQ(___)
+   }
+   return(list(qV = ___, avgReward = ___))
+}
+testEG(0.01)
+testEG(0.1)
+testEG(0.5)
+
+# True values
+env$optimalAction()
+env$mV
+```
+
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">Hint</button>
+
+
    1) Run the $\epsilon$-greedy algorithm with $\epsilon = 0.01, 0.1, 0.5$ over the 10000 steps. What are the estimated CTRs for each action ($Q_t(a)$)? What is the average number of clicks per user?
    
 <!-- Q2 -->
 
-<div class="modal fade bs-example-modal-lg" id="9UNSaGJghbZYV0FR4kTI" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="9UNSaGJghbZYV0FR4kTI-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="8ZCXznKGcQH0cwTItGQG" tabindex="-1" role="dialog" aria-labelledby="8ZCXznKGcQH0cwTItGQG-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="8ZCXznKGcQH0cwTItGQG-title">Solution</h4></div><div class="modal-body">
 
 ```{.r .fold-show}
 ## Test function modified with plot feature
 testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
    rew <- 0
-   qVal <- matrix(0, nrow = steps, ncol = 5)
+   qVal <- matrix(0, nrow = steps, ncol = 5)  # store qV in a row for each t
    colnames(qVal) = str_c("A", 1:5)
    for (t in 1:steps) {
       a <- agent$selectActionEG()
@@ -501,16 +533,47 @@ testEG(0.01)$plt
 testEG(0.5)$plt
 ```
 
-<img src="02_bandit_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
+<img src="02_bandit_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" />
 <p>As epsilon grows we estimate the true values better for all actions.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#8ZCXznKGcQH0cwTItGQG">Solution</button>
+
+<div class="modal fade bs-example-modal-lg" id="NQsc418Res9JKLe54Kx9" tabindex="-1" role="dialog" aria-labelledby="NQsc418Res9JKLe54Kx9-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="NQsc418Res9JKLe54Kx9-title">Hint</h4></div><div class="modal-body">
+
+```r
+## Test function modified with plot feature
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rew <- 0
+   qVal <- matrix(0, nrow = steps, ncol = 5)  # store qV in a row for each t
+   colnames(qVal) = str_c("A", 1:5)
+   for (t in 1:steps) {
+      ___
+   }
+   # make plot
+   dat <- tibble(t = 1:steps) %>%
+      bind_cols(qVal) %>%   # bind data together
+      pivot_longer(!t, values_to = "ctr", names_to = "action") 
+   pt <- dat %>% 
+      ggplot(aes(x = t, y = ctr, col = action)) +
+      geom_line() +
+      labs(y = "Empirical CTRs", x = "Time", title = str_c("CTRs eps = ", epsilon), col = "Action") +
+      theme(legend.position = "bottom")
+   return(list(qV = agent$qV, avgReward = rew/steps, plt = pt))
+}
+testEG(0.01)$plt
+testEG(0.5)$plt
+```
+
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#NQsc418Res9JKLe54Kx9">Hint</button>
+
 
    2) Make a plot of the empirical CTRs for $\epsilon = 0.01, 0.5$ over 10000 time-steps, i.e. plot $Q_t(a)$. 
    
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="cJNysHsWq0UWK5lQcvNQ" tabindex="-1" role="dialog" aria-labelledby="cJNysHsWq0UWK5lQcvNQ-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="cJNysHsWq0UWK5lQcvNQ-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="qYvHKkwtdCExjST1fUid" tabindex="-1" role="dialog" aria-labelledby="qYvHKkwtdCExjST1fUid-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="qYvHKkwtdCExjST1fUid-title">Solution</h4></div><div class="modal-body">
 
 ```{.r .fold-show}
 ## Test function modified with rewards
@@ -531,13 +594,13 @@ testEG <- function(epsilon, steps = 10000) {
 }
 testEG(0.01)
 #> $qV
-#> [1] 0.909 6.565 4.583 7.607 1.378
+#> [1] 0.909 6.591 4.583 7.610 1.111
 #> 
 #> $avgReward
-#> [1] 6.83
+#> [1] 7.15
 testEG(0.5)
 #> $qV
-#> [1] 0.952 6.640 4.290 7.459 1.355
+#> [1] 0.951 6.646 4.286 7.459 1.361
 #> 
 #> $avgReward
 #> [1] 5.74
@@ -550,8 +613,37 @@ env$mV * c(10, 8, 5, 15, 2)
 
 <p>The best action is now 4 and eps = 0.01 seems to give the best overall average reward.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cJNysHsWq0UWK5lQcvNQ">Solution</button>
-   
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#qYvHKkwtdCExjST1fUid">Solution</button>
+
+<div class="modal fade bs-example-modal-lg" id="cf8X5VazfjvV95Pm5lW3" tabindex="-1" role="dialog" aria-labelledby="cf8X5VazfjvV95Pm5lW3-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="cf8X5VazfjvV95Pm5lW3-title">Hint</h4></div><div class="modal-body">
+
+```r
+## Test function modified with rewards
+testEG <- function(epsilon, steps = 10000) {
+   agent <- RLAgent$new(k = 5, epsilon = epsilon)
+   rewards <- ___
+   rew <- 0
+   qVal <- matrix(0, nrow = 10000, ncol = 5)
+   colnames(qVal) = str_c("A", 1:5)
+   for (t in 1:steps) {
+      a <- agent$selectActionEG()
+      r <- ___
+      rew <- rew + r
+      agent$updateQ(a, r)
+      qVal[t,] <- agent$qV
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+testEG(0.01)
+testEG(0.5)
+
+# True average reward values
+env$mV * c(10, 8, 5, 15, 2)
+```
+
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cf8X5VazfjvV95Pm5lW3">Hint</button>
+
    3) Assume that the rewards of ad clicks is equal to (10, 8, 5, 15, 2). Modify the algorithm so you look at rewards instead of CTRs. What is the best action to choose?
    
 <!-- Q4 -->
@@ -627,7 +719,7 @@ RLAgent <- R6Class("RLAgent",
 ```
    
 
-<div class="modal fade bs-example-modal-lg" id="mhFyML8wY85v311DV6ie" tabindex="-1" role="dialog" aria-labelledby="mhFyML8wY85v311DV6ie-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="mhFyML8wY85v311DV6ie-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="J1yBcvDXBqroH1V8bpsm" tabindex="-1" role="dialog" aria-labelledby="J1yBcvDXBqroH1V8bpsm-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="J1yBcvDXBqroH1V8bpsm-title">Solution</h4></div><div class="modal-body">
 
 ```{.r .fold-show}
 testUCB <- function(c = 2, steps = 10000) {
@@ -644,34 +736,55 @@ testUCB <- function(c = 2, steps = 10000) {
 }
 testUCB(0.1)
 #> $qV
-#> [1] 0.00 6.63 3.75 0.00 0.00
+#> [1] 0.00 6.67 5.00 7.48 0.00
 #> 
 #> $avgReward
-#> [1] 6.63
+#> [1] 7.48
 testUCB(5)
 #> $qV
-#> [1] 2.22 6.48 3.68 7.46 1.43
+#> [1] 1.43 6.08 4.64 7.51 1.33
 #> 
 #> $avgReward
-#> [1] 7.28
+#> [1] 7.48
 testUCB(10)
 #> $qV
-#> [1] 0.556 6.586 3.952 7.502 1.680
+#> [1] 0.556 6.429 4.560 7.489 1.048
 #> 
 #> $avgReward
-#> [1] 7.4
+#> [1] 7.38
 testUCB(20)
 #> $qV
-#> [1] 1.48 6.62 4.25 7.56 1.42
+#> [1] 0.758 6.668 4.061 7.570 1.512
 #> 
 #> $avgReward
-#> [1] 7.25
+#> [1] 7.26
 ```
 
 
 <p>A value \(c = 10\) seems to be a good choice.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#mhFyML8wY85v311DV6ie">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#J1yBcvDXBqroH1V8bpsm">Solution</button>
+
+<div class="modal fade bs-example-modal-lg" id="UUQrBS46oTgD01U7DmnL" tabindex="-1" role="dialog" aria-labelledby="UUQrBS46oTgD01U7DmnL-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="UUQrBS46oTgD01U7DmnL-title">Hint</h4></div><div class="modal-body">
+
+```r
+testUCB <- function(c = 2, steps = 10000) {
+   agent <- RLAgent$new(k = 5)
+   rewards <- c(10, 8, 5, 15, 2)
+   rew <- 0
+   for (t in 1:steps) {
+      ___
+   }
+   return(list(qV = agent$qV, avgReward = rew/steps))
+}
+testUCB(0.1)
+testUCB(5)
+testUCB(10)
+testUCB(20)
+```
+
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UUQrBS46oTgD01U7DmnL">Hint</button>
 
    4) Test the UCB algorithm for $c$ values $(0.1, 5, 10, 20)$. Which algorithm seems to find the best average reward?
 
@@ -683,21 +796,21 @@ Consider a game where you choose to flip one of two (possibly unfair) coins. You
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="UogJuRebD8e68uuMCu63" tabindex="-1" role="dialog" aria-labelledby="UogJuRebD8e68uuMCu63-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="UogJuRebD8e68uuMCu63-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="BA4bBzteJ1obnKYNQ5V8" tabindex="-1" role="dialog" aria-labelledby="BA4bBzteJ1obnKYNQ5V8-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BA4bBzteJ1obnKYNQ5V8-title">Solution</h4></div><div class="modal-body">
 
 <p>This is a 2-bandit problem with actions of choosing coin 1 or 2.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UogJuRebD8e68uuMCu63">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BA4bBzteJ1obnKYNQ5V8">Solution</button>
 
    (1) Model this as a K-armed bandit problem: define the action set.
    
 <!-- Q2 -->
 
-<div class="modal fade bs-example-modal-lg" id="j7xBii6afnYS2GOohDOT" tabindex="-1" role="dialog" aria-labelledby="j7xBii6afnYS2GOohDOT-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="j7xBii6afnYS2GOohDOT-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="P7dFb49aFJkDFbk23jW9" tabindex="-1" role="dialog" aria-labelledby="P7dFb49aFJkDFbk23jW9-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="P7dFb49aFJkDFbk23jW9-title">Solution</h4></div><div class="modal-body">
 
 <p>The reward is stochastic. If consider coin \(i\) then \(\mathbb{E}[R_t | a_i] = \Pr(H)\cdot 1.\)</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#j7xBii6afnYS2GOohDOT">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#P7dFb49aFJkDFbk23jW9">Solution</button>
 
    (2) Is the reward a deterministic or stochastic function of your action?
 
@@ -705,21 +818,21 @@ Consider a game where you choose to flip one of two (possibly unfair) coins. You
 
 
 
-<div class="modal fade bs-example-modal-lg" id="taUUQrBS46oTgD01U7Dm" tabindex="-1" role="dialog" aria-labelledby="taUUQrBS46oTgD01U7Dm-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="taUUQrBS46oTgD01U7Dm-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="RDpiFx5KmYmybxoEch0d" tabindex="-1" role="dialog" aria-labelledby="RDpiFx5KmYmybxoEch0d-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="RDpiFx5KmYmybxoEch0d-title">Solution</h4></div><div class="modal-body">
 
 <p>The estimates are \[Q_t(a_1) = (0+1+1+0+0+0)/6 = 1/3\] and \[Q_t(a_2) = (1+0+1+1+1+0)/6 = 2/3\].</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#taUUQrBS46oTgD01U7Dm">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RDpiFx5KmYmybxoEch0d">Solution</button>
 
    (3) You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula \@ref(eq:avg) to compute the estimates of the value of each action.
 
 <!-- Q4 -->
 
-<div class="modal fade bs-example-modal-lg" id="nLBA4bBzteJ1obnKYNQ5" tabindex="-1" role="dialog" aria-labelledby="nLBA4bBzteJ1obnKYNQ5-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nLBA4bBzteJ1obnKYNQ5-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="e9XpG4cJ6DEQQnnTVXFW" tabindex="-1" role="dialog" aria-labelledby="e9XpG4cJ6DEQQnnTVXFW-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="e9XpG4cJ6DEQQnnTVXFW-title">Solution</h4></div><div class="modal-body">
 
 <p>Coin 2 is chosen since the best action-value.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nLBA4bBzteJ1obnKYNQ5">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#e9XpG4cJ6DEQQnnTVXFW">Solution</button>
 
    (4) Decide on which coin to flip next assuming that you exploit.
 

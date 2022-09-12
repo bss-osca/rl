@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-09-06" />
+<meta name="date" content="2022-09-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -620,14 +620,14 @@ Solution
 </h4>
 </div>
 <div class="modal-body">
-<div class="sourceCode" id="cb23"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb23-1"><a href="mod-mdp-1.html#cb23-1" aria-hidden="true" tabindex="-1"></a>gam <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb23-2"><a href="mod-mdp-1.html#cb23-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span><span class="dv">0</span></span>
-<span id="cb23-3"><a href="mod-mdp-1.html#cb23-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">1</span>)</span>
-<span id="cb23-4"><a href="mod-mdp-1.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">0</span>) {</span>
-<span id="cb23-5"><a href="mod-mdp-1.html#cb23-5" aria-hidden="true" tabindex="-1"></a>   g <span class="ot">&lt;-</span> r[i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">+</span>  gam<span class="sc">*</span>g</span>
-<span id="cb23-6"><a href="mod-mdp-1.html#cb23-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-7"><a href="mod-mdp-1.html#cb23-7" aria-hidden="true" tabindex="-1"></a>g</span>
-<span id="cb23-8"><a href="mod-mdp-1.html#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.27</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb27-1"><a href="mod-mdp-1.html#cb27-1" aria-hidden="true" tabindex="-1"></a>gam <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb27-2"><a href="mod-mdp-1.html#cb27-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb27-3"><a href="mod-mdp-1.html#cb27-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">1</span>)</span>
+<span id="cb27-4"><a href="mod-mdp-1.html#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">0</span>) {</span>
+<span id="cb27-5"><a href="mod-mdp-1.html#cb27-5" aria-hidden="true" tabindex="-1"></a>   g <span class="ot">&lt;-</span> r[i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">+</span>  gam<span class="sc">*</span>g</span>
+<span id="cb27-6"><a href="mod-mdp-1.html#cb27-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-7"><a href="mod-mdp-1.html#cb27-7" aria-hidden="true" tabindex="-1"></a>g</span>
+<span id="cb27-8"><a href="mod-mdp-1.html#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.27</span></span></code></pre></div>
 </div>
 <div class="modal-footer">
 <button class="btn btn-default" data-dismiss="modal">
@@ -656,13 +656,13 @@ Solution
 </h4>
 </div>
 <div class="modal-body">
-<div class="sourceCode" id="cb24"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb24-1"><a href="mod-mdp-1.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recall sum_k  g^k = 1/(1-g)</span></span>
-<span id="cb24-2"><a href="mod-mdp-1.html#cb24-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="dv">7</span> <span class="sc">*</span> <span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="fl">-0.9</span>)</span>
-<span id="cb24-3"><a href="mod-mdp-1.html#cb24-3" aria-hidden="true" tabindex="-1"></a>g1</span>
-<span id="cb24-4"><a href="mod-mdp-1.html#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 70</span></span>
-<span id="cb24-5"><a href="mod-mdp-1.html#cb24-5" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.9</span> <span class="sc">*</span> <span class="dv">70</span></span>
-<span id="cb24-6"><a href="mod-mdp-1.html#cb24-6" aria-hidden="true" tabindex="-1"></a>g0</span>
-<span id="cb24-7"><a href="mod-mdp-1.html#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 65</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb28-1"><a href="mod-mdp-1.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recall sum_k  g^k = 1/(1-g)</span></span>
+<span id="cb28-2"><a href="mod-mdp-1.html#cb28-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="dv">7</span> <span class="sc">*</span> <span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="fl">-0.9</span>)</span>
+<span id="cb28-3"><a href="mod-mdp-1.html#cb28-3" aria-hidden="true" tabindex="-1"></a>g1</span>
+<span id="cb28-4"><a href="mod-mdp-1.html#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 70</span></span>
+<span id="cb28-5"><a href="mod-mdp-1.html#cb28-5" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.9</span> <span class="sc">*</span> <span class="dv">70</span></span>
+<span id="cb28-6"><a href="mod-mdp-1.html#cb28-6" aria-hidden="true" tabindex="-1"></a>g0</span>
+<span id="cb28-7"><a href="mod-mdp-1.html#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 65</span></span></code></pre></div>
 </div>
 <div class="modal-footer">
 <button class="btn btn-default" data-dismiss="modal">

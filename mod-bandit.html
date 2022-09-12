@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-09-06" />
+<meta name="date" content="2022-09-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -518,45 +518,44 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <span id="cb13-16"><a href="mod-bandit.html#cb13-16" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Create an object (when call new).</span></span>
 <span id="cb13-17"><a href="mod-bandit.html#cb13-17" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param k Number of bandits.</span></span>
 <span id="cb13-18"><a href="mod-bandit.html#cb13-18" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param epsilon Epsilon used in epsilon greed action selection.</span></span>
-<span id="cb13-19"><a href="mod-bandit.html#cb13-19" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return The new object.</span></span>
-<span id="cb13-20"><a href="mod-bandit.html#cb13-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">k =</span> <span class="dv">10</span>, <span class="at">epsilon =</span> <span class="fl">0.01</span>, <span class="at">ini =</span>  <span class="dv">0</span>) {</span>
-<span id="cb13-21"><a href="mod-bandit.html#cb13-21" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>epsilon <span class="ot">&lt;-</span> epsilon</span>
-<span id="cb13-22"><a href="mod-bandit.html#cb13-22" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="fu">rep</span>(ini, k)</span>
-<span id="cb13-23"><a href="mod-bandit.html#cb13-23" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, k)</span>
-<span id="cb13-24"><a href="mod-bandit.html#cb13-24" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>k <span class="ot">&lt;-</span> k</span>
-<span id="cb13-25"><a href="mod-bandit.html#cb13-25" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb13-26"><a href="mod-bandit.html#cb13-26" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb13-27"><a href="mod-bandit.html#cb13-27" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Clear learning.</span></span>
-<span id="cb13-28"><a href="mod-bandit.html#cb13-28" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param eps Epsilon.</span></span>
-<span id="cb13-29"><a href="mod-bandit.html#cb13-29" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
-<span id="cb13-30"><a href="mod-bandit.html#cb13-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">clearLearning =</span> <span class="cf">function</span>() {</span>
-<span id="cb13-31"><a href="mod-bandit.html#cb13-31" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb13-32"><a href="mod-bandit.html#cb13-32" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb13-33"><a href="mod-bandit.html#cb13-33" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb13-34"><a href="mod-bandit.html#cb13-34" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb13-35"><a href="mod-bandit.html#cb13-35" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using an epsilon greedy strategy.</span></span>
-<span id="cb13-36"><a href="mod-bandit.html#cb13-36" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
-<span id="cb13-37"><a href="mod-bandit.html#cb13-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">selectActionEG =</span> <span class="cf">function</span>() {   </span>
-<span id="cb13-38"><a href="mod-bandit.html#cb13-38" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;=</span> self<span class="sc">$</span>epsilon) { <span class="co"># explore</span></span>
-<span id="cb13-39"><a href="mod-bandit.html#cb13-39" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>self<span class="sc">$</span>k, <span class="dv">1</span>)</span>
-<span id="cb13-40"><a href="mod-bandit.html#cb13-40" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
-<span id="cb13-41"><a href="mod-bandit.html#cb13-41" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">which</span>(self<span class="sc">$</span>qV <span class="sc">==</span> <span class="fu">max</span>(self<span class="sc">$</span>qV))</span>
-<span id="cb13-42"><a href="mod-bandit.html#cb13-42" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> a[<span class="fu">sample</span>(<span class="fu">length</span>(a), <span class="dv">1</span>)]  <span class="co"># choose a action random if more than one</span></span>
-<span id="cb13-43"><a href="mod-bandit.html#cb13-43" aria-hidden="true" tabindex="-1"></a>         }</span>
-<span id="cb13-44"><a href="mod-bandit.html#cb13-44" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
-<span id="cb13-45"><a href="mod-bandit.html#cb13-45" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb13-46"><a href="mod-bandit.html#cb13-46" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb13-47"><a href="mod-bandit.html#cb13-47" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Update learning values (including action counter).</span></span>
-<span id="cb13-48"><a href="mod-bandit.html#cb13-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param a Action.</span></span>
-<span id="cb13-49"><a href="mod-bandit.html#cb13-49" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param r Reward.</span></span>
-<span id="cb13-50"><a href="mod-bandit.html#cb13-50" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return NULL (invisible)</span></span>
-<span id="cb13-51"><a href="mod-bandit.html#cb13-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">updateQ =</span> <span class="cf">function</span>(a, r) {</span>
-<span id="cb13-52"><a href="mod-bandit.html#cb13-52" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>nV[a] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb13-53"><a href="mod-bandit.html#cb13-53" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>qV[a] <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>self<span class="sc">$</span>nV[a] <span class="sc">*</span> (r <span class="sc">-</span> self<span class="sc">$</span>qV[a])</span>
-<span id="cb13-54"><a href="mod-bandit.html#cb13-54" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
-<span id="cb13-55"><a href="mod-bandit.html#cb13-55" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb13-56"><a href="mod-bandit.html#cb13-56" aria-hidden="true" tabindex="-1"></a>   )</span>
-<span id="cb13-57"><a href="mod-bandit.html#cb13-57" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb13-19"><a href="mod-bandit.html#cb13-19" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param ini Initial qV values.</span></span>
+<span id="cb13-20"><a href="mod-bandit.html#cb13-20" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return The new object.</span></span>
+<span id="cb13-21"><a href="mod-bandit.html#cb13-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">k =</span> <span class="dv">10</span>, <span class="at">epsilon =</span> <span class="fl">0.01</span>, <span class="at">ini =</span>  <span class="dv">0</span>) {</span>
+<span id="cb13-22"><a href="mod-bandit.html#cb13-22" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>epsilon <span class="ot">&lt;-</span> epsilon</span>
+<span id="cb13-23"><a href="mod-bandit.html#cb13-23" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="fu">rep</span>(ini, k)  <span class="co"># k-length vector</span></span>
+<span id="cb13-24"><a href="mod-bandit.html#cb13-24" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, k)    <span class="co"># k-length vector</span></span>
+<span id="cb13-25"><a href="mod-bandit.html#cb13-25" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>k <span class="ot">&lt;-</span> k</span>
+<span id="cb13-26"><a href="mod-bandit.html#cb13-26" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb13-27"><a href="mod-bandit.html#cb13-27" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb13-28"><a href="mod-bandit.html#cb13-28" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Clear learning.</span></span>
+<span id="cb13-29"><a href="mod-bandit.html#cb13-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">clearLearning =</span> <span class="cf">function</span>() {</span>
+<span id="cb13-30"><a href="mod-bandit.html#cb13-30" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb13-31"><a href="mod-bandit.html#cb13-31" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb13-32"><a href="mod-bandit.html#cb13-32" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb13-33"><a href="mod-bandit.html#cb13-33" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb13-34"><a href="mod-bandit.html#cb13-34" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using an epsilon greedy strategy.</span></span>
+<span id="cb13-35"><a href="mod-bandit.html#cb13-35" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
+<span id="cb13-36"><a href="mod-bandit.html#cb13-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">selectActionEG =</span> <span class="cf">function</span>() {   </span>
+<span id="cb13-37"><a href="mod-bandit.html#cb13-37" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;=</span> self<span class="sc">$</span>epsilon) { <span class="co"># explore</span></span>
+<span id="cb13-38"><a href="mod-bandit.html#cb13-38" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>self<span class="sc">$</span>k, <span class="dv">1</span>)</span>
+<span id="cb13-39"><a href="mod-bandit.html#cb13-39" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
+<span id="cb13-40"><a href="mod-bandit.html#cb13-40" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">which</span>(self<span class="sc">$</span>qV <span class="sc">==</span> <span class="fu">max</span>(self<span class="sc">$</span>qV))</span>
+<span id="cb13-41"><a href="mod-bandit.html#cb13-41" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> a[<span class="fu">sample</span>(<span class="fu">length</span>(a), <span class="dv">1</span>)]  <span class="co"># choose a action random if more than one</span></span>
+<span id="cb13-42"><a href="mod-bandit.html#cb13-42" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb13-43"><a href="mod-bandit.html#cb13-43" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
+<span id="cb13-44"><a href="mod-bandit.html#cb13-44" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb13-45"><a href="mod-bandit.html#cb13-45" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb13-46"><a href="mod-bandit.html#cb13-46" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Update learning values (including action counter).</span></span>
+<span id="cb13-47"><a href="mod-bandit.html#cb13-47" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param a Action.</span></span>
+<span id="cb13-48"><a href="mod-bandit.html#cb13-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param r Reward.</span></span>
+<span id="cb13-49"><a href="mod-bandit.html#cb13-49" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return NULL (invisible)</span></span>
+<span id="cb13-50"><a href="mod-bandit.html#cb13-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">updateQ =</span> <span class="cf">function</span>(a, r) {</span>
+<span id="cb13-51"><a href="mod-bandit.html#cb13-51" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>nV[a] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb13-52"><a href="mod-bandit.html#cb13-52" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>qV[a] <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>self<span class="sc">$</span>nV[a] <span class="sc">*</span> (r <span class="sc">-</span> self<span class="sc">$</span>qV[a])</span>
+<span id="cb13-53"><a href="mod-bandit.html#cb13-53" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb13-54"><a href="mod-bandit.html#cb13-54" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb13-55"><a href="mod-bandit.html#cb13-55" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb13-56"><a href="mod-bandit.html#cb13-56" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Next, the environment generating rewards. The true mean reward <span class="math inline">\(q_*(a)\)</span> of an action is selected according to a normal (Gaussian) distribution with mean 0 and variance 1. The observed reward is then generated using a normal distribution with mean <span class="math inline">\(q_*(a)\)</span> and variance 1:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="mod-bandit.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL environment</span></span>
 <span id="cb14-2"><a href="mod-bandit.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; </span></span>
@@ -573,14 +572,14 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <span id="cb14-13"><a href="mod-bandit.html#cb14-13" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param k Number of bandits.</span></span>
 <span id="cb14-14"><a href="mod-bandit.html#cb14-14" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return The new object.</span></span>
 <span id="cb14-15"><a href="mod-bandit.html#cb14-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">k =</span> <span class="dv">10</span>) {</span>
-<span id="cb14-16"><a href="mod-bandit.html#cb14-16" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>mV <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k)</span>
+<span id="cb14-16"><a href="mod-bandit.html#cb14-16" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>mV <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k)  <span class="co"># means are from a N(0,1)</span></span>
 <span id="cb14-17"><a href="mod-bandit.html#cb14-17" aria-hidden="true" tabindex="-1"></a>      },</span>
 <span id="cb14-18"><a href="mod-bandit.html#cb14-18" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb14-19"><a href="mod-bandit.html#cb14-19" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Sample reward of a bandit.</span></span>
 <span id="cb14-20"><a href="mod-bandit.html#cb14-20" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param a Bandit (index).</span></span>
 <span id="cb14-21"><a href="mod-bandit.html#cb14-21" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return The reward.</span></span>
 <span id="cb14-22"><a href="mod-bandit.html#cb14-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">reward =</span> <span class="cf">function</span>(a) {</span>
-<span id="cb14-23"><a href="mod-bandit.html#cb14-23" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">rnorm</span>(<span class="dv">1</span>, self<span class="sc">$</span>mV[a]))</span>
+<span id="cb14-23"><a href="mod-bandit.html#cb14-23" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">rnorm</span>(<span class="dv">1</span>, self<span class="sc">$</span>mV[a]))   <span class="co"># pick a random value from N(self$mV[a],1)</span></span>
 <span id="cb14-24"><a href="mod-bandit.html#cb14-24" aria-hidden="true" tabindex="-1"></a>      },</span>
 <span id="cb14-25"><a href="mod-bandit.html#cb14-25" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb14-26"><a href="mod-bandit.html#cb14-26" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Returns action with best mean.</span></span>
@@ -648,7 +647,7 @@ Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span cl
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="mod-bandit.html#cb16-1" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">performance</span>(<span class="at">runs =</span> <span class="dv">2000</span>, <span class="at">steps =</span> <span class="dv">1000</span>)</span>
 <span id="cb16-2"><a href="mod-bandit.html#cb16-2" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>ptR</span>
 <span id="cb16-3"><a href="mod-bandit.html#cb16-3" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>ptO</span></code></pre></div>
-<p><img src="02_bandit_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="02_bandit_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The solid line shows averages over all the runs from <span class="math inline">\(t=1\)</span> to the considered time-step while the dotted line is a moving average over the last 50 time-steps. Since we are expected to learn over the time-steps the moving averages will in general be higher than the overall averages. Note that if we have 1000 time-steps a greedy approach in general is bad and an <span class="math inline">\(\epsilon\)</span>-greedy approach is better (<span class="math inline">\(\epsilon = 0.1\)</span> is best). That is, exploration is beneficial.</p>
 </div>
 <div id="sec-bandit-step-size" class="section level2 hasAnchor" number="2.5">
@@ -717,7 +716,7 @@ Figure 2.3: Square root term for an action using different <span class="math inl
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="mod-bandit.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL advertising environment</span></span>
 <span id="cb17-2"><a href="mod-bandit.html#cb17-2" aria-hidden="true" tabindex="-1"></a>RLAdEnv <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;RLAdEnv&quot;</span>,</span>
 <span id="cb17-3"><a href="mod-bandit.html#cb17-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
-<span id="cb17-4"><a href="mod-bandit.html#cb17-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field mV Click trough rates</span></span>
+<span id="cb17-4"><a href="mod-bandit.html#cb17-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field mV Click trough rates (unknown to you)</span></span>
 <span id="cb17-5"><a href="mod-bandit.html#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">mV =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.83</span>, <span class="fl">0.85</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>),  </span>
 <span id="cb17-6"><a href="mod-bandit.html#cb17-6" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb17-7"><a href="mod-bandit.html#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field k Number of ads.</span></span>
@@ -813,10 +812,6 @@ Close
 <button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bBIs4ifgbS5F91wS3KgW">
 Solution
 </button>
-<ol style="list-style-type: decimal">
-<li>Run the <span class="math inline">\(\epsilon\)</span>-greedy algorithm with <span class="math inline">\(\epsilon = 0.01, 0.1, 0.5\)</span> over the 10000 steps. What are the estimated CTRs for each action (<span class="math inline">\(Q_t(a)\)</span>)? What is the average number of clicks per user?</li>
-</ol>
-<!-- Q2 -->
 <div id="9UNSaGJghbZYV0FR4kTI" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
@@ -825,37 +820,89 @@ Solution
 <span aria-hidden="true">×</span>
 </button>
 <h4 class="modal-title" id="9UNSaGJghbZYV0FR4kTI-title">
+Hint
+</h4>
+</div>
+<div class="modal-body">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="mod-bandit.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">327</span>)  <span class="co"># to get same results </span></span>
+<span id="cb19-2"><a href="mod-bandit.html#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="mod-bandit.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Performance of the bandit algorithm.</span></span>
+<span id="cb19-4"><a href="mod-bandit.html#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param steps Steps (users).</span></span>
+<span id="cb19-5"><a href="mod-bandit.html#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param epsilon Epsilon to be tested.</span></span>
+<span id="cb19-6"><a href="mod-bandit.html#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A list with statistics.</span></span>
+<span id="cb19-7"><a href="mod-bandit.html#cb19-7" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb19-8"><a href="mod-bandit.html#cb19-8" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(___)</span>
+<span id="cb19-9"><a href="mod-bandit.html#cb19-9" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb19-10"><a href="mod-bandit.html#cb19-10" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb19-11"><a href="mod-bandit.html#cb19-11" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span>___</span>
+<span id="cb19-12"><a href="mod-bandit.html#cb19-12" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span>___</span>
+<span id="cb19-13"><a href="mod-bandit.html#cb19-13" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
+<span id="cb19-14"><a href="mod-bandit.html#cb19-14" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(___)</span>
+<span id="cb19-15"><a href="mod-bandit.html#cb19-15" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb19-16"><a href="mod-bandit.html#cb19-16" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> ___, <span class="at">avgReward =</span> ___))</span>
+<span id="cb19-17"><a href="mod-bandit.html#cb19-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-18"><a href="mod-bandit.html#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)</span>
+<span id="cb19-19"><a href="mod-bandit.html#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.1</span>)</span>
+<span id="cb19-20"><a href="mod-bandit.html#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)</span>
+<span id="cb19-21"><a href="mod-bandit.html#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="mod-bandit.html#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co"># True values</span></span>
+<span id="cb19-23"><a href="mod-bandit.html#cb19-23" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span><span class="fu">optimalAction</span>()</span>
+<span id="cb19-24"><a href="mod-bandit.html#cb19-24" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span>mV</span></code></pre></div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">
+Hint
+</button>
+<ol style="list-style-type: decimal">
+<li>Run the <span class="math inline">\(\epsilon\)</span>-greedy algorithm with <span class="math inline">\(\epsilon = 0.01, 0.1, 0.5\)</span> over the 10000 steps. What are the estimated CTRs for each action (<span class="math inline">\(Q_t(a)\)</span>)? What is the average number of clicks per user?</li>
+</ol>
+<!-- Q2 -->
+<div id="8ZCXznKGcQH0cwTItGQG" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="8ZCXznKGcQH0cwTItGQG-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="8ZCXznKGcQH0cwTItGQG-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
-<div class="sourceCode" id="cb19"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb19-1"><a href="mod-bandit.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Test function modified with plot feature</span></span>
-<span id="cb19-2"><a href="mod-bandit.html#cb19-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
-<span id="cb19-3"><a href="mod-bandit.html#cb19-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
-<span id="cb19-4"><a href="mod-bandit.html#cb19-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb19-5"><a href="mod-bandit.html#cb19-5" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> steps, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
-<span id="cb19-6"><a href="mod-bandit.html#cb19-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb19-7"><a href="mod-bandit.html#cb19-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
-<span id="cb19-8"><a href="mod-bandit.html#cb19-8" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionEG</span>()</span>
-<span id="cb19-9"><a href="mod-bandit.html#cb19-9" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">reward</span>(a)</span>
-<span id="cb19-10"><a href="mod-bandit.html#cb19-10" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
-<span id="cb19-11"><a href="mod-bandit.html#cb19-11" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
-<span id="cb19-12"><a href="mod-bandit.html#cb19-12" aria-hidden="true" tabindex="-1"></a>      qVal[t,] <span class="ot">&lt;-</span> agent<span class="sc">$</span>qV</span>
-<span id="cb19-13"><a href="mod-bandit.html#cb19-13" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb19-14"><a href="mod-bandit.html#cb19-14" aria-hidden="true" tabindex="-1"></a>   <span class="co"># make plot</span></span>
-<span id="cb19-15"><a href="mod-bandit.html#cb19-15" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span>steps) <span class="sc">%&gt;%</span></span>
-<span id="cb19-16"><a href="mod-bandit.html#cb19-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_cols</span>(qVal) <span class="sc">%&gt;%</span>   <span class="co"># bind data together</span></span>
-<span id="cb19-17"><a href="mod-bandit.html#cb19-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">!</span>t, <span class="at">values_to =</span> <span class="st">&quot;ctr&quot;</span>, <span class="at">names_to =</span> <span class="st">&quot;action&quot;</span>) </span>
-<span id="cb19-18"><a href="mod-bandit.html#cb19-18" aria-hidden="true" tabindex="-1"></a>   pt <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
-<span id="cb19-19"><a href="mod-bandit.html#cb19-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> ctr, <span class="at">col =</span> action)) <span class="sc">+</span></span>
-<span id="cb19-20"><a href="mod-bandit.html#cb19-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb19-21"><a href="mod-bandit.html#cb19-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Empirical CTRs&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>, <span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">&quot;CTRs eps = &quot;</span>, epsilon), <span class="at">col =</span> <span class="st">&quot;Action&quot;</span>) <span class="sc">+</span></span>
-<span id="cb19-22"><a href="mod-bandit.html#cb19-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
-<span id="cb19-23"><a href="mod-bandit.html#cb19-23" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps, <span class="at">plt =</span> pt))</span>
-<span id="cb19-24"><a href="mod-bandit.html#cb19-24" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-25"><a href="mod-bandit.html#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)<span class="sc">$</span>plt</span>
-<span id="cb19-26"><a href="mod-bandit.html#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)<span class="sc">$</span>plt</span></code></pre></div>
-<img src="02_bandit_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
+<div class="sourceCode" id="cb20"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb20-1"><a href="mod-bandit.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Test function modified with plot feature</span></span>
+<span id="cb20-2"><a href="mod-bandit.html#cb20-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb20-3"><a href="mod-bandit.html#cb20-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
+<span id="cb20-4"><a href="mod-bandit.html#cb20-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-5"><a href="mod-bandit.html#cb20-5" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> steps, <span class="at">ncol =</span> <span class="dv">5</span>)  <span class="co"># store qV in a row for each t</span></span>
+<span id="cb20-6"><a href="mod-bandit.html#cb20-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb20-7"><a href="mod-bandit.html#cb20-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb20-8"><a href="mod-bandit.html#cb20-8" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionEG</span>()</span>
+<span id="cb20-9"><a href="mod-bandit.html#cb20-9" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">reward</span>(a)</span>
+<span id="cb20-10"><a href="mod-bandit.html#cb20-10" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
+<span id="cb20-11"><a href="mod-bandit.html#cb20-11" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
+<span id="cb20-12"><a href="mod-bandit.html#cb20-12" aria-hidden="true" tabindex="-1"></a>      qVal[t,] <span class="ot">&lt;-</span> agent<span class="sc">$</span>qV</span>
+<span id="cb20-13"><a href="mod-bandit.html#cb20-13" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb20-14"><a href="mod-bandit.html#cb20-14" aria-hidden="true" tabindex="-1"></a>   <span class="co"># make plot</span></span>
+<span id="cb20-15"><a href="mod-bandit.html#cb20-15" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span>steps) <span class="sc">%&gt;%</span></span>
+<span id="cb20-16"><a href="mod-bandit.html#cb20-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_cols</span>(qVal) <span class="sc">%&gt;%</span>   <span class="co"># bind data together</span></span>
+<span id="cb20-17"><a href="mod-bandit.html#cb20-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">!</span>t, <span class="at">values_to =</span> <span class="st">&quot;ctr&quot;</span>, <span class="at">names_to =</span> <span class="st">&quot;action&quot;</span>) </span>
+<span id="cb20-18"><a href="mod-bandit.html#cb20-18" aria-hidden="true" tabindex="-1"></a>   pt <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
+<span id="cb20-19"><a href="mod-bandit.html#cb20-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> ctr, <span class="at">col =</span> action)) <span class="sc">+</span></span>
+<span id="cb20-20"><a href="mod-bandit.html#cb20-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb20-21"><a href="mod-bandit.html#cb20-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Empirical CTRs&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>, <span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">&quot;CTRs eps = &quot;</span>, epsilon), <span class="at">col =</span> <span class="st">&quot;Action&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-22"><a href="mod-bandit.html#cb20-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb20-23"><a href="mod-bandit.html#cb20-23" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps, <span class="at">plt =</span> pt))</span>
+<span id="cb20-24"><a href="mod-bandit.html#cb20-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-25"><a href="mod-bandit.html#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)<span class="sc">$</span>plt</span>
+<span id="cb20-26"><a href="mod-bandit.html#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)<span class="sc">$</span>plt</span></code></pre></div>
+<img src="02_bandit_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /><img src="02_bandit_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" />
 <p>
 As epsilon grows we estimate the true values better for all actions.
 </p>
@@ -868,57 +915,103 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#9UNSaGJghbZYV0FR4kTI">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#8ZCXznKGcQH0cwTItGQG">
 Solution
 </button>
-<ol start="2" style="list-style-type: decimal">
-<li>Make a plot of the empirical CTRs for <span class="math inline">\(\epsilon = 0.01, 0.5\)</span> over 10000 time-steps, i.e. plot <span class="math inline">\(Q_t(a)\)</span>.</li>
-</ol>
-<!-- Q3 -->
-<div id="cJNysHsWq0UWK5lQcvNQ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="cJNysHsWq0UWK5lQcvNQ-title">
+<div id="NQsc418Res9JKLe54Kx9" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="NQsc418Res9JKLe54Kx9-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="cJNysHsWq0UWK5lQcvNQ-title">
+<h4 class="modal-title" id="NQsc418Res9JKLe54Kx9-title">
+Hint
+</h4>
+</div>
+<div class="modal-body">
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="mod-bandit.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Test function modified with plot feature</span></span>
+<span id="cb21-2"><a href="mod-bandit.html#cb21-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb21-3"><a href="mod-bandit.html#cb21-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
+<span id="cb21-4"><a href="mod-bandit.html#cb21-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb21-5"><a href="mod-bandit.html#cb21-5" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> steps, <span class="at">ncol =</span> <span class="dv">5</span>)  <span class="co"># store qV in a row for each t</span></span>
+<span id="cb21-6"><a href="mod-bandit.html#cb21-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb21-7"><a href="mod-bandit.html#cb21-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb21-8"><a href="mod-bandit.html#cb21-8" aria-hidden="true" tabindex="-1"></a>      ___</span>
+<span id="cb21-9"><a href="mod-bandit.html#cb21-9" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb21-10"><a href="mod-bandit.html#cb21-10" aria-hidden="true" tabindex="-1"></a>   <span class="co"># make plot</span></span>
+<span id="cb21-11"><a href="mod-bandit.html#cb21-11" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">t =</span> <span class="dv">1</span><span class="sc">:</span>steps) <span class="sc">%&gt;%</span></span>
+<span id="cb21-12"><a href="mod-bandit.html#cb21-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_cols</span>(qVal) <span class="sc">%&gt;%</span>   <span class="co"># bind data together</span></span>
+<span id="cb21-13"><a href="mod-bandit.html#cb21-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">!</span>t, <span class="at">values_to =</span> <span class="st">&quot;ctr&quot;</span>, <span class="at">names_to =</span> <span class="st">&quot;action&quot;</span>) </span>
+<span id="cb21-14"><a href="mod-bandit.html#cb21-14" aria-hidden="true" tabindex="-1"></a>   pt <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
+<span id="cb21-15"><a href="mod-bandit.html#cb21-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> ctr, <span class="at">col =</span> action)) <span class="sc">+</span></span>
+<span id="cb21-16"><a href="mod-bandit.html#cb21-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb21-17"><a href="mod-bandit.html#cb21-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Empirical CTRs&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Time&quot;</span>, <span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">&quot;CTRs eps = &quot;</span>, epsilon), <span class="at">col =</span> <span class="st">&quot;Action&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-18"><a href="mod-bandit.html#cb21-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb21-19"><a href="mod-bandit.html#cb21-19" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps, <span class="at">plt =</span> pt))</span>
+<span id="cb21-20"><a href="mod-bandit.html#cb21-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-21"><a href="mod-bandit.html#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)<span class="sc">$</span>plt</span>
+<span id="cb21-22"><a href="mod-bandit.html#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)<span class="sc">$</span>plt</span></code></pre></div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#NQsc418Res9JKLe54Kx9">
+Hint
+</button>
+<ol start="2" style="list-style-type: decimal">
+<li>Make a plot of the empirical CTRs for <span class="math inline">\(\epsilon = 0.01, 0.5\)</span> over 10000 time-steps, i.e. plot <span class="math inline">\(Q_t(a)\)</span>.</li>
+</ol>
+<!-- Q3 -->
+<div id="qYvHKkwtdCExjST1fUid" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="qYvHKkwtdCExjST1fUid-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="qYvHKkwtdCExjST1fUid-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
-<div class="sourceCode" id="cb20"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb20-1"><a href="mod-bandit.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Test function modified with rewards</span></span>
-<span id="cb20-2"><a href="mod-bandit.html#cb20-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
-<span id="cb20-3"><a href="mod-bandit.html#cb20-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
-<span id="cb20-4"><a href="mod-bandit.html#cb20-4" aria-hidden="true" tabindex="-1"></a>   rewards <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
-<span id="cb20-5"><a href="mod-bandit.html#cb20-5" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-6"><a href="mod-bandit.html#cb20-6" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">10000</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
-<span id="cb20-7"><a href="mod-bandit.html#cb20-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb20-8"><a href="mod-bandit.html#cb20-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
-<span id="cb20-9"><a href="mod-bandit.html#cb20-9" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionEG</span>()</span>
-<span id="cb20-10"><a href="mod-bandit.html#cb20-10" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">reward</span>(a) <span class="sc">*</span> rewards[a]</span>
-<span id="cb20-11"><a href="mod-bandit.html#cb20-11" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
-<span id="cb20-12"><a href="mod-bandit.html#cb20-12" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
-<span id="cb20-13"><a href="mod-bandit.html#cb20-13" aria-hidden="true" tabindex="-1"></a>      qVal[t,] <span class="ot">&lt;-</span> agent<span class="sc">$</span>qV</span>
-<span id="cb20-14"><a href="mod-bandit.html#cb20-14" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb20-15"><a href="mod-bandit.html#cb20-15" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps))</span>
-<span id="cb20-16"><a href="mod-bandit.html#cb20-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb20-17"><a href="mod-bandit.html#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)</span>
-<span id="cb20-18"><a href="mod-bandit.html#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
-<span id="cb20-19"><a href="mod-bandit.html#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.909 6.565 4.583 7.607 1.378</span></span>
-<span id="cb20-20"><a href="mod-bandit.html#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb20-21"><a href="mod-bandit.html#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
-<span id="cb20-22"><a href="mod-bandit.html#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.83</span></span>
-<span id="cb20-23"><a href="mod-bandit.html#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)</span>
-<span id="cb20-24"><a href="mod-bandit.html#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
-<span id="cb20-25"><a href="mod-bandit.html#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.952 6.640 4.290 7.459 1.355</span></span>
-<span id="cb20-26"><a href="mod-bandit.html#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb20-27"><a href="mod-bandit.html#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
-<span id="cb20-28"><a href="mod-bandit.html#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5.74</span></span>
-<span id="cb20-29"><a href="mod-bandit.html#cb20-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-30"><a href="mod-bandit.html#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co"># True average reward values</span></span>
-<span id="cb20-31"><a href="mod-bandit.html#cb20-31" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span>mV <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
-<span id="cb20-32"><a href="mod-bandit.html#cb20-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.00 6.64 4.25 7.50 1.40</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb22-1"><a href="mod-bandit.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Test function modified with rewards</span></span>
+<span id="cb22-2"><a href="mod-bandit.html#cb22-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb22-3"><a href="mod-bandit.html#cb22-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
+<span id="cb22-4"><a href="mod-bandit.html#cb22-4" aria-hidden="true" tabindex="-1"></a>   rewards <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
+<span id="cb22-5"><a href="mod-bandit.html#cb22-5" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb22-6"><a href="mod-bandit.html#cb22-6" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">10000</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb22-7"><a href="mod-bandit.html#cb22-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb22-8"><a href="mod-bandit.html#cb22-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb22-9"><a href="mod-bandit.html#cb22-9" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionEG</span>()</span>
+<span id="cb22-10"><a href="mod-bandit.html#cb22-10" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">reward</span>(a) <span class="sc">*</span> rewards[a]</span>
+<span id="cb22-11"><a href="mod-bandit.html#cb22-11" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
+<span id="cb22-12"><a href="mod-bandit.html#cb22-12" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
+<span id="cb22-13"><a href="mod-bandit.html#cb22-13" aria-hidden="true" tabindex="-1"></a>      qVal[t,] <span class="ot">&lt;-</span> agent<span class="sc">$</span>qV</span>
+<span id="cb22-14"><a href="mod-bandit.html#cb22-14" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb22-15"><a href="mod-bandit.html#cb22-15" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps))</span>
+<span id="cb22-16"><a href="mod-bandit.html#cb22-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-17"><a href="mod-bandit.html#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)</span>
+<span id="cb22-18"><a href="mod-bandit.html#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
+<span id="cb22-19"><a href="mod-bandit.html#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.909 6.591 4.583 7.610 1.111</span></span>
+<span id="cb22-20"><a href="mod-bandit.html#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb22-21"><a href="mod-bandit.html#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
+<span id="cb22-22"><a href="mod-bandit.html#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.15</span></span>
+<span id="cb22-23"><a href="mod-bandit.html#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)</span>
+<span id="cb22-24"><a href="mod-bandit.html#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
+<span id="cb22-25"><a href="mod-bandit.html#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.951 6.646 4.286 7.459 1.361</span></span>
+<span id="cb22-26"><a href="mod-bandit.html#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb22-27"><a href="mod-bandit.html#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
+<span id="cb22-28"><a href="mod-bandit.html#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5.74</span></span>
+<span id="cb22-29"><a href="mod-bandit.html#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-30"><a href="mod-bandit.html#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="co"># True average reward values</span></span>
+<span id="cb22-31"><a href="mod-bandit.html#cb22-31" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span>mV <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
+<span id="cb22-32"><a href="mod-bandit.html#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.00 6.64 4.25 7.50 1.40</span></span></code></pre></div>
 <p>
 The best action is now 4 and eps = 0.01 seems to give the best overall average reward.
 </p>
@@ -931,127 +1024,172 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cJNysHsWq0UWK5lQcvNQ">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#qYvHKkwtdCExjST1fUid">
 Solution
 </button>
-<ol start="3" style="list-style-type: decimal">
-<li>Assume that the rewards of ad clicks is equal to (10, 8, 5, 15, 2). Modify the algorithm so you look at rewards instead of CTRs. What is the best action to choose?</li>
-</ol>
-<!-- Q4 -->
-<p>We now modify the RLAgent and add an upper-confidence bound function <code>selectActionUCB</code>:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="mod-bandit.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL agent</span></span>
-<span id="cb21-2"><a href="mod-bandit.html#cb21-2" aria-hidden="true" tabindex="-1"></a>RLAgent <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;RLAgent&quot;</span>,</span>
-<span id="cb21-3"><a href="mod-bandit.html#cb21-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
-<span id="cb21-4"><a href="mod-bandit.html#cb21-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field qV Q estimates.</span></span>
-<span id="cb21-5"><a href="mod-bandit.html#cb21-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">qV =</span> <span class="cn">NULL</span>,  </span>
-<span id="cb21-6"><a href="mod-bandit.html#cb21-6" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-7"><a href="mod-bandit.html#cb21-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field nV Action counter.</span></span>
-<span id="cb21-8"><a href="mod-bandit.html#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">nV =</span> <span class="cn">NULL</span>,  </span>
-<span id="cb21-9"><a href="mod-bandit.html#cb21-9" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-10"><a href="mod-bandit.html#cb21-10" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field k Number of bandits.</span></span>
-<span id="cb21-11"><a href="mod-bandit.html#cb21-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">k =</span> <span class="cn">NULL</span>,   </span>
-<span id="cb21-12"><a href="mod-bandit.html#cb21-12" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-13"><a href="mod-bandit.html#cb21-13" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field epsilon Epsilon used in epsilon greed action selection.</span></span>
-<span id="cb21-14"><a href="mod-bandit.html#cb21-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">epsilon =</span> <span class="cn">NULL</span>, </span>
-<span id="cb21-15"><a href="mod-bandit.html#cb21-15" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-16"><a href="mod-bandit.html#cb21-16" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Create an object (when call new).</span></span>
-<span id="cb21-17"><a href="mod-bandit.html#cb21-17" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param k Number of bandits.</span></span>
-<span id="cb21-18"><a href="mod-bandit.html#cb21-18" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param epsilon Epsilon used in epsilon greed action selection.</span></span>
-<span id="cb21-19"><a href="mod-bandit.html#cb21-19" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return The new object.</span></span>
-<span id="cb21-20"><a href="mod-bandit.html#cb21-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">k =</span> <span class="dv">10</span>, <span class="at">epsilon =</span> <span class="fl">0.01</span>, <span class="at">ini =</span>  <span class="dv">0</span>) {</span>
-<span id="cb21-21"><a href="mod-bandit.html#cb21-21" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>epsilon <span class="ot">&lt;-</span> epsilon</span>
-<span id="cb21-22"><a href="mod-bandit.html#cb21-22" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="fu">rep</span>(ini, k)</span>
-<span id="cb21-23"><a href="mod-bandit.html#cb21-23" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, k)</span>
-<span id="cb21-24"><a href="mod-bandit.html#cb21-24" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>k <span class="ot">&lt;-</span> k</span>
-<span id="cb21-25"><a href="mod-bandit.html#cb21-25" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb21-26"><a href="mod-bandit.html#cb21-26" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-27"><a href="mod-bandit.html#cb21-27" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Clear learning.</span></span>
-<span id="cb21-28"><a href="mod-bandit.html#cb21-28" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param eps Epsilon.</span></span>
-<span id="cb21-29"><a href="mod-bandit.html#cb21-29" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
-<span id="cb21-30"><a href="mod-bandit.html#cb21-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">clearLearning =</span> <span class="cf">function</span>() {</span>
-<span id="cb21-31"><a href="mod-bandit.html#cb21-31" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb21-32"><a href="mod-bandit.html#cb21-32" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb21-33"><a href="mod-bandit.html#cb21-33" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb21-34"><a href="mod-bandit.html#cb21-34" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-35"><a href="mod-bandit.html#cb21-35" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using an epsilon greedy strategy.</span></span>
-<span id="cb21-36"><a href="mod-bandit.html#cb21-36" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
-<span id="cb21-37"><a href="mod-bandit.html#cb21-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">selectActionEG =</span> <span class="cf">function</span>() {   </span>
-<span id="cb21-38"><a href="mod-bandit.html#cb21-38" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;=</span> self<span class="sc">$</span>epsilon) { <span class="co"># explore</span></span>
-<span id="cb21-39"><a href="mod-bandit.html#cb21-39" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>self<span class="sc">$</span>k, <span class="dv">1</span>)</span>
-<span id="cb21-40"><a href="mod-bandit.html#cb21-40" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
-<span id="cb21-41"><a href="mod-bandit.html#cb21-41" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">which</span>(self<span class="sc">$</span>qV <span class="sc">==</span> <span class="fu">max</span>(self<span class="sc">$</span>qV))</span>
-<span id="cb21-42"><a href="mod-bandit.html#cb21-42" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> a[<span class="fu">sample</span>(<span class="fu">length</span>(a), <span class="dv">1</span>)]</span>
-<span id="cb21-43"><a href="mod-bandit.html#cb21-43" aria-hidden="true" tabindex="-1"></a>         }</span>
-<span id="cb21-44"><a href="mod-bandit.html#cb21-44" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
-<span id="cb21-45"><a href="mod-bandit.html#cb21-45" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb21-46"><a href="mod-bandit.html#cb21-46" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-47"><a href="mod-bandit.html#cb21-47" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using UCB </span></span>
-<span id="cb21-48"><a href="mod-bandit.html#cb21-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
-<span id="cb21-49"><a href="mod-bandit.html#cb21-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">selectActionUCB =</span> <span class="cf">function</span>(c, t) {   </span>
-<span id="cb21-50"><a href="mod-bandit.html#cb21-50" aria-hidden="true" tabindex="-1"></a>         val <span class="ot">&lt;-</span> self<span class="sc">$</span>qV <span class="sc">+</span> c <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(t <span class="sc">+</span> <span class="fl">0.01</span>)<span class="sc">/</span>self<span class="sc">$</span>nV)</span>
-<span id="cb21-51"><a href="mod-bandit.html#cb21-51" aria-hidden="true" tabindex="-1"></a>         a <span class="ot">&lt;-</span> <span class="fu">which.max</span>(val)</span>
-<span id="cb21-52"><a href="mod-bandit.html#cb21-52" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
-<span id="cb21-53"><a href="mod-bandit.html#cb21-53" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb21-54"><a href="mod-bandit.html#cb21-54" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb21-55"><a href="mod-bandit.html#cb21-55" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Update learning values (including action counter).</span></span>
-<span id="cb21-56"><a href="mod-bandit.html#cb21-56" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param a Action.</span></span>
-<span id="cb21-57"><a href="mod-bandit.html#cb21-57" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param r Reward.</span></span>
-<span id="cb21-58"><a href="mod-bandit.html#cb21-58" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return NULL (invisible)</span></span>
-<span id="cb21-59"><a href="mod-bandit.html#cb21-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">updateQ =</span> <span class="cf">function</span>(a, r) {</span>
-<span id="cb21-60"><a href="mod-bandit.html#cb21-60" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>nV[a] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb21-61"><a href="mod-bandit.html#cb21-61" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>qV[a] <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>self<span class="sc">$</span>nV[a] <span class="sc">*</span> (r <span class="sc">-</span> self<span class="sc">$</span>qV[a])</span>
-<span id="cb21-62"><a href="mod-bandit.html#cb21-62" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
-<span id="cb21-63"><a href="mod-bandit.html#cb21-63" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb21-64"><a href="mod-bandit.html#cb21-64" aria-hidden="true" tabindex="-1"></a>   )</span>
-<span id="cb21-65"><a href="mod-bandit.html#cb21-65" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<div id="mhFyML8wY85v311DV6ie" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mhFyML8wY85v311DV6ie-title">
+<div id="cf8X5VazfjvV95Pm5lW3" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="cf8X5VazfjvV95Pm5lW3-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="mhFyML8wY85v311DV6ie-title">
+<h4 class="modal-title" id="cf8X5VazfjvV95Pm5lW3-title">
+Hint
+</h4>
+</div>
+<div class="modal-body">
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="mod-bandit.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Test function modified with rewards</span></span>
+<span id="cb23-2"><a href="mod-bandit.html#cb23-2" aria-hidden="true" tabindex="-1"></a>testEG <span class="ot">&lt;-</span> <span class="cf">function</span>(epsilon, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb23-3"><a href="mod-bandit.html#cb23-3" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>, <span class="at">epsilon =</span> epsilon)</span>
+<span id="cb23-4"><a href="mod-bandit.html#cb23-4" aria-hidden="true" tabindex="-1"></a>   rewards <span class="ot">&lt;-</span> ___</span>
+<span id="cb23-5"><a href="mod-bandit.html#cb23-5" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb23-6"><a href="mod-bandit.html#cb23-6" aria-hidden="true" tabindex="-1"></a>   qVal <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">10000</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb23-7"><a href="mod-bandit.html#cb23-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(qVal) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;A&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb23-8"><a href="mod-bandit.html#cb23-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb23-9"><a href="mod-bandit.html#cb23-9" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionEG</span>()</span>
+<span id="cb23-10"><a href="mod-bandit.html#cb23-10" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> ___</span>
+<span id="cb23-11"><a href="mod-bandit.html#cb23-11" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
+<span id="cb23-12"><a href="mod-bandit.html#cb23-12" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
+<span id="cb23-13"><a href="mod-bandit.html#cb23-13" aria-hidden="true" tabindex="-1"></a>      qVal[t,] <span class="ot">&lt;-</span> agent<span class="sc">$</span>qV</span>
+<span id="cb23-14"><a href="mod-bandit.html#cb23-14" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb23-15"><a href="mod-bandit.html#cb23-15" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps))</span>
+<span id="cb23-16"><a href="mod-bandit.html#cb23-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-17"><a href="mod-bandit.html#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.01</span>)</span>
+<span id="cb23-18"><a href="mod-bandit.html#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="fu">testEG</span>(<span class="fl">0.5</span>)</span>
+<span id="cb23-19"><a href="mod-bandit.html#cb23-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-20"><a href="mod-bandit.html#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co"># True average reward values</span></span>
+<span id="cb23-21"><a href="mod-bandit.html#cb23-21" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span>mV <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span></code></pre></div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cf8X5VazfjvV95Pm5lW3">
+Hint
+</button>
+<ol start="3" style="list-style-type: decimal">
+<li>Assume that the rewards of ad clicks is equal to (10, 8, 5, 15, 2). Modify the algorithm so you look at rewards instead of CTRs. What is the best action to choose?</li>
+</ol>
+<!-- Q4 -->
+<p>We now modify the RLAgent and add an upper-confidence bound function <code>selectActionUCB</code>:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="mod-bandit.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL agent</span></span>
+<span id="cb24-2"><a href="mod-bandit.html#cb24-2" aria-hidden="true" tabindex="-1"></a>RLAgent <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;RLAgent&quot;</span>,</span>
+<span id="cb24-3"><a href="mod-bandit.html#cb24-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb24-4"><a href="mod-bandit.html#cb24-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field qV Q estimates.</span></span>
+<span id="cb24-5"><a href="mod-bandit.html#cb24-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">qV =</span> <span class="cn">NULL</span>,  </span>
+<span id="cb24-6"><a href="mod-bandit.html#cb24-6" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-7"><a href="mod-bandit.html#cb24-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field nV Action counter.</span></span>
+<span id="cb24-8"><a href="mod-bandit.html#cb24-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">nV =</span> <span class="cn">NULL</span>,  </span>
+<span id="cb24-9"><a href="mod-bandit.html#cb24-9" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-10"><a href="mod-bandit.html#cb24-10" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field k Number of bandits.</span></span>
+<span id="cb24-11"><a href="mod-bandit.html#cb24-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">k =</span> <span class="cn">NULL</span>,   </span>
+<span id="cb24-12"><a href="mod-bandit.html#cb24-12" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-13"><a href="mod-bandit.html#cb24-13" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field epsilon Epsilon used in epsilon greed action selection.</span></span>
+<span id="cb24-14"><a href="mod-bandit.html#cb24-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">epsilon =</span> <span class="cn">NULL</span>, </span>
+<span id="cb24-15"><a href="mod-bandit.html#cb24-15" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-16"><a href="mod-bandit.html#cb24-16" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Create an object (when call new).</span></span>
+<span id="cb24-17"><a href="mod-bandit.html#cb24-17" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param k Number of bandits.</span></span>
+<span id="cb24-18"><a href="mod-bandit.html#cb24-18" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param epsilon Epsilon used in epsilon greed action selection.</span></span>
+<span id="cb24-19"><a href="mod-bandit.html#cb24-19" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return The new object.</span></span>
+<span id="cb24-20"><a href="mod-bandit.html#cb24-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">k =</span> <span class="dv">10</span>, <span class="at">epsilon =</span> <span class="fl">0.01</span>, <span class="at">ini =</span>  <span class="dv">0</span>) {</span>
+<span id="cb24-21"><a href="mod-bandit.html#cb24-21" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>epsilon <span class="ot">&lt;-</span> epsilon</span>
+<span id="cb24-22"><a href="mod-bandit.html#cb24-22" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="fu">rep</span>(ini, k)</span>
+<span id="cb24-23"><a href="mod-bandit.html#cb24-23" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, k)</span>
+<span id="cb24-24"><a href="mod-bandit.html#cb24-24" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>k <span class="ot">&lt;-</span> k</span>
+<span id="cb24-25"><a href="mod-bandit.html#cb24-25" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb24-26"><a href="mod-bandit.html#cb24-26" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-27"><a href="mod-bandit.html#cb24-27" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Clear learning.</span></span>
+<span id="cb24-28"><a href="mod-bandit.html#cb24-28" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param eps Epsilon.</span></span>
+<span id="cb24-29"><a href="mod-bandit.html#cb24-29" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
+<span id="cb24-30"><a href="mod-bandit.html#cb24-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">clearLearning =</span> <span class="cf">function</span>() {</span>
+<span id="cb24-31"><a href="mod-bandit.html#cb24-31" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb24-32"><a href="mod-bandit.html#cb24-32" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb24-33"><a href="mod-bandit.html#cb24-33" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb24-34"><a href="mod-bandit.html#cb24-34" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-35"><a href="mod-bandit.html#cb24-35" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using an epsilon greedy strategy.</span></span>
+<span id="cb24-36"><a href="mod-bandit.html#cb24-36" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
+<span id="cb24-37"><a href="mod-bandit.html#cb24-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">selectActionEG =</span> <span class="cf">function</span>() {   </span>
+<span id="cb24-38"><a href="mod-bandit.html#cb24-38" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;=</span> self<span class="sc">$</span>epsilon) { <span class="co"># explore</span></span>
+<span id="cb24-39"><a href="mod-bandit.html#cb24-39" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>self<span class="sc">$</span>k, <span class="dv">1</span>)</span>
+<span id="cb24-40"><a href="mod-bandit.html#cb24-40" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
+<span id="cb24-41"><a href="mod-bandit.html#cb24-41" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> <span class="fu">which</span>(self<span class="sc">$</span>qV <span class="sc">==</span> <span class="fu">max</span>(self<span class="sc">$</span>qV))</span>
+<span id="cb24-42"><a href="mod-bandit.html#cb24-42" aria-hidden="true" tabindex="-1"></a>            a <span class="ot">&lt;-</span> a[<span class="fu">sample</span>(<span class="fu">length</span>(a), <span class="dv">1</span>)]</span>
+<span id="cb24-43"><a href="mod-bandit.html#cb24-43" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb24-44"><a href="mod-bandit.html#cb24-44" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
+<span id="cb24-45"><a href="mod-bandit.html#cb24-45" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb24-46"><a href="mod-bandit.html#cb24-46" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-47"><a href="mod-bandit.html#cb24-47" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using UCB </span></span>
+<span id="cb24-48"><a href="mod-bandit.html#cb24-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action (index).</span></span>
+<span id="cb24-49"><a href="mod-bandit.html#cb24-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">selectActionUCB =</span> <span class="cf">function</span>(c, t) {   </span>
+<span id="cb24-50"><a href="mod-bandit.html#cb24-50" aria-hidden="true" tabindex="-1"></a>         val <span class="ot">&lt;-</span> self<span class="sc">$</span>qV <span class="sc">+</span> c <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(t <span class="sc">+</span> <span class="fl">0.01</span>)<span class="sc">/</span>self<span class="sc">$</span>nV)</span>
+<span id="cb24-51"><a href="mod-bandit.html#cb24-51" aria-hidden="true" tabindex="-1"></a>         a <span class="ot">&lt;-</span> <span class="fu">which.max</span>(val)</span>
+<span id="cb24-52"><a href="mod-bandit.html#cb24-52" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
+<span id="cb24-53"><a href="mod-bandit.html#cb24-53" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb24-54"><a href="mod-bandit.html#cb24-54" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-55"><a href="mod-bandit.html#cb24-55" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Update learning values (including action counter).</span></span>
+<span id="cb24-56"><a href="mod-bandit.html#cb24-56" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param a Action.</span></span>
+<span id="cb24-57"><a href="mod-bandit.html#cb24-57" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param r Reward.</span></span>
+<span id="cb24-58"><a href="mod-bandit.html#cb24-58" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return NULL (invisible)</span></span>
+<span id="cb24-59"><a href="mod-bandit.html#cb24-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">updateQ =</span> <span class="cf">function</span>(a, r) {</span>
+<span id="cb24-60"><a href="mod-bandit.html#cb24-60" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>nV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>nV[a] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb24-61"><a href="mod-bandit.html#cb24-61" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>qV[a] <span class="ot">&lt;-</span> self<span class="sc">$</span>qV[a] <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>self<span class="sc">$</span>nV[a] <span class="sc">*</span> (r <span class="sc">-</span> self<span class="sc">$</span>qV[a])</span>
+<span id="cb24-62"><a href="mod-bandit.html#cb24-62" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb24-63"><a href="mod-bandit.html#cb24-63" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb24-64"><a href="mod-bandit.html#cb24-64" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb24-65"><a href="mod-bandit.html#cb24-65" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div id="J1yBcvDXBqroH1V8bpsm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="J1yBcvDXBqroH1V8bpsm-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="J1yBcvDXBqroH1V8bpsm-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
-<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb22-1"><a href="mod-bandit.html#cb22-1" aria-hidden="true" tabindex="-1"></a>testUCB <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">c =</span> <span class="dv">2</span>, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
-<span id="cb22-2"><a href="mod-bandit.html#cb22-2" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>)</span>
-<span id="cb22-3"><a href="mod-bandit.html#cb22-3" aria-hidden="true" tabindex="-1"></a>   rewards <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
-<span id="cb22-4"><a href="mod-bandit.html#cb22-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb22-5"><a href="mod-bandit.html#cb22-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
-<span id="cb22-6"><a href="mod-bandit.html#cb22-6" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionUCB</span>(c, t)</span>
-<span id="cb22-7"><a href="mod-bandit.html#cb22-7" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">reward</span>(a) <span class="sc">*</span> rewards[a]</span>
-<span id="cb22-8"><a href="mod-bandit.html#cb22-8" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
-<span id="cb22-9"><a href="mod-bandit.html#cb22-9" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
-<span id="cb22-10"><a href="mod-bandit.html#cb22-10" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb22-11"><a href="mod-bandit.html#cb22-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps))</span>
-<span id="cb22-12"><a href="mod-bandit.html#cb22-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-13"><a href="mod-bandit.html#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="fl">0.1</span>)</span>
-<span id="cb22-14"><a href="mod-bandit.html#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
-<span id="cb22-15"><a href="mod-bandit.html#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.00 6.63 3.75 0.00 0.00</span></span>
-<span id="cb22-16"><a href="mod-bandit.html#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb22-17"><a href="mod-bandit.html#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
-<span id="cb22-18"><a href="mod-bandit.html#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.63</span></span>
-<span id="cb22-19"><a href="mod-bandit.html#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">5</span>)</span>
-<span id="cb22-20"><a href="mod-bandit.html#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
-<span id="cb22-21"><a href="mod-bandit.html#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.22 6.48 3.68 7.46 1.43</span></span>
-<span id="cb22-22"><a href="mod-bandit.html#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb22-23"><a href="mod-bandit.html#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
-<span id="cb22-24"><a href="mod-bandit.html#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.28</span></span>
-<span id="cb22-25"><a href="mod-bandit.html#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">10</span>)</span>
-<span id="cb22-26"><a href="mod-bandit.html#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
-<span id="cb22-27"><a href="mod-bandit.html#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.556 6.586 3.952 7.502 1.680</span></span>
-<span id="cb22-28"><a href="mod-bandit.html#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb22-29"><a href="mod-bandit.html#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
-<span id="cb22-30"><a href="mod-bandit.html#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.4</span></span>
-<span id="cb22-31"><a href="mod-bandit.html#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">20</span>)</span>
-<span id="cb22-32"><a href="mod-bandit.html#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
-<span id="cb22-33"><a href="mod-bandit.html#cb22-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.48 6.62 4.25 7.56 1.42</span></span>
-<span id="cb22-34"><a href="mod-bandit.html#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb22-35"><a href="mod-bandit.html#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
-<span id="cb22-36"><a href="mod-bandit.html#cb22-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.25</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb25-1"><a href="mod-bandit.html#cb25-1" aria-hidden="true" tabindex="-1"></a>testUCB <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">c =</span> <span class="dv">2</span>, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb25-2"><a href="mod-bandit.html#cb25-2" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb25-3"><a href="mod-bandit.html#cb25-3" aria-hidden="true" tabindex="-1"></a>   rewards <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
+<span id="cb25-4"><a href="mod-bandit.html#cb25-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb25-5"><a href="mod-bandit.html#cb25-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb25-6"><a href="mod-bandit.html#cb25-6" aria-hidden="true" tabindex="-1"></a>      a <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">selectActionUCB</span>(c, t)</span>
+<span id="cb25-7"><a href="mod-bandit.html#cb25-7" aria-hidden="true" tabindex="-1"></a>      r <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">reward</span>(a) <span class="sc">*</span> rewards[a]</span>
+<span id="cb25-8"><a href="mod-bandit.html#cb25-8" aria-hidden="true" tabindex="-1"></a>      rew <span class="ot">&lt;-</span> rew <span class="sc">+</span> r</span>
+<span id="cb25-9"><a href="mod-bandit.html#cb25-9" aria-hidden="true" tabindex="-1"></a>      agent<span class="sc">$</span><span class="fu">updateQ</span>(a, r)</span>
+<span id="cb25-10"><a href="mod-bandit.html#cb25-10" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb25-11"><a href="mod-bandit.html#cb25-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps))</span>
+<span id="cb25-12"><a href="mod-bandit.html#cb25-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-13"><a href="mod-bandit.html#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="fl">0.1</span>)</span>
+<span id="cb25-14"><a href="mod-bandit.html#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
+<span id="cb25-15"><a href="mod-bandit.html#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.00 6.67 5.00 7.48 0.00</span></span>
+<span id="cb25-16"><a href="mod-bandit.html#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-17"><a href="mod-bandit.html#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
+<span id="cb25-18"><a href="mod-bandit.html#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.48</span></span>
+<span id="cb25-19"><a href="mod-bandit.html#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">5</span>)</span>
+<span id="cb25-20"><a href="mod-bandit.html#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
+<span id="cb25-21"><a href="mod-bandit.html#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.43 6.08 4.64 7.51 1.33</span></span>
+<span id="cb25-22"><a href="mod-bandit.html#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-23"><a href="mod-bandit.html#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
+<span id="cb25-24"><a href="mod-bandit.html#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.48</span></span>
+<span id="cb25-25"><a href="mod-bandit.html#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">10</span>)</span>
+<span id="cb25-26"><a href="mod-bandit.html#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
+<span id="cb25-27"><a href="mod-bandit.html#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.556 6.429 4.560 7.489 1.048</span></span>
+<span id="cb25-28"><a href="mod-bandit.html#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-29"><a href="mod-bandit.html#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
+<span id="cb25-30"><a href="mod-bandit.html#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.38</span></span>
+<span id="cb25-31"><a href="mod-bandit.html#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">20</span>)</span>
+<span id="cb25-32"><a href="mod-bandit.html#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $qV</span></span>
+<span id="cb25-33"><a href="mod-bandit.html#cb25-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.758 6.668 4.061 7.570 1.512</span></span>
+<span id="cb25-34"><a href="mod-bandit.html#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-35"><a href="mod-bandit.html#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $avgReward</span></span>
+<span id="cb25-36"><a href="mod-bandit.html#cb25-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 7.26</span></span></code></pre></div>
 <p>
 A value <span class="math inline">\(c = 10\)</span> seems to be a good choice.
 </p>
@@ -1064,8 +1202,45 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#mhFyML8wY85v311DV6ie">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#J1yBcvDXBqroH1V8bpsm">
 Solution
+</button>
+<div id="UUQrBS46oTgD01U7DmnL" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="UUQrBS46oTgD01U7DmnL-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="UUQrBS46oTgD01U7DmnL-title">
+Hint
+</h4>
+</div>
+<div class="modal-body">
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="mod-bandit.html#cb26-1" aria-hidden="true" tabindex="-1"></a>testUCB <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">c =</span> <span class="dv">2</span>, <span class="at">steps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb26-2"><a href="mod-bandit.html#cb26-2" aria-hidden="true" tabindex="-1"></a>   agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>(<span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb26-3"><a href="mod-bandit.html#cb26-3" aria-hidden="true" tabindex="-1"></a>   rewards <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">2</span>)</span>
+<span id="cb26-4"><a href="mod-bandit.html#cb26-4" aria-hidden="true" tabindex="-1"></a>   rew <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-5"><a href="mod-bandit.html#cb26-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>steps) {</span>
+<span id="cb26-6"><a href="mod-bandit.html#cb26-6" aria-hidden="true" tabindex="-1"></a>      ___</span>
+<span id="cb26-7"><a href="mod-bandit.html#cb26-7" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb26-8"><a href="mod-bandit.html#cb26-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">qV =</span> agent<span class="sc">$</span>qV, <span class="at">avgReward =</span> rew<span class="sc">/</span>steps))</span>
+<span id="cb26-9"><a href="mod-bandit.html#cb26-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-10"><a href="mod-bandit.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="fl">0.1</span>)</span>
+<span id="cb26-11"><a href="mod-bandit.html#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">5</span>)</span>
+<span id="cb26-12"><a href="mod-bandit.html#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">10</span>)</span>
+<span id="cb26-13"><a href="mod-bandit.html#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="fu">testUCB</span>(<span class="dv">20</span>)</span></code></pre></div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UUQrBS46oTgD01U7DmnL">
+Hint
 </button>
 <ol start="4" style="list-style-type: decimal">
 <li>Test the UCB algorithm for <span class="math inline">\(c\)</span> values <span class="math inline">\((0.1, 5, 10, 20)\)</span>. Which algorithm seems to find the best average reward?</li>
@@ -1075,14 +1250,14 @@ Solution
 <h3><span class="header-section-number">2.9.2</span> Exercise - A coin game<a href="mod-bandit.html#ex-bandit-coin" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.</p>
 <!-- Q1 -->
-<div id="UogJuRebD8e68uuMCu63" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="UogJuRebD8e68uuMCu63-title">
+<div id="BA4bBzteJ1obnKYNQ5V8" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="BA4bBzteJ1obnKYNQ5V8-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="UogJuRebD8e68uuMCu63-title">
+<h4 class="modal-title" id="BA4bBzteJ1obnKYNQ5V8-title">
 Solution
 </h4>
 </div>
@@ -1099,21 +1274,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UogJuRebD8e68uuMCu63">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BA4bBzteJ1obnKYNQ5V8">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Model this as a K-armed bandit problem: define the action set.</li>
 </ol>
 <!-- Q2 -->
-<div id="j7xBii6afnYS2GOohDOT" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="j7xBii6afnYS2GOohDOT-title">
+<div id="P7dFb49aFJkDFbk23jW9" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="P7dFb49aFJkDFbk23jW9-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="j7xBii6afnYS2GOohDOT-title">
+<h4 class="modal-title" id="P7dFb49aFJkDFbk23jW9-title">
 Solution
 </h4>
 </div>
@@ -1130,21 +1305,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#j7xBii6afnYS2GOohDOT">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#P7dFb49aFJkDFbk23jW9">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Is the reward a deterministic or stochastic function of your action?</li>
 </ol>
 <!-- Q3 -->
-<div id="taUUQrBS46oTgD01U7Dm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="taUUQrBS46oTgD01U7Dm-title">
+<div id="RDpiFx5KmYmybxoEch0d" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="RDpiFx5KmYmybxoEch0d-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="taUUQrBS46oTgD01U7Dm-title">
+<h4 class="modal-title" id="RDpiFx5KmYmybxoEch0d-title">
 Solution
 </h4>
 </div>
@@ -1161,21 +1336,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#taUUQrBS46oTgD01U7Dm">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RDpiFx5KmYmybxoEch0d">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
 <li>You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula <a href="mod-bandit.html#eq:avg">(2.1)</a> to compute the estimates of the value of each action.</li>
 </ol>
 <!-- Q4 -->
-<div id="nLBA4bBzteJ1obnKYNQ5" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="nLBA4bBzteJ1obnKYNQ5-title">
+<div id="e9XpG4cJ6DEQQnnTVXFW" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="e9XpG4cJ6DEQQnnTVXFW-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="nLBA4bBzteJ1obnKYNQ5-title">
+<h4 class="modal-title" id="e9XpG4cJ6DEQQnnTVXFW-title">
 Solution
 </h4>
 </div>
@@ -1192,7 +1367,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nLBA4bBzteJ1obnKYNQ5">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#e9XpG4cJ6DEQQnnTVXFW">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
