@@ -18,7 +18,7 @@ for (f in rmd) {
       str_replace("---(.|\n)*?---", yml) %>%   # replace yaml
       str_replace("TITLE", title) %>%          # replace title
       str_remove_all("# .PART. .*") %>%        # remove PART statements
-      str_remove_all("```.*solution.*=.*TRUE.*\n(.|\n)*?```") %>%        # remove solutions
+      str_remove_all("```.*solution.*=.*TRUE.*\n(.|\n)*?```") %>%        # remove solutions NOTE don't remove hints
       str_remove_all("```(.|\n)*?bookdown::serve_book(.|\n)*?```") %>%   # remove bookdown comments
       str_remove_all("`r strExercises`") %>%                             # remove exercises comment
       write_file(file = str_c("student/", fs::path_file(f)))             # save file in student folder
