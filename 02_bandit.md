@@ -820,7 +820,7 @@ Consider a game where you choose to flip one of two (possibly unfair) coins. You
 
 <div class="modal fade bs-example-modal-lg" id="RDpiFx5KmYmybxoEch0d" tabindex="-1" role="dialog" aria-labelledby="RDpiFx5KmYmybxoEch0d-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="RDpiFx5KmYmybxoEch0d-title">Solution</h4></div><div class="modal-body">
 
-<p>The estimates are \[Q_t(a_1) = (0+1+1+0+0+0)/6 = 1/3\] and \[Q_t(a_2) = (1+0+1+1+1+0)/6 = 2/3\].</p>
+<p>The estimates are \[Q_t(a_1) = (-1+1+1-1-1-1)/6 = -1/3\] and \[Q_t(a_2) = (1-1+1+1+1-1)/6 = 1/3\].</p>
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RDpiFx5KmYmybxoEch0d">Solution</button>
 
