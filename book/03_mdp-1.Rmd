@@ -378,7 +378,7 @@ A gambler has the opportunity to make bets on the outcomes of a sequence of coin
    4) Let $R_a$ be zero for all bets $a$ and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?
 
 <!-- Q5 -->
-```{r, solution=TRUE, text="If $C$ denote a Bernoulli variable equal 1 if head. Then $$p(s' | s, a) = \\Pr(s' = max(0, min(100, s + Ca - (1-C)a))).$$ Hence there are two transitions: if $s' = max(0, s - a)$ then $p(s' | s, a) = 1-p_H$ and if $s' = min(100, s + a)$ then $p(s' | s, a) = p_H$."}
+```{r, solution=TRUE, text="If $C$ denote a Bernoulli variable equal 1 if head. Then $$p(s' | s, a) = \\Pr(s' = s + Ca - (1-C)a).$$ Hence there are two transitions: if $s' = s - a$ then $p(s' | s, a) = 1-p_H$ and if $s' = s + a$ then $p(s' | s, a) = p_H$."}
 ```
 
    5) Calculate the transition probabilities.
