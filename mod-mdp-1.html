@@ -789,7 +789,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-The expected reward is: <span class="math display">\[r(s,a) = \mathbb{E}[R_a] = p_H a\]</span> where <span class="math inline">\(p_H\)</span> denote the probability of head. The state-value is the probability of winning.
+Since <span class="math inline">\(r(s,a) = 0\)</span> for all states and actions, the state-value is the probability of winning.
 </p>
 </div>
 <div class="modal-footer">
@@ -820,7 +820,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-If <span class="math inline">\(C\)</span> denote a Bernoulli variable equal 1 if head. Then <span class="math display">\[p(s&#39; | s, a) = \Pr(s&#39; = max(0, min(100, s + Ca - (1-C)a))).\]</span> Hence there are two transitions: if <span class="math inline">\(s&#39; = max(0, s - a)\)</span> then <span class="math inline">\(p(s&#39; | s, a) = 1-p_H\)</span> and if <span class="math inline">\(s&#39; = min(100, s + a)\)</span> then <span class="math inline">\(p(s&#39; | s, a) = p_H\)</span>.
+If <span class="math inline">\(C\)</span> denote a Bernoulli variable equal 1 if head. Then <span class="math display">\[p(s&#39; | s, a) = \Pr(s&#39; = s + Ca - (1-C)a).\]</span> Hence there are two transitions: if <span class="math inline">\(s&#39; = s - a\)</span> then <span class="math inline">\(p(s&#39; | s, a) = 1-p_H\)</span> and if <span class="math inline">\(s&#39; = s + a\)</span> then <span class="math inline">\(p(s&#39; | s, a) = p_H\)</span>.
 </p>
 </div>
 <div class="modal-footer">
@@ -951,7 +951,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-The transition probabilities are: <span class="math display">\[p(s&#39;|s,k) = p_{s&#39;-s}\text{ if } s\leq s&#39; \leq 3\]</span> <span class="math display">\[p(4|s,k) = \sum_{i\geq 4-s} p_i\]</span> <span class="math display">\[p(s&#39;|s,e) = p_{s&#39;}\text{ if }  0\leq s&#39; \leq 4\]</span> <span class="math display">\[p(s&#39;|s,k) =  0 \text{ otherwise.}\]</span>
+The transition probabilities are: <span class="math display">\[p(s&#39;|s,k) = p_{s&#39;-s}\text{ if } s\leq s&#39; \leq 3\]</span> <span class="math display">\[p(4|s,k) = \sum_{i\geq 4-s} p_i\]</span> <span class="math display">\[p(s&#39;|s,e) = p_{s&#39;}\text{ if }  0\leq s&#39; \leq 4\]</span> <span class="math display">\[p(s&#39;|s,a) =  0 \text{ otherwise.}\]</span>
 </p>
 </div>
 <div class="modal-footer">
