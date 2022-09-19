@@ -130,21 +130,36 @@ layout: true
 
 ---
 
-layout:false
+layout: true
+
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/03_mdp-1-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/03_mdp-1-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+---
 
 ## Mathematical description of the MDP 
 
-- At time-step `\(t\)`: states `\(S_t \in \mathcal{S}\)`, actions `\(A_t \in \mathcal{A}(s)\)` and rewards `\(R_t \in \mathcal{R} \subset \mathbb{R}.\)`
-- Since a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. 
-- The random variables have well defined discrete probability distributions which defines the dynamics of the system:
+   * At time-step `\(t\)`: states `\(S_t \in \mathcal{S}\)`, actions `\(A_t \in \mathcal{A}(s)\)` and rewards `\(R_t \in \mathcal{R} \subset \mathbb{R}.\)`
+   * Since a *finite* MDP, the sets of states, actions all have a finite number of elements.
+   
+--
+
+* The random variables have well defined discrete probability distributions which defines the dynamics of the system:
 `\begin{equation}
     p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
 \end{equation}`
-which can be used to find the *transition probabilities*:
+   which can be used to find the *transition probabilities*:
 `\begin{equation}
     p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
 \end{equation}`
-and the *expected reward*:
+   and the *expected reward*:
 `\begin{equation}
     r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
 \end{equation}`
