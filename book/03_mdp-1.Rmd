@@ -372,7 +372,7 @@ A gambler has the opportunity to make bets on the outcomes of a sequence of coin
    3) Let $R_a$ denote the reward given bet $a$. Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?
 
 <!-- Q4 -->
-```{r, solution=TRUE, text="The expected reward is: $$r(s,a) = \\mathbb{E}[R_a] = p_H a$$ where $p_H$ denote the probability of head. The state-value is the probability of winning."}
+```{r, solution=TRUE, text="Since $r(s,a) = 0$ for all states and actions, the state-value is the probability of winning."}
 ```
 
    4) Let $R_a$ be zero for all bets $a$ and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?
@@ -415,7 +415,7 @@ The problem can be modelled as a finite MDP where a state denote the amount of w
    3) Calculate the expected rewards $r(s,a)$.
 
 <!-- Q4 -->
-```{r, solution=TRUE, text="The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\\text{ if } s\\leq s' \\leq 3$$ $$p(4|s,k) = \\sum_{i\\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\\text{ if }  0\\leq s' \\leq 4$$ $$p(s'|s,k) =  0 \\text{ otherwise.}$$"}
+```{r, solution=TRUE, text="The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\\text{ if } s\\leq s' \\leq 3$$ $$p(4|s,k) = \\sum_{i\\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\\text{ if }  0\\leq s' \\leq 4$$ $$p(s'|s,a) =  0 \\text{ otherwise.}$$"}
 ```
 
    4) Calculate the transition probabilities $p(s'|s,a)$.
