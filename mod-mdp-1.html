@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-09-13" />
+<meta name="date" content="2022-09-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -681,7 +681,7 @@ Solution
 </div>
 <div id="ex-mdp-1-gambler" class="section level3 hasAnchor" number="3.6.3">
 <h3><span class="header-section-number">3.6.3</span> Exercise - Gambler’s problem<a href="mod-mdp-1.html#ex-mdp-1-gambler" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. If the coin comes up heads (H), he wins as many dollars as he has staked on that flip; if it is tails (T), he loses his stake. The game ends when the gambler reaches his goal of a capital equal $100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP.</p>
+<p>A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. The coin may be an unequal coin where there is not equal probability <span class="math inline">\(p_H\)</span> for a head (H) and a tail (T). If the coin comes up heads, the gambler wins as many dollars as he has staked on that flip; if it is tails, he loses his stake. The game ends when the gambler reaches his goal of a capital equal 100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP, where we assume that the gambler starts with a capital <span class="math inline">\(0 &lt; s_0 &lt; 100\)</span>.</p>
 <!-- Q1 -->
 <div id="DATwFQqZBOCSpMEs73yZ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="DATwFQqZBOCSpMEs73yZ-title">
 <div class="modal-dialog modal-lg" role="document">
@@ -696,7 +696,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-Capital of the gambler: <span class="math display">\[\mathcal{S} = \{0, \ldots, 100 \}.\]</span>
+Capital of the gambler: <span class="math display">\[\mathcal{S} = \{0, \ldots, 100 \}.\]</span> Terminal states are 0 and 100 (loose or win).
 </p>
 </div>
 <div class="modal-footer">
@@ -711,7 +711,7 @@ Close
 Solution
 </button>
 <ol style="list-style-type: decimal">
-<li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</li>
+<li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>. Which states are terminal states?</li>
 </ol>
 <!-- Q2 -->
 <div id="U0HHHPsg3HtOt89GHo6t" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="U0HHHPsg3HtOt89GHo6t-title">
@@ -727,7 +727,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-Given his capital choose to gamble <span class="math inline">\(a\)</span>: <span class="math display">\[\mathcal{A}(s) = \{ a\in \mathcal{S} | 0 \leq a \leq s \}\]</span>
+Given his capital choose to gamble <span class="math inline">\(a\)</span>: <span class="math display">\[\mathcal{A}(s) = \{ a\in \mathcal{S} | 0 \leq a \leq \min(s, 100-s) \}.\]</span>
 </p>
 </div>
 <div class="modal-footer">
@@ -758,7 +758,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-The expected reward is: <span class="math display">\[r(s,a) = \mathbb{E}[R_a] = p_H a\]</span> where <span class="math inline">\(p_H\)</span> denote the probability of head.
+The expected reward is: <span class="math display">\[r(s,a) = \mathbb{E}[R_a] = p_H a\]</span> where <span class="math inline">\(p_H\)</span> denote the probability of head. The state-value denote the expected reward.
 </p>
 </div>
 <div class="modal-footer">
@@ -773,7 +773,7 @@ Close
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
-<li>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span>. Calculate the expected rewards.</li>
+<li>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span>. Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?</li>
 </ol>
 <!-- Q4 -->
 <div id="ZNJxUz9TqxMQqNzlzgtS" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ZNJxUz9TqxMQqNzlzgtS-title">
@@ -789,7 +789,7 @@ Solution
 </div>
 <div class="modal-body">
 <p>
-Note <span class="math display">\[p(s&#39; | s, a) = \Pr(s&#39; = s + \mathbb{1}_{\text{H}}a - \mathbb{1}_{\text{T}}a).\]</span> Hence there are two transitions: if <span class="math inline">\(s&#39; = s - a\)</span> then <span class="math inline">\(p(s&#39; | s, a) = 1-p_H\)</span> and if <span class="math inline">\(s&#39; = s + a\)</span> then <span class="math inline">\(p(s&#39; | s, a) = p_H\)</span>.
+The expected reward is: <span class="math display">\[r(s,a) = \mathbb{E}[R_a] = p_H a\]</span> where <span class="math inline">\(p_H\)</span> denote the probability of head. The state-value is the probability of winning.
 </p>
 </div>
 <div class="modal-footer">
@@ -804,6 +804,37 @@ Close
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
+<li>Let <span class="math inline">\(R_a\)</span> be zero for all bets <span class="math inline">\(a\)</span> and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?</li>
+</ol>
+<!-- Q5 -->
+<div id="v9fV8NQofDC8Q8Z1cyHt" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="v9fV8NQofDC8Q8Z1cyHt-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="v9fV8NQofDC8Q8Z1cyHt-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+If <span class="math inline">\(C\)</span> denote a Bernoulli variable equal 1 if head. Then <span class="math display">\[p(s&#39; | s, a) = \Pr(s&#39; = max(0, min(100, s + Ca - (1-C)a))).\]</span> Hence there are two transitions: if <span class="math inline">\(s&#39; = max(0, s - a)\)</span> then <span class="math inline">\(p(s&#39; | s, a) = 1-p_H\)</span> and if <span class="math inline">\(s&#39; = min(100, s + a)\)</span> then <span class="math inline">\(p(s&#39; | s, a) = p_H\)</span>.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#v9fV8NQofDC8Q8Z1cyHt">
+Solution
+</button>
+<ol start="5" style="list-style-type: decimal">
 <li>Calculate the transition probabilities.</li>
 </ol>
 </div>
@@ -814,14 +845,14 @@ Solution
 If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.</p>
 <p>The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week <span class="math inline">\(n\)</span> just before the regular removal opportunity.</p>
 <!-- Q1 -->
-<div id="v9fV8NQofDC8Q8Z1cyHt" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="v9fV8NQofDC8Q8Z1cyHt-title">
+<div id="STjejRRRAQtuchuhtie0" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="STjejRRRAQtuchuhtie0-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="v9fV8NQofDC8Q8Z1cyHt-title">
+<h4 class="modal-title" id="STjejRRRAQtuchuhtie0-title">
 Solution
 </h4>
 </div>
@@ -838,21 +869,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#v9fV8NQofDC8Q8Z1cyHt">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#STjejRRRAQtuchuhtie0">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</li>
 </ol>
 <!-- Q2 -->
-<div id="STjejRRRAQtuchuhtie0" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="STjejRRRAQtuchuhtie0-title">
+<div id="GoJFd5Ty9HE4Ue5fOO5U" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="GoJFd5Ty9HE4Ue5fOO5U-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="STjejRRRAQtuchuhtie0-title">
+<h4 class="modal-title" id="GoJFd5Ty9HE4Ue5fOO5U-title">
 Solution
 </h4>
 </div>
@@ -869,21 +900,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#STjejRRRAQtuchuhtie0">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#GoJFd5Ty9HE4Ue5fOO5U">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</li>
 </ol>
 <!-- Q3 -->
-<div id="GoJFd5Ty9HE4Ue5fOO5U" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="GoJFd5Ty9HE4Ue5fOO5U-title">
+<div id="IeNy6C6uCdcNC33wdyrr" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="IeNy6C6uCdcNC33wdyrr-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="GoJFd5Ty9HE4Ue5fOO5U-title">
+<h4 class="modal-title" id="IeNy6C6uCdcNC33wdyrr-title">
 Solution
 </h4>
 </div>
@@ -900,21 +931,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#GoJFd5Ty9HE4Ue5fOO5U">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IeNy6C6uCdcNC33wdyrr">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
 <li>Calculate the expected rewards <span class="math inline">\(r(s,a)\)</span>.</li>
 </ol>
 <!-- Q4 -->
-<div id="IeNy6C6uCdcNC33wdyrr" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="IeNy6C6uCdcNC33wdyrr-title">
+<div id="vWlZccBp0n3iZMuRaBeg" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="vWlZccBp0n3iZMuRaBeg-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="IeNy6C6uCdcNC33wdyrr-title">
+<h4 class="modal-title" id="vWlZccBp0n3iZMuRaBeg-title">
 Solution
 </h4>
 </div>
@@ -931,7 +962,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IeNy6C6uCdcNC33wdyrr">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#vWlZccBp0n3iZMuRaBeg">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
