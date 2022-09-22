@@ -7,3 +7,5 @@
 **tmp
 Rprof.out
 **.bak
+*.bin
+tmp.pdf
