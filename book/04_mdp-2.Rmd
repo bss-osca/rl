@@ -264,7 +264,7 @@ Formulate the problem as an finite MDP where the time-steps are days.
    2) Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1. 
    
 <!-- Q3 -->
-```{r, solution=TRUE, text="The reward equals the reward of rentals minus the cost of movements. Note we have $\\tilde{x} = x - a$ and $\\tilde{y} = x + a$ after movement. Hence $$r(s,a) = \\mathbb{E}[10(\\min(D_1, \\tilde{x}) + \\min(D_2, \\tilde{y}) )-2\\mid a \\mid]$$ where $$\\mathbb{E}[\\min(D, z)] = \\sum_{i=0}^z ip(D = i) + (1-p(D\\leq z))z.$$"}
+```{r, solution=TRUE, text="The reward equals the reward of rentals minus the cost of movements. Note we have $\\bar{x} = x - a$ and $\\bar{y} = x + a$ after movement. Hence $$r(s,a) = \\mathbb{E}[10(\\min(D_1, \\bar{x}) + \\min(D_2, \\bar{y}) )-2\\mid a \\mid]$$ where $$\\mathbb{E}[\\min(D, z)] = \\sum_{i=0}^z ip(D = i) + (1-p(D\\leq z))z.$$"}
 ```
 
    3) Calculate the expected reward $r(s,a)$.
