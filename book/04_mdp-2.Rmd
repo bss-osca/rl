@@ -27,7 +27,7 @@ By the end of this module, you are expected to:
 <!-- * Understand how the agent-environment RL description relates to an MDP. -->
 <!-- * Interpret the graphical representation of a Markov Decision Process. -->
 <!-- * Describe how rewards are used to define the objective function (expected return). -->
-<!-- * Interpret the discount factor and its effect on the objective function. -->
+<!-- * Interpret the discount rate and its effect on the objective function. -->
 <!-- * Identify episodes and how to formulate an MDP by adding an absorbing state.  -->
 
 * Identify a policy as a distribution over actions for each possible state.

@@ -215,11 +215,11 @@ The goal is to find a policy that maximize the total future reward. A *policy* i
 
 The total future reward is a currently not defined clearly. Let the *value function* denote the future reward in state $s$ and define it as the expected discounted future reward: $$V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).$$ Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states $$\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).$$
 
-The value of the discount factor is important:
+The value of the discount rate is important:
 
-   - Discount factor $\gamma=0$: Only care about present reward.
-   - Discount factor $\gamma=1$: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.
-   - Discount factor $\gamma<1$: Rewards near to the present more beneficial. Note $V(s)$ will converge to a number even if the time-horizon is infinite.
+   - Discount rate $\gamma=0$: Only care about present reward.
+   - Discount rate $\gamma=1$: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.
+   - Discount rate $\gamma<1$: Rewards near to the present more beneficial. Note $V(s)$ will converge to a number even if the time-horizon is infinite.
    
 
 
