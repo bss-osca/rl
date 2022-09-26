@@ -318,7 +318,8 @@ div.csl-indent {
 <li class="chapter" data-level="5.10" data-path="mod-dp.html"><a href="mod-dp.html#exercises"><i class="fa fa-check"></i><b>5.10</b> Exercises</a>
 <ul>
 <li class="chapter" data-level="5.10.1" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-gambler"><i class="fa fa-check"></i><b>5.10.1</b> Exercise - Gambler’s problem</a></li>
-<li class="chapter" data-level="5.10.2" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-rental"><i class="fa fa-check"></i><b>5.10.2</b> Exercise - Car rental</a></li>
+<li class="chapter" data-level="5.10.2" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-maintain"><i class="fa fa-check"></i><b>5.10.2</b> Exercise - Maintenance problem</a></li>
+<li class="chapter" data-level="5.10.3" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-rental"><i class="fa fa-check"></i><b>5.10.3</b> Exercise - Car rental</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control</a>
@@ -542,14 +543,14 @@ Figure 7.2: Possible transitions between states and rewards.
 </p>
 </div>
 <!-- Q1 -->
-<div id="u7ZcbBr0zHUVF2KLwJFm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="u7ZcbBr0zHUVF2KLwJFm-title">
+<div id="KkHaWX6PK2V3wpSgUHVq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="KkHaWX6PK2V3wpSgUHVq-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="u7ZcbBr0zHUVF2KLwJFm-title">
+<h4 class="modal-title" id="KkHaWX6PK2V3wpSgUHVq-title">
 Solution
 </h4>
 </div>
@@ -566,7 +567,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#u7ZcbBr0zHUVF2KLwJFm">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#KkHaWX6PK2V3wpSgUHVq">
 Solution
 </button>
 <ol style="list-style-type: decimal">
@@ -574,7 +575,7 @@ Solution
 <li><p>Consider an episode with sequence <span class="math inline">\(C, 0, B, 0, C, 0, D, 0, E, 1\)</span>. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with <span class="math inline">\(\alpha = 0.1\)</span>. It appears that only <span class="math inline">\(V(A)\)</span> change. What does this tell you about what happened on the first episode? Why was only the estimate for this one state changed? By exactly how much was it changed?</p></li>
 <li><p>Generate 100 episodes and run the TD(0) prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-td-pred.html#fig:td0-pred-alg">7.1</a>). Make a plot of the state-value estimate (y-axis) given state A-E (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.</p></li>
 </ol>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="mod-td-pred.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">875</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="mod-td-pred.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">875</span>)</span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Run an MC prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a> running for 1, 10 and 100 episodes.</p></li>
 <li><p>The results are dependent on the value of the step-size parameter. Try estimating the state-values using TD(0) and MC for <span class="math inline">\(\alpha = 0.2, 0.1, 0.05\)</span> and 0.025. Plot the root mean square (RMS) error <span class="math display">\[\sqrt{\frac{1}{5}\sum_{s=A}^E(V(s)-v_\pi(s))^2}\]</span> (y-axis) given the number of episodes (x-axis).Do you think the conclusions about that TD(0) is better than MC is affected by different values?</p></li>

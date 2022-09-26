@@ -104,6 +104,7 @@ example---factory-storage
 summary-4
 exercises
 ex-dp-gambler
+ex-dp-maintain
 ex-dp-rental
 mod-mc
 learning-outcomes-5

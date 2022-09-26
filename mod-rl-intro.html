@@ -318,7 +318,8 @@ div.csl-indent {
 <li class="chapter" data-level="5.10" data-path="mod-dp.html"><a href="mod-dp.html#exercises"><i class="fa fa-check"></i><b>5.10</b> Exercises</a>
 <ul>
 <li class="chapter" data-level="5.10.1" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-gambler"><i class="fa fa-check"></i><b>5.10.1</b> Exercise - Gambler’s problem</a></li>
-<li class="chapter" data-level="5.10.2" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-rental"><i class="fa fa-check"></i><b>5.10.2</b> Exercise - Car rental</a></li>
+<li class="chapter" data-level="5.10.2" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-maintain"><i class="fa fa-check"></i><b>5.10.2</b> Exercise - Maintenance problem</a></li>
+<li class="chapter" data-level="5.10.3" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-rental"><i class="fa fa-check"></i><b>5.10.3</b> Exercise - Car rental</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control</a>
@@ -563,11 +564,11 @@ Figure 1.5: State and action.
 </ul>
 <p>The goal is to find a policy that maximize the total future reward. A <em>policy</em> is the agent’s behaviour and is a map from state to action, i.e. a function <span class="math display">\[a = \pi(s)\]</span> saying that given the agent is in state <span class="math inline">\(s\)</span> we choose action <span class="math inline">\(a\)</span>.</p>
 <p>The total future reward is a currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
-<p>The value of the discount factor is important:</p>
+<p>The value of the discount rate is important:</p>
 <ul>
-<li>Discount factor <span class="math inline">\(\gamma=0\)</span>: Only care about present reward.</li>
-<li>Discount factor <span class="math inline">\(\gamma=1\)</span>: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.</li>
-<li>Discount factor <span class="math inline">\(\gamma&lt;1\)</span>: Rewards near to the present more beneficial. Note <span class="math inline">\(V(s)\)</span> will converge to a number even if the time-horizon is infinite.</li>
+<li>Discount rate <span class="math inline">\(\gamma=0\)</span>: Only care about present reward.</li>
+<li>Discount rate <span class="math inline">\(\gamma=1\)</span>: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.</li>
+<li>Discount rate <span class="math inline">\(\gamma&lt;1\)</span>: Rewards near to the present more beneficial. Note <span class="math inline">\(V(s)\)</span> will converge to a number even if the time-horizon is infinite.</li>
 </ul>
 <!-- ## Model free vs Model based -->
 </div>

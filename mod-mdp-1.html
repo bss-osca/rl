@@ -318,7 +318,8 @@ div.csl-indent {
 <li class="chapter" data-level="5.10" data-path="mod-dp.html"><a href="mod-dp.html#exercises"><i class="fa fa-check"></i><b>5.10</b> Exercises</a>
 <ul>
 <li class="chapter" data-level="5.10.1" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-gambler"><i class="fa fa-check"></i><b>5.10.1</b> Exercise - Gambler’s problem</a></li>
-<li class="chapter" data-level="5.10.2" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-rental"><i class="fa fa-check"></i><b>5.10.2</b> Exercise - Car rental</a></li>
+<li class="chapter" data-level="5.10.2" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-maintain"><i class="fa fa-check"></i><b>5.10.2</b> Exercise - Maintenance problem</a></li>
+<li class="chapter" data-level="5.10.3" data-path="mod-dp.html"><a href="mod-dp.html#ex-dp-rental"><i class="fa fa-check"></i><b>5.10.3</b> Exercise - Car rental</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="mod-mc.html"><a href="mod-mc.html"><i class="fa fa-check"></i><b>6</b> Monte Carlo methods for prediction and control</a>
@@ -419,7 +420,7 @@ div.csl-indent {
 <li>Understand how the agent-environment RL description relates to an MDP.</li>
 <li>Interpret the graphical representation of a Markov Decision Process.</li>
 <li>Describe how rewards are used to define the objective function (expected return).</li>
-<li>Interpret the discount factor and its effect on the objective function.</li>
+<li>Interpret the discount rate and its effect on the objective function.</li>
 <li>Identify episodes and how to formulate an MDP by adding an absorbing state.</li>
 </ul>
 <!-- * Identify a policy as a distribution over actions for each possible state. -->
@@ -495,7 +496,7 @@ and the <em>expected reward</em>:
 <p>All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).</p>
 </blockquote>
 <p>This assumption can be questioned but in this course we assume it holds. The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.</p>
-<p>The return <span class="math inline">\(G_t\)</span> can be defined as the sum of future rewards; however, if the time horizon is infinite the return is also infinite. Hence we use a <em>discount factor</em> <span class="math inline">\(0 \leq \gamma \leq 1\)</span> and define the return as</p>
+<p>The return <span class="math inline">\(G_t\)</span> can be defined as the sum of future rewards; however, if the time horizon is infinite the return is also infinite. Hence we use a <em>discount rate</em> <span class="math inline">\(0 \leq \gamma \leq 1\)</span> and define the return as</p>
 <p><span class="math display">\[\begin{equation}
     G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
 \end{equation}\]</span></p>
@@ -516,8 +517,8 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 <li>An agent’s choices have long-term consequences (delayed reward).</li>
 <li>Selected actions influences future states and rewards.</li>
 <li>The objective is to maximize the expected discounted return.</li>
-<li>With a discount factor less than one, we can guarantee the return remains finite.</li>
-<li>The value of the discount factor defines how much we care about short-term rewards versus long-term rewards.</li>
+<li>With a discount rate less than one, we can guarantee the return remains finite.</li>
+<li>The value of the discount rate defines how much we care about short-term rewards versus long-term rewards.</li>
 <li>A first step in applying reinforcement learning is to formulate the problem as an MDP.</li>
 </ul>
 </div>
