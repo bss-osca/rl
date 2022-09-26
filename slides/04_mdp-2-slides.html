@@ -94,7 +94,7 @@ $$
 
 ---
 
-## Belman equations
+## Bellman equations
 
 The value functions can be transformed into recursive equations (Bellman equations).
 
@@ -232,7 +232,7 @@ layout: true
 
 * Using the Bellman optimality equations optimal policies and value functions can be found.
 * It may be expensive to solve the equations if the number of states is huge. 
-* *Curse of dimensionality*: Consider a state `\(s = (x_1,\ldots,x_n)\)` with state variables `\(x_i\)` each taking two possible values, then the number of states is `\(|\mathcal{S}| = 2^n\)`. That is, the state space grows exponentially with the number of state variables. 
+* *Curse of dimensionality:* Consider a state `\(s = (x_1,\ldots,x_n)\)` with state variables `\(x_i\)` each taking two possible values, then the number of states is `\(|\mathcal{S}| = 2^n\)`. That is, the state space grows exponentially with the number of state variables. 
 * Large state or action spaces may happen in practice; moreover, they may also be continuous. 
 * In such cases we approximate the value functions instead. 
 * In RL we approximate the value functions if state stace is high or parameters unknown (e.g. transition probabilities). 
@@ -241,7 +241,7 @@ layout: true
 
 ## Semi-MDPs (non-fixed time length)
 
-* finite MDPs consider a fixed length between each time-step. 
+* Finite MDPs consider a fixed length between each time-step. 
 * Semi-MDPs consider non-fixed time-lengths. 
 * Let `\(l(s'|s,a)\)` denote the length of a time-step given that the system is in state `\(s\)`, action `\(a\)` is chosen and makes a transition to state `\(s'\)`. 
 * The discount rate over a time-step with length `\(l(s'|s,a)\)` is 

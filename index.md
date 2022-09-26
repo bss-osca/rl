@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
 favicon: assets/favicon.ico
-date: "2022-09-22"
+date: "2022-09-26"
 editor_options: 
   chunk_output_type: console
 ---
