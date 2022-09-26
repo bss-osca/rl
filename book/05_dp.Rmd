@@ -315,10 +315,9 @@ MDPClass <- R6Class("MDPClass",
       },
       
       #' @description Return the state-values as a tibble
-      getStateValues = function() {
-         enframe(values(self$v), name = "state", value = "v") %>% 
-            separate(state, c("state", "action")) %>% 
-            select(-action)
+      #' @param s A vector of state keys.
+      getStateValues = function(s = keys(self$v)) {
+         tibble(state = s, v = values(self$v, keys = s))
       },
       
       #' @description Return a matrix with trans pr for a given action. 
@@ -350,7 +349,7 @@ MDPClass <- R6Class("MDPClass",
       },
       
       #' @description Bellman calculations for a given state and action
-      #' @param gamma Discount factor.
+      #' @param gamma Discount rate.
       #' @param s State key.
       #' @param a Action key.
       bellmanCalc = function(gamma, s, a) {
@@ -362,7 +361,7 @@ MDPClass <- R6Class("MDPClass",
       },
       
       #' @description Iterative policy evaluation of current policy (defined by pi)
-      #' @param gamma Discount factor.
+      #' @param gamma Discount rate.
       #' @param theta Threshold parameter.
       #' @param maxIte Maximum number of iterations.
       #' @param reset If true set all state-values to 0.
@@ -393,7 +392,7 @@ MDPClass <- R6Class("MDPClass",
 
 
       #' @description Policy iteration using iterative policy eval
-      #' @param gamma Discount factor.
+      #' @param gamma Discount rate.
       #' @param theta Threshold parameter.
       #' @param maxIteEval Maximum number of iterations when evaluate policy.
       #' @param maxItePolicy Maximum number of policy iterations.
@@ -419,12 +418,12 @@ MDPClass <- R6Class("MDPClass",
             if (stable) break
          }
          if (ite == maxItePolicy) warning("Policy Iteration algorithm stopped at max iterations allowed:", maxItePolicy)
-         message("Policy iteration algorihm finished.")
+         message(str_c("Policy iteration algorihm finished in ", ite, " iterations."))
          return(invisible(NULL))
       },
       
       #' @description Value iteration
-      #' @param gamma Discount factor.
+      #' @param gamma Discount rate.
       #' @param theta Threshold parameter.
       #' @param maxIte Maximum number of iterations.
       #' @param reset If true set all state-values to 0.
@@ -450,7 +449,7 @@ MDPClass <- R6Class("MDPClass",
             if (delta < theta) break
          }
          if (ite == maxIte) warning("Value iteration algorithm stopped at max iterations allowed:", maxIte)         
-         message("Value iteration algorihm finished.")
+         message(str_c("Value iteration algorihm finished in ", ite, " iterations."))
          return(invisible(NULL))
       }
    )
@@ -540,7 +539,7 @@ mdp$getRewardMat()
 mdp$getActionInfo("3")
 ```
 
-Let us try to evaluate a fixed policy given a discount factor of 0.5:
+Let us try to evaluate a fixed policy given a discount rate of 0.5:
 
 ```{r}
 sa <- c("0" = "keep", "1" = "keep", "2" = "keep", "3" = "keep", "4" = "empty")
@@ -566,7 +565,7 @@ mdp$getPolicy()
 mdp$getStateValues()
 ```
 
-Finally, let us try to solve the problem with a discount factor of 0.99:
+Finally, let us try to solve the problem with a discount rate of 0.99:
 
 ```{r}
 mdp$policyIte(gamma =0.99)
@@ -845,86 +844,419 @@ library(patchwork)
 
 3) Solve the problem using value iteration with $p_h = 0.22$ and $0.55$ and plot the results. What is the probability of winning in state 10 and 67?
 
+### Exercise - Maintenance problem {#ex-dp-maintain}
+
+At the beginning of each day a piece of equipment is inspected to reveal its actual working condition. The equipment will be found in one of the working conditions $s = 1,\ldots, N$ where the working condition $s$ is better than the working condition
+$s+1$. 
+
+The equipment deteriorates in time. If the present working condition is $s$ and no repair is done, then at the beginning of the next day the equipment has working condition $s'$ with probability $q_{ss'}$. It is assumed that $q_{ss'}=0$ for $s'<s$ and $\sum_{s'\geq s}q_{ss'}=1$. 
+
+The working condition $s=N$ represents a malfunction that requires an enforced repair taking two days. For the intermediate states $s$ with $1<s<N$ there is a choice between preventively repairing the equipment and letting the equipment operate for the present day. A preventive repair takes only one day. A repaired system has the working condition $s=1$. 
+
+The cost of an enforced repair upon failure is $C_{f}$ and the cost of a preemptive repair in working condition $s$ is $C_{p,s}$. We wish to determine a maintenance rule which minimizes the repair cost.
+
+The problem can be formulated as an MDP. Since an enforced repair takes two days and the state of the system has to be defined at the beginning of each day, we need an auxiliary state for the situation in which an enforced repair is in progress already for one day.
+
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="$$\\mathcal{S}=\\{1,2,\\ \\ldots,\\ N,\\ N+1\\}.$$ State $s$ with $1\\leq s\\leq N$ corresponds to the situation in which an inspection reveals working condition $s$, while state $N+1$ corresponds to the situation in which an enforced repair is in progress already for one day."}
+```
+
+1) Define the state space $\mathcal{S}$, i.e. the the set of possible states of the system.
+
+
+<!-- Q2 -->
+```{r, solution=TRUE, text="The set of possible actions in state $s$ is chosen as $$\\mathcal{A}(1)=\\{0\\},\\ \\mathcal{A}(s)=\\{0,1\\} \\text{ for } 1<s<N, \\mathcal{A}(N)=\\mathcal{A}(N+1)=\\{2\\}.$$"}
+```
+
+2) Consider actions
+$$
+a=\left\{\begin{array}{ll}
+0 & \text{if no repair.}\\
+1 & \text{if preventive repair.}\\
+2 & \text{if forced repair.}\\
+\end{array}\right.
+$$
+Define the action space $\mathcal{A}(s)$ for all states $s$.
+
+
+<!-- Q3 -->
+```{r, solution=TRUE, text="The expected reward is $r(N+1,2) = 0$ and for $0 \\geq s \\geq N$ is $r(s,0) = 0$, $r(s,1) = -C_{ps}$ and $r(s,1) = -C_{f}$."}
+```
+
+3) Assume that the number of possible working conditions equals $N=5$. What is the expected reward $r(s,a)$?
+
+
+<!-- Q4 -->
+```{r, solution=TRUE, text="The transition probabilities $p(s'|s,a)$: $$p(s'|s,0) = q_{ij}, \\text{ for } 1 \\leq s<N,$$ $$p(1|s,1) = 1 \\text{ for } 1<s<N,$$ $$p(N+1|N,2) = p(1|N+1,2) =1,$$ and zero otherwise."}
+```
+
+4) What is the transition probabilities?
+
+
+<!-- Q5 -->
+5) Try make a drawing of the state-expanded hypergraph for stage $t$ and $t+1$.
+
+
+<!-- Q6 -->
+```{r, solution=TRUE}
+Q <- matrix(c(
+   0.90, 0.10, 0, 0, 0,
+   0, 0.80, 0.10, 0.05, 0.05,
+   0, 0, 0.70, 0.10, 0.20,
+   0, 0, 0, 0.50, 0.50), nrow=4, byrow=T)
+row.names(Q) <- str_c(1:4)
+colnames(Q) <- str_c(1:5)
+
+mdp <- MDPClass$new()      # initialize mdp object
+mdp$addStateSpace(1:6)   # add states (states are keys in a hash and are always converted to strings), 101 represent finished
+for (s in mdp$getStateKeys()) {  # add actions for each state (only the key of the action)
+   i <- as.numeric(s)
+   if (i == 1) mdp$addActionSpace(s, "nr")  
+   if (i > 1 & i <= 4) mdp$addActionSpace(s, c("nr", "pr"))
+   if (i == 5) mdp$addActionSpace(s, "fr")  
+   if (i == 6) mdp$addActionSpace(s, "fr")
+}
+# check some of the keys
+mdp$getActionKeys("2")
+mdp$getActionKeys("1")
+mdp$getActionKeys("6")
+
+## Add trans pr and expected reward to the actions
+cPR<-c(0,7,7,5,0,0)
+for (s in mdp$getStateKeys()) {
+   for (a in mdp$getActionKeys(s)) {
+      i <- as.numeric(s)
+      if (a == "nr") {
+         rew <- 0
+         transPr <- Q[i, Q[i,] > 0]
+      }
+      if (a == "pr") {
+         rew <- -cPR[i]
+         transPr <- 1
+         names(transPr) <- "1"
+      }
+      if (a == "fr" & i == 5) {
+         rew = -10
+         transPr <- 1
+         names(transPr) <- "6"
+      } 
+      if (a == "fr" & i == 6) {
+         rew = 0
+         transPr <- 1
+         names(transPr) <- "1"
+      } 
+      mdp$addAction(s, a, r = rew, pr = transPr)
+   }
+}
+# check some of the keys
+mdp$getActionInfo("1")
+mdp$getActionInfo("2")
+mdp$getActionInfo("5")
+mdp$getActionInfo("6")
+```
+
+6) The repair costs are given by $C_{f}=10,\ C_{p2}=7,\ C_{p3}=7$ and $C_{p4}=5$ and the deterioration probabilities $q_{ij}$ are given by matrix Q:
+
+```{r}
+Q <- matrix(c(
+   0.90, 0.10, 0, 0, 0,
+   0, 0.80, 0.10, 0.05, 0.05,
+   0, 0, 0.70, 0.10, 0.20,
+   0, 0, 0, 0.50, 0.50), nrow=4, byrow=T)
+Q
+```
+
+Build the MDP in R.
+
+
+<!-- Q7 -->
+```{r, solution=TRUE, text="In state 3 the discounted cost is 2.53."}
+mdp$valueIte(gamma = 0.6)
+# mdp$policyIte(gamma = 0.6)
+df <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+select(-pr)
+df
+```
+
+7) Find the optimal policy given a discount rate of $\gamma = 0.6$. What is the average discounted cost of being in state 3?
+
+
+<!-- Q8 -->
+```{r, solution=TRUE, text="A higher discont rate put more weight on future values, i.e. you have to look further ahead resulting in more iterations. This also results in a higher disconted cost, since costs in the future have higher weight. The optimal policy looks a bit different compared to the policy we found for $\\gamma = 0.6$. However, if the policy is the same for two different discount rates then you will have the same rewards/costs and hence the same cost of the policy. The discounted cost will not be the same since you use the discount rate to say how much you value the future."}
+mdp$valueIte(gamma = 0.99)
+# mdp$policyIte(gamma = 0.99)
+df1 <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+select(-pr)
+df
+df1
+```
+
+8) Find the optimal policy using value iteration given a discount rate of $\gamma = 0.99$. Why do the algorithm need more iterations compared to when $\gamma = 0.6$? Why are the average discounted costs higher compared to when $\gamma = 0.6$? Is it more costly to use this optimal policy?
+
+
 
 ### Exercise - Car rental {#ex-dp-rental}
 
-Consider the car rental problem in Exercise \@ref(ex-mdp-2-car). Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action $a$. Let us consider Location 1 and assume that we are in state $x$ and chose action $a$. Then the number of cars after movement is $x - a$ and after rental requests $x - a - \min(D_1, x-a)$. Next, the number of returned cars are added: $x - a - \min(D_1, x-a) +  H_1$. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is $$X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).$$. 
-Similar for Location 2 we have $$Y = \min(20, y + a - \min(D_2, y+a) + H_2)).$$
+Consider the car rental problem in Exercise \@ref(ex-mdp-2-car). Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action $a$. Let us consider Location 1 and assume that we are in state $x$ and chose action $a$.
+
+The reward equals the reward of rentals minus the cost of movements. Note we have $\bar{x} = x - a$ and $\bar{y} = x + a$ after movement. Hence $$r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]$$ 
+where $$\mathbb{E}[\min(D, z)] = \sum_{i=0}^{z-1} i\Pr(D = i) + \Pr(D \geq z)z.$$
+
+Let us make a reward function in R:
+
+```{r}
+
+# Mean of min(D,z). Assume z >= 0
+meanMinD <- function(z, lambda) {
+   if (z == 0) return(0)
+   sum(dpois(0:(z-1), lambda) * 0:(z-1)) + ppois(z-1, lambda, lower.tail = F) * z
+}
+
+reward <- function(x, y, a) {
+   10 * meanMinD(x-a, 3) + 10 * meanMinD(y+a, 4) - 2 * abs(a)
+}
+
+reward(20, 0, 0)
+reward(20, 0, 5)
+```
+
+Let us have a look at the state transition, the number of cars after rental requests $\bar{x} - \min(D_1, \bar{x})$. Next, the number of returned cars are added: $\bar{x} - \min(D_1, \bar{x}) +  H_1$. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is $$X = \min(20,  \bar{x} - \min(D_1, \bar{x}) +  H_1))).$$ 
+Similar for Location 2, if $\bar{y}= y+a$ we have $$Y = \min(20, \bar{y} - \min(D_2, \bar{y}) + H_2)).$$
 
 Since the dynamics is independent given action a, the transition probabilities can be split: $$ p((x',y') | (x,y), a) = p(x' | x, a) p(y' | y, a).$$ 
 
 Let us consider Location 1. If $x' < 20$ then 
-$$\begin{align} p(x | x', a) &= \Pr(x' = x-a - \min(D_1, x-a) +  H_1)\\ &= \Pr(H_1 - \min(D_1, x-a) = x' - x + a) \\ &= \sum_{i=0}^{20} \Pr(\min(D_1, x-a) = i)\Pr(H_1 = x' - x + a + i) \\ &= \sum_{i=0}^{20} \Pr(\min(D_1, x-a) = i)\phi_{H_1}(x' - x + a + i) \\ &= \sum_{i=0}^{20}\left( (\sum_{j=0}^{x-a} j \phi_{D_1}(j) + (1-\Pr(D_1 \leq x-a))(x-a))\Pr(\min(D_1, x-a) = i)\phi_{H_1}(x' - x + a + i)\right)\end{align}$$ 
+$$
+\begin{align} 
+   p(x' | x, a) &= \Pr(x' = x-a - \min(D_1, x-a) +  H_1)\\ 
+                &= \Pr(x' = \bar{x} - \min(D_1, \bar{x}) +  H_1)\\ 
+                &= \Pr(H_1 - \min(D_1, \bar{x}) = x' - \bar{x}) \\ 
+                &= \sum_{i=0}^{\bar{x}} \Pr(\min(D_1, \bar{x}) = i)\Pr(H_1 = x' - \bar{x} + i) \\ 
+                &= \sum_{i=0}^{\bar{x}}\left( (\mathbf{1}_{(i<\bar{x})} \Pr(D_1 = i) + \mathbf{1}_{(i=\bar{x})} \Pr(D_1 \geq \bar{x}))\Pr(H_1 = x' - \bar{x} + i)\right) \\
+                &= p(x' | \bar{x}).
+\end{align}
+$$ 
 
-<!-- $$ p((x,y) | (x',y'), a) = p(x | x', a) p(y | y', a) = \Pr(x = x' + n_x - a)\Pr(y = y' + n_y + a) = \Pr(n_x = x - x' + a)\Pr(n_y = y - y' - a) = \phi(x - x' + a)\phi(y - y' - a) $$ -->
-<!-- For location 1: -->
+If $x' = 20$ then 
+$$
+\begin{align} 
+   p(x' | x, a) &= \Pr(20 \leq \bar{x} - \min(D_1, \bar{x}) +  H_1)\\ 
+                &= \Pr(H_1 - \min(D_1, \bar{x}) \geq 20 - \bar{x}) \\ 
+                &= \sum_{i=0}^{\bar{x}} \Pr(\min(D_1, \bar{x}) = i)\Pr(H_1 \geq 20 - \bar{x} + i) \\ 
+                &= \sum_{i=0}^{\bar{x}}\left( (\mathbf{1}_{(i<\bar{x})} \Pr(D_1 =i) + \mathbf{1}_{(i=\bar{x})} \Pr(D_1 \geq \bar{x}))\Pr(H_1 \geq 20 - \bar{x} + i)\right)\\
+                &= p(x' = 20 | \bar{x}).
+\end{align}
+$$ 
 
-<!-- $$ -->
-<!-- p(x | x', a) = \Pr(x = \min(20, \max(0, x' - a - D_1) + H_1))) = -->
-<!-- \begin{cases} -->
-<!-- \Pr(\max(0, x' - a - D_1) + H_1 = x) & x < 20\\ -->
-<!-- \Pr(\max(0, x' - a - D_1) + H_1 \geq 20) & x = 20 -->
-<!-- \end{cases} -->
-<!-- $$ -->
+Similar for Location 2. That is we need to calculate and store $p(x'| \bar{x})$ and $p(y'| \bar{y})$ to find $$ p((x',y') | (x,y), a) = p(x' | \bar{x} = x-a) p(y' | \bar{y} = y+a).$$ This is done in R using two matrices:
 
-```{r car-transPr, include=FALSE, eval=FALSE}
-calcTransPr <- function() {
-   dD <- rbind(dpois(0:20, 3), dpois(0:20, 4))   # density pr(D_i = d) = dD[i, d+1]
-   pD <- rbind(ppois(0:20, 3), ppois(0:20, 4))   # distribution pr(D_i <= d) = pD[i, d+1]
-   dH <- rbind(dpois(0:20, 3), dpois(0:20, 2))   # density pr(H_i = d) = dH[i, d+1]
-   pH <- rbind(ppois(0:20, 3), ppois(0:20, 2))   # distribution pr(D_i <= d) = pD[i, d+1]
-   
-   # Pr(min(D_i, k) = d)
-   prMin <- function(i, k, d) {
-      v <- c(dD[i, 0:(k-1) + 1], 1 - pD[i, k])
-      return(v[d+1])
-      if (d == k) return(1 - pD[i, d])     # 1-pr(D <= d-1)
-      if (d < k) return(dD[i, d+1])
-      return(NA)
-   }
-   
-   # Pr(xN | x, a)
-   transPrX <- function(xN, x, a) {
-      if (xN == 20) {
-         return(sum(prMin(1, x-a, 0:(x-a)) * (1 - pH[1, xN - x + a + 0:(x-a) ])))
-      }
-      if (xN < 20) {
-         return(sum(prMin(1, x-a, 0:(x-a)) * dH[1, xN - x + a + 0:(x-a) + 1]))
-      }
-      error("Error in calculations!")
-   }
-   
-   # Pr(yN | y, a)
-   transPrY <- function(yN, y, a) {
-      if (yN == 20) {
-         return(sum(prMin(2, y+a, 0:(y+a)) * (1 - pH[2, yN - y - a + 0:(y+a) ])))
-      }
-      if (yN < 20) {
-         return(sum(prMin(2, y+a, 0:(y+a)) * dH[2, yN - y - a + 0:(y+a) + 1]))
-      }
-      error("Error in calculations!")
-   }
-   
-   dat <- expand_grid(x = 0:20, y = 0:20, xN = 0:20, yN = 0:20, a = -20:20) %>% 
-      filter(a >= -min(5, y, 20-x), a <= min(5, x, 20-y)) %>% 
-      mutate(pr = 0) 
-   for (i in 1:nrow(dat)) {
-      dat$pr[i] <- transPrX(dat$xN[i], dat$x[i], dat$a[i]) * transPrY(dat$yN[i], dat$y[i], dat$a[i])
-   }
-   return(dat)
+```{r car-transPr}
+library(tidyverse)
+lD <- c(3,4)
+lH <- c(3,2)
+
+# Pr(min(D_i, k) = d)
+# assume that d<=k
+prMin <- function(i, k, d) {
+   if (k == 0) return(1)
+   v <- c(dpois(0:(k-1), lD[i]), ppois(k-1, lD[i], lower.tail = F))
+   return(v[d+1])
+   # if (d == k) return(1 - pD[i, d])     # 1-pr(D <= d-1)
+   # if (d < k) return(dD[i, d+1])
+   # return(NA)
 }
-dat <- calcTransPr()
+
+# Pr(xN | x, a)
+transPrX <- function(xN, xBar) {
+   if (xN == 20) {
+      return(sum(prMin(1, xBar, 0:(xBar)) * ppois(xN - xBar + 0:(xBar) - 1, lH[1], lower.tail = F)))
+   }
+   if (xN < 20) {
+      return(sum(prMin(1, xBar, 0:(xBar)) * dpois(xN - xBar + 0:(xBar), lH[1])))
+   }
+   error("Error in calculations!")
+}
+
+# Pr(yN | y, a)
+transPrY <- function(yN, yBar) {
+   if (yN == 20) {
+      return(sum(prMin(2, yBar, 0:(yBar)) * ppois(yN - yBar + 0:(yBar) - 1, lH[2], lower.tail = F)))
+   }
+   if (yN < 20) {
+      return(sum(prMin(2, yBar, 0:(yBar)) * dpois(yN - yBar + 0:(yBar), lH[2])))
+   }
+   error("Error in calculations!")
+}
+
+mat <- matrix(0, nrow = 21, ncol = 21)
+colnames(mat) <- str_c(0:20)
+rownames(mat) <- str_c(0:20)
+matTransPrX <- mat     # matTransPrX[r,c] = Pr(xN = c-1 | xBar = r-1)
+matTransPrY <- mat
+for (r in 1:21) {
+   xBar <- r-1
+   for (c in 1:21) {
+      xN <- c-1
+      matTransPrX[r,c] <- transPrX(xN, xBar)
+      matTransPrY[r,c] <- transPrY(xN, xBar)
+   }
+}
+# check
+rowSums(matTransPrX)
+rowSums(matTransPrY)
 ```
 
 
-2) Solve the problem using policy iteration with $p_h = 0.4$. What is the optimal policy and the optimal action in state 4 m$^2$? What is the expected total discounted cost of being in state 2 m$^2$.
 
-3) Solve the problem using value iteration with a discount rate of 0.5. Check that the policy and state-values are the same.
+<!-- Q1 -->
+```{r, solution=TRUE, include=FALSE}
+mdp <- MDPClass$new()      # initialize mdp object
+states <- expand_grid(x = 0:20, y = 0:20) %>% 
+   mutate (state = str_c(x,",",y)) %>% 
+   pull(state)
+mdp$addStateSpace(states)   # add states (states are keys in a hash and are always converted to strings)
+for (s in mdp$getStateKeys()) {  # add actions for each state (only the key of the action)
+    x <- str_split(s, ",", simplify = T)
+    y <- as.numeric(x[2])
+    x <- as.numeric(x[1])
+    a <- (-min(5, y, 20-x)):(min(5, x, 20-y))
+    mdp$addActionSpace(s, a)
+}
+# check some of the keys
+mdp$getActionKeys("6,7")
+mdp$getActionKeys("0,3")
+mdp$getActionKeys("0,0")
+mdp$getActionKeys("20,20")
+mdp$getStateKeys()
 
-4) Solve the problem with a discount rate of 0.99. Why are the state-values lower now?
+## Add trans pr and expected reward to the actions. This may take some time!!
+states <- expand_grid(x = 0:20, y = 0:20) %>% 
+   mutate (state = str_c(x,",",y), pr = 0) 
+for (s in mdp$getStateKeys()) {
+   for (aS in mdp$getActionKeys(s)) {
+      x <- str_split(s, ",", simplify = T)
+      y <- as.numeric(x[2])
+      x <- as.numeric(x[1])
+      a <- as.numeric(aS) 
+      xBar <- x-a
+      yBar <- y+a
+      for (i in 1:nrow(states)) {
+         states$pr[i] <- matTransPrX[xBar+1, states$x[i] + 1] * matTransPrX[yBar+1, states$y[i] + 1]
+      }
+      transPr <- states$pr
+      names(transPr) <- states$state
+      mdp$addAction(s, aS, r = reward(x, y, a), pr = transPr)
+   }
+}
+# check some of the keys
+mdp$getActionInfo("20,20")
+sum(mdp$getActionInfo("20,20")$"0"$pr)
+mdp$getActionInfo("20,0")
+sum(mdp$getActionInfo("20,20")$"0"$pr)
+```
+
+```{r, hint=TRUE}
+mdp <- MDPClass$new()      # initialize mdp object
+states <- expand_grid(x = 0:20, y = 0:20) %>% 
+   mutate (state = str_c(x,",",y)) %>% 
+   pull(state)
+mdp$addStateSpace(states)   # add states (states are keys in a hash and are always converted to strings)
+for (s in mdp$getStateKeys()) {  # add actions for each state (only the key of the action)
+    x <- str_split(s, ",", simplify = T)
+    y <- as.numeric(x[2])
+    x <- as.numeric(x[1])
+    ___
+    mdp$addActionSpace(s, a)
+}
+# check some of the keys
+mdp$getActionKeys("6,7")
+mdp$getActionKeys("0,3")
+mdp$getActionKeys("0,0")
+mdp$getActionKeys("20,20")
+mdp$getStateKeys()
+
+## Add trans pr and expected reward to the actions. This may take some time!!
+states <- expand_grid(x = 0:20, y = 0:20) %>% 
+   mutate (state = str_c(x,",",y), pr = 0) 
+for (s in mdp$getStateKeys()) {
+   for (aS in mdp$getActionKeys(s)) {
+      x <- str_split(s, ",", simplify = T)
+      y <- as.numeric(x[2])
+      x <- as.numeric(x[1])
+      a <- as.numeric(aS) 
+      xBar <- x-a
+      yBar <- y+a
+      ___
+      mdp$addAction(s, aS, r = reward(x, y, a), pr = transPr)
+   }
+}
+# check some of the keys
+mdp$getActionInfo("20,20")
+sum(mdp$getActionInfo("20,20")$"0"$pr)
+mdp$getActionInfo("20,0")
+sum(mdp$getActionInfo("20,20")$"0"$pr)
+```
+
+1) Build the model in R.
+
+
+
+<!-- Q2 -->
+```{r, solution=TRUE, include=FALSE, text="The threshold value affect the precision of the state-value. Here values with a difference below 0.9 is considered as the same."}
+mdp$policyIte(gamma = 0.5, theta = 0.9)
+df <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+   select(-pr) %>% 
+   separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+   mutate(a = as.numeric(action))
+df %>% filter(state %in% c("1,15", "10,3"))
+ggplot(df, aes(x = y, y = x, label = a, col = factor(a))) +
+   geom_label() +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Optimal policy for gamma = 0.9")) + 
+   theme(legend.position = "none")
+```
+
+2) Solve the problem using policy iteration with a discount rate $\gamma = 0.5$ and threshold parameter $\theta = 0.9$. What is the optimal action in state $(1,15)$? What is the expected total discounted reward of being in state $(10,3)$? How do theta affect the state-values? Make a plot of the optimal policy with $x$ on the y-axis and $y$ on the x-axis, plotting the action. 
+
+
+
+<!-- Q3 -->
+```{r, solution=TRUE, include=FALSE}
+mdp$valueIte(gamma = 0.5, theta = 0.9)
+df1 <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+   select(-pr) %>% 
+   separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+   mutate(a = as.numeric(action))
+all(abs(df$v - df1$v) <= 0.9)  # check if state values af close to each other (should return TRUE)
+any(df$action != df1$action)   # there may be different policies giving the same approx. state-value
+```
+
+3) Solve the problem using value iteration. Check if the policy and state-values are the same as in Question 1. If not why could this be okay?
+
+
+
+<!-- Q4 -->
+```{r, solution=TRUE, include=FALSE, text="A higher discount rate result in higher discounted rewards since look further into the future."}
+mdp$policyIte(gamma = 0.9, theta = 0.9)
+df <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+   select(-pr) %>% 
+   separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+   mutate(a = as.numeric(action))
+df
+ggplot(df, aes(x = y, y = x, label = a, col = factor(a))) +
+   geom_label() +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Optimal policy for gamma = 0.9")) + 
+   theme(legend.position = "none")
+```
+
+4) Solve the problem using policy iteration with a discount rate $\gamma = 0.9$ and threshold parameter $\theta = 0.9$. Why are the state-values higher now?
 
 
 
 
 ```{r links, child="links.md", include=FALSE}
 ```
+
+
