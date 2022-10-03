@@ -207,7 +207,7 @@ knitr::include_graphics("img/policy-ite-path.png")
 Value iteration do one sweep of policy evaluation and one sweep of policy improvement by updating the Bellman optimality equation:
 
 $$v_{k+1}(s) = \arg\max_a \left(r(s,a) + \gamma\sum_{s',r} p(s'|s, a)v_k(s')\right)$$
-VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy $\pi^\star$ is found:
+VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy $\pi^*$ is found:
 
 $$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right)$$
 The sequence of calculations will be: 
@@ -245,9 +245,17 @@ knitr::include_graphics("img/policy-ite-general.png")
 
 ---
 
+## Policy evaluation in R (evaluation)
+
+```{r policy-eval-alg, echo=FALSE, out.width="100%"}
+knitr::include_graphics("img/policy-eval.png")
+``` 
+
+---
+
 ## Policy iteration in R (control)
 
-```{r policy-ite-alg, echo=FALSE, out.width="70%"}
+```{r policy-ite-alg, echo=FALSE, out.width="75%"}
 knitr::include_graphics("img/policy-iteration.png")
 ``` 
 
@@ -255,7 +263,7 @@ knitr::include_graphics("img/policy-iteration.png")
 
 ## Value iteration in R (control)
 
-```{r, echo=FALSE, out.width="70%"}
+```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("img/value-iteration.png") 
 ``` 
 

@@ -213,7 +213,7 @@ MDPClass <- R6Class("MDPClass",
       #' pr `pr` (named vector only with positive values) and expected reward `reward`.
       model = NULL,  
       
-      #' @field sV The state-values stored in a hash.
+      #' @field sV The state-values stored in a hash. Value updates are done in-place (one-array version).
       v = NULL,
       
       #' @description Create an object (when call new).
