@@ -119,6 +119,7 @@ weighted-importance-sampling
 off-policy-control-improvement
 summary-5
 exercises-1
+ex-mc-seasonal
 mod-td-pred
 learning-outcomes-6
 textbook-readings-6

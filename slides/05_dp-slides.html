@@ -13,8 +13,12 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Dynamic Programming
+]
+.author[
 ### Lars Relund Nielsen
+]
 
 ---
 
@@ -190,7 +194,7 @@ The number of steps needed are often low.
 Value iteration do one sweep of policy evaluation and one sweep of policy improvement by updating the Bellman optimality equation:
 
 `$$v_{k+1}(s) = \arg\max_a \left(r(s,a) + \gamma\sum_{s',r} p(s'|s, a)v_k(s')\right)$$`
-VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy `\(\pi^\star\)` is found:
+VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy `\(\pi^*\)` is found:
 
 `$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right)$$`
 The sequence of calculations will be: 
@@ -224,15 +228,21 @@ GPI works if explore the whole state space.
 
 ---
 
+## Policy evaluation in R (evaluation)
+
+&lt;img src="img/policy-eval.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
 ## Policy iteration in R (control)
 
-&lt;img src="img/policy-iteration.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/policy-iteration.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Value iteration in R (control)
 
-&lt;img src="img/value-iteration.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/value-iteration.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 &lt;!-- # References --&gt;
 
@@ -436,6 +446,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

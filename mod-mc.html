@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-09-27" />
+<meta name="date" content="2022-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -341,7 +341,10 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-control-improvement"><i class="fa fa-check"></i><b>6.6</b> Off-policy control (improvement)</a></li>
 <li class="chapter" data-level="6.7" data-path="mod-mc.html"><a href="mod-mc.html#summary-5"><i class="fa fa-check"></i><b>6.7</b> Summary</a></li>
-<li class="chapter" data-level="6.8" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.8</b> Exercises</a></li>
+<li class="chapter" data-level="6.8" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.8</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="6.8.1" data-path="mod-mc.html"><a href="mod-mc.html#ex-mc-seasonal"><i class="fa fa-check"></i><b>6.8.1</b> Exercise - Seasonal inventory and sales planning</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="mod-td-pred.html"><a href="mod-td-pred.html"><i class="fa fa-check"></i><b>7</b> Temporal difference methods for prediction</a>
 <ul>
@@ -635,7 +638,21 @@ Figure 6.5: Off-policy GPI <span class="citation">(<a href="#ref-Sutton18" role=
 <div id="exercises-1" class="section level2 hasAnchor" number="6.8">
 <h2><span class="header-section-number">6.8</span> Exercises<a href="mod-mc.html#exercises-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<div id="ex-mc-seasonal" class="section level3 hasAnchor" number="6.8.1">
+<h3><span class="header-section-number">6.8.1</span> Exercise - Seasonal inventory and sales planning<a href="mod-mc.html#ex-mc-seasonal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us try to find the optimal policy using policy iteration:</p>
+<p>We consider seasonal product such as garden furnitures. Assume that the maximum inventory level is <span class="math inline">\(Q\)</span> items, i.e. we can buy at most <span class="math inline">\(Q\)</span> items at the start of the season for a price of $14. The product can be sold for at most <span class="math inline">\(T\)</span> weeks and at the end of the period (week <span class="math inline">\(T\)</span>), the remaining inventory is sold to an outlet store for $5 per item.</p>
+<p>The demand depends on the sales price which based on historic observations is assumed in the interval <span class="math inline">\([10,25]\)</span>. In general a higher sales price result in a lower demand. Moreover, in the first half part of the season the demand is on average 10% higher given a fixed sales price compared to the last half part of the season. Historic observed demands can be seen in Figure <a href="#fig:demand"><strong>??</strong></a>.</p>
+<p>Let <span class="math inline">\(s = (q,t)\)</span> denote the state of the system in the start of a week, where <span class="math inline">\(q\)</span> is the inventory and <span class="math inline">\(t\)</span> the week number. Then the state space is <span class="math display">\[\mathcal{S} = \{ s = (q,t) | 1 \leq q \leq Q, 1 \leq t \leq T \} \cup \{ 0 \},\]</span>
+where state <span class="math inline">\(s = 0\)</span> denote the terminal state (inventory empty).
+Possible actions are <span class="math display">\[\mathcal{A}(q,t) = \{ 10,\ldots,25 \}, \mathcal{A}(0) = \{ d \}, \]</span> where action <span class="math inline">\(d\)</span> denote the dummy action with deterministic transition to state <span class="math inline">\(0\)</span>.</p>
+<p>The inventory dynamics for transitions not to the terminal state are <span class="math display">\[t&#39; = t + 1, q&#39; = q - min(q, D),\]</span>
+where <span class="math inline">\(D\)</span> denote the demand. Moreover, if <span class="math inline">\(t = T\)</span> or <span class="math inline">\(q&#39; = 0\)</span>, then a transition to the terminal state happens.</p>
+<p>For <span class="math inline">\(t=1\)</span> the reward of an state <span class="math inline">\((q,t)\)</span> is sales price times the number of sold items minus the purchase cost. For <span class="math inline">\(1&lt;t&lt;T\)</span> the reward is sales price times the number of sold (we assume an inventory cost of zero), while for <span class="math inline">\(t=T\)</span> the reward is the scrap price times the inventory.</p>
+<p>We define the RL agent:</p>
+<p>Given the current policy an episode can be extracted using:</p>
 
+</div>
 </div>
 </div>
 <h3>References</h3>

@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-09-27" />
+<meta name="date" content="2022-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -341,7 +341,10 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="mod-mc.html"><a href="mod-mc.html#off-policy-control-improvement"><i class="fa fa-check"></i><b>6.6</b> Off-policy control (improvement)</a></li>
 <li class="chapter" data-level="6.7" data-path="mod-mc.html"><a href="mod-mc.html#summary-5"><i class="fa fa-check"></i><b>6.7</b> Summary</a></li>
-<li class="chapter" data-level="6.8" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.8</b> Exercises</a></li>
+<li class="chapter" data-level="6.8" data-path="mod-mc.html"><a href="mod-mc.html#exercises-1"><i class="fa fa-check"></i><b>6.8</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="6.8.1" data-path="mod-mc.html"><a href="mod-mc.html#ex-mc-seasonal"><i class="fa fa-check"></i><b>6.8.1</b> Exercise - Seasonal inventory and sales planning</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="mod-td-pred.html"><a href="mod-td-pred.html"><i class="fa fa-check"></i><b>7</b> Temporal difference methods for prediction</a>
 <ul>
@@ -589,7 +592,7 @@ Finally, the transition probabilities are:
 <span id="cb29-15"><a href="mod-dp.html#cb29-15" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; pr `pr` (named vector only with positive values) and expected reward `reward`.</span></span>
 <span id="cb29-16"><a href="mod-dp.html#cb29-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">model =</span> <span class="cn">NULL</span>,  </span>
 <span id="cb29-17"><a href="mod-dp.html#cb29-17" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb29-18"><a href="mod-dp.html#cb29-18" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field sV The state-values stored in a hash.</span></span>
+<span id="cb29-18"><a href="mod-dp.html#cb29-18" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field sV The state-values stored in a hash. Value updates are done in-place (one-array version).</span></span>
 <span id="cb29-19"><a href="mod-dp.html#cb29-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">v =</span> <span class="cn">NULL</span>,</span>
 <span id="cb29-20"><a href="mod-dp.html#cb29-20" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb29-21"><a href="mod-dp.html#cb29-21" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Create an object (when call new).</span></span>
@@ -775,60 +778,59 @@ Finally, the transition probabilities are:
 <span id="cb29-201"><a href="mod-dp.html#cb29-201" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span><span class="fu">setRandomDeterministicPolicy</span>()</span>
 <span id="cb29-202"><a href="mod-dp.html#cb29-202" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (ite <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxItePolicy) {</span>
 <span id="cb29-203"><a href="mod-dp.html#cb29-203" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span><span class="fu">policyEval</span>(gamma, theta, maxIteEval, <span class="at">reset =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb29-204"><a href="mod-dp.html#cb29-204" aria-hidden="true" tabindex="-1"></a>            <span class="co"># self$setStateValue()  # set to 0</span></span>
-<span id="cb29-205"><a href="mod-dp.html#cb29-205" aria-hidden="true" tabindex="-1"></a>            stable <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb29-206"><a href="mod-dp.html#cb29-206" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
-<span id="cb29-207"><a href="mod-dp.html#cb29-207" aria-hidden="true" tabindex="-1"></a>               piOld <span class="ot">&lt;-</span> <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi)</span>
-<span id="cb29-208"><a href="mod-dp.html#cb29-208" aria-hidden="true" tabindex="-1"></a>               actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
-<span id="cb29-209"><a href="mod-dp.html#cb29-209" aria-hidden="true" tabindex="-1"></a>               vMax <span class="ot">=</span>  <span class="sc">-</span><span class="cn">Inf</span></span>
-<span id="cb29-210"><a href="mod-dp.html#cb29-210" aria-hidden="true" tabindex="-1"></a>               <span class="cf">for</span> (a <span class="cf">in</span> actions) {</span>
-<span id="cb29-211"><a href="mod-dp.html#cb29-211" aria-hidden="true" tabindex="-1"></a>                  val <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">bellmanCalc</span>(gamma, s, a)</span>
-<span id="cb29-212"><a href="mod-dp.html#cb29-212" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">if</span> (val <span class="sc">&gt;</span> vMax) {</span>
-<span id="cb29-213"><a href="mod-dp.html#cb29-213" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) <span class="ot">&lt;-</span> a</span>
-<span id="cb29-214"><a href="mod-dp.html#cb29-214" aria-hidden="true" tabindex="-1"></a>                     vMax <span class="ot">&lt;-</span> val</span>
-<span id="cb29-215"><a href="mod-dp.html#cb29-215" aria-hidden="true" tabindex="-1"></a>                  }</span>
-<span id="cb29-216"><a href="mod-dp.html#cb29-216" aria-hidden="true" tabindex="-1"></a>               }</span>
-<span id="cb29-217"><a href="mod-dp.html#cb29-217" aria-hidden="true" tabindex="-1"></a>               <span class="cf">if</span> (piOld <span class="sc">!=</span> <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) ) stable <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb29-218"><a href="mod-dp.html#cb29-218" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb29-219"><a href="mod-dp.html#cb29-219" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (stable) <span class="cf">break</span></span>
-<span id="cb29-220"><a href="mod-dp.html#cb29-220" aria-hidden="true" tabindex="-1"></a>         }</span>
-<span id="cb29-221"><a href="mod-dp.html#cb29-221" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (ite <span class="sc">==</span> maxItePolicy) <span class="fu">warning</span>(<span class="st">&quot;Policy Iteration algorithm stopped at max iterations allowed:&quot;</span>, maxItePolicy)</span>
-<span id="cb29-222"><a href="mod-dp.html#cb29-222" aria-hidden="true" tabindex="-1"></a>         <span class="fu">message</span>(<span class="fu">str_c</span>(<span class="st">&quot;Policy iteration algorihm finished in &quot;</span>, ite, <span class="st">&quot; iterations.&quot;</span>))</span>
-<span id="cb29-223"><a href="mod-dp.html#cb29-223" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
-<span id="cb29-224"><a href="mod-dp.html#cb29-224" aria-hidden="true" tabindex="-1"></a>      },</span>
-<span id="cb29-225"><a href="mod-dp.html#cb29-225" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb29-226"><a href="mod-dp.html#cb29-226" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Value iteration</span></span>
-<span id="cb29-227"><a href="mod-dp.html#cb29-227" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param gamma Discount rate.</span></span>
-<span id="cb29-228"><a href="mod-dp.html#cb29-228" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param theta Threshold parameter.</span></span>
-<span id="cb29-229"><a href="mod-dp.html#cb29-229" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param maxIte Maximum number of iterations.</span></span>
-<span id="cb29-230"><a href="mod-dp.html#cb29-230" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param reset If true set all state-values to 0.</span></span>
-<span id="cb29-231"><a href="mod-dp.html#cb29-231" aria-hidden="true" tabindex="-1"></a>      <span class="at">valueIte =</span> <span class="cf">function</span>(gamma, <span class="at">theta =</span> <span class="fl">0.00001</span>, <span class="at">maxIte =</span> <span class="dv">10000</span>, <span class="at">reset =</span> <span class="cn">TRUE</span>) {</span>
-<span id="cb29-232"><a href="mod-dp.html#cb29-232" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span><span class="fu">setRandomDeterministicPolicy</span>()</span>
-<span id="cb29-233"><a href="mod-dp.html#cb29-233" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (reset) self<span class="sc">$</span><span class="fu">setStateValue</span>()  <span class="co"># set to 0</span></span>
-<span id="cb29-234"><a href="mod-dp.html#cb29-234" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (ite <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxIte) { </span>
-<span id="cb29-235"><a href="mod-dp.html#cb29-235" aria-hidden="true" tabindex="-1"></a>            delta <span class="ot">&lt;-</span> <span class="dv">0</span>   <span class="co"># Bellman error </span></span>
-<span id="cb29-236"><a href="mod-dp.html#cb29-236" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
-<span id="cb29-237"><a href="mod-dp.html#cb29-237" aria-hidden="true" tabindex="-1"></a>               v <span class="ot">&lt;-</span> self<span class="sc">$</span>v[[s]]  </span>
-<span id="cb29-238"><a href="mod-dp.html#cb29-238" aria-hidden="true" tabindex="-1"></a>               actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
-<span id="cb29-239"><a href="mod-dp.html#cb29-239" aria-hidden="true" tabindex="-1"></a>               vMax <span class="ot">=</span>  <span class="sc">-</span><span class="cn">Inf</span></span>
-<span id="cb29-240"><a href="mod-dp.html#cb29-240" aria-hidden="true" tabindex="-1"></a>               <span class="cf">for</span> (a <span class="cf">in</span> actions) {</span>
-<span id="cb29-241"><a href="mod-dp.html#cb29-241" aria-hidden="true" tabindex="-1"></a>                  val <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">bellmanCalc</span>(gamma, s, a)</span>
-<span id="cb29-242"><a href="mod-dp.html#cb29-242" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">if</span> (val <span class="sc">&gt;</span> vMax) {</span>
-<span id="cb29-243"><a href="mod-dp.html#cb29-243" aria-hidden="true" tabindex="-1"></a>                     vMax <span class="ot">&lt;-</span> val</span>
-<span id="cb29-244"><a href="mod-dp.html#cb29-244" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) <span class="ot">&lt;-</span> a</span>
-<span id="cb29-245"><a href="mod-dp.html#cb29-245" aria-hidden="true" tabindex="-1"></a>                  }</span>
-<span id="cb29-246"><a href="mod-dp.html#cb29-246" aria-hidden="true" tabindex="-1"></a>               }</span>
-<span id="cb29-247"><a href="mod-dp.html#cb29-247" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>v[[s]] <span class="ot">&lt;-</span> vMax</span>
-<span id="cb29-248"><a href="mod-dp.html#cb29-248" aria-hidden="true" tabindex="-1"></a>               delta <span class="ot">&lt;-</span> <span class="fu">max</span>(delta, <span class="fu">abs</span>(v<span class="sc">-</span>vMax))</span>
-<span id="cb29-249"><a href="mod-dp.html#cb29-249" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb29-250"><a href="mod-dp.html#cb29-250" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (delta <span class="sc">&lt;</span> theta) <span class="cf">break</span></span>
-<span id="cb29-251"><a href="mod-dp.html#cb29-251" aria-hidden="true" tabindex="-1"></a>         }</span>
-<span id="cb29-252"><a href="mod-dp.html#cb29-252" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (ite <span class="sc">==</span> maxIte) <span class="fu">warning</span>(<span class="st">&quot;Value iteration algorithm stopped at max iterations allowed:&quot;</span>, maxIte)         </span>
-<span id="cb29-253"><a href="mod-dp.html#cb29-253" aria-hidden="true" tabindex="-1"></a>         <span class="fu">message</span>(<span class="fu">str_c</span>(<span class="st">&quot;Value iteration algorihm finished in &quot;</span>, ite, <span class="st">&quot; iterations.&quot;</span>))</span>
-<span id="cb29-254"><a href="mod-dp.html#cb29-254" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
-<span id="cb29-255"><a href="mod-dp.html#cb29-255" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb29-256"><a href="mod-dp.html#cb29-256" aria-hidden="true" tabindex="-1"></a>   )</span>
-<span id="cb29-257"><a href="mod-dp.html#cb29-257" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb29-204"><a href="mod-dp.html#cb29-204" aria-hidden="true" tabindex="-1"></a>            stable <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb29-205"><a href="mod-dp.html#cb29-205" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb29-206"><a href="mod-dp.html#cb29-206" aria-hidden="true" tabindex="-1"></a>               piOld <span class="ot">&lt;-</span> <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi)</span>
+<span id="cb29-207"><a href="mod-dp.html#cb29-207" aria-hidden="true" tabindex="-1"></a>               actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb29-208"><a href="mod-dp.html#cb29-208" aria-hidden="true" tabindex="-1"></a>               vMax <span class="ot">=</span>  <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb29-209"><a href="mod-dp.html#cb29-209" aria-hidden="true" tabindex="-1"></a>               <span class="cf">for</span> (a <span class="cf">in</span> actions) {</span>
+<span id="cb29-210"><a href="mod-dp.html#cb29-210" aria-hidden="true" tabindex="-1"></a>                  val <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">bellmanCalc</span>(gamma, s, a)</span>
+<span id="cb29-211"><a href="mod-dp.html#cb29-211" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">if</span> (val <span class="sc">&gt;</span> vMax) {</span>
+<span id="cb29-212"><a href="mod-dp.html#cb29-212" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) <span class="ot">&lt;-</span> a</span>
+<span id="cb29-213"><a href="mod-dp.html#cb29-213" aria-hidden="true" tabindex="-1"></a>                     vMax <span class="ot">&lt;-</span> val</span>
+<span id="cb29-214"><a href="mod-dp.html#cb29-214" aria-hidden="true" tabindex="-1"></a>                  }</span>
+<span id="cb29-215"><a href="mod-dp.html#cb29-215" aria-hidden="true" tabindex="-1"></a>               }</span>
+<span id="cb29-216"><a href="mod-dp.html#cb29-216" aria-hidden="true" tabindex="-1"></a>               <span class="cf">if</span> (piOld <span class="sc">!=</span> <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) ) stable <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb29-217"><a href="mod-dp.html#cb29-217" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb29-218"><a href="mod-dp.html#cb29-218" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (stable) <span class="cf">break</span></span>
+<span id="cb29-219"><a href="mod-dp.html#cb29-219" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb29-220"><a href="mod-dp.html#cb29-220" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (ite <span class="sc">==</span> maxItePolicy) <span class="fu">warning</span>(<span class="st">&quot;Policy Iteration algorithm stopped at max iterations allowed:&quot;</span>, maxItePolicy)</span>
+<span id="cb29-221"><a href="mod-dp.html#cb29-221" aria-hidden="true" tabindex="-1"></a>         <span class="fu">message</span>(<span class="fu">str_c</span>(<span class="st">&quot;Policy iteration algorihm finished in &quot;</span>, ite, <span class="st">&quot; iterations.&quot;</span>))</span>
+<span id="cb29-222"><a href="mod-dp.html#cb29-222" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb29-223"><a href="mod-dp.html#cb29-223" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb29-224"><a href="mod-dp.html#cb29-224" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb29-225"><a href="mod-dp.html#cb29-225" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Value iteration</span></span>
+<span id="cb29-226"><a href="mod-dp.html#cb29-226" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param gamma Discount rate.</span></span>
+<span id="cb29-227"><a href="mod-dp.html#cb29-227" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param theta Threshold parameter.</span></span>
+<span id="cb29-228"><a href="mod-dp.html#cb29-228" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param maxIte Maximum number of iterations.</span></span>
+<span id="cb29-229"><a href="mod-dp.html#cb29-229" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param reset If true initialize all state-values to 0.</span></span>
+<span id="cb29-230"><a href="mod-dp.html#cb29-230" aria-hidden="true" tabindex="-1"></a>      <span class="at">valueIte =</span> <span class="cf">function</span>(gamma, <span class="at">theta =</span> <span class="fl">0.00001</span>, <span class="at">maxIte =</span> <span class="dv">10000</span>, <span class="at">reset =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb29-231"><a href="mod-dp.html#cb29-231" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span><span class="fu">setRandomDeterministicPolicy</span>()</span>
+<span id="cb29-232"><a href="mod-dp.html#cb29-232" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (reset) self<span class="sc">$</span><span class="fu">setStateValue</span>()  <span class="co"># set to 0</span></span>
+<span id="cb29-233"><a href="mod-dp.html#cb29-233" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (ite <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxIte) { </span>
+<span id="cb29-234"><a href="mod-dp.html#cb29-234" aria-hidden="true" tabindex="-1"></a>            delta <span class="ot">&lt;-</span> <span class="dv">0</span>   <span class="co"># Bellman error </span></span>
+<span id="cb29-235"><a href="mod-dp.html#cb29-235" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb29-236"><a href="mod-dp.html#cb29-236" aria-hidden="true" tabindex="-1"></a>               v <span class="ot">&lt;-</span> self<span class="sc">$</span>v[[s]]  </span>
+<span id="cb29-237"><a href="mod-dp.html#cb29-237" aria-hidden="true" tabindex="-1"></a>               actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb29-238"><a href="mod-dp.html#cb29-238" aria-hidden="true" tabindex="-1"></a>               vMax <span class="ot">=</span>  <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb29-239"><a href="mod-dp.html#cb29-239" aria-hidden="true" tabindex="-1"></a>               <span class="cf">for</span> (a <span class="cf">in</span> actions) {</span>
+<span id="cb29-240"><a href="mod-dp.html#cb29-240" aria-hidden="true" tabindex="-1"></a>                  val <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">bellmanCalc</span>(gamma, s, a)</span>
+<span id="cb29-241"><a href="mod-dp.html#cb29-241" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">if</span> (val <span class="sc">&gt;</span> vMax) {</span>
+<span id="cb29-242"><a href="mod-dp.html#cb29-242" aria-hidden="true" tabindex="-1"></a>                     vMax <span class="ot">&lt;-</span> val</span>
+<span id="cb29-243"><a href="mod-dp.html#cb29-243" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) <span class="ot">&lt;-</span> a</span>
+<span id="cb29-244"><a href="mod-dp.html#cb29-244" aria-hidden="true" tabindex="-1"></a>                  }</span>
+<span id="cb29-245"><a href="mod-dp.html#cb29-245" aria-hidden="true" tabindex="-1"></a>               }</span>
+<span id="cb29-246"><a href="mod-dp.html#cb29-246" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>v[[s]] <span class="ot">&lt;-</span> vMax</span>
+<span id="cb29-247"><a href="mod-dp.html#cb29-247" aria-hidden="true" tabindex="-1"></a>               delta <span class="ot">&lt;-</span> <span class="fu">max</span>(delta, <span class="fu">abs</span>(v<span class="sc">-</span>vMax))</span>
+<span id="cb29-248"><a href="mod-dp.html#cb29-248" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb29-249"><a href="mod-dp.html#cb29-249" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (delta <span class="sc">&lt;</span> theta) <span class="cf">break</span></span>
+<span id="cb29-250"><a href="mod-dp.html#cb29-250" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb29-251"><a href="mod-dp.html#cb29-251" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (ite <span class="sc">==</span> maxIte) <span class="fu">warning</span>(<span class="st">&quot;Value iteration algorithm stopped at max iterations allowed:&quot;</span>, maxIte)         </span>
+<span id="cb29-252"><a href="mod-dp.html#cb29-252" aria-hidden="true" tabindex="-1"></a>         <span class="fu">message</span>(<span class="fu">str_c</span>(<span class="st">&quot;Value iteration algorihm finished in &quot;</span>, ite, <span class="st">&quot; iterations.&quot;</span>))</span>
+<span id="cb29-253"><a href="mod-dp.html#cb29-253" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb29-254"><a href="mod-dp.html#cb29-254" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb29-255"><a href="mod-dp.html#cb29-255" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb29-256"><a href="mod-dp.html#cb29-256" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>You may have a look at the code and try to get an overview. Let us now try to solve the problem. First we need some functions for calculating the reward and transition probabilities:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="mod-dp.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Expected reward of an action</span></span>
 <span id="cb30-2"><a href="mod-dp.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param s Waste amount (state).</span></span>
@@ -1028,14 +1030,14 @@ Finally, the transition probabilities are:
 <h3><span class="header-section-number">5.10.1</span> Exercise - Gambler’s problem<a href="mod-dp.html#ex-dp-gambler" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider the gambler’s problem in Exercise <a href="mod-mdp-1.html#ex-mdp-1-gambler">3.6.3</a>.</p>
 <!-- Q1 -->
-<div id="Z9SVqmMWZXl9Gei4EyQk" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Z9SVqmMWZXl9Gei4EyQk-title">
+<div id="XhcXIHKbm5tze5yCGrLF" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="XhcXIHKbm5tze5yCGrLF-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="Z9SVqmMWZXl9Gei4EyQk-title">
+<h4 class="modal-title" id="XhcXIHKbm5tze5yCGrLF-title">
 Solution
 </h4>
 </div>
@@ -1081,21 +1083,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Z9SVqmMWZXl9Gei4EyQk">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#XhcXIHKbm5tze5yCGrLF">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Build the model in R.</li>
 </ol>
 <!-- Q2 -->
-<div id="RXw7ODsreTfdOyVkC5Nh" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="RXw7ODsreTfdOyVkC5Nh-title">
+<div id="xbesMrNXXA4SXsKLhph3" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="xbesMrNXXA4SXsKLhph3-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="RXw7ODsreTfdOyVkC5Nh-title">
+<h4 class="modal-title" id="xbesMrNXXA4SXsKLhph3-title">
 Solution
 </h4>
 </div>
@@ -1133,21 +1135,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RXw7ODsreTfdOyVkC5Nh">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#xbesMrNXXA4SXsKLhph3">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Solve the problem using value iteration with <span class="math inline">\(p_h = 0.4\)</span>. Plot the policy with states 1-99 on the x-axis and action on the y-axis. Plot the state-values given states 1-99 on the x-axis. Your policy may not look like the policy in the book, why?</li>
 </ol>
 <!-- Q3 -->
-<div id="AvMjlfNVI13hvCA5EVaa" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="AvMjlfNVI13hvCA5EVaa-title">
+<div id="a1s2o3acSgkeoHvOuz0I" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="a1s2o3acSgkeoHvOuz0I-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="AvMjlfNVI13hvCA5EVaa-title">
+<h4 class="modal-title" id="a1s2o3acSgkeoHvOuz0I-title">
 Solution
 </h4>
 </div>
@@ -1181,7 +1183,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#AvMjlfNVI13hvCA5EVaa">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#a1s2o3acSgkeoHvOuz0I">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
@@ -1197,14 +1199,14 @@ Solution
 <p>The cost of an enforced repair upon failure is <span class="math inline">\(C_{f}\)</span> and the cost of a preemptive repair in working condition <span class="math inline">\(s\)</span> is <span class="math inline">\(C_{p,s}\)</span>. We wish to determine a maintenance rule which minimizes the repair cost.</p>
 <p>The problem can be formulated as an MDP. Since an enforced repair takes two days and the state of the system has to be defined at the beginning of each day, we need an auxiliary state for the situation in which an enforced repair is in progress already for one day.</p>
 <!-- Q1 -->
-<div id="dXcKidn2M8Qdn0nbarvk" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="dXcKidn2M8Qdn0nbarvk-title">
+<div id="shpUt9ehaYgFFjRGy58Q" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="shpUt9ehaYgFFjRGy58Q-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="dXcKidn2M8Qdn0nbarvk-title">
+<h4 class="modal-title" id="shpUt9ehaYgFFjRGy58Q-title">
 Solution
 </h4>
 </div>
@@ -1221,21 +1223,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#dXcKidn2M8Qdn0nbarvk">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#shpUt9ehaYgFFjRGy58Q">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>, i.e. the the set of possible states of the system.</li>
 </ol>
 <!-- Q2 -->
-<div id="7u8hFTzd8uMDExBHd9f9" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="7u8hFTzd8uMDExBHd9f9-title">
+<div id="YS2ZedZI4s1xPCI8RgED" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="YS2ZedZI4s1xPCI8RgED-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="7u8hFTzd8uMDExBHd9f9-title">
+<h4 class="modal-title" id="YS2ZedZI4s1xPCI8RgED-title">
 Solution
 </h4>
 </div>
@@ -1252,7 +1254,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#7u8hFTzd8uMDExBHd9f9">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#YS2ZedZI4s1xPCI8RgED">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
@@ -1267,14 +1269,14 @@ a=\left\{\begin{array}{ll}
 Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span> for all states <span class="math inline">\(s\)</span>.</li>
 </ol>
 <!-- Q3 -->
-<div id="RSgF0YE3IIdltiMBNGjs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="RSgF0YE3IIdltiMBNGjs-title">
+<div id="A8N1jPSDgfB6s25llK1F" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="A8N1jPSDgfB6s25llK1F-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="RSgF0YE3IIdltiMBNGjs-title">
+<h4 class="modal-title" id="A8N1jPSDgfB6s25llK1F-title">
 Solution
 </h4>
 </div>
@@ -1291,21 +1293,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RSgF0YE3IIdltiMBNGjs">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#A8N1jPSDgfB6s25llK1F">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
 <li>Assume that the number of possible working conditions equals <span class="math inline">\(N=5\)</span>. What is the expected reward <span class="math inline">\(r(s,a)\)</span>?</li>
 </ol>
 <!-- Q4 -->
-<div id="KSNGTEwv5hACRQEBJnfq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="KSNGTEwv5hACRQEBJnfq-title">
+<div id="4xXeiOV5h0VFVgPiH5fo" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="4xXeiOV5h0VFVgPiH5fo-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="KSNGTEwv5hACRQEBJnfq-title">
+<h4 class="modal-title" id="4xXeiOV5h0VFVgPiH5fo-title">
 Solution
 </h4>
 </div>
@@ -1322,7 +1324,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#KSNGTEwv5hACRQEBJnfq">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#4xXeiOV5h0VFVgPiH5fo">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
@@ -1333,14 +1335,14 @@ Solution
 <li>Try make a drawing of the state-expanded hypergraph for stage <span class="math inline">\(t\)</span> and <span class="math inline">\(t+1\)</span>.</li>
 </ol>
 <!-- Q6 -->
-<div id="hN2N5unyc2d0KeRe9C6C" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="hN2N5unyc2d0KeRe9C6C-title">
+<div id="hyXgIl3fPlleWmUaSefq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="hyXgIl3fPlleWmUaSefq-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="hN2N5unyc2d0KeRe9C6C-title">
+<h4 class="modal-title" id="hyXgIl3fPlleWmUaSefq-title">
 Solution
 </h4>
 </div>
@@ -1448,7 +1450,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#hN2N5unyc2d0KeRe9C6C">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#hyXgIl3fPlleWmUaSefq">
 Solution
 </button>
 <ol start="6" style="list-style-type: decimal">
@@ -1467,14 +1469,14 @@ Solution
 <p>Build the MDP in R.</p></li>
 </ol>
 <!-- Q7 -->
-<div id="bwMwNYvznoU74pgtZFM9" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="bwMwNYvznoU74pgtZFM9-title">
+<div id="w9uSWIM78n1tGX1kdOdG" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="w9uSWIM78n1tGX1kdOdG-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="bwMwNYvznoU74pgtZFM9-title">
+<h4 class="modal-title" id="w9uSWIM78n1tGX1kdOdG-title">
 Solution
 </h4>
 </div>
@@ -1505,21 +1507,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bwMwNYvznoU74pgtZFM9">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#w9uSWIM78n1tGX1kdOdG">
 Solution
 </button>
 <ol start="7" style="list-style-type: decimal">
 <li>Find the optimal policy given a discount rate of <span class="math inline">\(\gamma = 0.6\)</span>. What is the average discounted cost of being in state 3?</li>
 </ol>
 <!-- Q8 -->
-<div id="p9Lu9E4WZ9iVrFIrh665" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="p9Lu9E4WZ9iVrFIrh665-title">
+<div id="tlVbcvXldtaZhC17mKOj" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="tlVbcvXldtaZhC17mKOj-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="p9Lu9E4WZ9iVrFIrh665-title">
+<h4 class="modal-title" id="tlVbcvXldtaZhC17mKOj-title">
 Solution
 </h4>
 </div>
@@ -1560,7 +1562,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#p9Lu9E4WZ9iVrFIrh665">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#tlVbcvXldtaZhC17mKOj">
 Solution
 </button>
 <ol start="8" style="list-style-type: decimal">
@@ -1671,14 +1673,14 @@ Similar for Location 2, if <span class="math inline">\(\bar{y}= y+a\)</span> we 
 <span id="cb46-56"><a href="mod-dp.html#cb46-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 </span></span>
 <span id="cb46-57"><a href="mod-dp.html#cb46-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1</span></span></code></pre></div>
 <!-- Q1 -->
-<div id="yO6vQjOVgI7eMTHLncYg" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="yO6vQjOVgI7eMTHLncYg-title">
+<div id="LDcRtqlDOrODIfysAvqO" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="LDcRtqlDOrODIfysAvqO-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="yO6vQjOVgI7eMTHLncYg-title">
+<h4 class="modal-title" id="LDcRtqlDOrODIfysAvqO-title">
 Hint
 </h4>
 </div>
@@ -1731,7 +1733,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#yO6vQjOVgI7eMTHLncYg">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#LDcRtqlDOrODIfysAvqO">
 Hint
 </button>
 <ol style="list-style-type: decimal">
