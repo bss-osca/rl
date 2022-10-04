@@ -400,7 +400,6 @@ MDPClass <- R6Class("MDPClass",
          self$setRandomDeterministicPolicy()
          for (ite in 1:maxItePolicy) {
             self$policyEval(gamma, theta, maxIteEval, reset = FALSE)
-            # self$setStateValue()  # set to 0
             stable <- TRUE
             for (s in keys(self$model)) {
                piOld <- names(self$model[[s]]$pi)
@@ -426,7 +425,7 @@ MDPClass <- R6Class("MDPClass",
       #' @param gamma Discount rate.
       #' @param theta Threshold parameter.
       #' @param maxIte Maximum number of iterations.
-      #' @param reset If true set all state-values to 0.
+      #' @param reset If true initialize all state-values to 0.
       valueIte = function(gamma, theta = 0.00001, maxIte = 10000, reset = TRUE) {
          self$setRandomDeterministicPolicy()
          if (reset) self$setStateValue()  # set to 0
@@ -843,6 +842,8 @@ library(patchwork)
 ```
 
 3) Solve the problem using value iteration with $p_h = 0.22$ and $0.55$ and plot the results. What is the probability of winning in state 10 and 67?
+
+
 
 ### Exercise - Maintenance problem {#ex-dp-maintain}
 
