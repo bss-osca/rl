@@ -207,7 +207,7 @@ knitr::include_graphics("img/policy-ite-path.png")
 Value iteration do one sweep of policy evaluation and one sweep of policy improvement by updating the Bellman optimality equation:
 
 $$v_{k+1}(s) = \arg\max_a \left(r(s,a) + \gamma\sum_{s',r} p(s'|s, a)v_k(s')\right)$$
-VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy $\pi^*$ is found:
+VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy $\pi_*$ is found:
 
 $$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right)$$
 The sequence of calculations will be: 
