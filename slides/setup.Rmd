@@ -46,3 +46,6 @@ BibOptions(check.entries = FALSE,
            dashed = FALSE)
 bib <- ReadBib(here("book/rl.bib"), check = FALSE)
 ```
+
+
+

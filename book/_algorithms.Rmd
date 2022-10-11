@@ -1,0 +1,560 @@
+<!-- Various algorithms for the RL course -->
+
+```{r, MDP-class, include=FALSE, eval=FALSE}
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 class representing the MDP
+#' 
+#' Note since the MDP is a model with full information, we combine the agent and environment into a single class.
+MDPClass <- R6Class("MDPClass",
+   public = list(
+      
+      #' @field model The Markov decision process (model). The model is represented 
+      #' using a hash list for the states. Each states contains a list with `actions`: a hash 
+      #' list with actions and `pi` a vector with policy pr (named vector with only 
+      #' positive values). The `actions` hash list contains actions with trans 
+      #' pr `pr` (named vector only with positive values) and expected reward `reward`.
+      model = NULL,  
+      
+      #' @field sV The state-values stored in a hash. Value updates are done in-place (one-array version).
+      v = NULL,
+      
+      #' @description Create an object (when call new).
+      #' @return The new object.
+      initialize = function() {
+         self$model <- hash()
+         self$v <- hash()
+      },
+      
+      #' @description Add the states (keys/strings in the hash)
+      #' @param s A vector of states (converted to strings).
+      addStateSpace = function(s) {
+         keys <- make.keys(s)
+         self$model[keys] <- list(pi = NA)   # don't use pi = NULL since then won't be defined 
+         self$setStateValue()  # so v defined
+         return(invisible(NULL))
+      },
+      
+      #' @description Add the actions to a state
+      #' @param stateStr State key/string.
+      #' @param a A vector of actions (converted to strings).
+      addActionSpace = function(stateStr, a) {
+         a <- make.keys(a)
+         self$model[[stateStr]]$actions <- hash()
+         self$model[[stateStr]]$actions[a] <- NA
+         return(invisible(NULL))
+      },
+      
+      #' @description Add expected reward and trans pr to an action
+      #' @param stateStr State key/string.
+      #' @param actionStr Action key/string.
+      #' @param r The expected reward.
+      #' @param pr A named vector with positive trans pr. The name of an element must be the state key.
+      addAction = function(stateStr, actionStr, r, pr) {
+         if (!has.key(stateStr, self$model)) {
+            self$addStateSpace(stateStr)
+            # self$model[make.keys(stateStr)] <- hash(pi = NA, actions = hash())
+         } 
+         self$model[[stateStr]]$actions[[actionStr]] <- list(r = r, pr = pr)
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the state-value of states
+      #' @param stateStr A vector of state keys.
+      #' @param value The value.
+      setStateValue = function(stateStr = keys(self$model), value = 0) {
+         self$v[stateStr] <- value
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to a random determistic policy.
+      setRandomDeterministicPolicy = function() {
+         stateStr = keys(self$model)
+         for (s in stateStr) {
+            self$model[[s]]$pi <- 1
+            names(self$model[[s]]$pi) <- sample(self$getActionKeys(s), 1)
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set a deterministic policy
+      #' @param sa A named vector with action keys and names equal state keys-
+      setDeterministicPolicy = function(sa) {
+         states <- names(sa)
+         pi = 1
+         for (i in 1:length(sa)) {
+            names(pi) <- sa[i]
+            s <- states[i]
+            self$model[[s]]$pi <- pi
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Return the state keys
+      getStateKeys = function() {
+         keys(self$model)
+      },
+      
+      #' @description Return the action keys
+      #' @param s The state considered.
+      getActionKeys = function(s) {
+         keys(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return the expected reward and trans pr of actions in a state
+      #' @param s The state considered.
+      getActionInfo = function(s) {
+         as.list(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return the current policy as a tibble
+      getPolicy = function() {
+         # if (all(sapply(self$model, FUN = function(s) {s$pi}) == 1)) { # deterministic policy
+         #    sapply(self$model, FUN = function(s) {names(s$pi)})
+         # } else {
+         map_dfr(self$getStateKeys(), .f = function(s) {
+               list(state = s, action = names(self$model[[s]]$pi), pr = self$model[[s]]$pi)
+            })
+      },
+      
+      #' @description Return the state-values as a tibble
+      #' @param s A vector of state keys.
+      getStateValues = function(s = keys(self$v)) {
+         tibble(state = s, v = values(self$v, keys = s))
+      },
+      
+      #' @description Return a matrix with trans pr for a given action. 
+      #' @param a Action key.
+      getTransPrActionMat = function(a) {
+         states <- keys(self$model)
+         m <- matrix(0, nrow = length(states), ncol = length(states))
+         colnames(m) <- states
+         rownames(m) <- states
+         for (s in states) {
+            m[s, names(self$model[[s]]$actions[[a]]$pr)] <- self$model[[s]]$actions[[a]]$pr
+         }
+         return(m)
+      },
+      
+      #' @description Returns all rewards in a matrix
+      getRewardMat = function() {
+         states <- keys(self$model)
+         actions <- unique(unlist(sapply(states, function(s) self$getActionKeys(s))))
+         m <- matrix(NA, nrow = length(states), ncol = length(actions))
+         colnames(m) <- actions
+         rownames(m) <- states
+         for (s in states) {
+            for (a in self$getActionKeys(s)) {
+               m[s, a] <- self$model[[s]]$actions[[a]]$r
+            }
+         }
+         return(m)
+      },
+      
+      #' @description Bellman calculations for a given state and action
+      #' @param gamma Discount rate.
+      #' @param s State key.
+      #' @param a Action key.
+      bellmanCalc = function(gamma, s, a) {
+         pr <- self$model[[s]]$actions[[a]]$pr
+         r <- self$model[[s]]$actions[[a]]$r
+         nS <- names(pr)
+         vS <- values(self$v, nS)
+         return(r + gamma * sum(pr * vS))
+      },
+      
+      #' @description Iterative policy evaluation of current policy (defined by pi)
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param maxIte Maximum number of iterations.
+      #' @param reset If true set all state-values to 0.
+      policyEval = function(gamma, theta = 0.00001, maxIte = 10000, reset = TRUE) {
+         if (reset) self$setStateValue()  # set to 0
+         for (ite in 1:maxIte) { 
+            delta <- 0   # Bellman error 
+            for (s in keys(self$model)) {
+               v <- self$v[[s]]  
+               # update
+               pi <- self$model[[s]]$pi
+               actions <- names(pi)
+               val =  0
+               for (a in actions) {
+                  # pr <- self$model[[s]]$actions[[a]]$pr
+                  # r <- self$model[[s]]$actions[[a]]$r
+                  # nS <- names(pr)
+                  # vS <- values(self$v, nS)
+                  val <- val + pi[a] * self$bellmanCalc(gamma, s, a)
+               }
+               self$v[[s]] <- val
+               delta <- max(delta, abs(v-val))
+            }
+            if (delta < theta) break
+         }
+         if (ite == maxIte) warning("Policy evaluation algorithm stopped at max iterations allowed:", maxIte)
+      },
+
+
+      #' @description Policy iteration using iterative policy eval
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param maxIteEval Maximum number of iterations when evaluate policy.
+      #' @param maxItePolicy Maximum number of policy iterations.
+      policyIte = function(gamma, theta = 0.00001, maxIteEval = 10000, maxItePolicy = 100) {
+         self$setRandomDeterministicPolicy()
+         for (ite in 1:maxItePolicy) {
+            self$policyEval(gamma, theta, maxIteEval, reset = FALSE)
+            stable <- TRUE
+            for (s in keys(self$model)) {
+               piOld <- names(self$model[[s]]$pi)
+               actions <- self$getActionKeys(s)
+               vMax =  -Inf
+               for (a in actions) {
+                  val <- self$bellmanCalc(gamma, s, a)
+                  if (val > vMax) {
+                     names(self$model[[s]]$pi) <- a
+                     vMax <- val
+                  }
+               }
+               if (piOld != names(self$model[[s]]$pi) ) stable <- FALSE
+            }
+            if (stable) break
+         }
+         if (ite == maxItePolicy) warning("Policy Iteration algorithm stopped at max iterations allowed:", maxItePolicy)
+         message(str_c("Policy iteration algorihm finished in ", ite, " iterations."))
+         return(invisible(NULL))
+      },
+      
+      #' @description Value iteration
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param maxIte Maximum number of iterations.
+      #' @param reset If true initialize all state-values to 0.
+      valueIte = function(gamma, theta = 0.00001, maxIte = 10000, reset = TRUE) {
+         self$setRandomDeterministicPolicy()
+         if (reset) self$setStateValue()  # set to 0
+         for (ite in 1:maxIte) { 
+            delta <- 0   # Bellman error 
+            for (s in keys(self$model)) {
+               v <- self$v[[s]]  
+               actions <- self$getActionKeys(s)
+               vMax =  -Inf
+               for (a in actions) {
+                  val <- self$bellmanCalc(gamma, s, a)
+                  if (val > vMax) {
+                     vMax <- val
+                     names(self$model[[s]]$pi) <- a
+                  }
+               }
+               self$v[[s]] <- vMax
+               delta <- max(delta, abs(v-vMax))
+            }
+            if (delta < theta) break
+         }
+         if (ite == maxIte) warning("Value iteration algorithm stopped at max iterations allowed:", maxIte)         
+         message(str_c("Value iteration algorihm finished in ", ite, " iterations."))
+         return(invisible(NULL))
+      }
+   )
+)
+```
+
+
+```{r RLAgent, include=FALSE, eval=FALSE}
+library(R6)
+library(hash)
+library(tidyverse)
+
+## Generic RL agent for tabular data (R6 class)
+RLAgent <- R6Class("RLAgent",
+   public = list(
+      #' @field model The model is used to represent the information we have. The
+      #' model is represented using a hash list for the states. Each states contains 
+      #'    - A list with `actions` (a hash #' list with actions).
+      #'    - `pi` (a named vector with policy pr (only positive values).
+      #'    - `piG` the greedy action (a string). 
+      #'    - `n` a visit counter
+      #' The `actions` hash list contains 
+      #'    - The action-values `q`.
+      #'    - `n` a visit counter.
+      model = NULL,  
+      
+      #' @description Create an object (when call new).
+      initialize = function() {
+         self$model <- hash()
+         return(invisible(NULL))
+      },
+
+      #' @description Add state and action to the hash (only if not already added)
+      #' @param s State key/string.
+      #' @param a Action key/string.
+      addStateAction = function(s, a) {
+         if (!has.key(s, self$model)) addStates(s)
+         if (!has.key(a, self$model[[s]]$actions)) self$model[[s]]$actions[[a]] <- list(q = 0, n = 0)
+         return(invisible(NULL))
+      },
+      
+      #' @description Add the states (keys) and define void policy and empty action hash. 
+      #' @param states A vector of states (converted to strings).
+      addStates = function(states) {
+         keys <- make.keys(states)
+         self$model[keys] <- list(pi = NA)   # don't use pi = NULL since then won't be defined 
+         for (s in keys) {
+            self$model[[s]]$piG <- NA
+            self$model[[s]]$actions <- hash()
+            self$model[[s]]$n <- 0  # counter visited
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Add the actions to a state
+      #' @param s State (key).
+      #' @param actions A vector of actions (converted to strings).
+      addActions = function(s, actions) {
+         keys <- make.keys(actions)
+         for (a in keys) {
+            self$addStateAction(s, a)
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Add states and actions to the hash with initial values. If already exists nothing happens. 
+      #' @param df A tibble with string columns `s` (states) and `a` (actions).
+      addStatesAndActions = function(df) {
+         for (i in 1:nrow(df)) {
+            self$addStateAction(df$s[i], df$a[i])
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the action-values for all actions.
+      #' @param value The value.
+      setActionValue = function(value = 0) {
+         for (s in keys(self$model)) {
+            for (a in keys(self$model[[s]]$actions)) {
+               self$model[[s]]$actions[[a]]$q = value
+            }
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the action visit counter values for all actions.
+      #' @param ctrValue Counter value.
+      setActionCtrValue = function(ctrValue = 0) {
+         for (s in keys(self$model)) {
+            for (a in keys(self$model[[s]]$actions)) {
+               self$model[[s]]$actions[[a]]$n = ctrValue
+            }
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the action-values for a single action (including the counter values).
+      #' @param value The value.
+      #' @param ctrValue Counter value.
+      setActionValueSingle = function(value = 0, ctrValue = 0, s, a) {
+         self$model[[s]]$actions[[a]]$q = value
+         self$model[[s]]$actions[[a]]$n = ctrValue
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to a random epsilon-greedy policy.
+      #' @param eps Epsilon used in epsilon-greedy policy.
+      setRandomEpsGreedyPolicy = function(eps) {
+         states <- keys(self$model)
+         for (s in states) {
+            actions <- self$getActionKeys(s)
+            self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
+            names(self$model[[s]]$pi) <- actions
+            self$model[[s]]$piG <- sample(self$getActionKeys(s), 1)
+            self$model[[s]]$pi[self$model[[s]]$piG] <- self$model[[s]]$pi[self$model[[s]]$piG] + 1 - eps
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to the optimal epsilon-greedy policy 
+      #' @param eps Epsilon used in epsilon-greedy policy.
+      #' @param states States under consideration.
+      setEpsGreedyPolicy = function(eps, states) {
+         for (s in states) {
+            actions <- self$getActionKeys(s)
+            self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
+            names(self$model[[s]]$pi) <- actions
+            idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
+            # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
+            self$model[[s]]$piG <- actions[idx]
+            self$model[[s]]$pi[idx] <- self$model[[s]]$pi[idx] + 1 - eps
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the greedy policy (stored in piG) based on action-values. 
+      #' @param states States under consideration.
+      setGreedyPolicy = function(states = self$getStateKeys()) {
+         for (s in states) {
+            actions <- self$getActionKeys(s)
+            idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
+            # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
+            self$model[[s]]$piG <- actions[idx]
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the state visit counter values for all states.
+      #' @param ctrValue Counter value.
+      setStateCtrValue = function(ctrValue = 0) {
+         for (s in keys(self$model)) {
+            self$model[[s]]$n = ctrValue
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Return the state keys
+      getStateKeys = function() {
+         keys(self$model)
+      },
+      
+      getStateValue = function(s) {
+         pi <- self$model[[s]]$pi
+         # print(pi)
+         val <- 0
+         for (a in names(pi)) {
+            val <- val + pi[a] * self$model[[s]]$actions[[a]]$q
+            # print(self$model[[s]]$actions[[a]]$q)
+         }
+         # print(val)
+         return(val)
+      },
+      
+      #' @description Return the action keys
+      #' @param s The state considered.
+      getActionKeys = function(s) {
+         keys(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return information stored in a state
+      #' @param s The state considered.
+      getActionInfo = function(s) {
+         as.list(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return the current policy as a tibble
+      getPolicy = function(states = self$getStateKeys()) {
+         map_dfr(states, .f = function(s) {
+               list(state = s, action = names(self$model[[s]]$pi), pr = self$model[[s]]$pi)
+            })
+      },
+      
+      #' @description Returns all action-values in a matrix (cols: actions, rows: states)
+      getStateActionQMat = function() {
+         states <- keys(self$model)
+         actions <- unique(unlist(sapply(states, function(s) self$getActionKeys(s))))
+         m <- matrix(NA, nrow = length(states), ncol = length(actions))
+         colnames(m) <- actions
+         rownames(m) <- states
+         for (s in states) {
+            for (a in self$getActionKeys(s)) {
+               m[s, a] <- self$model[[s]]$actions[[a]]$q
+            }
+         }
+         return(m)
+      },
+      
+      #' @description Return the action-values as a tibble
+      #' @param states A vector of state keys.
+      getActionValues = function(states = keys(self$model)) {
+         map_dfr(states, .f = function(s) {
+               list(state = s, action = keys(self$model[[s]]$actions), q = unlist(values(self$model[[s]]$actions)["q",]), n = unlist(values(self$model[[s]]$actions)["n",]))
+            })
+      },
+      
+      #' @description Select next action using upper-confidence bound. Also update the visit counters for both state and selected action.
+      #' @return Action.
+      getActionUCB = function(s, coeff = 1) { 
+         actions <- self$getActionKeys(s)
+         self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+         qV <- unlist(values(self$model[[s]]$actions)["q",])
+         nA <- unlist(values(self$model[[s]]$actions)["n",])
+         nS <- self$model[[s]]$n
+         val <- qV + coeff * sqrt(log(nS + 0.0001)/nA)
+         idx <- which.max(val)
+         a <- actions[idx]
+         self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+         return(a)
+      },
+      
+      #' @description Select next action using epsilon-greedy policy based on action-values. Also update the visit counters for both state and selected action.
+      #' @return Action.
+      getActionEG = function(s, eps) {
+         self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+         q <- unlist(values(self$model[[s]]$actions)["q",])
+         actions <- self$getActionKeys(s)
+         pi <- rep(eps/length(q), length(q))
+         idx <- nnet::which.is.max(q)  # choose among max values at random
+         # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
+         pi[idx] <- pi[idx] + 1 - eps
+         a <- actions[sample(1:length(actions), 1, prob = pi)]
+         self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+         return(a)
+      },
+      
+      #' @description Generalized policy iteration using on policy every-visit Monte Carlo sampling.  
+      #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
+      #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
+      #'    the method that decides which action selection method is used. 
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param minIte Minimum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Start states in the episodes, which all are visited using a for loop.
+      #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
+      gpiOnPolicyMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), eps = 0.1) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()   # reset counter
+            self$setStateCtrValue()    # reset counter
+         }
+         # self$setRandomEpsGreedyPolicy(epsilon)
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         # self$setGreedyPolicy()
+         for (ite in 1:maxIte) {
+            delta <- 0
+            # stable <- TRUE
+            for (ss in states) {  # for episode with s as start
+               df <- env$getEpisode(self, ss, eps)  # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
+               if (nrow(df) == 0) next
+               # df <- df %>% mutate(nA = NA, nS = NA, oldQ = NA, q = NA, g = NA, oldV = NA, v = NA)
+               gain <- 0
+               for (i in nrow(df):1) {
+                  s <- df$s[i]
+                  a <- df$a[i]
+                  gain <- df$r[i] + gamma * gain
+                  ctr <- self$model[[s]]$actions[[a]]$n
+                  oldQ <- self$model[[s]]$actions[[a]]$q
+                  oldV <- self$getStateValue(s)
+                  stepSize <- (1/ctr)^0.5
+                  self$model[[s]]$actions[[a]]$q <- oldQ + stepSize * (gain - oldQ)
+                  # self$model[[s]]$actions[[a]]$q <- oldQ + 0.1 * (gain - oldQ)
+                  self$setEpsGreedyPolicy(eps, s)
+                  # oldPiG <- self$model[[s]]$piG
+                  # delta <- max(delta, abs(oldQ - self$model[[s]]$actions[[a]]$q))
+                  delta <- max(delta, abs(oldV - self$getStateValue(s)))
+                  # self$setGreedyPolicy(s)
+                  # if (oldPiG != self$model[[s]]$piG | self$model[[s]]$piG != a) stable = FALSE 
+                  # df$oldQ[i] <- oldQ; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain; df$nA[i] <- ctr; df$nS[i] <- self$model[[s]]$n; df$oldV[i] <- oldV; df$v[i] <- self$getStateValue(s)
+               }
+               # print(df)
+            }
+            if (delta < theta & ite >= minIte) break
+         }
+         if (ite == maxIte) warning("GPI algorithm stopped at max iterations allowed: ", maxIte)
+         message(str_c("GPI algorihm finished in ", ite, " iterations."))
+         return(invisible(NULL))
+      }
+      
+
+   )
+)
+```
