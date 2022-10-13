@@ -7,6 +7,9 @@ editor_options:
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
+```{r, child = "_algorithms.Rmd", echo=FALSE}
+```
+
 ```{r}
 knitr::opts_chunk$set(
    echo = TRUE
@@ -142,6 +145,354 @@ Note by using exploring starts in Algorithm \@ref(fig:mc-gpi-es-alg), the 'infin
 knitr::include_graphics("img/mc-gpi-on-policy.png")
 ```
 
+An incremental approach for updating $Q$ can be used by storing the number of times $n_a$, action $a$ has been visited in state $s$ and then update $Q(s,a)$ using $$Q_{n+1} = Q_n + \frac{1}{n_a}(G-Q_n),$$
+where $Q_n$ denote the previous value.
+
+Finally, the algorithm in Figure \@ref(fig:mc-gpi-on-policy-alg) do not mention how to find the start state of an episode. In general all states that we want to approximate must be used as start state. 
+
+
+### GPI using upper-confience bound action selection 
+
+GPI using exploring starts or $\epsilon$-soft policies may be slow. Often speed-ups can be done by using e.g. upper-confidence bounds (UCB) for action selection. Recall from Module \@ref(mod-bandit) that UCB select actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. That is, the next action $a'$ given a state $s$ is selected using:
+$$
+	a' = \arg\max_a \left(Q(s,a) + c\sqrt{\frac{\ln n_s}{n_a}}\right),
+$$
+where $n_s$ denote the number of times state $s$ has been visited and $n_a$ denote the number of times action $a$ has been visited (both numbers must be stored). The parameter $c>0$ controls the degree of exploration. Higher $c$ results in more weight on the uncertainty. However, one problem with UCB is that it is hard to decide on which value of $c$ to use in advance.   
+<!-- Preliminary testing showed that using UCB instead of $\epsilon$-greedy policies worked better.  -->
+
+
+
+
+
+### Example - Seasonal inventory and sales planning {#mc-seasonal}
+
+```{r RL-env-seasonal, include=FALSE}
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 Class representing the RL environment for the problem
+RLEnvSeasonal <- R6Class("RLEnvSeasonal",
+   public = list(
+      
+      #' @field maxInv Max inventory level.
+      maxInv = NA,  
+      
+      #' @field maxT Max number of weeks to sell product.
+      maxT = NA,
+      
+      #' @field scrapPrice Scrap price per item in week maxT.
+      scrapPrice = NA,
+      
+      #' @field purchasePrice Purchase price per item.
+      purchasePrice = NA,
+      
+      #' @field prices Possible sales prices per item.
+      prices = NA,
+
+      #' @description Create an object (when call new).
+      #' @param maxInv Max inventory level.
+      #' @param maxT Max number of weeks to sell product.
+      #' @param scrapPrice Scrap price per item in week maxT.
+      #' @param purchasePrice Purchase price per item.
+      #' @return The new object.
+      initialize = function(maxInv, maxT, scrapPrice, purchasePrice, prices) {
+         self$maxInv <- maxInv 
+         self$maxT <- maxT
+         self$scrapPrice <- scrapPrice
+         self$purchasePrice <- purchasePrice
+         self$prices <- prices
+      },
+      
+      
+      #' @description Return all states (keys).
+      getStates = function() {
+         states <- expand_grid(l = 1:env$maxInv, t = 1:env$maxT) %>% mutate(s = str_c(l, ",", t)) %>% pull(s)
+         states <- c(states, "0")
+         return(states)
+      },
+      
+      #' @description Return all actions (keys) for a state.
+      #' @param s State considered.
+      getActions = function(s) {
+         if (s == "0") return("dummy")
+         q <- str_split(s, ",", simplify = T)
+         t <- as.numeric(q[2])
+         q <- as.numeric(q[1])
+         if (t == self$maxT) return(str_c(self$scrapPrice))
+         return(str_c(self$prices))
+      },
+      
+      #' @description Stochastic demand sample. 
+      #' @param price Sales price.
+      #' @param t Week.
+      getDemand = function(price, t) {
+         l1 = matrix(c(10,20, 12,12), ncol = 2, byrow = T)  # points (price, demand) for first line
+         l2 = matrix(c(12,12, 15,10), ncol = 2, byrow = T)  
+         l3 = matrix(c(15,10), ncol = 2, byrow = T)  
+         
+         if (price <= max(l1[1,1],l1[2,1])) {
+            a <- (l1[1,2]-l1[2,2])/(l1[1,1]-l1[2,1])
+            b <- l1[1,2] - a * l1[1,1] 
+            d <- a * price + b 
+            dS <- d * runif(1, 0.75, 1.25)
+         } else if (price >= min(l2[1,1],l2[2,1]) & price <= max(l2[1,1],l2[2,1])) {
+            a <- (l2[1,2]-l2[2,2])/(l2[1,1]-l2[2,1])
+            b <- l2[1,2] - a * l2[1,1] 
+            d <- a * price + b 
+            dS <- d * runif(1, 0.75, 1.25)
+         } else if (price >= l3[1,1]) {
+            d <- -4*log(price - l3[1,1] + 1) + l3[1,2]
+            dS <- d * runif(1, 1, 2)
+         }
+         if (t <= self$maxT/2) {
+            dS <- runif(1, 1, 1.2) * dS
+         }
+         # if (stochastic) return(round(dS)) else return(round(d))
+         return(round(dS))
+      },
+      
+      #' @description Returns the simulated transition probabilities and reward. 
+      getTransPrR = function(s, a, runs = 10000) {
+         q <- str_split(s, ",", simplify = T)
+         t <- as.numeric(q[2])
+         q <- as.numeric(q[1])
+         if (q == 0) {
+            return(list(pr = c("0" = 1), r = 0))
+         }
+         if (t == env$maxT) {
+            return(list(pr = c("0" = 1), r = env$scrapPrice * q))
+         }
+         a <- as.numeric(a)
+         df <- tibble(sim = 1:runs) %>% 
+            rowwise() %>% 
+            mutate(demand = self$getDemand(a, t)) %>% 
+            ungroup() %>% 
+            mutate(qN = q - pmin(q, demand), reward = a * pmin(q, demand))
+         reward <- mean(df$reward)
+         if (t == 1) reward <- reward - q * self$purchasePrice
+         df <- df %>% 
+            count(qN) %>% 
+            mutate(pr = n/sum(n), qN = if_else(qN == 0, "0", str_c(qN, ",", t+1)))
+         pr <- df %>% pull(pr, name = qN)
+         return(list(pr = pr, r = reward))
+      },
+      
+      #' @description Returns an episode as a tibble with cols s, a, r (last col the terminal reward).
+      #' @param agent The agent that holds the model with current policy. Use upper-confidence bound action selection.
+      getEpisode = function(agent, startState, coeff = 1, eps = 0.1) {
+         if (startState == "0") {
+            return(tibble::tibble(!!!c("s", "a", "r"), .rows = 0))  # empty tibble
+         }
+         q <- str_split(startState, ",", simplify = T)
+         t <- as.numeric(q[2])
+         q <- as.numeric(q[1])
+         df <- tibble(s = rep(NA_character_, 100 * self$maxInv), a = NA_character_, r = NA_real_)  # a tibble with more rows than used
+         # q <- sample(1:self$maxInv, 1)  # pick start inventory random
+         # q <- 1
+         # t <- 1
+         for (i in 1:nrow(df)) {
+            if (q == 0) {
+               df <- df[1:(i-1),]  # remove unused rows
+               break  # have reached terminal state
+            }
+            s <- str_c(q, ",", t)
+            if (t == self$maxT) { # sell remaining
+               a <- agent$getActionUCB(s, coeff)
+               r <- self$scrapPrice * q
+               q <- 0  # new q value
+            } else {
+               # actions <- names(agent$model[[s]]$pi)
+               # a <- actions[sample(1:length(actions), 1, prob = agent$model[[s]]$pi)]
+               # a <- agent$getActionUCB(s, coeff)
+               # epsN <- eps * (1/(agent$model[[s]]$n+1))^0.28
+               epsN <- eps
+               a <- agent$getActionEG(s, epsN)
+               # cat(a, " ")
+               price <- as.numeric(a)
+               d <- self$getDemand(price, t)
+               if (t == 1) {
+                  r <- price * min(q, d) - q * self$purchasePrice
+               } else {
+                  r <- price * min(q, d)
+               }
+               q <- q - min(q, d)  # new q value
+               t <- t + 1 # new t value
+            }
+            df$s[i] <- s
+            df$a[i] <- a
+            df$r[i] <- r
+         }
+         return(df)
+      }
+   )
+)
+```
+
+```{r RL-env-seasonal-def, include=FALSE}
+set.seed(876)
+prices <- c(10, 15, 20, 25)
+env <- RLEnvSeasonal$new(maxInv = 100, maxT = 15, scrapPrice = 5, purchasePrice = 14, prices)
+```
+
+In the following example we try to implement an algorithm that uses generalized policy iteration with every-visit estimation using epsilon-greedy action selection.
+
+We consider seasonal product such as garden furnitures. Assume that the maximum inventory level is $Q$ items, i.e. we can buy at most $Q$ items at the start of the season for a price of $`r env$purchasePrice`. The product can be sold for at most $T$ weeks and at the end of the period (week $T$), the remaining inventory is sold to an outlet store for $`r env$scrapPrice` per item. 
+
+The demand depends on the sales price which based on historic observations is assumed in the interval $[10,25].$ In general a higher sales price result in a lower demand. Moreover, in the first half part of the season the demand is on average 10% higher given a fixed sales price compared to the last half part of the season. Historic observed demands can be seen in Figure \@ref(fig:demand). 
+
+```{r demand, echo=FALSE, fig.cap="Observed demands given price (scaled based on number of observations)."}
+df1 <- tibble(price = rep(prices, 200), t = "First half of season") %>% 
+   rowwise() %>% 
+   mutate(demand = env$getDemand(price, 1)) 
+df2 <- tibble(price = rep(prices, 200), t = "Last half of season") %>% 
+   rowwise() %>% 
+   mutate(demand = env$getDemand(price, env$maxT)) 
+df <- bind_rows(df1, df2) %>% 
+   count(price, demand, t) 
+df %>% 
+   ggplot(aes(x = price, y = demand, size = n)) + 
+   # geom_smooth(se = F, lwd = 0.5, col = "grey") + 
+   geom_point() +
+   facet_grid(cols = vars(t)) +
+   theme(legend.position = "none")
+```
+   
+Let $s = (q,t)$ denote the state of the system in the start of a week, where $q$ is the inventory and $t$ the week number. Then the state space is $$\mathcal{S} = \{ s = (q,t) | 1 \leq q \leq Q, 1 \leq t \leq T \} \cup \{ 0 \},$$
+where state $s = 0$ denote the terminal state (inventory empty).
+Let us limit us to actions $$\mathcal{A}(q,t) = \{ 10,15,20,25 \}, \mathcal{A}(0) = \{ d \}, $$ where action $a$ denote the price and $d$ denote the dummy action with deterministic transition to state $0$.
+
+The inventory dynamics for transitions not to the terminal state are $$t' = t + 1,$$ $$q' = q - min(q, D),$$ 
+where $D$ denote the demand. Moreover, if $t = T$ or $q' = 0$, then a transition to the terminal state happens.  
+
+For $t=1$ the reward of an state $(q,t)$ is sales price times the number of sold items minus the purchase cost. For $1<t<T$ the reward is sales price times the number of sold (we assume an inventory cost of zero), while for $t=T$ the reward is the scrap price times the inventory. 
+
+Let us define a R6 class representing the environment for this problem
+
+```{r ref.label='RL-env-seasonal', include=TRUE, eval=FALSE}
+```
+
+Note that we define methods for getting the state and actions, an episode and the demand. Moreover, for this problem we many also use simulation to get the transition probabilities and the expected reward of a state-action pair (see method `getTransPrR`). That is, we may solve the problem using an MDP first and compare. Let us define the environment:
+
+```{r ref.label='RL-env-seasonal-def', include=TRUE, eval=FALSE}
+```
+
+First let us try to find the optimal policy using an MDP:
+
+```{r ref.label='MDP-class', include=FALSE}
+```
+
+```{r Solve MDP, cache=TRUE}
+## Build the MDP
+mdp <- MDPClass$new()                           # initialize mdp object
+mdp$addStateSpace(env$getStates())              # add states
+for (s in mdp$getStateKeys()) {                 # add actions
+   mdp$addActionSpace(s, env$getActions(s))
+} 
+for (s in mdp$getStateKeys()) {                 # add trans pr and reward (this will take some time!)
+   for (a in mdp$getActionKeys(s)) {
+      lst <- env$getTransPrR(s, a, runs = 1000)
+      mdp$addAction(s, a, r = lst$r, pr = lst$pr)
+   }
+}
+## Solve the MDP
+mdp$policyIte(gamma = 1)
+# mdp$valueIte(gamma = 1)
+dfMDP <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+   select(-pr) %>% 
+   separate(state, into = c("inv", "t"), remove = F, convert = T)
+```
+
+Let us plot the optimal policy (see Figure \@ref(fig:seasonal-mdp-plot)):
+
+```{r seasonal-mdp-plot, fig.cap="Optimal policy for the MDP."}
+dfMDP %>% filter(!is.na(t)) %>% 
+   ggplot(aes(x = t, y = inv, col = action)) +
+   geom_point()
+```
+
+Note in general we change the price based on a diagonal line running from upper-left to lower-right. Some time two prices oscillate given a time due to state-values close to each other. 
+
+The best inventory level to order can be found by searching among the state-values at time one. 
+
+```{r}
+res <- dfMDP %>% 
+   filter(t == 1) %>% 
+   arrange(desc(v)) %>% 
+   print()
+```
+
+This is approx around `r res$inv[1]` items. If ordering 100 items we would loose:
+
+```{r}
+res$v[1] - dfMDP %>% 
+   filter(state == "100,1") %>% pull(v)
+```
+
+Let us now try to use RL and MC to approximate the best policy. First, we define a generic RL agent:
+
+```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
+```
+
+Pay attention to the `gpiOnPolicyMC` method which uses generalized policy iteration with every-visit estimation using on-policy sampling and an epsilon greedy policy for action selection. Note that `gpiOnPolicyMC` also takes a set of states as input which are the starting states of the episodes generated (all used in each iteration). Moreover, we do not use a step size equal $1/n_a$ but $(1/n_a)^{0.5}$ which decrease slower. Finally, the stopping criteria is added by comparing the the differences in the state-values for each state in an episode. Note the value of $\theta$ gives no guarantee that the action-values will be close to the optimal ones, since we not sample episodes. For instance if two similar episodes are generated early in run then they may be so alike that that the state-values are almost equal and hence the algorithm stops.   
+
+We define the RL agent:
+
+```{r}
+agent <- RLAgent$new()
+agent$addStates(env$getStates())   # add states
+for (s in agent$getStateKeys()) {  # add actions
+   agent$addActions(s, env$getActions(s))
+} 
+agent$getActionKeys("2,5")
+```
+
+Given the current policy an episode can be extracted using: 
+
+```{r, include=FALSE, eval=FALSE}
+env$getEpisode(agent, "50,1", eps = 0.2)
+```
+
+Each row contains the state, action and reward for a time-step. Let us try to approximate the optimal state-value and action in state $(50,1)$.
+
+```{r, cache=TRUE}
+set.seed(232)
+time <- 1
+i <- 50
+state = str_c(i, ",", time)
+agent$gpiOnPolicyMC(env, minIte = 2000, maxIte = 50000, states = state, reset = T, eps = 0.2, theta = 0.2)
+dfRL <- agent$getActionValues() %>% 
+   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
+```
+
+Let us consider the action-values at state $(50,1)$
+
+```{r}
+dfRL %>%
+   filter(inv == i, t == time) %>% 
+   left_join(dfMDP)
+```
+
+Note that actions in state $(50,1)$ are sampled differently (based on the epsilon-greedy policy). The best action found (the one with the highest action-value) also seems to be the optimal action w.r.t. the MDP. 
+
+Let us make a plot of the greedy action for the visited states:
+
+```{r}
+visits <- dfRL %>% group_by(state) %>% summarise(nS = sum(n)) 
+df1 <- dfRL %>% 
+   group_by(state) %>%
+   slice_max(q, with_ties = F) %>% 
+   left_join(visits) %>% 
+   filter(n != 0)  
+df1 %>% 
+   ggplot(aes(x = t, y = inv, size = nS, col = action)) +
+   geom_point() 
+```
+
+Observe that the states are now sampled differently. Some states are visited many times (many episodes visit that state) while others are not visited often. For the states visited often we have a better approximation of best action compared to states which are visited rarely. Here the action is more or less random, e.g. the action in state $(5,3)$ should not be to set the price to 10 (setting the price to 25 would be better since we only have 5 items left).
+
+
+
 
 ## Off-policy MC prediction {#sec-mc-off-policy}
 
@@ -261,740 +612,173 @@ Read Chapter 5.10 in @Sutton18.
 
 ### Exercise - Seasonal inventory and sales planning {#ex-mc-seasonal}
 
-```{r RL env seasonal, include=FALSE}
-library(R6)
-library(hash)
-library(tidyverse)
-
-#' R6 Class representing the RL environment for the problem
-RLEnvSeasonal <- R6Class("RLEnvSeasonal",
-   public = list(
-      
-      #' @field maxInv Max inventory level.
-      maxInv = NA,  
-      
-      #' @field maxT Max number of weeks to sell product.
-      maxT = NA,
-      
-      #' @field scrapPrice Scrap price per item in week maxT.
-      scrapPrice = NA,
-      
-      #' @field purchasePrice Purchase price per item.
-      purchasePrice = NA,
-      
-      #' @field prices Possible sales prices per item.
-      prices = NA,
-
-      #' @description Create an object (when call new).
-      #' @param maxInv Max inventory level.
-      #' @param maxT Max number of weeks to sell product.
-      #' @param scrapPrice Scrap price per item in week maxT.
-      #' @param purchasePrice Purchase price per item.
-      #' @return The new object.
-      initialize = function(maxInv, maxT, scrapPrice, purchasePrice, prices) {
-         self$maxInv <- maxInv 
-         self$maxT <- maxT
-         self$scrapPrice <- scrapPrice
-         self$purchasePrice <- purchasePrice
-         self$prices <- prices
-      },
-      
-      
-      #' @description Return all states (keys).
-      getStates = function() {
-         states <- expand_grid(l = 1:env$maxInv, t = 1:env$maxT) %>% mutate(s = str_c(l, ",", t)) %>% pull(s)
-         states <- c(states, "0")
-         return(states)
-      },
-      
-      #' @description Return all actions (keys) for a state.
-      #' @param s State considered.
-      getActions = function(s) {
-         if (s == "0") return("dummy")
-         q <- str_split(s, ",", simplify = T)
-         t <- as.numeric(q[2])
-         q <- as.numeric(q[1])
-         if (t == self$maxT) return(str_c(self$scrapPrice))
-         return(str_c(self$prices))
-      },
-      
-      #' @description Stochastic demand sample. 
-      #' @param price Sales price.
-      #' @param t Week.
-      getDemand = function(price, t) {
-         l1 = matrix(c(10,20, 12,12), ncol = 2, byrow = T)  # points (price, demand) for first line
-         l2 = matrix(c(12,12, 15,10), ncol = 2, byrow = T)  
-         l3 = matrix(c(15,10), ncol = 2, byrow = T)  
-         
-         if (price <= max(l1[1,1],l1[2,1])) {
-            a <- (l1[1,2]-l1[2,2])/(l1[1,1]-l1[2,1])
-            b <- l1[1,2] - a * l1[1,1] 
-            d <- a * price + b 
-            dS <- d * runif(1, 0.75, 1.25)
-         } else if (price >= min(l2[1,1],l2[2,1]) & price <= max(l2[1,1],l2[2,1])) {
-            a <- (l2[1,2]-l2[2,2])/(l2[1,1]-l2[2,1])
-            b <- l2[1,2] - a * l2[1,1] 
-            d <- a * price + b 
-            dS <- d * runif(1, 0.75, 1.25)
-         } else if (price >= l3[1,1]) {
-            d <- -4*log(price - l3[1,1] + 1) + l3[1,2]
-            dS <- d * runif(1, 1, 2)
-         }
-         if (t <= self$maxT/2) {
-            dS <- runif(1, 1, 1.2) * dS
-         }
-         # if (stochastic) return(round(dS)) else return(round(d))
-         return(round(dS))
-      },
-      
-      #' @description Returns the simulated transition probabilities and reward. 
-      getTransPrR = function(s, a, runs = 10000) {
-         q <- str_split(s, ",", simplify = T)
-         t <- as.numeric(q[2])
-         q <- as.numeric(q[1])
-         if (q == 0) {
-            return(list(pr = c("0" = 1), r = 0))
-         }
-         if (t == env$maxT) {
-            return(list(pr = c("0" = 1), r = env$scrapPrice * q))
-         }
-         a <- as.numeric(a)
-         df <- tibble(sim = 1:runs) %>% 
-            rowwise() %>% 
-            mutate(demand = self$getDemand(a, t)) %>% 
-            ungroup() %>% 
-            mutate(qN = q - pmin(q, demand), reward = a * pmin(q, demand))
-         reward <- mean(df$reward)
-         if (t == 1) reward <- reward - q * self$purchasePrice
-         df <- df %>% 
-            count(qN) %>% 
-            mutate(pr = n/sum(n), qN = if_else(qN == 0, "0", str_c(qN, ",", t+1)))
-         pr <- df %>% pull(pr, name = qN)
-         return(list(pr = pr, r = reward))
-      },
-      
-      #' @description Returns an episode as a tibble with cols s, a, r (last col the terminal reward).
-      #' @param agent The agent that holds the model with current policy.
-      getEpisode = function(agent, q = sample(1:self$maxInv, 1)) {
-         df <- tibble(s = rep(NA_character_, 100 * self$maxInv), a = NA_character_, r = NA_real_)  # a tibble with more rows than used
-         # q <- sample(1:self$maxInv, 1)  # pick start inventory random
-         # q <- 1
-         t <- 1
-         for (i in 1:nrow(df)) {
-            if (q == 0) {
-               df <- df[1:(i-1),]  # remove unused rows
-               break  # have reached terminal state
-            }
-            s <- str_c(q, ",", t)
-            if (t == self$maxT) { # sell remaining
-               a <- names(agent$model[[s]]$pi)  # only a single action
-               r <- self$scrapPrice * q
-               q <- 0  # new q value
-            } else {
-               actions <- names(agent$model[[s]]$pi)
-               a <- actions[sample(1:length(actions), 1, prob = agent$model[[s]]$pi)]
-               # cat(a, " ")
-               price <- as.numeric(a)
-               d <- self$getDemand(price, t)
-               if (t == 1) {
-                  r <- price * min(q, d) - q * self$purchasePrice
-               } else {
-                  r <- price * min(q, d)
-               }
-               q <- q - min(q, d)  # new q value
-               t <- t + 1 # new t value
-            }
-            df$s[i] <- s
-            df$a[i] <- a
-            df$r[i] <- r
-         }
-         return(df)
-      }
-   )
-)
+```{r}
+knitr::knit_exit()
 ```
+
+Consider the seasonal product in Example \@ref(mc-seasonal). 
+
+```{r ref.label='RL-env-seasonal-def', include=TRUE, eval=FALSE}
+```
+
+<!-- Q1 -->
+
+```{r, solution=TRUE, text="With a low inventory level, there is a high probability of selling everything even for the highest price. This effect is more dominant if the number of time-steps left is high and decrease as we approach week 15. Contrary with a high inventory level there is a low probability of selling everything (if the price is set to high) and therefore have to use a lower price. This effect is more dominant if the number of time-steps left is low."}
+```
+
+1) Consider the optimal policy for the MDP modelling the problem in Figure \@ref(fig:seasonal-mdp-plot). Here the optimal price is high at the lower-left and decrease as we approach the upper-right. Explain why this from an intuitive point of view seems correct. 
+
+
+<!-- Q2 -->
+```{r, solution=TRUE, text="The optimal policy is found using a threshold value, i.e the MDP finds an optimal with state-values within the threshold. Hence small differences in state-value may produce different optimal prices. Another reason could be that we have multiple optimal policies."}
+```
+
+2) Consider the optimal policy for the MDP modelling the problem in Figure \@ref(fig:seasonal-mdp-plot). For a fixed time $t$ the optimal price does not always decrease as the inventory level increase. Some time two prices oscillate (e.g. first green, then red and then green again). Give possible reasons for this happening. 
+
+
+<!-- Q3 -->
+```{r, solution=TRUE, text="In state $(1,1)$ the optimal price is 25 (we only have one item left to sell over 15 weeks) and in state $(100,15)$ the optimal price is 10 (we can not sell all items in one week so set price low)."}
+```
+
+3) Let us consider two extreme states $(1,1)$ and $(100,15)$. From an intuitively point of view, what is the optimal action/price to do in these states?
+
+
+<!-- Q4 -->
+```{r, solution=TRUE, text="Since the epsilon-greedy policy selects $a=20$ (at random) first, $a=20$ becomes the greedy action that is selected with highest probability. In this run, when selecting the next action, 20 is always selected and hence only $q$ for $a=20$ is updated 10 times (minimum number of iterations). Afterwards differences in state-values off states in the current episode are compared (`oldV` and `v` column). Since they are the same the algorithm stop. That is, we never get a chance to have a view on $a=25$ or the stopping criteria may not work well for episodes with small length."}
+```
+
+4) Consider state $(1,1)$ and let us try approximating best epsilon-greedy policy using MC with the verbose option so it prints out info about each episode:
+
+```{r, cache=TRUE}
+set.seed(79)
+time <- 1
+i <- 1
+state = str_c(i, ",", time)
+agent$gpiOnPolicyMC(env, minIte = 10, maxIte = 100000, states = state, reset = T, eps = 0.2, verbose = T)
+dfRL <- agent$getActionValues() %>% 
+   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
+dfRL %>%
+   filter(inv == i, t == time) %>% 
+   left_join(dfMDP)
+```
+
+Why do we not estimate the optimal action here and why do the algorithm stop. Hint: You may have a look at method `gpiOnPolicyMC` in the RLagent class.
+
+
+<!-- Q5 -->
+```{r, solution=TRUE, text="Since the initial action-value is high, all actions will be explored with high probability first. This may help the algorithm to get a good start."}
+```
+
+5) Let us try to set the action-value high initially:
+
+```{r, cache=TRUE}
+set.seed(105)
+agent$setActionValue(1000)
+agent$setActionCtrValue()   # reset counter
+agent$setStateCtrValue()    # reset counter
+agent$getActionValues("1,1")
+agent$gpiOnPolicyMC(env, minIte = 5, maxIte = 100000, states = state, reset = F, eps = 0.2, verbose = T)
+dfRL <- agent$getActionValues() %>% 
+   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
+dfRL %>%
+   filter(inv == i, t == time) %>% 
+   left_join(dfMDP)
+```
+
+What happens with the sequence of episodes?
+
+<!-- Q6 -->
+```{r, solution=TRUE, text="Since we do simulations (we here do 3) each simulation may produce different results depending on how the algorithm starts. That is, we need more iterations for converging to the correct state-value."}
+```
+
+6) Consider state $(1,1)$ and let us try approximating best epsilon-greedy policy using MC using more episodes:
+
+```{r, cache=TRUE}
+set.seed(749)
+agent$gpiOnPolicyMC(env, minIte = 100, maxIte = 100000, states = state, reset = T, eps = 0.2)
+agent$getStateValue(state)  # get the state-value v(s) of the epsilon-greedy policy
+agent$gpiOnPolicyMC(env, minIte = 1000, maxIte = 100000, states = state, reset = T, eps = 0.2)
+agent$getStateValue(state)  # get the state-value v(s) of the epsilon-greedy policy
+agent$gpiOnPolicyMC(env, minIte = 2000, maxIte = 100000, states = state, reset = T, eps = 0.2)
+agent$getStateValue(state)  # get the state-value v(s) of the epsilon-greedy policy
+```
+
+Why is the state-value not increasing monotone as number of iterations increase?
+
+
+<!-- Q7 -->
+```{r, solution=TRUE, text="No, the q-values are the averages over all the generated episodes (also those generated using bad policies). With enough simulations these numbers will converge against the action-values for the best epsilon-greedy policy ($\\epsilon = 0.5$ here), not the optimal greedy policy."}
+```
+
+7) Consider state $(25,8)$ and let us approximate the best epsilon-greedy policy:
+```{r, cache=TRUE}
+set.seed(281)
+time <- 8
+i <- 25
+state = str_c(i, ",", time)
+agent$setActionValue(1000)
+agent$setActionCtrValue()   # reset counter
+agent$setStateCtrValue()    # reset counter
+agent$gpiOnPolicyMC(env, minIte = 5000, maxIte = 100000, states = state, reset = F, eps = 0.5)
+dfRL <- agent$getActionValues() %>% 
+   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
+dfRL %>%
+   filter(inv == i, t == time) %>% 
+   left_join(dfMDP)
+```
+
+As can be seen the the optimal state value for the MDP is not equal the action-value for that action. Should that have been the case if run enough simulations?
+
+
+
+
+
+
+
 
 ```{r, include=FALSE}
-env <- RLEnvSeasonal$new(maxInv = 200, maxT = 20, scrapPrice = 5, purchasePrice = 14, prices = c(10, 15, 25))
+knitr::knit_exit()
 ```
 
 
-```{r mdp-class, include=FALSE, eval=FALSE}
-library(R6)
-library(hash)
-library(tidyverse)
-
-#' R6 Class representing the MDP
-#' 
-#' Note since the MDP is a model with full information, we combine the agent and environment into a single class.
-MDPClass <- R6Class("MDPClass",
-   public = list(
-      
-      #' @field model The Markov decision process (model). The model is represented 
-      #' using a hash list for the states. Each states contains a list with `actions`: a hash 
-      #' list with actions and `pi` a vector with policy pr (named vector with only 
-      #' positive values). The `actions` hash list contains actions with trans 
-      #' pr `pr` (named vector only with positive values) and expected reward `reward`.
-      model = NULL,  
-      
-      #' @field sV The state-values stored in a hash. Value updates are done in-place (one-array version).
-      v = NULL,
-      
-      #' @description Create an object (when call new).
-      #' @return The new object.
-      initialize = function() {
-         self$model <- hash()
-         self$v <- hash()
-      },
-      
-      #' @description Add the states (keys/strings in the hash)
-      #' @param s A vector of states (converted to strings).
-      addStateSpace = function(s) {
-         keys <- make.keys(s)
-         self$model[keys] <- list(pi = NA)   # don't use pi = NULL since then won't be defined 
-         self$setStateValue()  # so v defined
-         return(invisible(NULL))
-      },
-      
-      #' @description Add the actions to a state
-      #' @param stateStr State key/string.
-      #' @param a A vector of actions (converted to strings).
-      addActionSpace = function(stateStr, a) {
-         a <- make.keys(a)
-         self$model[[stateStr]]$actions <- hash()
-         self$model[[stateStr]]$actions[a] <- NA
-         return(invisible(NULL))
-      },
-      
-      #' @description Add expected reward and trans pr to an action
-      #' @param stateStr State key/string.
-      #' @param actionStr Action key/string.
-      #' @param r The expected reward.
-      #' @param pr A named vector with positive trans pr. The name of an element must be the state key.
-      addAction = function(stateStr, actionStr, r, pr) {
-         if (!has.key(stateStr, self$model)) {
-            self$addStateSpace(stateStr)
-            # self$model[make.keys(stateStr)] <- hash(pi = NA, actions = hash())
-         } 
-         self$model[[stateStr]]$actions[[actionStr]] <- list(r = r, pr = pr)
-         return(invisible(NULL))
-      },
-      
-      #' @description Set the state-value of states
-      #' @param stateStr A vector of state keys.
-      #' @param value The value.
-      setStateValue = function(stateStr = keys(self$model), value = 0) {
-         self$v[stateStr] <- value
-         return(invisible(NULL))
-      },
-      
-      #' @description Set the policy to a random determistic policy.
-      setRandomDeterministicPolicy = function() {
-         stateStr = keys(self$model)
-         for (s in stateStr) {
-            self$model[[s]]$pi <- 1
-            names(self$model[[s]]$pi) <- sample(self$getActionKeys(s), 1)
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Set a deterministic policy
-      #' @param sa A named vector with action keys and names equal state keys-
-      setDeterministicPolicy = function(sa) {
-         states <- names(sa)
-         pi = 1
-         for (i in 1:length(sa)) {
-            names(pi) <- sa[i]
-            s <- states[i]
-            self$model[[s]]$pi <- pi
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Return the state keys
-      getStateKeys = function() {
-         keys(self$model)
-      },
-      
-      #' @description Return the action keys
-      #' @param s The state considered.
-      getActionKeys = function(s) {
-         keys(self$model[[s]]$actions) 
-      },
-      
-      #' @description Return the expected reward and trans pr of actions in a state
-      #' @param s The state considered.
-      getActionInfo = function(s) {
-         as.list(self$model[[s]]$actions) 
-      },
-      
-      #' @description Return the current policy as a tibble
-      getPolicy = function() {
-         # if (all(sapply(self$model, FUN = function(s) {s$pi}) == 1)) { # deterministic policy
-         #    sapply(self$model, FUN = function(s) {names(s$pi)})
-         # } else {
-         map_dfr(self$getStateKeys(), .f = function(s) {
-               list(state = s, action = names(self$model[[s]]$pi), pr = self$model[[s]]$pi)
-            })
-      },
-      
-      #' @description Return the state-values as a tibble
-      #' @param s A vector of state keys.
-      getStateValues = function(s = keys(self$v)) {
-         tibble(state = s, v = values(self$v, keys = s))
-      },
-      
-      #' @description Return a matrix with trans pr for a given action. 
-      #' @param a Action key.
-      getTransPrActionMat = function(a) {
-         states <- keys(self$model)
-         m <- matrix(0, nrow = length(states), ncol = length(states))
-         colnames(m) <- states
-         rownames(m) <- states
-         for (s in states) {
-            m[s, names(self$model[[s]]$actions[[a]]$pr)] <- self$model[[s]]$actions[[a]]$pr
-         }
-         return(m)
-      },
-      
-      #' @description Returns all rewards in a matrix
-      getRewardMat = function() {
-         states <- keys(self$model)
-         actions <- unique(unlist(sapply(states, function(s) self$getActionKeys(s))))
-         m <- matrix(NA, nrow = length(states), ncol = length(actions))
-         colnames(m) <- actions
-         rownames(m) <- states
-         for (s in states) {
-            for (a in self$getActionKeys(s)) {
-               m[s, a] <- self$model[[s]]$actions[[a]]$r
-            }
-         }
-         return(m)
-      },
-      
-      #' @description Bellman calculations for a given state and action
-      #' @param gamma Discount rate.
-      #' @param s State key.
-      #' @param a Action key.
-      bellmanCalc = function(gamma, s, a) {
-         pr <- self$model[[s]]$actions[[a]]$pr
-         r <- self$model[[s]]$actions[[a]]$r
-         nS <- names(pr)
-         vS <- values(self$v, nS)
-         return(r + gamma * sum(pr * vS))
-      },
-      
-      #' @description Iterative policy evaluation of current policy (defined by pi)
-      #' @param gamma Discount rate.
-      #' @param theta Threshold parameter.
-      #' @param maxIte Maximum number of iterations.
-      #' @param reset If true set all state-values to 0.
-      policyEval = function(gamma, theta = 0.00001, maxIte = 10000, reset = TRUE) {
-         if (reset) self$setStateValue()  # set to 0
-         for (ite in 1:maxIte) { 
-            delta <- 0   # Bellman error 
-            for (s in keys(self$model)) {
-               v <- self$v[[s]]  
-               # update
-               pi <- self$model[[s]]$pi
-               actions <- names(pi)
-               val =  0
-               for (a in actions) {
-                  # pr <- self$model[[s]]$actions[[a]]$pr
-                  # r <- self$model[[s]]$actions[[a]]$r
-                  # nS <- names(pr)
-                  # vS <- values(self$v, nS)
-                  val <- val + pi[a] * self$bellmanCalc(gamma, s, a)
-               }
-               self$v[[s]] <- val
-               delta <- max(delta, abs(v-val))
-            }
-            if (delta < theta) break
-         }
-         if (ite == maxIte) warning("Policy evaluation algorithm stopped at max iterations allowed:", maxIte)
-      },
-
-
-      #' @description Policy iteration using iterative policy eval
-      #' @param gamma Discount rate.
-      #' @param theta Threshold parameter.
-      #' @param maxIteEval Maximum number of iterations when evaluate policy.
-      #' @param maxItePolicy Maximum number of policy iterations.
-      policyIte = function(gamma, theta = 0.00001, maxIteEval = 10000, maxItePolicy = 100) {
-         self$setRandomDeterministicPolicy()
-         for (ite in 1:maxItePolicy) {
-            self$policyEval(gamma, theta, maxIteEval, reset = FALSE)
-            stable <- TRUE
-            for (s in keys(self$model)) {
-               piOld <- names(self$model[[s]]$pi)
-               actions <- self$getActionKeys(s)
-               vMax =  -Inf
-               for (a in actions) {
-                  val <- self$bellmanCalc(gamma, s, a)
-                  if (val > vMax) {
-                     names(self$model[[s]]$pi) <- a
-                     vMax <- val
-                  }
-               }
-               if (piOld != names(self$model[[s]]$pi) ) stable <- FALSE
-            }
-            if (stable) break
-         }
-         if (ite == maxItePolicy) warning("Policy Iteration algorithm stopped at max iterations allowed:", maxItePolicy)
-         message(str_c("Policy iteration algorihm finished in ", ite, " iterations."))
-         return(invisible(NULL))
-      },
-      
-      #' @description Value iteration
-      #' @param gamma Discount rate.
-      #' @param theta Threshold parameter.
-      #' @param maxIte Maximum number of iterations.
-      #' @param reset If true initialize all state-values to 0.
-      valueIte = function(gamma, theta = 0.00001, maxIte = 10000, reset = TRUE) {
-         self$setRandomDeterministicPolicy()
-         if (reset) self$setStateValue()  # set to 0
-         for (ite in 1:maxIte) { 
-            delta <- 0   # Bellman error 
-            for (s in keys(self$model)) {
-               v <- self$v[[s]]  
-               actions <- self$getActionKeys(s)
-               vMax =  -Inf
-               for (a in actions) {
-                  val <- self$bellmanCalc(gamma, s, a)
-                  if (val > vMax) {
-                     vMax <- val
-                     names(self$model[[s]]$pi) <- a
-                  }
-               }
-               self$v[[s]] <- vMax
-               delta <- max(delta, abs(v-vMax))
-            }
-            if (delta < theta) break
-         }
-         if (ite == maxIte) warning("Value iteration algorithm stopped at max iterations allowed:", maxIte)         
-         message(str_c("Value iteration algorihm finished in ", ite, " iterations."))
-         return(invisible(NULL))
-      }
-   )
-)
-```
-
-```{r, include=FALSE, eval=FALSE}
-env <- RLEnvSeasonal$new(maxInv = 200, maxT = 15, scrapPrice = 5, purchasePrice = 14, prices  = c(10,15,20,25))
-mdp <- MDPClass$new()      # initialize mdp object
-mdp$addStateSpace(env$getStates())   # add states (states are keys in a hash and are always converted to strings), 101 represent finished
-for (s in mdp$getStateKeys()) {  # add actions for each state (only the key of the action)
-   mdp$addActionSpace(s, env$getActions(s))
-} 
-# check some of the keys
-mdp$getActionKeys("0")
-mdp$getActionKeys("2,1")
-
-
-for (s in mdp$getStateKeys()) {
-   cat(s, " ")
-   for (a in mdp$getActionKeys(s)) {
-      lst <- env$getTransPrR(s, a, runs = 1000)
-      mdp$addAction(s, a, r = lst$r, pr = lst$pr)
-   }
-}
-mdp$getActionInfo("0")
-mdp$getActionInfo("20,1")
-```
-
-Let us try to find the optimal policy using policy iteration:
-
-```{r, include=FALSE, eval=FALSE}
-mdp$policyIte(gamma = 1)
-mdp$getPolicy()
-mdp$getStateValues()
-df <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
-   select(-pr) %>% 
-   separate(state, into = c("q", "t"), remove = F, convert = T) 
-df %>% filter(q == 200)
-
-df %>% 
-   ggplot(aes(x = t, y = q, col = action)) +
-   geom_point()
-```
-
-
-
-
-
-We consider seasonal product such as garden furnitures. Assume that the maximum inventory level is $Q$ items, i.e. we can buy at most $Q$ items at the start of the season for a price of $`r env$purchasePrice`. The product can be sold for at most $T$ weeks and at the end of the period (week $T$), the remaining inventory is sold to an outlet store for $`r env$scrapPrice` per item. 
-
-The demand depends on the sales price which based on historic observations is assumed in the interval $[10,25]$. In general a higher sales price result in a lower demand. Moreover, in the first half part of the season the demand is on average 10% higher given a fixed sales price compared to the last half part of the season. Historic observed demands can be seen in Figure \@ref(fig:demand). 
-
-```{r demand, echo=FALSE, fig.cap="Observed demands given price.", include=FALSE, eval=FALSE}
-# df1 <- tibble(price = 10:25, stoc = F) %>% rowwise() %>% 
-#    mutate(demand = env$getDemand(price, stochastic = F)) 
-df1 <- tibble(price = rep(10:25, 200), t = "First half of season") %>% 
-   rowwise() %>% 
-   mutate(demand = env$getDemand(price, 1)) 
-df2 <- tibble(price = rep(10:25, 200), t = "Last half of season") %>% 
-   rowwise() %>% 
-   mutate(demand = env$getDemand(price, 25)) 
-df <- bind_rows(df1, df2) %>% 
-   count(price, demand, t) 
-df %>% 
-   ggplot(aes(x = price, y = demand)) + 
-   geom_smooth(se = F, lwd = 0.5, col = "grey") + 
-   geom_point() +
-   facet_grid(cols = vars(t))
-```
-   
-   
-Let $s = (q,t)$ denote the state of the system in the start of a week, where $q$ is the inventory and $t$ the week number. Then the state space is $$\mathcal{S} = \{ s = (q,t) | 1 \leq q \leq Q, 1 \leq t \leq T \} \cup \{ 0 \},$$
-where state $s = 0$ denote the terminal state (inventory empty).
-Possible actions are $$\mathcal{A}(q,t) = \{ 10,\ldots,25 \}, \mathcal{A}(0) = \{ d \}, $$ where action $d$ denote the dummy action with deterministic transition to state $0$.
-
-The inventory dynamics for transitions not to the terminal state are $$t' = t + 1, q' = q - min(q, D),$$ 
-where $D$ denote the demand. Moreover, if $t = T$ or $q'  = 0$, then a transition to the terminal state happens.  
-
-For $t=1$ the reward of an state $(q,t)$ is sales price times the number of sold items minus the purchase cost. For $1<t<T$ the reward is sales price times the number of sold (we assume an inventory cost of zero), while for $t=T$ the reward is the scrap price times the inventory. 
-
-```{r, include=FALSE, eval=FALSE}
-library(R6)
-library(hash)
-library(tidyverse)
-
-RLAgent <- R6Class("RLAgent",
-   public = list(
-      #' @field model The model is used to represent the information we have. The model is represented 
-      #' using a hash list for the states. Each states contains a list with `actions`: a hash 
-      #' list with actions and `pi` a vector with policy pr (named vector with only 
-      #' positive values) and `piG` the greedy action. The `actions` hash list contains the action-values `q` and and counter `n`.
-      model = NULL,  
-      
-      #' @description Create an object (when call new).
-      initialize = function() {
-         self$model <- hash()
-         return(invisible(NULL))
-      },
-
-      #' @description Add state and action to the hash (only if not already added)
-      #' @param s State key/string.
-      #' @param a Action key/string.
-      addStateAction = function(s, a) {
-         if (!has.key(s, self$model)) addStates(s)
-         if (!has.key(a, self$model[[s]]$actions)) self$model[[s]]$actions[[a]] <- list(q = 0, n = 0)
-         return(invisible(NULL))
-      },
-      
-      #' @description Add the states (keys) and define void policy and empty action hash. 
-      #' @param states A vector of states (converted to strings).
-      addStates = function(states) {
-         keys <- make.keys(states)
-         self$model[keys] <- list(pi = NA)   # don't use pi = NULL since then won't be defined 
-         for (s in keys) {
-            self$model[[s]]$piG <- NA
-            self$model[[s]]$actions <- hash()
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Add the actions to a state
-      #' @param s State (key).
-      #' @param actions A vector of actions (converted to strings).
-      addActions = function(s, actions) {
-         keys <- make.keys(actions)
-         for (a in keys) {
-            self$addStateAction(s, a)
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Add states and actions to the hash with initial values. If already exists nothing happens. 
-      #' @param df A tibble with string columns `s` (states) and `a` (actions).
-      addStatesAndActions = function(df) {
-         for (i in 1:nrow(df)) {
-            self$addStateAction(df$s[i], df$a[i])
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Set the action-values for all actions (including the counter values).
-      #' @param value The value.
-      #' @param ctrValue Counter value.
-      setActionValue = function(value = 0, ctrValue = 0) {
-         for (s in keys(self$model)) {
-            for (a in keys(self$model[[s]]$actions)) {
-               self$model[[s]]$actions[[a]]$q = value
-               self$model[[s]]$actions[[a]]$n = ctrValue
-            }
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Set the policy to a random epsilon-greedy policy.
-      #' @param eps Epsilon used in epsilon-greedy policy.
-      setRandomEpsGreedyPolicy = function(eps) {
-         states <- keys(self$model)
-         for (s in states) {
-            actions <- self$getActionKeys(s)
-            self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
-            names(self$model[[s]]$pi) <- actions
-            self$model[[s]]$piG <- sample(self$getActionKeys(s), 1)
-            self$model[[s]]$pi[self$model[[s]]$piG] <- self$model[[s]]$pi[self$model[[s]]$piG] + 1 - eps
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Set the policy to the optimal epsilon-greedy policy 
-      #' @param eps Epsilon used in epsilon-greedy policy.
-      #' @param states States under consideration.
-      setEpsGreedyPolicy = function(eps, states) {
-         for (s in states) {
-            actions <- self$getActionKeys(s)
-            self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
-            names(self$model[[s]]$pi) <- actions
-            idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
-            # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
-            self$model[[s]]$piG <- actions[idx]
-            self$model[[s]]$pi[idx] <- self$model[[s]]$pi[idx] + 1 - eps
-         }
-         return(invisible(NULL))
-      },
-      
-      #' @description Return the state keys
-      getStateKeys = function() {
-         keys(self$model)
-      },
-      
-      #' @description Return the action keys
-      #' @param s The state considered.
-      getActionKeys = function(s) {
-         keys(self$model[[s]]$actions) 
-      },
-      
-      #' @description Return information stored in a state
-      #' @param s The state considered.
-      getActionInfo = function(s) {
-         as.list(self$model[[s]]$actions) 
-      },
-      
-      #' @description Return the current policy as a tibble
-      getPolicy = function() {
-         map_dfr(self$getStateKeys(), .f = function(s) {
-               list(state = s, action = names(self$model[[s]]$pi), pr = self$model[[s]]$pi)
-            })
-      },
-      
-      #' @description Returns all action-values in a matrix (cols: actions, rows: states)
-      getStateActionQMat = function() {
-         states <- keys(self$model)
-         actions <- unique(unlist(sapply(states, function(s) self$getActionKeys(s))))
-         m <- matrix(NA, nrow = length(states), ncol = length(actions))
-         colnames(m) <- actions
-         rownames(m) <- states
-         for (s in states) {
-            for (a in self$getActionKeys(s)) {
-               m[s, a] <- self$model[[s]]$actions[[a]]$q
-            }
-         }
-         return(m)
-      },
-      
-      #' @description Return the action-values as a tibble
-      #' @param states A vector of state keys.
-      getActionValues = function(states = keys(self$model)) {
-         map_dfr(states, .f = function(s) {
-               list(state = s, action = keys(self$model[[s]]$actions), q = unlist(values(self$model[[s]]$actions)["q",]), n = unlist(values(self$model[[s]]$actions)["n",]))
-            })
-      },
-      
-      #' @description Generalized policy iteration using on policy Monte Carlo sampling and epsilon-greedy policies.
-      #' @param env The environment that have a method `getEpisode` that return a tibble with cols s, a, r (last col the terminal reward)
-      #' @param gamma Discount rate.
-      #' @param epsilon Use epsilon-greedy policy.
-      #' @param theta Threshold parameter.
-      #' @param maxIte Maximum number of iterations.
-      #' @param reset If true initialize all action-values to 0.
-      gpiOnPolicyMC = function(env, gamma = 1, epsilon = 0.1, theta = 0.00001, maxIte = 10000, reset = TRUE, ...) {
-         # if (reset) self$setActionValue(max(env$prices) * env$maxInv, 2)   # set to 0 and reset counter
-         if (reset) self$setActionValue()   # set to 0 and reset counter
-         self$setRandomEpsGreedyPolicy(epsilon)
-         for (ite in 1:maxIte) { 
-            stable <- TRUE
-            delta <- 0
-            df <- env$getEpisode(self, ...)   # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
-            # df <- df %>% mutate(oldQ = NA, q = NA, g = NA)
-            gain <- 0
-            for (i in nrow(df):1) {
-               s <- df$s[i]
-               a <- df$a[i]
-               # self$addStateAction(s,a)
-               gain <- df$r[i] + gamma * gain
-               self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1
-               ctr <- self$model[[s]]$actions[[a]]$n
-               oldV <- self$model[[s]]$actions[[a]]$q
-               self$model[[s]]$actions[[a]]$q <- oldV + 1/ctr * (gain - oldV)
-               delta <- max(delta, abs(oldV - self$model[[s]]$actions[[a]]$q))
-               oldPiG <- self$model[[s]]$piG
-               self$setEpsGreedyPolicy(epsilon, s)
-               if (oldPiG != self$model[[s]]$piG) stable = FALSE 
-               # df$oldQ[i] <- oldV; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain
-               # cat("s:", s, " a:", a, " oldQ:", oldV, " q:", self$model[[s]]$actions[[a]]$q, "\n", sep="")
-            }
-            # print(df)
-            # if (delta < theta & stable) break
-            
-         }
-         if (ite == maxIte) warning("GPI algorithm stopped at max iterations allowed:", maxIte)
-         message(str_c("GPI algorihm finished in ", ite, " iterations."))
-         return(invisible(NULL))
-      }
-      
-
-   )
-)
-```
-
-
-We define the RL agent:
-
-```{r, include=FALSE, eval=FALSE}
-env <- RLEnvSeasonal$new(maxInv = 200, maxT = 20, scrapPrice = 5, purchasePrice = 14)
+```{r}
+## Using RL MC
 agent <- RLAgent$new()
 agent$addStates(env$getStates())   # add state keys
 for (s in agent$getStateKeys()) {
    agent$addActions(s, env$getActions(s))
 } 
-agent$addActions("0", "dummy")
 agent$getStateKeys()
 agent$getActionKeys("2,5")
-agent$getActionKeys("2,20")
-agent$getActionInfo("2,20")
-agent$setRandomEpsGreedyPolicy(0.1)
-agent$getPolicy()
-```
-
-Given the current policy an episode can be extracted using: 
-
-```{r, include=FALSE, eval=FALSE}
-env$getEpisode(agent)
-```
 
 
 
-
-```{r, include=FALSE, eval=FALSE}
-agent$gpiOnPolicyMC(env, epsilon = 0.1, maxIte = 10000, q = env$maxInv)
-df <- agent$getActionValues() %>% 
+## RESULTS ARE VERY DEPENDENT ON START POLICY!! MAYBY ONLY SHOW EXAMPLE WHERE SAMPLE GIVEN A POLICY? and find the optimal solution using an mdp. 
+# for (s in agent$getStateKeys()) {
+#    for (a in agent$getActionKeys(s)) {
+#       if (a == "25") agent$setActionValueSingle(0.1, 0, s, a)
+#    } 
+# }
+# agent$getActionValues("5,1")
+agent$gpiOnPolicyMC(env)
+dfRL <- agent$getActionValues() %>% 
    separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
 # df %>% filter(q>0)
 # df %>% filter(t == 1) %>% print(n=80)
 # 
-# df %>% 
-#    count(state) 
-# 
-df %>%
-   filter(state == "200,1") %>% pull(n) %>% sum
-df %>%
-   filter(state == "200,1")
+dfRL %>% 
+   group_by(t, inv) %>% 
+   summarize(ct = sum(n))
 
-df1 <- df %>% 
+
+left_join(dfRL, dfMDP) %>% filter(q != 0)  %>% View
+
+dfRL %>%
+   filter(inv == env$maxInv, t == 1) #%>% pull(n) %>% sum
+df %>%
+   filter(q == env$maxInv, t == 1) 
+
+df1 <- dfRL %>% 
    group_by(state) %>% 
    # nest() %>% 
    slice_max(q) %>% 
@@ -1006,6 +790,21 @@ df1 %>%
    ggplot(aes(x = t, y = inv, col = action)) +
    geom_point()
 ```
+
+
+
+
+
+
+
+
+
+
+
+```{r ref.label='RLAgent'}
+```
+
+
 
 
 

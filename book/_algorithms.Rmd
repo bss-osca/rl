@@ -433,7 +433,7 @@ RLAgent <- R6Class("RLAgent",
          keys(self$model[[s]]$actions) 
       },
       
-      #' @description Return information stored in a state
+      #' @description Return information about actions stored in a state
       #' @param s The state considered.
       getActionInfo = function(s) {
          as.list(self$model[[s]]$actions) 
@@ -510,7 +510,7 @@ RLAgent <- R6Class("RLAgent",
       #' @param reset If true initialize all action-values to 0.
       #' @param states Start states in the episodes, which all are visited using a for loop.
       #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
-      gpiOnPolicyMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), eps = 0.1) {
+      gpiOnPolicyMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, verbose = FALSE) {
          if (reset) {
             self$setActionValue()      # set to 0
             self$setActionCtrValue()   # reset counter
@@ -525,7 +525,7 @@ RLAgent <- R6Class("RLAgent",
             for (ss in states) {  # for episode with s as start
                df <- env$getEpisode(self, ss, eps)  # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
                if (nrow(df) == 0) next
-               # df <- df %>% mutate(nA = NA, nS = NA, oldQ = NA, q = NA, g = NA, oldV = NA, v = NA)
+               df <- df %>% mutate(nA = NA, nS = NA, oldQ = NA, q = NA, g = NA, oldV = NA, v = NA)
                gain <- 0
                for (i in nrow(df):1) {
                   s <- df$s[i]
@@ -538,14 +538,11 @@ RLAgent <- R6Class("RLAgent",
                   self$model[[s]]$actions[[a]]$q <- oldQ + stepSize * (gain - oldQ)
                   # self$model[[s]]$actions[[a]]$q <- oldQ + 0.1 * (gain - oldQ)
                   self$setEpsGreedyPolicy(eps, s)
-                  # oldPiG <- self$model[[s]]$piG
-                  # delta <- max(delta, abs(oldQ - self$model[[s]]$actions[[a]]$q))
-                  delta <- max(delta, abs(oldV - self$getStateValue(s)))
-                  # self$setGreedyPolicy(s)
-                  # if (oldPiG != self$model[[s]]$piG | self$model[[s]]$piG != a) stable = FALSE 
-                  # df$oldQ[i] <- oldQ; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain; df$nA[i] <- ctr; df$nS[i] <- self$model[[s]]$n; df$oldV[i] <- oldV; df$v[i] <- self$getStateValue(s)
+                  newV <- self$getStateValue(s)
+                  delta <- max(delta, abs(oldV - newV))
+                  if (verbose) df$oldQ[i] <- oldQ; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain; df$nA[i] <- ctr; df$nS[i] <- self$model[[s]]$n; df$oldV[i] <- oldV; df$v[i] <- self$getStateValue(s)
                }
-               # print(df)
+               if (verbose) print(df)
             }
             if (delta < theta & ite >= minIte) break
          }
