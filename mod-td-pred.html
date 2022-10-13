@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-10-11" />
+<meta name="date" content="2022-10-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -334,6 +334,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="mod-mc.html"><a href="mod-mc.html#gpi-with-exploring-starts"><i class="fa fa-check"></i><b>6.4.1</b> GPI with exploring starts</a></li>
 <li class="chapter" data-level="6.4.2" data-path="mod-mc.html"><a href="mod-mc.html#gpi-using-epsilon-soft-policies"><i class="fa fa-check"></i><b>6.4.2</b> GPI using <span class="math inline">\(\epsilon\)</span>-soft policies</a></li>
+<li class="chapter" data-level="6.4.3" data-path="mod-mc.html"><a href="mod-mc.html#gpi-using-upper-confience-bound-action-selection"><i class="fa fa-check"></i><b>6.4.3</b> GPI using upper-confience bound action selection</a></li>
+<li class="chapter" data-level="6.4.4" data-path="mod-mc.html"><a href="mod-mc.html#mc-seasonal"><i class="fa fa-check"></i><b>6.4.4</b> Example - Seasonal inventory and sales planning</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="mod-mc.html"><a href="mod-mc.html#sec-mc-off-policy"><i class="fa fa-check"></i><b>6.5</b> Off-policy MC prediction</a>
 <ul>
@@ -546,14 +548,14 @@ Figure 7.2: Possible transitions between states and rewards.
 </p>
 </div>
 <!-- Q1 -->
-<div id="g5eUrVqfeDdnzPXxI5BA" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="g5eUrVqfeDdnzPXxI5BA-title">
+<div id="RXK48anMpNZzH0kY3g7v" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="RXK48anMpNZzH0kY3g7v-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="g5eUrVqfeDdnzPXxI5BA-title">
+<h4 class="modal-title" id="RXK48anMpNZzH0kY3g7v-title">
 Solution
 </h4>
 </div>
@@ -570,7 +572,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#g5eUrVqfeDdnzPXxI5BA">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RXK48anMpNZzH0kY3g7v">
 Solution
 </button>
 <ol style="list-style-type: decimal">
@@ -578,7 +580,7 @@ Solution
 <li><p>Consider an episode with sequence <span class="math inline">\(C, 0, B, 0, C, 0, D, 0, E, 1\)</span>. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with <span class="math inline">\(\alpha = 0.1\)</span>. It appears that only <span class="math inline">\(V(A)\)</span> change. What does this tell you about what happened on the first episode? Why was only the estimate for this one state changed? By exactly how much was it changed?</p></li>
 <li><p>Generate 100 episodes and run the TD(0) prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-td-pred.html#fig:td0-pred-alg">7.1</a>). Make a plot of the state-value estimate (y-axis) given state A-E (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.</p></li>
 </ol>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="mod-td-pred.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">875</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="mod-td-pred.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">875</span>)</span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Run an MC prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a> running for 1, 10 and 100 episodes.</p></li>
 <li><p>The results are dependent on the value of the step-size parameter. Try estimating the state-values using TD(0) and MC for <span class="math inline">\(\alpha = 0.2, 0.1, 0.05\)</span> and 0.025. Plot the root mean square (RMS) error <span class="math display">\[\sqrt{\frac{1}{5}\sum_{s=A}^E(V(s)-v_\pi(s))^2}\]</span> (y-axis) given the number of episodes (x-axis).Do you think the conclusions about that TD(0) is better than MC is affected by different values?</p></li>

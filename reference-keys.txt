@@ -24,6 +24,8 @@ fig:value-ite-alg
 fig:mc-prediction-alg
 fig:mc-gpi-es-alg
 fig:mc-gpi-on-policy-alg
+fig:demand
+fig:seasonal-mdp-plot
 eq:is-approx
 eq:isr
 eq:ois
@@ -114,6 +116,8 @@ mc-prediction-of-action-values
 mc-control-improvement
 gpi-with-exploring-starts
 gpi-using-epsilon-soft-policies
+gpi-using-upper-confience-bound-action-selection
+mc-seasonal
 sec-mc-off-policy
 weighted-importance-sampling
 off-policy-control-improvement
