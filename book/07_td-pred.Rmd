@@ -7,6 +7,9 @@ editor_options:
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
+```{r, child = "_algorithms.Rmd", echo=FALSE}
+```
+
 ```{r}
 knitr::opts_chunk$set(
    echo = TRUE
@@ -160,15 +163,15 @@ An example illustrating that TD methods converge faster than MC methods is given
 
 ### Exercise - A randow walk {#ex-td-pred-random}
 
-Consider a MDP with states A-E and two terminal states. Possible transitions are given in Figure \@ref(fig:rw-trans). All episodes start in the centre state, C, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (T1) or the right (T2). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
+Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in Figure \@ref(fig:rw-trans). All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
 
 ```{r rw-trans, echo=FALSE, out.width="80%", fig.height=1, fig.width=6, fig.cap = "Possible transitions between states and rewards."}
 library(tidyverse)
 library(tidygraph)
 library(ggraph)
 edges <- tibble(
-  from = c("T1", LETTERS[1:5]),
-  to = c("A", LETTERS[2:5], "T2"),
+  from = str_c(1:6),
+  to = str_c(2:7),
   reward = c(rep(0,5), 1)
 )
 gr <- as_tbl_graph(edges)
@@ -182,20 +185,164 @@ ggraph(gr, layout = "linear") +
 
 
 <!-- Q1 -->
-
 ```{r, solution=TRUE, text="The state space is $\\mathcal{S} = \\{ T1, A, \\ldots, E, T2 \\}$ with $\\mathcal{A}(s) = \\{ \\text{left}, \\text{right}\\}$ (transition to the neighbour states) except for terminating states which have no actions (see Figure \\@ref(fig:rw-trans)). Rewards are deterministic $\\mathcal{R} = \\{0, 1\\}$ (see Figure \\@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \\@ref(eq:bm-pol-eval) $$v_\\pi(s) = \\sum_{a \\in \\mathcal{A}}\\pi(a | s)\\left( r(s,a) + \\gamma\\sum_{s' \\in \\mathcal{S}} p(s' | s, a) v_\\pi(s')\\right),$$ which becomes $$\\begin{align}v_\\pi(A) &= 0.5v_\\pi(T1) + 0.5v_\\pi(B) = 0.5v_\\pi(B) \\\\\\ v_\\pi(B) &= 0.5v_\\pi(A) + 0.5v_\\pi( C ) \\\\\\ v_\\pi( C ) &= 0.5v_\\pi(B) + 0.5v_\\pi(D) \\\\\\ v_\\pi(D) &= 0.5v_\\pi( C ) + 0.5v_\\pi(E) \\\\\\ v_\\pi(E) &= 0.5v_\\pi(D) + 0.5(1 + v_\\pi(T2)) = 0.5v_\\pi(D) + 0.5\\\\\\ \\end{align}$$ Solving the equations with a state-value equal to 0 (you may also use that by symmetry $v_\\pi(C ) = 0.5$) for the terminating states gives state-values $\\frac{1}{6}, \\frac{2}{6}, \\frac{3}{6}, \\frac{4}{6}$ and $\\frac{5}{6}$ for A-E, respectively."} 
 ```
 
-1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval).
+1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state A-E. 
 
-2) Consider an episode with sequence $C, 0, B, 0, C, 0, D, 0, E, 1$. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(A)$ change. What does this tell you about what happened on the first episode? Why was only the estimate for this one state changed? By exactly how much was it changed?
 
-3) Generate 100 episodes and run the TD(0) prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:td0-pred-alg)). Make a plot of the state-value estimate (y-axis) given state A-E (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.
+<!-- Q2 -->
+2) Consider the code below which build, set the policy and evaluate it. Try to understand what happens and check if the results are the same as found in Question 1.
+
+```{r ref.label='MDP-class', include=FALSE}
+```
 
 ```{r}
-set.seed(875)
-
+## Build the MDP
+# Use numbers instead 1 = T1, 2-6 = A-E, 7 = T2
+mdp <- MDPClass$new()
+states <- str_c(2:6)
+mdp$addStateSpace(1:7)   # add state keys
+for (s in states) {
+      mdp$addActionSpace(s, c("left", "right"))
+}
+mdp$addActionSpace("1", c("dummy"))
+mdp$addActionSpace("7", c("dummy"))
+# Add trans pr and rewards
+pr <- 1
+for (s in 2:5) {
+   names(pr) = s+1
+   mdp$addAction(as.character(s), "right", r = 0, pr)
+}
+mdp$addAction("6", "right", r = 1, pr = c("7" = 1))
+for (s in 2:6) {
+   names(pr) = s-1 
+   mdp$addAction(as.character(s), "left", r = 0, pr)
+}
+mdp$addAction("1", "dummy", r = 0, pr = c("1" = 1))
+mdp$addAction("7", "dummy", r = 0, pr = c("7" = 1))
+mdp$getActionInfo("1")
+mdp$getActionInfo("2")
+mdp$getActionInfo("6")
+mdp$getActionInfo("7")
+## Set the policy
+pi = c("left" = 0.5, "right" = 0.5)
+mdp$setPolicy(states, pi)
+pi = c("dummy" = 1)
+mdp$setPolicy(c("1", "7"), pi)
+mdp$getPolicy()
+## Evaluate the policy
+mdp$policyEval(gamma = 1)
+mdp$getStateValues()
 ```
+
+
+<!-- Q3 -->
+```{r, solution=TRUE, text="We use TD(0), i.e. update using $V(S_t) \\leftarrow V(S_t) + \\alpha\\left[R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)\\right]$: $$V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.$$ That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05."}
+```
+
+3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(A)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
+
+
+<!-- Q4 -->
+
+4) Generate 100 episodes and run the TD(0) prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:td0-pred-alg)). Make a plot of the state-value estimate (y-axis) given state 2-6 (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.
+
+   First we need an environment representing the problem
+
+   ```{r}
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 Class representing the RL environment for the problem
+RLEnvRandom <- R6Class("RLEnvRandom",
+   public = list(
+      
+      #' @description Returns next state and reward given current state and action in a list (with names `r` and `sN`).
+      #' @param s Current state.
+      #' @param a Current action.
+      getTimeStepData = function(s,a) {
+         s <- as.numeric(s)
+         if (a == "left" & s > 1 & s < 7) return(list(r = 0, sN = as.character(s-1)))
+         if (a == "right" & s > 1 & s < 7) {
+            if (s == 6) return(list(r = 1, sN = as.character(s+1)))
+            return(list(r = 0, sN = as.character(s+1)))
+         }
+         if ((s == 1 | s == 7) & a == "dummy") return(list(r = 0, sN = NA_character_))
+         stop("Error finding next state and reward!")
+      }
+      
+      
+   )
+)
+env <- RLEnvRandom$new()
+env$getTimeStepData("3", "right")
+env$getTimeStepData("1", "dummy")
+env$getTimeStepData("6", "right")
+```
+
+   Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
+
+   ```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
+   ```
+
+   We can now define the RL agent and set the policy which must be done before calling TD(0):
+
+   ```{r}
+   agent <- RLAgent$new()
+   ## Set the policy
+   states <- str_c(2:6)
+   pi = c("left" = 0.5, "right" = 0.5)
+   agent$setPolicy(states, pi)
+   pi = c("dummy" = 1)
+   agent$setPolicy(c("1", "7"), pi)
+   agent$getPolicy()
+   ```
+
+   Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
+
+   ```{r}
+   set.seed(875)
+   ## One episode
+   agent$setStateValue(states, 0.5)
+   agent$setStateValue(c("1", "7"), 0)
+   agent$getStateValues()
+   agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 1, reset = F)
+   res <- agent$getStateValues() %>% mutate(episodes = 1)
+   ```
+
+```{r, solution=TRUE}
+## 10 episodes
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 10, reset = F)
+res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+## 100 episodes
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 100, reset = F)
+res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+   mutate(state = as.numeric(state), episodes = as.character(episodes)) 
+res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+   filter(state > 1, state < 7)
+res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+```
+
+   Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
+
+
+
+
+```{r, include=FALSE}
+knitr::knit_exit()
+```
+
+
+
+
+
+
 
 
 4) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes.

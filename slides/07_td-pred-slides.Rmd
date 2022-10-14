@@ -122,7 +122,7 @@ $$
 * Replace $G_t$ with the TD estimate $R_{t+1} + \gamma V(S_{t+1}).$
 * Update now becomes 
 .midi[
-$$V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right].$$
+$$V(S_t) \leftarrow V(S_t) + \alpha_n\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right].$$
 ] 
 * Can update when the next state $S_{t+1}$ is observed.
 * As the estimate of $S_{t+1}$ improve the estimate of $S_t$ also improve. 
@@ -163,7 +163,7 @@ knitr::include_graphics("img/td0-pred.png")
 ```
 
 * Also works for continuing processes (infinite number of time-steps of inner loop).
-* No stopping criterion is given but could stop when small for state-values differences. 
+* No stopping criterion is given but could stop when small for state-value differences. 
 
 ---
 

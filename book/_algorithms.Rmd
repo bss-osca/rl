@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 <!-- Various algorithms for the RL course -->
 
 ```{r, MDP-class, include=FALSE, eval=FALSE}
@@ -87,6 +92,16 @@ MDPClass <- R6Class("MDPClass",
          for (i in 1:length(sa)) {
             names(pi) <- sa[i]
             s <- states[i]
+            self$model[[s]]$pi <- pi
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to the named vector pi for a set of states
+      #' @param states States under consideration.
+      #' @param pi A named vector with policy pr (only psitive values).
+      setPolicy = function(states, pi) {
+         for (s in states) {
             self$model[[s]]$pi <- pi
          }
          return(invisible(NULL))
@@ -301,7 +316,7 @@ RLAgent <- R6Class("RLAgent",
          keys <- make.keys(states)
          self$model[keys] <- list(pi = NA)   # don't use pi = NULL since then won't be defined 
          for (s in keys) {
-            self$model[[s]]$piG <- NA
+            self$model[[s]]$v <- NA
             self$model[[s]]$actions <- hash()
             self$model[[s]]$n <- 0  # counter visited
          }
@@ -339,6 +354,16 @@ RLAgent <- R6Class("RLAgent",
          return(invisible(NULL))
       },
       
+      #' @description Set the state-value of states
+      #' @param states A vector of states.
+      #' @param value The value.
+      setStateValue = function(states = keys(self$model), value = 0) {
+         for (s in states) {
+            self$model[[s]]$v <- value
+         }
+         return(invisible(NULL))
+      },
+      
       #' @description Set the action visit counter values for all actions.
       #' @param ctrValue Counter value.
       setActionCtrValue = function(ctrValue = 0) {
@@ -367,8 +392,8 @@ RLAgent <- R6Class("RLAgent",
             actions <- self$getActionKeys(s)
             self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
             names(self$model[[s]]$pi) <- actions
-            self$model[[s]]$piG <- sample(self$getActionKeys(s), 1)
-            self$model[[s]]$pi[self$model[[s]]$piG] <- self$model[[s]]$pi[self$model[[s]]$piG] + 1 - eps
+            piG <- sample(self$getActionKeys(s), 1)
+            self$model[[s]]$pi[piG] <- self$model[[s]]$pi[piG] + 1 - eps
          }
          return(invisible(NULL))
       },
@@ -383,7 +408,7 @@ RLAgent <- R6Class("RLAgent",
             names(self$model[[s]]$pi) <- actions
             idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
             # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
-            self$model[[s]]$piG <- actions[idx]
+            # self$model[[s]]$piG <- actions[idx]
             self$model[[s]]$pi[idx] <- self$model[[s]]$pi[idx] + 1 - eps
          }
          return(invisible(NULL))
@@ -397,6 +422,16 @@ RLAgent <- R6Class("RLAgent",
             idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
             # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
             self$model[[s]]$piG <- actions[idx]
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to the named vector pi for a set of states
+      #' @param states States under consideration.
+      #' @param pi A named vector with policy pr (only psitive values).
+      setPolicy = function(states, pi) {
+         for (s in states) {
+            self$model[[s]]$pi <- pi
          }
          return(invisible(NULL))
       },
@@ -415,7 +450,9 @@ RLAgent <- R6Class("RLAgent",
          keys(self$model)
       },
       
-      getStateValue = function(s) {
+      #' @description Return the state-value for a state and policy using the q/action-values 
+      #' @param s A state.
+      getStateValueQ = function(s) {
          pi <- self$model[[s]]$pi
          # print(pi)
          val <- 0
@@ -425,6 +462,12 @@ RLAgent <- R6Class("RLAgent",
          }
          # print(val)
          return(val)
+      },
+      
+      #' @description Return the state-values as a tibble
+      #' @param s A vector of state keys.
+      getStateValues = function(s = keys(self$model)) {
+         tibble(state = s) %>% rowwise() %>% mutate(v = self$model[[state]]$v) 
       },
       
       #' @description Return the action keys
@@ -437,6 +480,13 @@ RLAgent <- R6Class("RLAgent",
       #' @param s The state considered.
       getActionInfo = function(s) {
          as.list(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return and action sampled from the current policy pi.
+      #' @param s The state considered.
+      getActionPi = function(s) {
+         pi <- self$model[[s]]$pi
+         return(sample(names(pi), 1, prob = pi))
       },
       
       #' @description Return the current policy as a tibble
@@ -499,6 +549,23 @@ RLAgent <- R6Class("RLAgent",
          return(a)
       },
       
+      policyEvalTD0 = function(env, gamma = 1, alpha = 0.1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys()) {
+         if (reset) self$setStateValue(self$getStateKeys())      # set to 0
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among states
+            for (i in 1:maxEL) {  # for episode with ss as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldV <- self$model[[s]]$v
+               self$model[[s]]$v <- oldV + alpha * (r + gamma * self$model[[sN]]$v - oldV)
+               s <- sN
+            }
+         }
+      },
+      
       #' @description Generalized policy iteration using on policy every-visit Monte Carlo sampling.  
       #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
       #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
@@ -533,14 +600,14 @@ RLAgent <- R6Class("RLAgent",
                   gain <- df$r[i] + gamma * gain
                   ctr <- self$model[[s]]$actions[[a]]$n
                   oldQ <- self$model[[s]]$actions[[a]]$q
-                  oldV <- self$getStateValue(s)
+                  oldV <- self$getStateValueQ(s)
                   stepSize <- (1/ctr)^0.5
                   self$model[[s]]$actions[[a]]$q <- oldQ + stepSize * (gain - oldQ)
                   # self$model[[s]]$actions[[a]]$q <- oldQ + 0.1 * (gain - oldQ)
                   self$setEpsGreedyPolicy(eps, s)
-                  newV <- self$getStateValue(s)
+                  newV <- self$getStateValueQ(s)
                   delta <- max(delta, abs(oldV - newV))
-                  if (verbose) df$oldQ[i] <- oldQ; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain; df$nA[i] <- ctr; df$nS[i] <- self$model[[s]]$n; df$oldV[i] <- oldV; df$v[i] <- self$getStateValue(s)
+                  if (verbose) df$oldQ[i] <- oldQ; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain; df$nA[i] <- ctr; df$nS[i] <- self$model[[s]]$n; df$oldV[i] <- oldV; df$v[i] <- newV
                }
                if (verbose) print(df)
             }

@@ -726,90 +726,14 @@ dfRL %>%
 As can be seen the the optimal state value for the MDP is not equal the action-value for that action. Should that have been the case if run enough simulations?
 
 
-
-
-
-
-
-
 ```{r, include=FALSE}
-knitr::knit_exit()
-```
-
-
-```{r}
-## Using RL MC
-agent <- RLAgent$new()
-agent$addStates(env$getStates())   # add state keys
-for (s in agent$getStateKeys()) {
-   agent$addActions(s, env$getActions(s))
-} 
-agent$getStateKeys()
-agent$getActionKeys("2,5")
-
-
-
-## RESULTS ARE VERY DEPENDENT ON START POLICY!! MAYBY ONLY SHOW EXAMPLE WHERE SAMPLE GIVEN A POLICY? and find the optimal solution using an mdp. 
 # for (s in agent$getStateKeys()) {
 #    for (a in agent$getActionKeys(s)) {
 #       if (a == "25") agent$setActionValueSingle(0.1, 0, s, a)
 #    } 
 # }
 # agent$getActionValues("5,1")
-agent$gpiOnPolicyMC(env)
-dfRL <- agent$getActionValues() %>% 
-   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
-# df %>% filter(q>0)
-# df %>% filter(t == 1) %>% print(n=80)
-# 
-dfRL %>% 
-   group_by(t, inv) %>% 
-   summarize(ct = sum(n))
-
-
-left_join(dfRL, dfMDP) %>% filter(q != 0)  %>% View
-
-dfRL %>%
-   filter(inv == env$maxInv, t == 1) #%>% pull(n) %>% sum
-df %>%
-   filter(q == env$maxInv, t == 1) 
-
-df1 <- dfRL %>% 
-   group_by(state) %>% 
-   # nest() %>% 
-   slice_max(q) %>% 
-   filter(q != 0)  
-# %>% 
-#    mutate(action = as.numeric(action))
-
-df1 %>% 
-   ggplot(aes(x = t, y = inv, col = action)) +
-   geom_point()
 ```
-
-
-
-
-
-
-
-
-
-
-
-```{r ref.label='RLAgent'}
-```
-
-
-
-
-
-
-
-
-
-
-
 
 
 
