@@ -612,10 +612,6 @@ Read Chapter 5.10 in @Sutton18.
 
 ### Exercise - Seasonal inventory and sales planning {#ex-mc-seasonal}
 
-```{r}
-knitr::knit_exit()
-```
-
 Consider the seasonal product in Example \@ref(mc-seasonal). 
 
 ```{r ref.label='RL-env-seasonal-def', include=TRUE, eval=FALSE}
@@ -623,14 +619,14 @@ Consider the seasonal product in Example \@ref(mc-seasonal).
 
 <!-- Q1 -->
 
-```{r, solution=TRUE, text="With a low inventory level, there is a high probability of selling everything even for the highest price. This effect is more dominant if the number of time-steps left is high and decrease as we approach week 15. Contrary with a high inventory level there is a low probability of selling everything (if the price is set to high) and therefore have to use a lower price. This effect is more dominant if the number of time-steps left is low."}
+```{r, solution=TRUE, text="With a low inventory level, there is a high probability of selling everything even for the highest price. This effect is more dominant if the number of time-steps left is high and decrease as we approach week 15. Contrary with a high inventory level there is a low probability of selling everything (if the price is set to high) and therefore we have to use a lower price. This effect is more dominant if the number of time-steps left is low."}
 ```
 
 1) Consider the optimal policy for the MDP modelling the problem in Figure \@ref(fig:seasonal-mdp-plot). Here the optimal price is high at the lower-left and decrease as we approach the upper-right. Explain why this from an intuitive point of view seems correct. 
 
 
 <!-- Q2 -->
-```{r, solution=TRUE, text="The optimal policy is found using a threshold value, i.e the MDP finds an optimal with state-values within the threshold. Hence small differences in state-value may produce different optimal prices. Another reason could be that we have multiple optimal policies."}
+```{r, solution=TRUE, text="The optimal policy is found using a threshold value, i.e the MDP finds an optimal policy with state-values within the threshold. Hence small differences in state-value may produce different optimal prices. Another reason could be that we have multiple optimal policies."}
 ```
 
 2) Consider the optimal policy for the MDP modelling the problem in Figure \@ref(fig:seasonal-mdp-plot). For a fixed time $t$ the optimal price does not always decrease as the inventory level increase. Some time two prices oscillate (e.g. first green, then red and then green again). Give possible reasons for this happening. 
@@ -644,7 +640,7 @@ Consider the seasonal product in Example \@ref(mc-seasonal).
 
 
 <!-- Q4 -->
-```{r, solution=TRUE, text="Since the epsilon-greedy policy selects $a=20$ (at random) first, $a=20$ becomes the greedy action that is selected with highest probability. In this run, when selecting the next action, 20 is always selected and hence only $q$ for $a=20$ is updated 10 times (minimum number of iterations). Afterwards differences in state-values off states in the current episode are compared (`oldV` and `v` column). Since they are the same the algorithm stop. That is, we never get a chance to have a view on $a=25$ or the stopping criteria may not work well for episodes with small length."}
+```{r, solution=TRUE, text="Since the epsilon-greedy policy selects $a=20$ (at random) first, $a=20$ becomes the greedy action that is selected with highest probability. In this run, when selecting the next action, 20 is always selected and hence only $q$ for $a=20$ is updated 10 times (minimum number of iterations). Afterwards differences in state-values of states in the current episode are compared (`oldV` and `v` column). Since they are the same the algorithm stop. That is, we never get a chance to have a view on action $a=25$ or put differently, the stopping criteria may not work well for episodes with small length."}
 ```
 
 4) Consider state $(1,1)$ and let us try approximating best epsilon-greedy policy using MC with the verbose option so it prints out info about each episode:
