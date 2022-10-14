@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-10-13" />
+<meta name="date" content="2022-10-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1227,7 +1227,368 @@ Figure 6.7: Off-policy GPI <span class="citation">(<a href="#ref-Sutton18" role=
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
 <div id="ex-mc-seasonal" class="section level3 hasAnchor" number="6.8.1">
 <h3><span class="header-section-number">6.8.1</span> Exercise - Seasonal inventory and sales planning<a href="mod-mc.html#ex-mc-seasonal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="mod-mc.html#cb63-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">knit_exit</span>()</span></code></pre></div>
+<p>Consider the seasonal product in Example <a href="mod-mc.html#mc-seasonal">6.4.4</a>.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="mod-mc.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">876</span>)</span>
+<span id="cb63-2"><a href="mod-mc.html#cb63-2" aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>)</span>
+<span id="cb63-3"><a href="mod-mc.html#cb63-3" aria-hidden="true" tabindex="-1"></a>env <span class="ot">&lt;-</span> RLEnvSeasonal<span class="sc">$</span><span class="fu">new</span>(<span class="at">maxInv =</span> <span class="dv">100</span>, <span class="at">maxT =</span> <span class="dv">15</span>, <span class="at">scrapPrice =</span> <span class="dv">5</span>, <span class="at">purchasePrice =</span> <span class="dv">14</span>, prices)</span></code></pre></div>
+<!-- Q1 -->
+<div id="nsd3QCYiHPGPH3UKIUYD" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="nsd3QCYiHPGPH3UKIUYD-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="nsd3QCYiHPGPH3UKIUYD-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+With a low inventory level, there is a high probability of selling everything even for the highest price. This effect is more dominant if the number of time-steps left is high and decrease as we approach week 15. Contrary with a high inventory level there is a low probability of selling everything (if the price is set to high) and therefore we have to use a lower price. This effect is more dominant if the number of time-steps left is low.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nsd3QCYiHPGPH3UKIUYD">
+Solution
+</button>
+<ol style="list-style-type: decimal">
+<li>Consider the optimal policy for the MDP modelling the problem in Figure <a href="mod-mc.html#fig:seasonal-mdp-plot">6.5</a>. Here the optimal price is high at the lower-left and decrease as we approach the upper-right. Explain why this from an intuitive point of view seems correct.</li>
+</ol>
+<!-- Q2 -->
+<div id="bEkJ0EFEHXBqbuGwrGhb" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="bEkJ0EFEHXBqbuGwrGhb-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="bEkJ0EFEHXBqbuGwrGhb-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+The optimal policy is found using a threshold value, i.e the MDP finds an optimal policy with state-values within the threshold. Hence small differences in state-value may produce different optimal prices. Another reason could be that we have multiple optimal policies.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bEkJ0EFEHXBqbuGwrGhb">
+Solution
+</button>
+<ol start="2" style="list-style-type: decimal">
+<li>Consider the optimal policy for the MDP modelling the problem in Figure <a href="mod-mc.html#fig:seasonal-mdp-plot">6.5</a>. For a fixed time <span class="math inline">\(t\)</span> the optimal price does not always decrease as the inventory level increase. Some time two prices oscillate (e.g. first green, then red and then green again). Give possible reasons for this happening.</li>
+</ol>
+<!-- Q3 -->
+<div id="EJMHpaXfpP8T291cLSEm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="EJMHpaXfpP8T291cLSEm-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="EJMHpaXfpP8T291cLSEm-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+In state <span class="math inline">\((1,1)\)</span> the optimal price is 25 (we only have one item left to sell over 15 weeks) and in state <span class="math inline">\((100,15)\)</span> the optimal price is 10 (we can not sell all items in one week so set price low).
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#EJMHpaXfpP8T291cLSEm">
+Solution
+</button>
+<ol start="3" style="list-style-type: decimal">
+<li>Let us consider two extreme states <span class="math inline">\((1,1)\)</span> and <span class="math inline">\((100,15)\)</span>. From an intuitively point of view, what is the optimal action/price to do in these states?</li>
+</ol>
+<!-- Q4 -->
+<div id="yzXPhW8qUIm7pChXQz4c" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="yzXPhW8qUIm7pChXQz4c-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="yzXPhW8qUIm7pChXQz4c-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Since the epsilon-greedy policy selects <span class="math inline">\(a=20\)</span> (at random) first, <span class="math inline">\(a=20\)</span> becomes the greedy action that is selected with highest probability. In this run, when selecting the next action, 20 is always selected and hence only <span class="math inline">\(q\)</span> for <span class="math inline">\(a=20\)</span> is updated 10 times (minimum number of iterations). Afterwards differences in state-values of states in the current episode are compared (<code>oldV</code> and <code>v</code> column). Since they are the same the algorithm stop. That is, we never get a chance to have a view on action <span class="math inline">\(a=25\)</span> or put differently, the stopping criteria may not work well for episodes with small length.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#yzXPhW8qUIm7pChXQz4c">
+Solution
+</button>
+<ol start="4" style="list-style-type: decimal">
+<li>Consider state <span class="math inline">\((1,1)\)</span> and let us try approximating best epsilon-greedy policy using MC with the verbose option so it prints out info about each episode:</li>
+</ol>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="mod-mc.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">79</span>)</span>
+<span id="cb64-2"><a href="mod-mc.html#cb64-2" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb64-3"><a href="mod-mc.html#cb64-3" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb64-4"><a href="mod-mc.html#cb64-4" aria-hidden="true" tabindex="-1"></a>state <span class="ot">=</span> <span class="fu">str_c</span>(i, <span class="st">&quot;,&quot;</span>, time)</span>
+<span id="cb64-5"><a href="mod-mc.html#cb64-5" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">gpiOnPolicyMC</span>(env, <span class="at">minIte =</span> <span class="dv">10</span>, <span class="at">maxIte =</span> <span class="dv">100000</span>, <span class="at">states =</span> state, <span class="at">reset =</span> T, <span class="at">eps =</span> <span class="fl">0.2</span>, <span class="at">verbose =</span> T)</span>
+<span id="cb64-6"><a href="mod-mc.html#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-7"><a href="mod-mc.html#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-8"><a href="mod-mc.html#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-9"><a href="mod-mc.html#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     1     1     0     6     6     0   5.1</span></span>
+<span id="cb64-10"><a href="mod-mc.html#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-11"><a href="mod-mc.html#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-12"><a href="mod-mc.html#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-13"><a href="mod-mc.html#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     2     2     6     6     6   5.1   5.1</span></span>
+<span id="cb64-14"><a href="mod-mc.html#cb64-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-15"><a href="mod-mc.html#cb64-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-16"><a href="mod-mc.html#cb64-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-17"><a href="mod-mc.html#cb64-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     3     3     6     6     6   5.1   5.1</span></span>
+<span id="cb64-18"><a href="mod-mc.html#cb64-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-19"><a href="mod-mc.html#cb64-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-20"><a href="mod-mc.html#cb64-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-21"><a href="mod-mc.html#cb64-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     4     4     6     6     6   5.1   5.1</span></span>
+<span id="cb64-22"><a href="mod-mc.html#cb64-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-23"><a href="mod-mc.html#cb64-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-24"><a href="mod-mc.html#cb64-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-25"><a href="mod-mc.html#cb64-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     5     5     6     6     6   5.1   5.1</span></span>
+<span id="cb64-26"><a href="mod-mc.html#cb64-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-27"><a href="mod-mc.html#cb64-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-28"><a href="mod-mc.html#cb64-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-29"><a href="mod-mc.html#cb64-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     6     6     6     6     6   5.1   5.1</span></span>
+<span id="cb64-30"><a href="mod-mc.html#cb64-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-31"><a href="mod-mc.html#cb64-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-32"><a href="mod-mc.html#cb64-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-33"><a href="mod-mc.html#cb64-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     7     7     6     6     6   5.1   5.1</span></span>
+<span id="cb64-34"><a href="mod-mc.html#cb64-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-35"><a href="mod-mc.html#cb64-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-36"><a href="mod-mc.html#cb64-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-37"><a href="mod-mc.html#cb64-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     8     8     6     6     6   5.1   5.1</span></span>
+<span id="cb64-38"><a href="mod-mc.html#cb64-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-39"><a href="mod-mc.html#cb64-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-40"><a href="mod-mc.html#cb64-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-41"><a href="mod-mc.html#cb64-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     9     9     6     6     6   5.1   5.1</span></span>
+<span id="cb64-42"><a href="mod-mc.html#cb64-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb64-43"><a href="mod-mc.html#cb64-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb64-44"><a href="mod-mc.html#cb64-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-45"><a href="mod-mc.html#cb64-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6    10    10     6     6     6   5.1   5.1</span></span>
+<span id="cb64-46"><a href="mod-mc.html#cb64-46" aria-hidden="true" tabindex="-1"></a>dfRL <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">getActionValues</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb64-47"><a href="mod-mc.html#cb64-47" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(state, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;inv&quot;</span>, <span class="st">&quot;t&quot;</span>), <span class="at">remove =</span> F, <span class="at">convert =</span> T)</span>
+<span id="cb64-48"><a href="mod-mc.html#cb64-48" aria-hidden="true" tabindex="-1"></a>dfRL <span class="sc">%&gt;%</span></span>
+<span id="cb64-49"><a href="mod-mc.html#cb64-49" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(inv <span class="sc">==</span> i, t <span class="sc">==</span> time) <span class="sc">%&gt;%</span> </span>
+<span id="cb64-50"><a href="mod-mc.html#cb64-50" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(dfMDP)</span>
+<span id="cb64-51"><a href="mod-mc.html#cb64-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 7</span></span>
+<span id="cb64-52"><a href="mod-mc.html#cb64-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state   inv     t action     q     n     v</span></span>
+<span id="cb64-53"><a href="mod-mc.html#cb64-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb64-54"><a href="mod-mc.html#cb64-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1       1     1 10         0     0  NA  </span></span>
+<span id="cb64-55"><a href="mod-mc.html#cb64-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1,1       1     1 15         0     0  NA  </span></span>
+<span id="cb64-56"><a href="mod-mc.html#cb64-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1,1       1     1 20         6    10  NA  </span></span>
+<span id="cb64-57"><a href="mod-mc.html#cb64-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 1,1       1     1 25         0     0  11.0</span></span></code></pre></div>
+<p>Why do we not estimate the optimal action here and why do the algorithm stop. Hint: You may have a look at method <code>gpiOnPolicyMC</code> in the RLagent class.</p>
+<!-- Q5 -->
+<div id="E1UWYwFVTUG6TatvgDC4" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="E1UWYwFVTUG6TatvgDC4-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="E1UWYwFVTUG6TatvgDC4-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Since the initial action-value is high, all actions will be explored with high probability first. This may help the algorithm to get a good start.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#E1UWYwFVTUG6TatvgDC4">
+Solution
+</button>
+<ol start="5" style="list-style-type: decimal">
+<li>Let us try to set the action-value high initially:</li>
+</ol>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="mod-mc.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">105</span>)</span>
+<span id="cb65-2"><a href="mod-mc.html#cb65-2" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setActionValue</span>(<span class="dv">1000</span>)</span>
+<span id="cb65-3"><a href="mod-mc.html#cb65-3" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setActionCtrValue</span>()   <span class="co"># reset counter</span></span>
+<span id="cb65-4"><a href="mod-mc.html#cb65-4" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateCtrValue</span>()    <span class="co"># reset counter</span></span>
+<span id="cb65-5"><a href="mod-mc.html#cb65-5" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">getActionValues</span>(<span class="st">&quot;1,1&quot;</span>)</span>
+<span id="cb65-6"><a href="mod-mc.html#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 4</span></span>
+<span id="cb65-7"><a href="mod-mc.html#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state action     q     n</span></span>
+<span id="cb65-8"><a href="mod-mc.html#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-9"><a href="mod-mc.html#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   10      1000     0</span></span>
+<span id="cb65-10"><a href="mod-mc.html#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1,1   15      1000     0</span></span>
+<span id="cb65-11"><a href="mod-mc.html#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1,1   20      1000     0</span></span>
+<span id="cb65-12"><a href="mod-mc.html#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 1,1   25      1000     0</span></span>
+<span id="cb65-13"><a href="mod-mc.html#cb65-13" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">gpiOnPolicyMC</span>(env, <span class="at">minIte =</span> <span class="dv">5</span>, <span class="at">maxIte =</span> <span class="dv">100000</span>, <span class="at">states =</span> state, <span class="at">reset =</span> F, <span class="at">eps =</span> <span class="fl">0.2</span>, <span class="at">verbose =</span> T)</span>
+<span id="cb65-14"><a href="mod-mc.html#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb65-15"><a href="mod-mc.html#cb65-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb65-16"><a href="mod-mc.html#cb65-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-17"><a href="mod-mc.html#cb65-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   15        1     1     1  1000     1     1  1000  950.</span></span>
+<span id="cb65-18"><a href="mod-mc.html#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 10</span></span>
+<span id="cb65-19"><a href="mod-mc.html#cb65-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb65-20"><a href="mod-mc.html#cb65-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-21"><a href="mod-mc.html#cb65-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   25      -14     1     2  1000    11    11  950.  901.</span></span>
+<span id="cb65-22"><a href="mod-mc.html#cb65-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1,2   25       25     1     1  1000    25    25 1000   951.</span></span>
+<span id="cb65-23"><a href="mod-mc.html#cb65-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb65-24"><a href="mod-mc.html#cb65-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb65-25"><a href="mod-mc.html#cb65-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-26"><a href="mod-mc.html#cb65-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   10       -4     1     3  1000    -4    -4  901.  850.</span></span>
+<span id="cb65-27"><a href="mod-mc.html#cb65-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span id="cb65-28"><a href="mod-mc.html#cb65-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb65-29"><a href="mod-mc.html#cb65-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-30"><a href="mod-mc.html#cb65-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   20        6     1     4  1000     6     6  850.   9.5</span></span>
+<span id="cb65-31"><a href="mod-mc.html#cb65-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 10</span></span>
+<span id="cb65-32"><a href="mod-mc.html#cb65-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   s     a         r    nA    nS  oldQ     q     g  oldV     v</span></span>
+<span id="cb65-33"><a href="mod-mc.html#cb65-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-34"><a href="mod-mc.html#cb65-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1   25      -14     2     5    11    11    11   9.5   9.5</span></span>
+<span id="cb65-35"><a href="mod-mc.html#cb65-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1,2   25       25     2     2    25    25    25 951.  951.</span></span>
+<span id="cb65-36"><a href="mod-mc.html#cb65-36" aria-hidden="true" tabindex="-1"></a>dfRL <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">getActionValues</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb65-37"><a href="mod-mc.html#cb65-37" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(state, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;inv&quot;</span>, <span class="st">&quot;t&quot;</span>), <span class="at">remove =</span> F, <span class="at">convert =</span> T)</span>
+<span id="cb65-38"><a href="mod-mc.html#cb65-38" aria-hidden="true" tabindex="-1"></a>dfRL <span class="sc">%&gt;%</span></span>
+<span id="cb65-39"><a href="mod-mc.html#cb65-39" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(inv <span class="sc">==</span> i, t <span class="sc">==</span> time) <span class="sc">%&gt;%</span> </span>
+<span id="cb65-40"><a href="mod-mc.html#cb65-40" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(dfMDP)</span>
+<span id="cb65-41"><a href="mod-mc.html#cb65-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 7</span></span>
+<span id="cb65-42"><a href="mod-mc.html#cb65-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state   inv     t action     q     n     v</span></span>
+<span id="cb65-43"><a href="mod-mc.html#cb65-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb65-44"><a href="mod-mc.html#cb65-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1,1       1     1 10        -4     1  NA  </span></span>
+<span id="cb65-45"><a href="mod-mc.html#cb65-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1,1       1     1 15         1     1  NA  </span></span>
+<span id="cb65-46"><a href="mod-mc.html#cb65-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1,1       1     1 20         6     1  NA  </span></span>
+<span id="cb65-47"><a href="mod-mc.html#cb65-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 1,1       1     1 25        11     2  11.0</span></span></code></pre></div>
+<p>What happens with the sequence of episodes?</p>
+<!-- Q6 -->
+<div id="H1htBI4rrFF4QyQbhqTQ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="H1htBI4rrFF4QyQbhqTQ-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="H1htBI4rrFF4QyQbhqTQ-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Since we do simulations (we here do 3) each simulation may produce different results depending on how the algorithm starts. That is, we need more iterations for converging to the correct state-value.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#H1htBI4rrFF4QyQbhqTQ">
+Solution
+</button>
+<ol start="6" style="list-style-type: decimal">
+<li>Consider state <span class="math inline">\((1,1)\)</span> and let us try approximating best epsilon-greedy policy using MC using more episodes:</li>
+</ol>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="mod-mc.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">749</span>)</span>
+<span id="cb66-2"><a href="mod-mc.html#cb66-2" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">gpiOnPolicyMC</span>(env, <span class="at">minIte =</span> <span class="dv">100</span>, <span class="at">maxIte =</span> <span class="dv">100000</span>, <span class="at">states =</span> state, <span class="at">reset =</span> T, <span class="at">eps =</span> <span class="fl">0.2</span>)</span>
+<span id="cb66-3"><a href="mod-mc.html#cb66-3" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">getStateValue</span>(state)  <span class="co"># get the state-value v(s) of the epsilon-greedy policy</span></span>
+<span id="cb66-4"><a href="mod-mc.html#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   10 </span></span>
+<span id="cb66-5"><a href="mod-mc.html#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9.34</span></span>
+<span id="cb66-6"><a href="mod-mc.html#cb66-6" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">gpiOnPolicyMC</span>(env, <span class="at">minIte =</span> <span class="dv">1000</span>, <span class="at">maxIte =</span> <span class="dv">100000</span>, <span class="at">states =</span> state, <span class="at">reset =</span> T, <span class="at">eps =</span> <span class="fl">0.2</span>)</span>
+<span id="cb66-7"><a href="mod-mc.html#cb66-7" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">getStateValue</span>(state)  <span class="co"># get the state-value v(s) of the epsilon-greedy policy</span></span>
+<span id="cb66-8"><a href="mod-mc.html#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   10 </span></span>
+<span id="cb66-9"><a href="mod-mc.html#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9.03</span></span>
+<span id="cb66-10"><a href="mod-mc.html#cb66-10" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">gpiOnPolicyMC</span>(env, <span class="at">minIte =</span> <span class="dv">2000</span>, <span class="at">maxIte =</span> <span class="dv">100000</span>, <span class="at">states =</span> state, <span class="at">reset =</span> T, <span class="at">eps =</span> <span class="fl">0.2</span>)</span>
+<span id="cb66-11"><a href="mod-mc.html#cb66-11" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">getStateValue</span>(state)  <span class="co"># get the state-value v(s) of the epsilon-greedy policy</span></span>
+<span id="cb66-12"><a href="mod-mc.html#cb66-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   10 </span></span>
+<span id="cb66-13"><a href="mod-mc.html#cb66-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9.49</span></span></code></pre></div>
+<p>Why is the state-value not increasing monotone as number of iterations increase?</p>
+<!-- Q7 -->
+<div id="nTZymV5TdwF3iCGuz0Kj" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="nTZymV5TdwF3iCGuz0Kj-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="nTZymV5TdwF3iCGuz0Kj-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+No, the q-values are the averages over all the generated episodes (also those generated using bad policies). With enough simulations these numbers will converge against the action-values for the best epsilon-greedy policy (<span class="math inline">\(\epsilon = 0.5\)</span> here), not the optimal greedy policy.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nTZymV5TdwF3iCGuz0Kj">
+Solution
+</button>
+<ol start="7" style="list-style-type: decimal">
+<li>Consider state <span class="math inline">\((25,8)\)</span> and let us approximate the best epsilon-greedy policy:</li>
+</ol>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="mod-mc.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">281</span>)</span>
+<span id="cb67-2"><a href="mod-mc.html#cb67-2" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb67-3"><a href="mod-mc.html#cb67-3" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">25</span></span>
+<span id="cb67-4"><a href="mod-mc.html#cb67-4" aria-hidden="true" tabindex="-1"></a>state <span class="ot">=</span> <span class="fu">str_c</span>(i, <span class="st">&quot;,&quot;</span>, time)</span>
+<span id="cb67-5"><a href="mod-mc.html#cb67-5" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setActionValue</span>(<span class="dv">1000</span>)</span>
+<span id="cb67-6"><a href="mod-mc.html#cb67-6" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setActionCtrValue</span>()   <span class="co"># reset counter</span></span>
+<span id="cb67-7"><a href="mod-mc.html#cb67-7" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateCtrValue</span>()    <span class="co"># reset counter</span></span>
+<span id="cb67-8"><a href="mod-mc.html#cb67-8" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">gpiOnPolicyMC</span>(env, <span class="at">minIte =</span> <span class="dv">5000</span>, <span class="at">maxIte =</span> <span class="dv">100000</span>, <span class="at">states =</span> state, <span class="at">reset =</span> F, <span class="at">eps =</span> <span class="fl">0.5</span>)</span>
+<span id="cb67-9"><a href="mod-mc.html#cb67-9" aria-hidden="true" tabindex="-1"></a>dfRL <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">getActionValues</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb67-10"><a href="mod-mc.html#cb67-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(state, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;inv&quot;</span>, <span class="st">&quot;t&quot;</span>), <span class="at">remove =</span> F, <span class="at">convert =</span> T)</span>
+<span id="cb67-11"><a href="mod-mc.html#cb67-11" aria-hidden="true" tabindex="-1"></a>dfRL <span class="sc">%&gt;%</span></span>
+<span id="cb67-12"><a href="mod-mc.html#cb67-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(inv <span class="sc">==</span> i, t <span class="sc">==</span> time) <span class="sc">%&gt;%</span> </span>
+<span id="cb67-13"><a href="mod-mc.html#cb67-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(dfMDP)</span>
+<span id="cb67-14"><a href="mod-mc.html#cb67-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 7</span></span>
+<span id="cb67-15"><a href="mod-mc.html#cb67-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state   inv     t action     q     n     v</span></span>
+<span id="cb67-16"><a href="mod-mc.html#cb67-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb67-17"><a href="mod-mc.html#cb67-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 25,8     25     8 10      295.   148   NA </span></span>
+<span id="cb67-18"><a href="mod-mc.html#cb67-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 25,8     25     8 15      436.  1491   NA </span></span>
+<span id="cb67-19"><a href="mod-mc.html#cb67-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 25,8     25     8 20      480.  3566  502.</span></span>
+<span id="cb67-20"><a href="mod-mc.html#cb67-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 25,8     25     8 25      438.   135   NA</span></span></code></pre></div>
+<p>As can be seen the the optimal state value for the MDP is not equal the action-value for that action. Should that have been the case if run enough simulations?</p>
 
 </div>
 </div>
