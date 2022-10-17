@@ -245,7 +245,7 @@ where given the sample-paths, have `\(n\)` observations of the return `\((G_1, \
 
 $$
 `\begin{align}
-    \rho(G_t) &amp;= \frac{\Pr{}(S_t, A_t, \dots S_T| S_t = s, A_t = a, \pi)}{\Pr{}(S_t, A_t, \dots, S_T)| S_t = s, A_t = a, b)} \\
+    \rho(G_t) &amp;= \frac{\Pr{}(S_t, A_t, \dots S_T| S_t = s, A_t = a, \pi)}{\Pr{}(S_t, A_t, \dots, S_T| S_t = s, A_t = a, b)} \\
                  &amp;= \frac{\prod_{k=t}^{T-1}\pi(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}{\prod_{k=t}^{T-1}b(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}\\
                  &amp;=\prod_{k=t}^{T-1}\frac{\pi(A_k|S_k)}{b(A_k|S_k)}.
 \end{align}`
@@ -269,7 +269,7 @@ We can now modify the MC prediction algorithm to use off-policy learning:
 * Modify line `\(G \leftarrow \gamma G + R_{t+1}\)` to `\(G \leftarrow \gamma WG + R_{t+1}\)` since we now need to multiply with the importance sampling ratio.
 * Add a line after the last with `\(W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)\)`, i.e. we update the importance sampling ratio.
 * If `\(\pi(A_t|S_t) = 0\)` then we may stop the inner loop earlier ( `\(W=0\)` for the remaining `\(t\)`). 
-* An incremental update of `\(V\)` can be done
+* An incremental update of `\(V\)` can be done (only if don't modify `\(G\)`)
 $$
   V(s) \leftarrow V(s) + \frac{1}{n} \left[WG - V(s)\right].
 $$
