@@ -184,11 +184,11 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="7R9B9hbf0oRlbhI7j9ej" tabindex="-1" role="dialog" aria-labelledby="7R9B9hbf0oRlbhI7j9ej-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="7R9B9hbf0oRlbhI7j9ej-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="KrFtqN92OheQk4D9aDed" tabindex="-1" role="dialog" aria-labelledby="KrFtqN92OheQk4D9aDed-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="KrFtqN92OheQk4D9aDed-title">Solution</h4></div><div class="modal-body">
 
 <p>The state space is \(\mathcal{S} = \{ T1, A, \ldots, E, T2 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states which have no actions (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(A) &= 0.5v_\pi(T1) + 0.5v_\pi(B) = 0.5v_\pi(B) \\ v_\pi(B) &= 0.5v_\pi(A) + 0.5v_\pi( C ) \\ v_\pi( C ) &= 0.5v_\pi(B) + 0.5v_\pi(D) \\ v_\pi(D) &= 0.5v_\pi( C ) + 0.5v_\pi(E) \\ v_\pi(E) &= 0.5v_\pi(D) + 0.5(1 + v_\pi(T2)) = 0.5v_\pi(D) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 (you may also use that by symmetry \(v_\pi(C ) = 0.5\)) for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for A-E, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#7R9B9hbf0oRlbhI7j9ej">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#KrFtqN92OheQk4D9aDed">Solution</button>
 
 1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state A-E. 
 
@@ -312,11 +312,11 @@ mdp$getStateValues()
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="vmkOpJEc1TgNgogc5eGY" tabindex="-1" role="dialog" aria-labelledby="vmkOpJEc1TgNgogc5eGY-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="vmkOpJEc1TgNgogc5eGY-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="qQA5VgOmbGKcFKIDkOEy" tabindex="-1" role="dialog" aria-labelledby="qQA5VgOmbGKcFKIDkOEy-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="qQA5VgOmbGKcFKIDkOEy-title">Solution</h4></div><div class="modal-body">
 
 <p>We use TD(0), i.e. update using \(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\): \[V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.\] That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#vmkOpJEc1TgNgogc5eGY">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#qQA5VgOmbGKcFKIDkOEy">Solution</button>
 
 3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(A)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
@@ -584,13 +584,6 @@ mdp$getStateValues()
             as.list(self$model[[s]]$actions) 
          },
          
-         #' @description Return and action sampled from the current policy pi.
-         #' @param s The state considered.
-         getActionPi = function(s) {
-            pi <- self$model[[s]]$pi
-            return(sample(names(pi), 1, prob = pi))
-         },
-         
          #' @description Return the current policy as a tibble
          getPolicy = function(states = self$getStateKeys()) {
             map_dfr(states, .f = function(s) {
@@ -651,6 +644,32 @@ mdp$getStateValues()
             return(a)
          },
          
+         #' @description Return and action sampled from the current policy pi. Also update the visit counters for both state and selected action.
+         #' @param s The state considered.
+         getActionPi = function(s) {
+            self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+            pi <- self$model[[s]]$pi
+            actions <- names(pi)
+            a <- sample(actions, 1, prob = pi)
+            self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+            return(a)
+         },
+         
+   # 
+   #       getActionPi = function(s) {
+   #          pi <- self$model[[s]]$pi
+   #          return(sample(names(pi), 1, prob = pi))
+   #       },
+         
+         #' @description Policy evaluation using TD(0)
+         #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+         #' @param gamma Discount rate.
+         #' @param alpha Step-size (use a fixed step-size).
+         #' @param maxE Maximum number of episodes generated.  
+         #' @param maxEL Maximum episode length.
+         #' @param reset If true initialize all state-values to 0.
+         #' @param states Possible start states of each episode (one picked at random).
+         #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
          policyEvalTD0 = function(env, gamma = 1, alpha = 0.1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys()) {
             if (reset) self$setStateValue(self$getStateKeys())      # set to 0
             for (ite in 1:maxE) {
@@ -668,6 +687,52 @@ mdp$getStateValues()
             }
          },
          
+         
+         #' @description Policy evaluation using every-visit Monte Carlo sampling.  
+         #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
+         #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
+         #'    the method that decides which action selection method is used. 
+         #' @param gamma Discount rate.
+         #' @param theta Threshold parameter.
+         #' @param minIte Minimum number of iterations for each start state (all `states` are used a start state in one iteration).
+         #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
+         #' @param reset If true initialize all state-values to 0.
+         #' @param states Start states in the episodes, which all are visited using a for loop.
+         #' @param verbose If true then print info for each episode.
+         policyEvalMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), verbose = FALSE) {
+            if (reset) {
+               self$setStateValue()      # set to 0
+               self$setActionCtrValue()   # reset counter
+               self$setStateCtrValue()    # reset counter
+            }
+            for (ite in 1:maxIte) {
+               delta <- 0
+               for (ss in states) {  # for episode with s as start
+                  df <- env$getEpisodePi(self, ss)  # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
+                  if (nrow(df) == 0) next
+                  df <- df %>% mutate(nS = NA, g = NA, oldV = NA, v = NA)
+                  gain <- 0
+                  for (i in nrow(df):1) {
+                     s <- df$s[i]
+                     a <- df$a[i]
+                     gain <- df$r[i] + gamma * gain
+                     ctr <- self$model[[s]]$n
+                     oldV <- self$model[[s]]$v
+                     stepSize <- (1/ctr)
+                     self$model[[s]]$v <- oldV + stepSize * (gain - oldV)
+                     newV <- self$model[[s]]$v
+                     delta <- max(delta, abs(oldV - newV))
+                     if (verbose) df$g[i] <- gain; df$nS[i] <- ctr; df$oldV[i] <- oldV; df$v[i] <- newV
+                  }
+                  if (verbose) print(df)
+               }
+               if (delta < theta & ite >= minIte) break
+            }
+            if (ite == maxIte) warning("Polcy eval algorithm stopped at max iterations allowed: ", maxIte)
+            message(str_c("Policy eval algorihm finished in ", ite, " iterations."))
+            return(invisible(NULL))
+         },
+         
          #' @description Generalized policy iteration using on policy every-visit Monte Carlo sampling.  
          #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
          #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
@@ -678,7 +743,8 @@ mdp$getStateValues()
          #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
          #' @param reset If true initialize all action-values to 0.
          #' @param states Start states in the episodes, which all are visited using a for loop.
-         #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
+         #' @param eps Epsilon used for the epsilon-greedy policy.
+         #' @param verbose If true then print info for each episode.
          gpiOnPolicyMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, verbose = FALSE) {
             if (reset) {
                self$setActionValue()      # set to 0
