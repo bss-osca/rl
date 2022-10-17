@@ -489,7 +489,7 @@ df1 %>%
    geom_point() 
 ```
 
-Observe that the states are now sampled differently. Some states are visited many times (many episodes visit that state) while others are not visited often. For the states visited often we have a better approximation of best action compared to states which are visited rarely. Here the action is more or less random, e.g. the action in state $(5,3)$ should not be to set the price to 10 (setting the price to 25 would be better since we only have 5 items left).
+Observe that the states are now sampled differently. Some states are visited many times (many episodes visit that state) while others are not visited often. For the states visited often we have a better approximation of best action compared to states which are visited rarely. Here the action is more or less random, e.g. the action in state $(5,3)$ should not set the price to 10 (setting the price to 25 would be better since we only have 5 items left).
 
 
 
@@ -658,7 +658,7 @@ dfRL %>%
    left_join(dfMDP)
 ```
 
-Why do we not estimate the optimal action here and why do the algorithm stop. Hint: You may have a look at method `gpiOnPolicyMC` in the RLagent class.
+Why do we not estimate the optimal action here and why do the algorithm stop. Hint: You may have a look at method `gpiOnPolicyMC` in the RLAgent class.
 
 
 <!-- Q5 -->
@@ -692,11 +692,11 @@ What happens with the sequence of episodes?
 ```{r, cache=TRUE}
 set.seed(749)
 agent$gpiOnPolicyMC(env, minIte = 100, maxIte = 100000, states = state, reset = T, eps = 0.2)
-agent$getStateValue(state)  # get the state-value v(s) of the epsilon-greedy policy
+agent$getStateValueQ(state)  # get the state-value v(s) of the epsilon-greedy policy
 agent$gpiOnPolicyMC(env, minIte = 1000, maxIte = 100000, states = state, reset = T, eps = 0.2)
-agent$getStateValue(state)  # get the state-value v(s) of the epsilon-greedy policy
+agent$getStateValueQ(state)  # get the state-value v(s) of the epsilon-greedy policy
 agent$gpiOnPolicyMC(env, minIte = 2000, maxIte = 100000, states = state, reset = T, eps = 0.2)
-agent$getStateValue(state)  # get the state-value v(s) of the epsilon-greedy policy
+agent$getStateValueQ(state)  # get the state-value v(s) of the epsilon-greedy policy
 ```
 
 Why is the state-value not increasing monotone as number of iterations increase?

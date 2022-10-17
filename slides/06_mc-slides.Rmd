@@ -113,7 +113,7 @@ Given a policy $\pi$ and a set of sample-paths, there are two ways to estimate t
   - Does not generate independent estimates, but still converges.
   - Easier to use since we don't have to check if visited already.
 
-We mostly focus on first visit but in practice often use every visit.
+Mostly focus on first visit in the book but the R code use every visit.
 
 ---
 
