@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-10-14" />
+<meta name="date" content="2022-10-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -361,7 +361,6 @@ div.csl-indent {
 <li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.6</b> Exercises</a>
 <ul>
 <li class="chapter" data-level="7.6.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#ex-td-pred-random"><i class="fa fa-check"></i><b>7.6.1</b> Exercise - A randow walk</a></li>
-<li class="chapter" data-level="7.6.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#ex-td-pred-off-policy"><i class="fa fa-check"></i><b>7.6.2</b> Exercise - Off-policy TD</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mod-td-control.html"><a href="mod-td-control.html"><i class="fa fa-check"></i><b>8</b> Temporal difference methods for control</a>
@@ -591,14 +590,14 @@ q_*(s, a) = r(s,a) + \sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) \gamma(s&#39
 Figure 4.1: A simple MDP.
 </p>
 </div>
-<div id="ChtGsZSYU3L1RfR7NCxN" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ChtGsZSYU3L1RfR7NCxN-title">
+<div id="Dqe22yUB1dAgFApGKbjn" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Dqe22yUB1dAgFApGKbjn-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="ChtGsZSYU3L1RfR7NCxN-title">
+<h4 class="modal-title" id="Dqe22yUB1dAgFApGKbjn-title">
 Solution
 </h4>
 </div>
@@ -626,7 +625,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#ChtGsZSYU3L1RfR7NCxN">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Dqe22yUB1dAgFApGKbjn">
 Solution
 </button>
 <p>Consider the transition diagram for an MDP shown in Figure <a href="mod-mdp-2.html#fig:simple">4.1</a> with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
@@ -642,14 +641,14 @@ Solution
 <p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>
 <p>Formulate the problem as an finite MDP where the time-steps are days.</p>
 <!-- Q1 -->
-<div id="ki5DqNX05uc4AOC8BtAd" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ki5DqNX05uc4AOC8BtAd-title">
+<div id="rGbQdCScJe7LkI6bnDEb" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="rGbQdCScJe7LkI6bnDEb-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="ki5DqNX05uc4AOC8BtAd-title">
+<h4 class="modal-title" id="rGbQdCScJe7LkI6bnDEb-title">
 Solution
 </h4>
 </div>
@@ -666,21 +665,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#ki5DqNX05uc4AOC8BtAd">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#rGbQdCScJe7LkI6bnDEb">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space (with states <span class="math inline">\((x,y)\)</span>) equal the number of cars at each location at the end of the day.</li>
 </ol>
 <!-- Q2 -->
-<div id="5t0c9mvUhddq2mUMCKaJ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="5t0c9mvUhddq2mUMCKaJ-title">
+<div id="qVk55dcBjKtqK7Fwqkji" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="qVk55dcBjKtqK7Fwqkji-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="5t0c9mvUhddq2mUMCKaJ-title">
+<h4 class="modal-title" id="qVk55dcBjKtqK7Fwqkji-title">
 Solution
 </h4>
 </div>
@@ -697,21 +696,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#5t0c9mvUhddq2mUMCKaJ">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#qVk55dcBjKtqK7Fwqkji">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1.</li>
 </ol>
 <!-- Q3 -->
-<div id="DHJPT6ADkXSj1E53cbEC" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="DHJPT6ADkXSj1E53cbEC-title">
+<div id="2e2cmvHTvBhT0o9McSI0" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="2e2cmvHTvBhT0o9McSI0-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="DHJPT6ADkXSj1E53cbEC-title">
+<h4 class="modal-title" id="2e2cmvHTvBhT0o9McSI0-title">
 Solution
 </h4>
 </div>
@@ -728,7 +727,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#DHJPT6ADkXSj1E53cbEC">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#2e2cmvHTvBhT0o9McSI0">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
@@ -736,14 +735,14 @@ Solution
 </ol>
 <p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x - a\)</span> and after rental requests <span class="math inline">\(x - a - \min(D_1, x-a)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(x - a - \min(D_1, x-a) + H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).\]</span></p>
 <!-- Q4 -->
-<div id="nhtlTxoL8q8V1QsKXkx5" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="nhtlTxoL8q8V1QsKXkx5-title">
+<div id="DI3Sm95FYfVYiqsThiAd" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="DI3Sm95FYfVYiqsThiAd-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="nhtlTxoL8q8V1QsKXkx5-title">
+<h4 class="modal-title" id="DI3Sm95FYfVYiqsThiAd-title">
 Solution
 </h4>
 </div>
@@ -760,7 +759,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nhtlTxoL8q8V1QsKXkx5">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#DI3Sm95FYfVYiqsThiAd">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">

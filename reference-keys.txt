@@ -133,7 +133,6 @@ td-prediction-for-action-values
 benefits-of-td-methods
 exercises-2
 ex-td-pred-random
-ex-td-pred-off-policy
 mod-td-control
 learning-outcomes-7
 textbook-readings-7

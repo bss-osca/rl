@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-10-14" />
+<meta name="date" content="2022-10-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -361,7 +361,6 @@ div.csl-indent {
 <li class="chapter" data-level="7.6" data-path="mod-td-pred.html"><a href="mod-td-pred.html#exercises-2"><i class="fa fa-check"></i><b>7.6</b> Exercises</a>
 <ul>
 <li class="chapter" data-level="7.6.1" data-path="mod-td-pred.html"><a href="mod-td-pred.html#ex-td-pred-random"><i class="fa fa-check"></i><b>7.6.1</b> Exercise - A randow walk</a></li>
-<li class="chapter" data-level="7.6.2" data-path="mod-td-pred.html"><a href="mod-td-pred.html#ex-td-pred-off-policy"><i class="fa fa-check"></i><b>7.6.2</b> Exercise - Off-policy TD</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mod-td-control.html"><a href="mod-td-control.html"><i class="fa fa-check"></i><b>8</b> Temporal difference methods for control</a>
@@ -540,7 +539,7 @@ Figure 7.1: TD(0) policy prediction <span class="citation">(<a href="#ref-Sutton
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="help.html#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
 <div id="ex-td-pred-random" class="section level3 hasAnchor" number="7.6.1">
 <h3><span class="header-section-number">7.6.1</span> Exercise - A randow walk<a href="mod-td-pred.html#ex-td-pred-random" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Consider a MDP with states A-E and two terminal states. Possible transitions are given in Figure <a href="mod-td-pred.html#fig:rw-trans">7.2</a>. All episodes start in the centre state, C, then proceed either left or right by one state on each step. We assume the stochastic policy <span class="math inline">\(\pi\)</span> is used where each direction has equal probability. Episodes terminate either on the left (T1) or the right (T2). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.</p>
+<p>Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in Figure <a href="mod-td-pred.html#fig:rw-trans">7.2</a>. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy <span class="math inline">\(\pi\)</span> is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:rw-trans"></span>
 <img src="07_td-pred_files/figure-html/rw-trans-1.png" alt="Possible transitions between states and rewards." width="80%" />
 <p class="caption">
@@ -548,14 +547,14 @@ Figure 7.2: Possible transitions between states and rewards.
 </p>
 </div>
 <!-- Q1 -->
-<div id="UliU1Xr230fLWikAq4Iq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="UliU1Xr230fLWikAq4Iq-title">
+<div id="7R9B9hbf0oRlbhI7j9ej" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="7R9B9hbf0oRlbhI7j9ej-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="UliU1Xr230fLWikAq4Iq-title">
+<h4 class="modal-title" id="7R9B9hbf0oRlbhI7j9ej-title">
 Solution
 </h4>
 </div>
@@ -572,25 +571,631 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UliU1Xr230fLWikAq4Iq">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#7R9B9hbf0oRlbhI7j9ej">
 Solution
 </button>
 <ol style="list-style-type: decimal">
-<li><p>Formulate the MDP model and calculate the state-value <span class="math inline">\(v_\pi\)</span> for each state using the Bellman equations <a href="mod-dp.html#eq:bm-pol-eval">(5.1)</a>.</p></li>
-<li><p>Consider an episode with sequence <span class="math inline">\(C, 0, B, 0, C, 0, D, 0, E, 1\)</span>. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with <span class="math inline">\(\alpha = 0.1\)</span>. It appears that only <span class="math inline">\(V(A)\)</span> change. What does this tell you about what happened on the first episode? Why was only the estimate for this one state changed? By exactly how much was it changed?</p></li>
-<li><p>Generate 100 episodes and run the TD(0) prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-td-pred.html#fig:td0-pred-alg">7.1</a>). Make a plot of the state-value estimate (y-axis) given state A-E (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.</p></li>
+<li>Formulate the MDP model and calculate the state-value <span class="math inline">\(v_\pi\)</span> for each state using the Bellman equations <a href="mod-dp.html#eq:bm-pol-eval">(5.1)</a>. Hint: there is no need to code this. Just solve the Bellman equations for state A-E.</li>
 </ol>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="mod-td-pred.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">875</span>)</span></code></pre></div>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Run an MC prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-mc.html#fig:mc-prediction-alg">6.1</a> running for 1, 10 and 100 episodes.</p></li>
-<li><p>The results are dependent on the value of the step-size parameter. Try estimating the state-values using TD(0) and MC for <span class="math inline">\(\alpha = 0.2, 0.1, 0.05\)</span> and 0.025. Plot the root mean square (RMS) error <span class="math display">\[\sqrt{\frac{1}{5}\sum_{s=A}^E(V(s)-v_\pi(s))^2}\]</span> (y-axis) given the number of episodes (x-axis).Do you think the conclusions about that TD(0) is better than MC is affected by different values?</p></li>
-<li><p>In the right graph of the random walk example, the RMS error of the TD method seems to go down and then up again, particularly at high <span class="math inline">\(\alpha\)</span>’s. What could have caused this? Do you think this always occurs, or might it be a function of how the approximate value function was initialized?</p></li>
+<!-- Q2 -->
+<ol start="2" style="list-style-type: decimal">
+<li>Consider the code below which build, set the policy and evaluate it. Try to understand what happens and check if the results are the same as found in Question 1.</li>
 </ol>
-<!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="mod-td-pred.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Build the MDP</span></span>
+<span id="cb68-2"><a href="mod-td-pred.html#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use numbers instead 1 = T1, 2-6 = A-E, 7 = T2</span></span>
+<span id="cb68-3"><a href="mod-td-pred.html#cb68-3" aria-hidden="true" tabindex="-1"></a>mdp <span class="ot">&lt;-</span> MDPClass<span class="sc">$</span><span class="fu">new</span>()</span>
+<span id="cb68-4"><a href="mod-td-pred.html#cb68-4" aria-hidden="true" tabindex="-1"></a>states <span class="ot">&lt;-</span> <span class="fu">str_c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb68-5"><a href="mod-td-pred.html#cb68-5" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">addStateSpace</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)   <span class="co"># add state keys</span></span>
+<span id="cb68-6"><a href="mod-td-pred.html#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb68-7"><a href="mod-td-pred.html#cb68-7" aria-hidden="true" tabindex="-1"></a>      mdp<span class="sc">$</span><span class="fu">addActionSpace</span>(s, <span class="fu">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;right&quot;</span>))</span>
+<span id="cb68-8"><a href="mod-td-pred.html#cb68-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-9"><a href="mod-td-pred.html#cb68-9" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">addActionSpace</span>(<span class="st">&quot;1&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;dummy&quot;</span>))</span>
+<span id="cb68-10"><a href="mod-td-pred.html#cb68-10" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">addActionSpace</span>(<span class="st">&quot;7&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;dummy&quot;</span>))</span>
+<span id="cb68-11"><a href="mod-td-pred.html#cb68-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add trans pr and rewards</span></span>
+<span id="cb68-12"><a href="mod-td-pred.html#cb68-12" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb68-13"><a href="mod-td-pred.html#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>) {</span>
+<span id="cb68-14"><a href="mod-td-pred.html#cb68-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">names</span>(pr) <span class="ot">=</span> s<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb68-15"><a href="mod-td-pred.html#cb68-15" aria-hidden="true" tabindex="-1"></a>   mdp<span class="sc">$</span><span class="fu">addAction</span>(<span class="fu">as.character</span>(s), <span class="st">&quot;right&quot;</span>, <span class="at">r =</span> <span class="dv">0</span>, pr)</span>
+<span id="cb68-16"><a href="mod-td-pred.html#cb68-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-17"><a href="mod-td-pred.html#cb68-17" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">addAction</span>(<span class="st">&quot;6&quot;</span>, <span class="st">&quot;right&quot;</span>, <span class="at">r =</span> <span class="dv">1</span>, <span class="at">pr =</span> <span class="fu">c</span>(<span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="dv">1</span>))</span>
+<span id="cb68-18"><a href="mod-td-pred.html#cb68-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb68-19"><a href="mod-td-pred.html#cb68-19" aria-hidden="true" tabindex="-1"></a>   <span class="fu">names</span>(pr) <span class="ot">=</span> s<span class="dv">-1</span> </span>
+<span id="cb68-20"><a href="mod-td-pred.html#cb68-20" aria-hidden="true" tabindex="-1"></a>   mdp<span class="sc">$</span><span class="fu">addAction</span>(<span class="fu">as.character</span>(s), <span class="st">&quot;left&quot;</span>, <span class="at">r =</span> <span class="dv">0</span>, pr)</span>
+<span id="cb68-21"><a href="mod-td-pred.html#cb68-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-22"><a href="mod-td-pred.html#cb68-22" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">addAction</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;dummy&quot;</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">pr =</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="dv">1</span>))</span>
+<span id="cb68-23"><a href="mod-td-pred.html#cb68-23" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">addAction</span>(<span class="st">&quot;7&quot;</span>, <span class="st">&quot;dummy&quot;</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">pr =</span> <span class="fu">c</span>(<span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="dv">1</span>))</span>
+<span id="cb68-24"><a href="mod-td-pred.html#cb68-24" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">getActionInfo</span>(<span class="st">&quot;1&quot;</span>)</span>
+<span id="cb68-25"><a href="mod-td-pred.html#cb68-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $dummy</span></span>
+<span id="cb68-26"><a href="mod-td-pred.html#cb68-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $dummy$r</span></span>
+<span id="cb68-27"><a href="mod-td-pred.html#cb68-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb68-28"><a href="mod-td-pred.html#cb68-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-29"><a href="mod-td-pred.html#cb68-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $dummy$pr</span></span>
+<span id="cb68-30"><a href="mod-td-pred.html#cb68-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 </span></span>
+<span id="cb68-31"><a href="mod-td-pred.html#cb68-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1</span></span>
+<span id="cb68-32"><a href="mod-td-pred.html#cb68-32" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">getActionInfo</span>(<span class="st">&quot;2&quot;</span>)</span>
+<span id="cb68-33"><a href="mod-td-pred.html#cb68-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $right</span></span>
+<span id="cb68-34"><a href="mod-td-pred.html#cb68-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $right$r</span></span>
+<span id="cb68-35"><a href="mod-td-pred.html#cb68-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb68-36"><a href="mod-td-pred.html#cb68-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-37"><a href="mod-td-pred.html#cb68-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $right$pr</span></span>
+<span id="cb68-38"><a href="mod-td-pred.html#cb68-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 </span></span>
+<span id="cb68-39"><a href="mod-td-pred.html#cb68-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 </span></span>
+<span id="cb68-40"><a href="mod-td-pred.html#cb68-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-41"><a href="mod-td-pred.html#cb68-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-42"><a href="mod-td-pred.html#cb68-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $left</span></span>
+<span id="cb68-43"><a href="mod-td-pred.html#cb68-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $left$r</span></span>
+<span id="cb68-44"><a href="mod-td-pred.html#cb68-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb68-45"><a href="mod-td-pred.html#cb68-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-46"><a href="mod-td-pred.html#cb68-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $left$pr</span></span>
+<span id="cb68-47"><a href="mod-td-pred.html#cb68-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 </span></span>
+<span id="cb68-48"><a href="mod-td-pred.html#cb68-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1</span></span>
+<span id="cb68-49"><a href="mod-td-pred.html#cb68-49" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">getActionInfo</span>(<span class="st">&quot;6&quot;</span>)</span>
+<span id="cb68-50"><a href="mod-td-pred.html#cb68-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $right</span></span>
+<span id="cb68-51"><a href="mod-td-pred.html#cb68-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $right$r</span></span>
+<span id="cb68-52"><a href="mod-td-pred.html#cb68-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb68-53"><a href="mod-td-pred.html#cb68-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-54"><a href="mod-td-pred.html#cb68-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $right$pr</span></span>
+<span id="cb68-55"><a href="mod-td-pred.html#cb68-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 </span></span>
+<span id="cb68-56"><a href="mod-td-pred.html#cb68-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 </span></span>
+<span id="cb68-57"><a href="mod-td-pred.html#cb68-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-58"><a href="mod-td-pred.html#cb68-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-59"><a href="mod-td-pred.html#cb68-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $left</span></span>
+<span id="cb68-60"><a href="mod-td-pred.html#cb68-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $left$r</span></span>
+<span id="cb68-61"><a href="mod-td-pred.html#cb68-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb68-62"><a href="mod-td-pred.html#cb68-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-63"><a href="mod-td-pred.html#cb68-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $left$pr</span></span>
+<span id="cb68-64"><a href="mod-td-pred.html#cb68-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 </span></span>
+<span id="cb68-65"><a href="mod-td-pred.html#cb68-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1</span></span>
+<span id="cb68-66"><a href="mod-td-pred.html#cb68-66" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">getActionInfo</span>(<span class="st">&quot;7&quot;</span>)</span>
+<span id="cb68-67"><a href="mod-td-pred.html#cb68-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $dummy</span></span>
+<span id="cb68-68"><a href="mod-td-pred.html#cb68-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $dummy$r</span></span>
+<span id="cb68-69"><a href="mod-td-pred.html#cb68-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb68-70"><a href="mod-td-pred.html#cb68-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb68-71"><a href="mod-td-pred.html#cb68-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $dummy$pr</span></span>
+<span id="cb68-72"><a href="mod-td-pred.html#cb68-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 </span></span>
+<span id="cb68-73"><a href="mod-td-pred.html#cb68-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1</span></span>
+<span id="cb68-74"><a href="mod-td-pred.html#cb68-74" aria-hidden="true" tabindex="-1"></a><span class="do">## Set the policy</span></span>
+<span id="cb68-75"><a href="mod-td-pred.html#cb68-75" aria-hidden="true" tabindex="-1"></a>pi <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;left&quot;</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">&quot;right&quot;</span> <span class="ot">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb68-76"><a href="mod-td-pred.html#cb68-76" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">setPolicy</span>(states, pi)</span>
+<span id="cb68-77"><a href="mod-td-pred.html#cb68-77" aria-hidden="true" tabindex="-1"></a>pi <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;dummy&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)</span>
+<span id="cb68-78"><a href="mod-td-pred.html#cb68-78" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">setPolicy</span>(<span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;7&quot;</span>), pi)</span>
+<span id="cb68-79"><a href="mod-td-pred.html#cb68-79" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">getPolicy</span>()</span>
+<span id="cb68-80"><a href="mod-td-pred.html#cb68-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
+<span id="cb68-81"><a href="mod-td-pred.html#cb68-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state action    pr</span></span>
+<span id="cb68-82"><a href="mod-td-pred.html#cb68-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;</span></span>
+<span id="cb68-83"><a href="mod-td-pred.html#cb68-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1     dummy    1  </span></span>
+<span id="cb68-84"><a href="mod-td-pred.html#cb68-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 2     left     0.5</span></span>
+<span id="cb68-85"><a href="mod-td-pred.html#cb68-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 2     right    0.5</span></span>
+<span id="cb68-86"><a href="mod-td-pred.html#cb68-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 3     left     0.5</span></span>
+<span id="cb68-87"><a href="mod-td-pred.html#cb68-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 3     right    0.5</span></span>
+<span id="cb68-88"><a href="mod-td-pred.html#cb68-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 4     left     0.5</span></span>
+<span id="cb68-89"><a href="mod-td-pred.html#cb68-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 4     right    0.5</span></span>
+<span id="cb68-90"><a href="mod-td-pred.html#cb68-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 5     left     0.5</span></span>
+<span id="cb68-91"><a href="mod-td-pred.html#cb68-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 5     right    0.5</span></span>
+<span id="cb68-92"><a href="mod-td-pred.html#cb68-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 6     left     0.5</span></span>
+<span id="cb68-93"><a href="mod-td-pred.html#cb68-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 6     right    0.5</span></span>
+<span id="cb68-94"><a href="mod-td-pred.html#cb68-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 7     dummy    1</span></span>
+<span id="cb68-95"><a href="mod-td-pred.html#cb68-95" aria-hidden="true" tabindex="-1"></a><span class="do">## Evaluate the policy</span></span>
+<span id="cb68-96"><a href="mod-td-pred.html#cb68-96" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">policyEval</span>(<span class="at">gamma =</span> <span class="dv">1</span>)</span>
+<span id="cb68-97"><a href="mod-td-pred.html#cb68-97" aria-hidden="true" tabindex="-1"></a>mdp<span class="sc">$</span><span class="fu">getStateValues</span>()</span>
+<span id="cb68-98"><a href="mod-td-pred.html#cb68-98" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 2</span></span>
+<span id="cb68-99"><a href="mod-td-pred.html#cb68-99" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state     v</span></span>
+<span id="cb68-100"><a href="mod-td-pred.html#cb68-100" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;</span></span>
+<span id="cb68-101"><a href="mod-td-pred.html#cb68-101" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1     0    </span></span>
+<span id="cb68-102"><a href="mod-td-pred.html#cb68-102" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2     0.167</span></span>
+<span id="cb68-103"><a href="mod-td-pred.html#cb68-103" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3     0.333</span></span>
+<span id="cb68-104"><a href="mod-td-pred.html#cb68-104" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 4     0.500</span></span>
+<span id="cb68-105"><a href="mod-td-pred.html#cb68-105" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 5     0.667</span></span>
+<span id="cb68-106"><a href="mod-td-pred.html#cb68-106" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 6     0.833</span></span>
+<span id="cb68-107"><a href="mod-td-pred.html#cb68-107" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 7     0</span></span></code></pre></div>
+<!-- Q3 -->
+<div id="vmkOpJEc1TgNgogc5eGY" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="vmkOpJEc1TgNgogc5eGY-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="vmkOpJEc1TgNgogc5eGY-title">
+Solution
+</h4>
 </div>
-<div id="ex-td-pred-off-policy" class="section level3 hasAnchor" number="7.6.2">
-<h3><span class="header-section-number">7.6.2</span> Exercise - Off-policy TD<a href="mod-td-pred.html#ex-td-pred-off-policy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Design an off-policy version of the TD(0) update that can be used with arbitrary target policy <span class="math inline">\(\pi\)</span> and covering behaviour policy b, using at each step t the importance sampling ratio $_{t:t}.</p>
+<div class="modal-body">
+<p>
+We use TD(0), i.e. update using <span class="math inline">\(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\)</span>: <span class="math display">\[V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\]</span> <span class="math display">\[V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\]</span> <span class="math display">\[V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.\]</span> That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#vmkOpJEc1TgNgogc5eGY">
+Solution
+</button>
+<ol start="3" style="list-style-type: decimal">
+<li>Consider an episode with sequence <span class="math inline">\(4, 0, 3, 0, 2, 0, 1\)</span>. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with <span class="math inline">\(\alpha = 0.1\)</span>. It appears that only <span class="math inline">\(V(A)\)</span> change why was only the estimate for this one state changed? By exactly how much was it changed?</li>
+</ol>
+<!-- Q4 -->
+<ol start="4" style="list-style-type: decimal">
+<li><p>Generate 100 episodes and run the TD(0) prediction algorithm with <span class="math inline">\(\alpha = 0.1\)</span> (see Figure <a href="mod-td-pred.html#fig:td0-pred-alg">7.1</a>). Make a plot of the state-value estimate (y-axis) given state 2-6 (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.</p>
+<p>First we need an environment representing the problem</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="mod-td-pred.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(R6)</span>
+<span id="cb69-2"><a href="mod-td-pred.html#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hash)</span>
+<span id="cb69-3"><a href="mod-td-pred.html#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb69-4"><a href="mod-td-pred.html#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="mod-td-pred.html#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; R6 Class representing the RL environment for the problem</span></span>
+<span id="cb69-6"><a href="mod-td-pred.html#cb69-6" aria-hidden="true" tabindex="-1"></a>RLEnvRandom <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;RLEnvRandom&quot;</span>,</span>
+<span id="cb69-7"><a href="mod-td-pred.html#cb69-7" aria-hidden="true" tabindex="-1"></a><span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb69-8"><a href="mod-td-pred.html#cb69-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-9"><a href="mod-td-pred.html#cb69-9" aria-hidden="true" tabindex="-1"></a>   <span class="co">#&#39; @description Returns next state and reward given current state and action in a list (with names `r` and `sN`).</span></span>
+<span id="cb69-10"><a href="mod-td-pred.html#cb69-10" aria-hidden="true" tabindex="-1"></a>   <span class="co">#&#39; @param s Current state.</span></span>
+<span id="cb69-11"><a href="mod-td-pred.html#cb69-11" aria-hidden="true" tabindex="-1"></a>   <span class="co">#&#39; @param a Current action.</span></span>
+<span id="cb69-12"><a href="mod-td-pred.html#cb69-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">getTimeStepData =</span> <span class="cf">function</span>(s,a) {</span>
+<span id="cb69-13"><a href="mod-td-pred.html#cb69-13" aria-hidden="true" tabindex="-1"></a>      s <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(s)</span>
+<span id="cb69-14"><a href="mod-td-pred.html#cb69-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (a <span class="sc">==</span> <span class="st">&quot;left&quot;</span> <span class="sc">&amp;</span> s <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;</span> s <span class="sc">&lt;</span> <span class="dv">7</span>) <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">r =</span> <span class="dv">0</span>, <span class="at">sN =</span> <span class="fu">as.character</span>(s<span class="dv">-1</span>)))</span>
+<span id="cb69-15"><a href="mod-td-pred.html#cb69-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (a <span class="sc">==</span> <span class="st">&quot;right&quot;</span> <span class="sc">&amp;</span> s <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;</span> s <span class="sc">&lt;</span> <span class="dv">7</span>) {</span>
+<span id="cb69-16"><a href="mod-td-pred.html#cb69-16" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (s <span class="sc">==</span> <span class="dv">6</span>) <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">r =</span> <span class="dv">1</span>, <span class="at">sN =</span> <span class="fu">as.character</span>(s<span class="sc">+</span><span class="dv">1</span>)))</span>
+<span id="cb69-17"><a href="mod-td-pred.html#cb69-17" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">r =</span> <span class="dv">0</span>, <span class="at">sN =</span> <span class="fu">as.character</span>(s<span class="sc">+</span><span class="dv">1</span>)))</span>
+<span id="cb69-18"><a href="mod-td-pred.html#cb69-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb69-19"><a href="mod-td-pred.html#cb69-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> ((s <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> s <span class="sc">==</span> <span class="dv">7</span>) <span class="sc">&amp;</span> a <span class="sc">==</span> <span class="st">&quot;dummy&quot;</span>) <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">r =</span> <span class="dv">0</span>, <span class="at">sN =</span> <span class="cn">NA_character_</span>))</span>
+<span id="cb69-20"><a href="mod-td-pred.html#cb69-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Error finding next state and reward!&quot;</span>)</span>
+<span id="cb69-21"><a href="mod-td-pred.html#cb69-21" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb69-22"><a href="mod-td-pred.html#cb69-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-23"><a href="mod-td-pred.html#cb69-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-24"><a href="mod-td-pred.html#cb69-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb69-25"><a href="mod-td-pred.html#cb69-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb69-26"><a href="mod-td-pred.html#cb69-26" aria-hidden="true" tabindex="-1"></a>env <span class="ot">&lt;-</span> RLEnvRandom<span class="sc">$</span><span class="fu">new</span>()</span>
+<span id="cb69-27"><a href="mod-td-pred.html#cb69-27" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span><span class="fu">getTimeStepData</span>(<span class="st">&quot;3&quot;</span>, <span class="st">&quot;right&quot;</span>)</span>
+<span id="cb69-28"><a href="mod-td-pred.html#cb69-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $r</span></span>
+<span id="cb69-29"><a href="mod-td-pred.html#cb69-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb69-30"><a href="mod-td-pred.html#cb69-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb69-31"><a href="mod-td-pred.html#cb69-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $sN</span></span>
+<span id="cb69-32"><a href="mod-td-pred.html#cb69-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;4&quot;</span></span>
+<span id="cb69-33"><a href="mod-td-pred.html#cb69-33" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span><span class="fu">getTimeStepData</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;dummy&quot;</span>)</span>
+<span id="cb69-34"><a href="mod-td-pred.html#cb69-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $r</span></span>
+<span id="cb69-35"><a href="mod-td-pred.html#cb69-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb69-36"><a href="mod-td-pred.html#cb69-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb69-37"><a href="mod-td-pred.html#cb69-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $sN</span></span>
+<span id="cb69-38"><a href="mod-td-pred.html#cb69-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb69-39"><a href="mod-td-pred.html#cb69-39" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span><span class="fu">getTimeStepData</span>(<span class="st">&quot;6&quot;</span>, <span class="st">&quot;right&quot;</span>)</span>
+<span id="cb69-40"><a href="mod-td-pred.html#cb69-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $r</span></span>
+<span id="cb69-41"><a href="mod-td-pred.html#cb69-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb69-42"><a href="mod-td-pred.html#cb69-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb69-43"><a href="mod-td-pred.html#cb69-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $sN</span></span>
+<span id="cb69-44"><a href="mod-td-pred.html#cb69-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;7&quot;</span></span></code></pre></div>
+<p>Note we define a method <code>getTimeStepData</code> that takes a state and action and return the reward and next state. This method is used by the RL agent class in method <code>policyEvalTD0</code>:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="mod-td-pred.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(R6)</span>
+<span id="cb70-2"><a href="mod-td-pred.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hash)</span>
+<span id="cb70-3"><a href="mod-td-pred.html#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb70-4"><a href="mod-td-pred.html#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="mod-td-pred.html#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Generic RL agent for tabular data (R6 class)</span></span>
+<span id="cb70-6"><a href="mod-td-pred.html#cb70-6" aria-hidden="true" tabindex="-1"></a>RLAgent <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">&quot;RLAgent&quot;</span>,</span>
+<span id="cb70-7"><a href="mod-td-pred.html#cb70-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb70-8"><a href="mod-td-pred.html#cb70-8" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @field model The model is used to represent the information we have. The</span></span>
+<span id="cb70-9"><a href="mod-td-pred.html#cb70-9" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; model is represented using a hash list for the states. Each states contains </span></span>
+<span id="cb70-10"><a href="mod-td-pred.html#cb70-10" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    - A list with `actions` (a hash #&#39; list with actions).</span></span>
+<span id="cb70-11"><a href="mod-td-pred.html#cb70-11" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    - `pi` (a named vector with policy pr (only positive values).</span></span>
+<span id="cb70-12"><a href="mod-td-pred.html#cb70-12" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    - `piG` the greedy action (a string). </span></span>
+<span id="cb70-13"><a href="mod-td-pred.html#cb70-13" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    - `n` a visit counter</span></span>
+<span id="cb70-14"><a href="mod-td-pred.html#cb70-14" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; The `actions` hash list contains </span></span>
+<span id="cb70-15"><a href="mod-td-pred.html#cb70-15" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    - The action-values `q`.</span></span>
+<span id="cb70-16"><a href="mod-td-pred.html#cb70-16" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    - `n` a visit counter.</span></span>
+<span id="cb70-17"><a href="mod-td-pred.html#cb70-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">model =</span> <span class="cn">NULL</span>,  </span>
+<span id="cb70-18"><a href="mod-td-pred.html#cb70-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-19"><a href="mod-td-pred.html#cb70-19" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Create an object (when call new).</span></span>
+<span id="cb70-20"><a href="mod-td-pred.html#cb70-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>() {</span>
+<span id="cb70-21"><a href="mod-td-pred.html#cb70-21" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="fu">hash</span>()</span>
+<span id="cb70-22"><a href="mod-td-pred.html#cb70-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-23"><a href="mod-td-pred.html#cb70-23" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-24"><a href="mod-td-pred.html#cb70-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-25"><a href="mod-td-pred.html#cb70-25" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Add state and action to the hash (only if not already added)</span></span>
+<span id="cb70-26"><a href="mod-td-pred.html#cb70-26" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s State key/string.</span></span>
+<span id="cb70-27"><a href="mod-td-pred.html#cb70-27" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param a Action key/string.</span></span>
+<span id="cb70-28"><a href="mod-td-pred.html#cb70-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">addStateAction =</span> <span class="cf">function</span>(s, a) {</span>
+<span id="cb70-29"><a href="mod-td-pred.html#cb70-29" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has.key</span>(s, self<span class="sc">$</span>model)) <span class="fu">addStates</span>(s)</span>
+<span id="cb70-30"><a href="mod-td-pred.html#cb70-30" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has.key</span>(a, self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)) self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">q =</span> <span class="dv">0</span>, <span class="at">n =</span> <span class="dv">0</span>)</span>
+<span id="cb70-31"><a href="mod-td-pred.html#cb70-31" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-32"><a href="mod-td-pred.html#cb70-32" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-33"><a href="mod-td-pred.html#cb70-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-34"><a href="mod-td-pred.html#cb70-34" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Add the states (keys) and define void policy and empty action hash. </span></span>
+<span id="cb70-35"><a href="mod-td-pred.html#cb70-35" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states A vector of states (converted to strings).</span></span>
+<span id="cb70-36"><a href="mod-td-pred.html#cb70-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">addStates =</span> <span class="cf">function</span>(states) {</span>
+<span id="cb70-37"><a href="mod-td-pred.html#cb70-37" aria-hidden="true" tabindex="-1"></a>         keys <span class="ot">&lt;-</span> <span class="fu">make.keys</span>(states)</span>
+<span id="cb70-38"><a href="mod-td-pred.html#cb70-38" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[keys] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pi =</span> <span class="cn">NA</span>)   <span class="co"># don&#39;t use pi = NULL since then won&#39;t be defined </span></span>
+<span id="cb70-39"><a href="mod-td-pred.html#cb70-39" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> keys) {</span>
+<span id="cb70-40"><a href="mod-td-pred.html#cb70-40" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>v <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb70-41"><a href="mod-td-pred.html#cb70-41" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions <span class="ot">&lt;-</span> <span class="fu">hash</span>()</span>
+<span id="cb70-42"><a href="mod-td-pred.html#cb70-42" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n <span class="ot">&lt;-</span> <span class="dv">0</span>  <span class="co"># counter visited</span></span>
+<span id="cb70-43"><a href="mod-td-pred.html#cb70-43" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-44"><a href="mod-td-pred.html#cb70-44" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-45"><a href="mod-td-pred.html#cb70-45" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-46"><a href="mod-td-pred.html#cb70-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-47"><a href="mod-td-pred.html#cb70-47" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Add the actions to a state</span></span>
+<span id="cb70-48"><a href="mod-td-pred.html#cb70-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s State (key).</span></span>
+<span id="cb70-49"><a href="mod-td-pred.html#cb70-49" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param actions A vector of actions (converted to strings).</span></span>
+<span id="cb70-50"><a href="mod-td-pred.html#cb70-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">addActions =</span> <span class="cf">function</span>(s, actions) {</span>
+<span id="cb70-51"><a href="mod-td-pred.html#cb70-51" aria-hidden="true" tabindex="-1"></a>         keys <span class="ot">&lt;-</span> <span class="fu">make.keys</span>(actions)</span>
+<span id="cb70-52"><a href="mod-td-pred.html#cb70-52" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (a <span class="cf">in</span> keys) {</span>
+<span id="cb70-53"><a href="mod-td-pred.html#cb70-53" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span><span class="fu">addStateAction</span>(s, a)</span>
+<span id="cb70-54"><a href="mod-td-pred.html#cb70-54" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-55"><a href="mod-td-pred.html#cb70-55" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-56"><a href="mod-td-pred.html#cb70-56" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-57"><a href="mod-td-pred.html#cb70-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-58"><a href="mod-td-pred.html#cb70-58" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Add states and actions to the hash with initial values. If already exists nothing happens. </span></span>
+<span id="cb70-59"><a href="mod-td-pred.html#cb70-59" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param df A tibble with string columns `s` (states) and `a` (actions).</span></span>
+<span id="cb70-60"><a href="mod-td-pred.html#cb70-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">addStatesAndActions =</span> <span class="cf">function</span>(df) {</span>
+<span id="cb70-61"><a href="mod-td-pred.html#cb70-61" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
+<span id="cb70-62"><a href="mod-td-pred.html#cb70-62" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span><span class="fu">addStateAction</span>(df<span class="sc">$</span>s[i], df<span class="sc">$</span>a[i])</span>
+<span id="cb70-63"><a href="mod-td-pred.html#cb70-63" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-64"><a href="mod-td-pred.html#cb70-64" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-65"><a href="mod-td-pred.html#cb70-65" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-66"><a href="mod-td-pred.html#cb70-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-67"><a href="mod-td-pred.html#cb70-67" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the action-values for all actions.</span></span>
+<span id="cb70-68"><a href="mod-td-pred.html#cb70-68" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param value The value.</span></span>
+<span id="cb70-69"><a href="mod-td-pred.html#cb70-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">setActionValue =</span> <span class="cf">function</span>(<span class="at">value =</span> <span class="dv">0</span>) {</span>
+<span id="cb70-70"><a href="mod-td-pred.html#cb70-70" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb70-71"><a href="mod-td-pred.html#cb70-71" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (a <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)) {</span>
+<span id="cb70-72"><a href="mod-td-pred.html#cb70-72" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q <span class="ot">=</span> value</span>
+<span id="cb70-73"><a href="mod-td-pred.html#cb70-73" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb70-74"><a href="mod-td-pred.html#cb70-74" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-75"><a href="mod-td-pred.html#cb70-75" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-76"><a href="mod-td-pred.html#cb70-76" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-77"><a href="mod-td-pred.html#cb70-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-78"><a href="mod-td-pred.html#cb70-78" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the state-value of states</span></span>
+<span id="cb70-79"><a href="mod-td-pred.html#cb70-79" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states A vector of states.</span></span>
+<span id="cb70-80"><a href="mod-td-pred.html#cb70-80" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param value The value.</span></span>
+<span id="cb70-81"><a href="mod-td-pred.html#cb70-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">setStateValue =</span> <span class="cf">function</span>(<span class="at">states =</span> <span class="fu">keys</span>(self<span class="sc">$</span>model), <span class="at">value =</span> <span class="dv">0</span>) {</span>
+<span id="cb70-82"><a href="mod-td-pred.html#cb70-82" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb70-83"><a href="mod-td-pred.html#cb70-83" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>v <span class="ot">&lt;-</span> value</span>
+<span id="cb70-84"><a href="mod-td-pred.html#cb70-84" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-85"><a href="mod-td-pred.html#cb70-85" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-86"><a href="mod-td-pred.html#cb70-86" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-87"><a href="mod-td-pred.html#cb70-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-88"><a href="mod-td-pred.html#cb70-88" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the action visit counter values for all actions.</span></span>
+<span id="cb70-89"><a href="mod-td-pred.html#cb70-89" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param ctrValue Counter value.</span></span>
+<span id="cb70-90"><a href="mod-td-pred.html#cb70-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">setActionCtrValue =</span> <span class="cf">function</span>(<span class="at">ctrValue =</span> <span class="dv">0</span>) {</span>
+<span id="cb70-91"><a href="mod-td-pred.html#cb70-91" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb70-92"><a href="mod-td-pred.html#cb70-92" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (a <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)) {</span>
+<span id="cb70-93"><a href="mod-td-pred.html#cb70-93" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n <span class="ot">=</span> ctrValue</span>
+<span id="cb70-94"><a href="mod-td-pred.html#cb70-94" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb70-95"><a href="mod-td-pred.html#cb70-95" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-96"><a href="mod-td-pred.html#cb70-96" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-97"><a href="mod-td-pred.html#cb70-97" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-98"><a href="mod-td-pred.html#cb70-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-99"><a href="mod-td-pred.html#cb70-99" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the action-values for a single action (including the counter values).</span></span>
+<span id="cb70-100"><a href="mod-td-pred.html#cb70-100" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param value The value.</span></span>
+<span id="cb70-101"><a href="mod-td-pred.html#cb70-101" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param ctrValue Counter value.</span></span>
+<span id="cb70-102"><a href="mod-td-pred.html#cb70-102" aria-hidden="true" tabindex="-1"></a>      <span class="at">setActionValueSingle =</span> <span class="cf">function</span>(<span class="at">value =</span> <span class="dv">0</span>, <span class="at">ctrValue =</span> <span class="dv">0</span>, s, a) {</span>
+<span id="cb70-103"><a href="mod-td-pred.html#cb70-103" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q <span class="ot">=</span> value</span>
+<span id="cb70-104"><a href="mod-td-pred.html#cb70-104" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n <span class="ot">=</span> ctrValue</span>
+<span id="cb70-105"><a href="mod-td-pred.html#cb70-105" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-106"><a href="mod-td-pred.html#cb70-106" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-107"><a href="mod-td-pred.html#cb70-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-108"><a href="mod-td-pred.html#cb70-108" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the policy to a random epsilon-greedy policy.</span></span>
+<span id="cb70-109"><a href="mod-td-pred.html#cb70-109" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param eps Epsilon used in epsilon-greedy policy.</span></span>
+<span id="cb70-110"><a href="mod-td-pred.html#cb70-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">setRandomEpsGreedyPolicy =</span> <span class="cf">function</span>(eps) {</span>
+<span id="cb70-111"><a href="mod-td-pred.html#cb70-111" aria-hidden="true" tabindex="-1"></a>         states <span class="ot">&lt;-</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)</span>
+<span id="cb70-112"><a href="mod-td-pred.html#cb70-112" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb70-113"><a href="mod-td-pred.html#cb70-113" aria-hidden="true" tabindex="-1"></a>            actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb70-114"><a href="mod-td-pred.html#cb70-114" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi <span class="ot">&lt;-</span> <span class="fu">rep</span>(eps<span class="sc">/</span><span class="fu">length</span>(actions), <span class="fu">length</span>(actions))</span>
+<span id="cb70-115"><a href="mod-td-pred.html#cb70-115" aria-hidden="true" tabindex="-1"></a>            <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) <span class="ot">&lt;-</span> actions</span>
+<span id="cb70-116"><a href="mod-td-pred.html#cb70-116" aria-hidden="true" tabindex="-1"></a>            piG <span class="ot">&lt;-</span> <span class="fu">sample</span>(self<span class="sc">$</span><span class="fu">getActionKeys</span>(s), <span class="dv">1</span>)</span>
+<span id="cb70-117"><a href="mod-td-pred.html#cb70-117" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi[piG] <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi[piG] <span class="sc">+</span> <span class="dv">1</span> <span class="sc">-</span> eps</span>
+<span id="cb70-118"><a href="mod-td-pred.html#cb70-118" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-119"><a href="mod-td-pred.html#cb70-119" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-120"><a href="mod-td-pred.html#cb70-120" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-121"><a href="mod-td-pred.html#cb70-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-122"><a href="mod-td-pred.html#cb70-122" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the policy to the optimal epsilon-greedy policy </span></span>
+<span id="cb70-123"><a href="mod-td-pred.html#cb70-123" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param eps Epsilon used in epsilon-greedy policy.</span></span>
+<span id="cb70-124"><a href="mod-td-pred.html#cb70-124" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states States under consideration.</span></span>
+<span id="cb70-125"><a href="mod-td-pred.html#cb70-125" aria-hidden="true" tabindex="-1"></a>      <span class="at">setEpsGreedyPolicy =</span> <span class="cf">function</span>(eps, states) {</span>
+<span id="cb70-126"><a href="mod-td-pred.html#cb70-126" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb70-127"><a href="mod-td-pred.html#cb70-127" aria-hidden="true" tabindex="-1"></a>            actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb70-128"><a href="mod-td-pred.html#cb70-128" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi <span class="ot">&lt;-</span> <span class="fu">rep</span>(eps<span class="sc">/</span><span class="fu">length</span>(actions), <span class="fu">length</span>(actions))</span>
+<span id="cb70-129"><a href="mod-td-pred.html#cb70-129" aria-hidden="true" tabindex="-1"></a>            <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi) <span class="ot">&lt;-</span> actions</span>
+<span id="cb70-130"><a href="mod-td-pred.html#cb70-130" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> nnet<span class="sc">::</span><span class="fu">which.is.max</span>(<span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;q&quot;</span>,]))  <span class="co"># choose among max values at random</span></span>
+<span id="cb70-131"><a href="mod-td-pred.html#cb70-131" aria-hidden="true" tabindex="-1"></a>            <span class="co"># idx &lt;- which.max(unlist(values(self$model[[s]]$actions)[&quot;q&quot;,]))  # choose first max </span></span>
+<span id="cb70-132"><a href="mod-td-pred.html#cb70-132" aria-hidden="true" tabindex="-1"></a>            <span class="co"># self$model[[s]]$piG &lt;- actions[idx]</span></span>
+<span id="cb70-133"><a href="mod-td-pred.html#cb70-133" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi[idx] <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi[idx] <span class="sc">+</span> <span class="dv">1</span> <span class="sc">-</span> eps</span>
+<span id="cb70-134"><a href="mod-td-pred.html#cb70-134" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-135"><a href="mod-td-pred.html#cb70-135" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-136"><a href="mod-td-pred.html#cb70-136" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-137"><a href="mod-td-pred.html#cb70-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-138"><a href="mod-td-pred.html#cb70-138" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the greedy policy (stored in piG) based on action-values. </span></span>
+<span id="cb70-139"><a href="mod-td-pred.html#cb70-139" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states States under consideration.</span></span>
+<span id="cb70-140"><a href="mod-td-pred.html#cb70-140" aria-hidden="true" tabindex="-1"></a>      <span class="at">setGreedyPolicy =</span> <span class="cf">function</span>(<span class="at">states =</span> self<span class="sc">$</span><span class="fu">getStateKeys</span>()) {</span>
+<span id="cb70-141"><a href="mod-td-pred.html#cb70-141" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb70-142"><a href="mod-td-pred.html#cb70-142" aria-hidden="true" tabindex="-1"></a>            actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb70-143"><a href="mod-td-pred.html#cb70-143" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> nnet<span class="sc">::</span><span class="fu">which.is.max</span>(<span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;q&quot;</span>,]))  <span class="co"># choose among max values at random</span></span>
+<span id="cb70-144"><a href="mod-td-pred.html#cb70-144" aria-hidden="true" tabindex="-1"></a>            <span class="co"># idx &lt;- which.max(unlist(values(self$model[[s]]$actions)[&quot;q&quot;,]))  # choose first max </span></span>
+<span id="cb70-145"><a href="mod-td-pred.html#cb70-145" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>piG <span class="ot">&lt;-</span> actions[idx]</span>
+<span id="cb70-146"><a href="mod-td-pred.html#cb70-146" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-147"><a href="mod-td-pred.html#cb70-147" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-148"><a href="mod-td-pred.html#cb70-148" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-149"><a href="mod-td-pred.html#cb70-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-150"><a href="mod-td-pred.html#cb70-150" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the policy to the named vector pi for a set of states</span></span>
+<span id="cb70-151"><a href="mod-td-pred.html#cb70-151" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states States under consideration.</span></span>
+<span id="cb70-152"><a href="mod-td-pred.html#cb70-152" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param pi A named vector with policy pr (only psitive values).</span></span>
+<span id="cb70-153"><a href="mod-td-pred.html#cb70-153" aria-hidden="true" tabindex="-1"></a>      <span class="at">setPolicy =</span> <span class="cf">function</span>(states, pi) {</span>
+<span id="cb70-154"><a href="mod-td-pred.html#cb70-154" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb70-155"><a href="mod-td-pred.html#cb70-155" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi <span class="ot">&lt;-</span> pi</span>
+<span id="cb70-156"><a href="mod-td-pred.html#cb70-156" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-157"><a href="mod-td-pred.html#cb70-157" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-158"><a href="mod-td-pred.html#cb70-158" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-159"><a href="mod-td-pred.html#cb70-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-160"><a href="mod-td-pred.html#cb70-160" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Set the state visit counter values for all states.</span></span>
+<span id="cb70-161"><a href="mod-td-pred.html#cb70-161" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param ctrValue Counter value.</span></span>
+<span id="cb70-162"><a href="mod-td-pred.html#cb70-162" aria-hidden="true" tabindex="-1"></a>      <span class="at">setStateCtrValue =</span> <span class="cf">function</span>(<span class="at">ctrValue =</span> <span class="dv">0</span>) {</span>
+<span id="cb70-163"><a href="mod-td-pred.html#cb70-163" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb70-164"><a href="mod-td-pred.html#cb70-164" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n <span class="ot">=</span> ctrValue</span>
+<span id="cb70-165"><a href="mod-td-pred.html#cb70-165" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-166"><a href="mod-td-pred.html#cb70-166" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-167"><a href="mod-td-pred.html#cb70-167" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-168"><a href="mod-td-pred.html#cb70-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-169"><a href="mod-td-pred.html#cb70-169" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return the state keys</span></span>
+<span id="cb70-170"><a href="mod-td-pred.html#cb70-170" aria-hidden="true" tabindex="-1"></a>      <span class="at">getStateKeys =</span> <span class="cf">function</span>() {</span>
+<span id="cb70-171"><a href="mod-td-pred.html#cb70-171" aria-hidden="true" tabindex="-1"></a>         <span class="fu">keys</span>(self<span class="sc">$</span>model)</span>
+<span id="cb70-172"><a href="mod-td-pred.html#cb70-172" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-173"><a href="mod-td-pred.html#cb70-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-174"><a href="mod-td-pred.html#cb70-174" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return the state-value for a state and policy using the q/action-values </span></span>
+<span id="cb70-175"><a href="mod-td-pred.html#cb70-175" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s A state.</span></span>
+<span id="cb70-176"><a href="mod-td-pred.html#cb70-176" aria-hidden="true" tabindex="-1"></a>      <span class="at">getStateValueQ =</span> <span class="cf">function</span>(s) {</span>
+<span id="cb70-177"><a href="mod-td-pred.html#cb70-177" aria-hidden="true" tabindex="-1"></a>         pi <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi</span>
+<span id="cb70-178"><a href="mod-td-pred.html#cb70-178" aria-hidden="true" tabindex="-1"></a>         <span class="co"># print(pi)</span></span>
+<span id="cb70-179"><a href="mod-td-pred.html#cb70-179" aria-hidden="true" tabindex="-1"></a>         val <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb70-180"><a href="mod-td-pred.html#cb70-180" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (a <span class="cf">in</span> <span class="fu">names</span>(pi)) {</span>
+<span id="cb70-181"><a href="mod-td-pred.html#cb70-181" aria-hidden="true" tabindex="-1"></a>            val <span class="ot">&lt;-</span> val <span class="sc">+</span> pi[a] <span class="sc">*</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q</span>
+<span id="cb70-182"><a href="mod-td-pred.html#cb70-182" aria-hidden="true" tabindex="-1"></a>            <span class="co"># print(self$model[[s]]$actions[[a]]$q)</span></span>
+<span id="cb70-183"><a href="mod-td-pred.html#cb70-183" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-184"><a href="mod-td-pred.html#cb70-184" aria-hidden="true" tabindex="-1"></a>         <span class="co"># print(val)</span></span>
+<span id="cb70-185"><a href="mod-td-pred.html#cb70-185" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(val)</span>
+<span id="cb70-186"><a href="mod-td-pred.html#cb70-186" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-187"><a href="mod-td-pred.html#cb70-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-188"><a href="mod-td-pred.html#cb70-188" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return the state-values as a tibble</span></span>
+<span id="cb70-189"><a href="mod-td-pred.html#cb70-189" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s A vector of state keys.</span></span>
+<span id="cb70-190"><a href="mod-td-pred.html#cb70-190" aria-hidden="true" tabindex="-1"></a>      <span class="at">getStateValues =</span> <span class="cf">function</span>(<span class="at">s =</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb70-191"><a href="mod-td-pred.html#cb70-191" aria-hidden="true" tabindex="-1"></a>         <span class="fu">tibble</span>(<span class="at">state =</span> s) <span class="sc">%&gt;%</span> <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">v =</span> self<span class="sc">$</span>model[[state]]<span class="sc">$</span>v) </span>
+<span id="cb70-192"><a href="mod-td-pred.html#cb70-192" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-193"><a href="mod-td-pred.html#cb70-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-194"><a href="mod-td-pred.html#cb70-194" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return the action keys</span></span>
+<span id="cb70-195"><a href="mod-td-pred.html#cb70-195" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s The state considered.</span></span>
+<span id="cb70-196"><a href="mod-td-pred.html#cb70-196" aria-hidden="true" tabindex="-1"></a>      <span class="at">getActionKeys =</span> <span class="cf">function</span>(s) {</span>
+<span id="cb70-197"><a href="mod-td-pred.html#cb70-197" aria-hidden="true" tabindex="-1"></a>         <span class="fu">keys</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions) </span>
+<span id="cb70-198"><a href="mod-td-pred.html#cb70-198" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-199"><a href="mod-td-pred.html#cb70-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-200"><a href="mod-td-pred.html#cb70-200" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return information about actions stored in a state</span></span>
+<span id="cb70-201"><a href="mod-td-pred.html#cb70-201" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s The state considered.</span></span>
+<span id="cb70-202"><a href="mod-td-pred.html#cb70-202" aria-hidden="true" tabindex="-1"></a>      <span class="at">getActionInfo =</span> <span class="cf">function</span>(s) {</span>
+<span id="cb70-203"><a href="mod-td-pred.html#cb70-203" aria-hidden="true" tabindex="-1"></a>         <span class="fu">as.list</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions) </span>
+<span id="cb70-204"><a href="mod-td-pred.html#cb70-204" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-205"><a href="mod-td-pred.html#cb70-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-206"><a href="mod-td-pred.html#cb70-206" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return and action sampled from the current policy pi.</span></span>
+<span id="cb70-207"><a href="mod-td-pred.html#cb70-207" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param s The state considered.</span></span>
+<span id="cb70-208"><a href="mod-td-pred.html#cb70-208" aria-hidden="true" tabindex="-1"></a>      <span class="at">getActionPi =</span> <span class="cf">function</span>(s) {</span>
+<span id="cb70-209"><a href="mod-td-pred.html#cb70-209" aria-hidden="true" tabindex="-1"></a>         pi <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi</span>
+<span id="cb70-210"><a href="mod-td-pred.html#cb70-210" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">sample</span>(<span class="fu">names</span>(pi), <span class="dv">1</span>, <span class="at">prob =</span> pi))</span>
+<span id="cb70-211"><a href="mod-td-pred.html#cb70-211" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-212"><a href="mod-td-pred.html#cb70-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-213"><a href="mod-td-pred.html#cb70-213" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return the current policy as a tibble</span></span>
+<span id="cb70-214"><a href="mod-td-pred.html#cb70-214" aria-hidden="true" tabindex="-1"></a>      <span class="at">getPolicy =</span> <span class="cf">function</span>(<span class="at">states =</span> self<span class="sc">$</span><span class="fu">getStateKeys</span>()) {</span>
+<span id="cb70-215"><a href="mod-td-pred.html#cb70-215" aria-hidden="true" tabindex="-1"></a>         <span class="fu">map_dfr</span>(states, <span class="at">.f =</span> <span class="cf">function</span>(s) {</span>
+<span id="cb70-216"><a href="mod-td-pred.html#cb70-216" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">state =</span> s, <span class="at">action =</span> <span class="fu">names</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi), <span class="at">pr =</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>pi)</span>
+<span id="cb70-217"><a href="mod-td-pred.html#cb70-217" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb70-218"><a href="mod-td-pred.html#cb70-218" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-219"><a href="mod-td-pred.html#cb70-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-220"><a href="mod-td-pred.html#cb70-220" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Returns all action-values in a matrix (cols: actions, rows: states)</span></span>
+<span id="cb70-221"><a href="mod-td-pred.html#cb70-221" aria-hidden="true" tabindex="-1"></a>      <span class="at">getStateActionQMat =</span> <span class="cf">function</span>() {</span>
+<span id="cb70-222"><a href="mod-td-pred.html#cb70-222" aria-hidden="true" tabindex="-1"></a>         states <span class="ot">&lt;-</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)</span>
+<span id="cb70-223"><a href="mod-td-pred.html#cb70-223" aria-hidden="true" tabindex="-1"></a>         actions <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(<span class="fu">sapply</span>(states, <span class="cf">function</span>(s) self<span class="sc">$</span><span class="fu">getActionKeys</span>(s))))</span>
+<span id="cb70-224"><a href="mod-td-pred.html#cb70-224" aria-hidden="true" tabindex="-1"></a>         m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> <span class="fu">length</span>(states), <span class="at">ncol =</span> <span class="fu">length</span>(actions))</span>
+<span id="cb70-225"><a href="mod-td-pred.html#cb70-225" aria-hidden="true" tabindex="-1"></a>         <span class="fu">colnames</span>(m) <span class="ot">&lt;-</span> actions</span>
+<span id="cb70-226"><a href="mod-td-pred.html#cb70-226" aria-hidden="true" tabindex="-1"></a>         <span class="fu">rownames</span>(m) <span class="ot">&lt;-</span> states</span>
+<span id="cb70-227"><a href="mod-td-pred.html#cb70-227" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (s <span class="cf">in</span> states) {</span>
+<span id="cb70-228"><a href="mod-td-pred.html#cb70-228" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (a <span class="cf">in</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)) {</span>
+<span id="cb70-229"><a href="mod-td-pred.html#cb70-229" aria-hidden="true" tabindex="-1"></a>               m[s, a] <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q</span>
+<span id="cb70-230"><a href="mod-td-pred.html#cb70-230" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb70-231"><a href="mod-td-pred.html#cb70-231" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-232"><a href="mod-td-pred.html#cb70-232" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(m)</span>
+<span id="cb70-233"><a href="mod-td-pred.html#cb70-233" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-234"><a href="mod-td-pred.html#cb70-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-235"><a href="mod-td-pred.html#cb70-235" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Return the action-values as a tibble</span></span>
+<span id="cb70-236"><a href="mod-td-pred.html#cb70-236" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states A vector of state keys.</span></span>
+<span id="cb70-237"><a href="mod-td-pred.html#cb70-237" aria-hidden="true" tabindex="-1"></a>      <span class="at">getActionValues =</span> <span class="cf">function</span>(<span class="at">states =</span> <span class="fu">keys</span>(self<span class="sc">$</span>model)) {</span>
+<span id="cb70-238"><a href="mod-td-pred.html#cb70-238" aria-hidden="true" tabindex="-1"></a>         <span class="fu">map_dfr</span>(states, <span class="at">.f =</span> <span class="cf">function</span>(s) {</span>
+<span id="cb70-239"><a href="mod-td-pred.html#cb70-239" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">state =</span> s, <span class="at">action =</span> <span class="fu">keys</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions), <span class="at">q =</span> <span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;q&quot;</span>,]), <span class="at">n =</span> <span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;n&quot;</span>,]))</span>
+<span id="cb70-240"><a href="mod-td-pred.html#cb70-240" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb70-241"><a href="mod-td-pred.html#cb70-241" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-242"><a href="mod-td-pred.html#cb70-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-243"><a href="mod-td-pred.html#cb70-243" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using upper-confidence bound. Also update the visit counters for both state and selected action.</span></span>
+<span id="cb70-244"><a href="mod-td-pred.html#cb70-244" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action.</span></span>
+<span id="cb70-245"><a href="mod-td-pred.html#cb70-245" aria-hidden="true" tabindex="-1"></a>      <span class="at">getActionUCB =</span> <span class="cf">function</span>(s, <span class="at">coeff =</span> <span class="dv">1</span>) { </span>
+<span id="cb70-246"><a href="mod-td-pred.html#cb70-246" aria-hidden="true" tabindex="-1"></a>         actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb70-247"><a href="mod-td-pred.html#cb70-247" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># visit s</span></span>
+<span id="cb70-248"><a href="mod-td-pred.html#cb70-248" aria-hidden="true" tabindex="-1"></a>         qV <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;q&quot;</span>,])</span>
+<span id="cb70-249"><a href="mod-td-pred.html#cb70-249" aria-hidden="true" tabindex="-1"></a>         nA <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;n&quot;</span>,])</span>
+<span id="cb70-250"><a href="mod-td-pred.html#cb70-250" aria-hidden="true" tabindex="-1"></a>         nS <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n</span>
+<span id="cb70-251"><a href="mod-td-pred.html#cb70-251" aria-hidden="true" tabindex="-1"></a>         val <span class="ot">&lt;-</span> qV <span class="sc">+</span> coeff <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(nS <span class="sc">+</span> <span class="fl">0.0001</span>)<span class="sc">/</span>nA)</span>
+<span id="cb70-252"><a href="mod-td-pred.html#cb70-252" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which.max</span>(val)</span>
+<span id="cb70-253"><a href="mod-td-pred.html#cb70-253" aria-hidden="true" tabindex="-1"></a>         a <span class="ot">&lt;-</span> actions[idx]</span>
+<span id="cb70-254"><a href="mod-td-pred.html#cb70-254" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. </span></span>
+<span id="cb70-255"><a href="mod-td-pred.html#cb70-255" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
+<span id="cb70-256"><a href="mod-td-pred.html#cb70-256" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-257"><a href="mod-td-pred.html#cb70-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-258"><a href="mod-td-pred.html#cb70-258" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Select next action using epsilon-greedy policy based on action-values. Also update the visit counters for both state and selected action.</span></span>
+<span id="cb70-259"><a href="mod-td-pred.html#cb70-259" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @return Action.</span></span>
+<span id="cb70-260"><a href="mod-td-pred.html#cb70-260" aria-hidden="true" tabindex="-1"></a>      <span class="at">getActionEG =</span> <span class="cf">function</span>(s, eps) {</span>
+<span id="cb70-261"><a href="mod-td-pred.html#cb70-261" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># visit s</span></span>
+<span id="cb70-262"><a href="mod-td-pred.html#cb70-262" aria-hidden="true" tabindex="-1"></a>         q <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">values</span>(self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions)[<span class="st">&quot;q&quot;</span>,])</span>
+<span id="cb70-263"><a href="mod-td-pred.html#cb70-263" aria-hidden="true" tabindex="-1"></a>         actions <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionKeys</span>(s)</span>
+<span id="cb70-264"><a href="mod-td-pred.html#cb70-264" aria-hidden="true" tabindex="-1"></a>         pi <span class="ot">&lt;-</span> <span class="fu">rep</span>(eps<span class="sc">/</span><span class="fu">length</span>(q), <span class="fu">length</span>(q))</span>
+<span id="cb70-265"><a href="mod-td-pred.html#cb70-265" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> nnet<span class="sc">::</span><span class="fu">which.is.max</span>(q)  <span class="co"># choose among max values at random</span></span>
+<span id="cb70-266"><a href="mod-td-pred.html#cb70-266" aria-hidden="true" tabindex="-1"></a>         <span class="co"># idx &lt;- which.max(unlist(values(self$model[[s]]$actions)[&quot;q&quot;,]))  # choose first max </span></span>
+<span id="cb70-267"><a href="mod-td-pred.html#cb70-267" aria-hidden="true" tabindex="-1"></a>         pi[idx] <span class="ot">&lt;-</span> pi[idx] <span class="sc">+</span> <span class="dv">1</span> <span class="sc">-</span> eps</span>
+<span id="cb70-268"><a href="mod-td-pred.html#cb70-268" aria-hidden="true" tabindex="-1"></a>         a <span class="ot">&lt;-</span> actions[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(actions), <span class="dv">1</span>, <span class="at">prob =</span> pi)]</span>
+<span id="cb70-269"><a href="mod-td-pred.html#cb70-269" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n <span class="sc">+</span> <span class="dv">1</span>  <span class="co"># note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. </span></span>
+<span id="cb70-270"><a href="mod-td-pred.html#cb70-270" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(a)</span>
+<span id="cb70-271"><a href="mod-td-pred.html#cb70-271" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-272"><a href="mod-td-pred.html#cb70-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-273"><a href="mod-td-pred.html#cb70-273" aria-hidden="true" tabindex="-1"></a>      <span class="at">policyEvalTD0 =</span> <span class="cf">function</span>(env, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">maxE =</span> <span class="dv">1000</span>, <span class="at">maxEL =</span> <span class="dv">10000</span>, <span class="at">reset =</span> <span class="cn">TRUE</span>, <span class="at">states =</span> self<span class="sc">$</span><span class="fu">getStateKeys</span>()) {</span>
+<span id="cb70-274"><a href="mod-td-pred.html#cb70-274" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (reset) self<span class="sc">$</span><span class="fu">setStateValue</span>(self<span class="sc">$</span><span class="fu">getStateKeys</span>())      <span class="co"># set to 0</span></span>
+<span id="cb70-275"><a href="mod-td-pred.html#cb70-275" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (ite <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxE) {</span>
+<span id="cb70-276"><a href="mod-td-pred.html#cb70-276" aria-hidden="true" tabindex="-1"></a>            s <span class="ot">&lt;-</span> <span class="fu">sample</span>(states, <span class="dv">1</span>)  <span class="co"># pick start state among states</span></span>
+<span id="cb70-277"><a href="mod-td-pred.html#cb70-277" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxEL) {  <span class="co"># for episode with ss as start (max length 100000)</span></span>
+<span id="cb70-278"><a href="mod-td-pred.html#cb70-278" aria-hidden="true" tabindex="-1"></a>               a <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getActionPi</span>(s)</span>
+<span id="cb70-279"><a href="mod-td-pred.html#cb70-279" aria-hidden="true" tabindex="-1"></a>               dat <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">getTimeStepData</span>(s,a)  <span class="co"># get next state and reward</span></span>
+<span id="cb70-280"><a href="mod-td-pred.html#cb70-280" aria-hidden="true" tabindex="-1"></a>               r <span class="ot">&lt;-</span> dat<span class="sc">$</span>r</span>
+<span id="cb70-281"><a href="mod-td-pred.html#cb70-281" aria-hidden="true" tabindex="-1"></a>               sN <span class="ot">&lt;-</span> dat<span class="sc">$</span>sN</span>
+<span id="cb70-282"><a href="mod-td-pred.html#cb70-282" aria-hidden="true" tabindex="-1"></a>               <span class="cf">if</span> (<span class="fu">is.na</span>(sN) <span class="sc">|</span> <span class="fu">is.na</span>(a)) <span class="cf">break</span>  <span class="co"># start generating new episode</span></span>
+<span id="cb70-283"><a href="mod-td-pred.html#cb70-283" aria-hidden="true" tabindex="-1"></a>               oldV <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>v</span>
+<span id="cb70-284"><a href="mod-td-pred.html#cb70-284" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>model[[s]]<span class="sc">$</span>v <span class="ot">&lt;-</span> oldV <span class="sc">+</span> alpha <span class="sc">*</span> (r <span class="sc">+</span> gamma <span class="sc">*</span> self<span class="sc">$</span>model[[sN]]<span class="sc">$</span>v <span class="sc">-</span> oldV)</span>
+<span id="cb70-285"><a href="mod-td-pred.html#cb70-285" aria-hidden="true" tabindex="-1"></a>               s <span class="ot">&lt;-</span> sN</span>
+<span id="cb70-286"><a href="mod-td-pred.html#cb70-286" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb70-287"><a href="mod-td-pred.html#cb70-287" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-288"><a href="mod-td-pred.html#cb70-288" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb70-289"><a href="mod-td-pred.html#cb70-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-290"><a href="mod-td-pred.html#cb70-290" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @description Generalized policy iteration using on policy every-visit Monte Carlo sampling.  </span></span>
+<span id="cb70-291"><a href="mod-td-pred.html#cb70-291" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with </span></span>
+<span id="cb70-292"><a href="mod-td-pred.html#cb70-292" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also </span></span>
+<span id="cb70-293"><a href="mod-td-pred.html#cb70-293" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39;    the method that decides which action selection method is used. </span></span>
+<span id="cb70-294"><a href="mod-td-pred.html#cb70-294" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param gamma Discount rate.</span></span>
+<span id="cb70-295"><a href="mod-td-pred.html#cb70-295" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param theta Threshold parameter.</span></span>
+<span id="cb70-296"><a href="mod-td-pred.html#cb70-296" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param minIte Minimum number of iterations for each start state (all `states` are used a start state in one iteration).</span></span>
+<span id="cb70-297"><a href="mod-td-pred.html#cb70-297" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).</span></span>
+<span id="cb70-298"><a href="mod-td-pred.html#cb70-298" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param reset If true initialize all action-values to 0.</span></span>
+<span id="cb70-299"><a href="mod-td-pred.html#cb70-299" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param states Start states in the episodes, which all are visited using a for loop.</span></span>
+<span id="cb70-300"><a href="mod-td-pred.html#cb70-300" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&#39; @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. </span></span>
+<span id="cb70-301"><a href="mod-td-pred.html#cb70-301" aria-hidden="true" tabindex="-1"></a>      <span class="at">gpiOnPolicyMC =</span> <span class="cf">function</span>(env, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">theta =</span> <span class="fl">0.1</span>, <span class="at">minIte =</span> <span class="dv">100</span>, <span class="at">maxIte =</span> <span class="dv">1000</span>, <span class="at">reset =</span> <span class="cn">TRUE</span>, <span class="at">states =</span> self<span class="sc">$</span><span class="fu">getStateKeys</span>(), <span class="at">eps =</span> <span class="fl">0.1</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb70-302"><a href="mod-td-pred.html#cb70-302" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (reset) {</span>
+<span id="cb70-303"><a href="mod-td-pred.html#cb70-303" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span><span class="fu">setActionValue</span>()      <span class="co"># set to 0</span></span>
+<span id="cb70-304"><a href="mod-td-pred.html#cb70-304" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span><span class="fu">setActionCtrValue</span>()   <span class="co"># reset counter</span></span>
+<span id="cb70-305"><a href="mod-td-pred.html#cb70-305" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span><span class="fu">setStateCtrValue</span>()    <span class="co"># reset counter</span></span>
+<span id="cb70-306"><a href="mod-td-pred.html#cb70-306" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-307"><a href="mod-td-pred.html#cb70-307" aria-hidden="true" tabindex="-1"></a>         <span class="co"># self$setRandomEpsGreedyPolicy(epsilon)</span></span>
+<span id="cb70-308"><a href="mod-td-pred.html#cb70-308" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span><span class="fu">setEpsGreedyPolicy</span>(eps, self<span class="sc">$</span><span class="fu">getStateKeys</span>())</span>
+<span id="cb70-309"><a href="mod-td-pred.html#cb70-309" aria-hidden="true" tabindex="-1"></a>         <span class="co"># self$setGreedyPolicy()</span></span>
+<span id="cb70-310"><a href="mod-td-pred.html#cb70-310" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (ite <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxIte) {</span>
+<span id="cb70-311"><a href="mod-td-pred.html#cb70-311" aria-hidden="true" tabindex="-1"></a>            delta <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb70-312"><a href="mod-td-pred.html#cb70-312" aria-hidden="true" tabindex="-1"></a>            <span class="co"># stable &lt;- TRUE</span></span>
+<span id="cb70-313"><a href="mod-td-pred.html#cb70-313" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (ss <span class="cf">in</span> states) {  <span class="co"># for episode with s as start</span></span>
+<span id="cb70-314"><a href="mod-td-pred.html#cb70-314" aria-hidden="true" tabindex="-1"></a>               df <span class="ot">&lt;-</span> env<span class="sc">$</span><span class="fu">getEpisode</span>(self, ss, eps)  <span class="co"># an episode stored in a tibble with cols s, a, r (last col the terminal reward)</span></span>
+<span id="cb70-315"><a href="mod-td-pred.html#cb70-315" aria-hidden="true" tabindex="-1"></a>               <span class="cf">if</span> (<span class="fu">nrow</span>(df) <span class="sc">==</span> <span class="dv">0</span>) <span class="cf">next</span></span>
+<span id="cb70-316"><a href="mod-td-pred.html#cb70-316" aria-hidden="true" tabindex="-1"></a>               df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">nA =</span> <span class="cn">NA</span>, <span class="at">nS =</span> <span class="cn">NA</span>, <span class="at">oldQ =</span> <span class="cn">NA</span>, <span class="at">q =</span> <span class="cn">NA</span>, <span class="at">g =</span> <span class="cn">NA</span>, <span class="at">oldV =</span> <span class="cn">NA</span>, <span class="at">v =</span> <span class="cn">NA</span>)</span>
+<span id="cb70-317"><a href="mod-td-pred.html#cb70-317" aria-hidden="true" tabindex="-1"></a>               gain <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb70-318"><a href="mod-td-pred.html#cb70-318" aria-hidden="true" tabindex="-1"></a>               <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">nrow</span>(df)<span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb70-319"><a href="mod-td-pred.html#cb70-319" aria-hidden="true" tabindex="-1"></a>                  s <span class="ot">&lt;-</span> df<span class="sc">$</span>s[i]</span>
+<span id="cb70-320"><a href="mod-td-pred.html#cb70-320" aria-hidden="true" tabindex="-1"></a>                  a <span class="ot">&lt;-</span> df<span class="sc">$</span>a[i]</span>
+<span id="cb70-321"><a href="mod-td-pred.html#cb70-321" aria-hidden="true" tabindex="-1"></a>                  gain <span class="ot">&lt;-</span> df<span class="sc">$</span>r[i] <span class="sc">+</span> gamma <span class="sc">*</span> gain</span>
+<span id="cb70-322"><a href="mod-td-pred.html#cb70-322" aria-hidden="true" tabindex="-1"></a>                  ctr <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>n</span>
+<span id="cb70-323"><a href="mod-td-pred.html#cb70-323" aria-hidden="true" tabindex="-1"></a>                  oldQ <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q</span>
+<span id="cb70-324"><a href="mod-td-pred.html#cb70-324" aria-hidden="true" tabindex="-1"></a>                  oldV <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getStateValueQ</span>(s)</span>
+<span id="cb70-325"><a href="mod-td-pred.html#cb70-325" aria-hidden="true" tabindex="-1"></a>                  stepSize <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">/</span>ctr)<span class="sc">^</span><span class="fl">0.5</span></span>
+<span id="cb70-326"><a href="mod-td-pred.html#cb70-326" aria-hidden="true" tabindex="-1"></a>                  self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q <span class="ot">&lt;-</span> oldQ <span class="sc">+</span> stepSize <span class="sc">*</span> (gain <span class="sc">-</span> oldQ)</span>
+<span id="cb70-327"><a href="mod-td-pred.html#cb70-327" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># self$model[[s]]$actions[[a]]$q &lt;- oldQ + 0.1 * (gain - oldQ)</span></span>
+<span id="cb70-328"><a href="mod-td-pred.html#cb70-328" aria-hidden="true" tabindex="-1"></a>                  self<span class="sc">$</span><span class="fu">setEpsGreedyPolicy</span>(eps, s)</span>
+<span id="cb70-329"><a href="mod-td-pred.html#cb70-329" aria-hidden="true" tabindex="-1"></a>                  newV <span class="ot">&lt;-</span> self<span class="sc">$</span><span class="fu">getStateValueQ</span>(s)</span>
+<span id="cb70-330"><a href="mod-td-pred.html#cb70-330" aria-hidden="true" tabindex="-1"></a>                  delta <span class="ot">&lt;-</span> <span class="fu">max</span>(delta, <span class="fu">abs</span>(oldV <span class="sc">-</span> newV))</span>
+<span id="cb70-331"><a href="mod-td-pred.html#cb70-331" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">if</span> (verbose) df<span class="sc">$</span>oldQ[i] <span class="ot">&lt;-</span> oldQ; df<span class="sc">$</span>q[i] <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>actions[[a]]<span class="sc">$</span>q; df<span class="sc">$</span>g[i] <span class="ot">&lt;-</span> gain; df<span class="sc">$</span>nA[i] <span class="ot">&lt;-</span> ctr; df<span class="sc">$</span>nS[i] <span class="ot">&lt;-</span> self<span class="sc">$</span>model[[s]]<span class="sc">$</span>n; df<span class="sc">$</span>oldV[i] <span class="ot">&lt;-</span> oldV; df<span class="sc">$</span>v[i] <span class="ot">&lt;-</span> newV</span>
+<span id="cb70-332"><a href="mod-td-pred.html#cb70-332" aria-hidden="true" tabindex="-1"></a>               }</span>
+<span id="cb70-333"><a href="mod-td-pred.html#cb70-333" aria-hidden="true" tabindex="-1"></a>               <span class="cf">if</span> (verbose) <span class="fu">print</span>(df)</span>
+<span id="cb70-334"><a href="mod-td-pred.html#cb70-334" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb70-335"><a href="mod-td-pred.html#cb70-335" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (delta <span class="sc">&lt;</span> theta <span class="sc">&amp;</span> ite <span class="sc">&gt;=</span> minIte) <span class="cf">break</span></span>
+<span id="cb70-336"><a href="mod-td-pred.html#cb70-336" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb70-337"><a href="mod-td-pred.html#cb70-337" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (ite <span class="sc">==</span> maxIte) <span class="fu">warning</span>(<span class="st">&quot;GPI algorithm stopped at max iterations allowed: &quot;</span>, maxIte)</span>
+<span id="cb70-338"><a href="mod-td-pred.html#cb70-338" aria-hidden="true" tabindex="-1"></a>         <span class="fu">message</span>(<span class="fu">str_c</span>(<span class="st">&quot;GPI algorihm finished in &quot;</span>, ite, <span class="st">&quot; iterations.&quot;</span>))</span>
+<span id="cb70-339"><a href="mod-td-pred.html#cb70-339" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb70-340"><a href="mod-td-pred.html#cb70-340" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb70-341"><a href="mod-td-pred.html#cb70-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-342"><a href="mod-td-pred.html#cb70-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-343"><a href="mod-td-pred.html#cb70-343" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb70-344"><a href="mod-td-pred.html#cb70-344" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>We can now define the RL agent and set the policy which must be done before calling TD(0):</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="mod-td-pred.html#cb71-1" aria-hidden="true" tabindex="-1"></a>agent <span class="ot">&lt;-</span> RLAgent<span class="sc">$</span><span class="fu">new</span>()</span>
+<span id="cb71-2"><a href="mod-td-pred.html#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Set the policy</span></span>
+<span id="cb71-3"><a href="mod-td-pred.html#cb71-3" aria-hidden="true" tabindex="-1"></a>states <span class="ot">&lt;-</span> <span class="fu">str_c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb71-4"><a href="mod-td-pred.html#cb71-4" aria-hidden="true" tabindex="-1"></a>pi <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;left&quot;</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">&quot;right&quot;</span> <span class="ot">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb71-5"><a href="mod-td-pred.html#cb71-5" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setPolicy</span>(states, pi)</span>
+<span id="cb71-6"><a href="mod-td-pred.html#cb71-6" aria-hidden="true" tabindex="-1"></a>pi <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;dummy&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)</span>
+<span id="cb71-7"><a href="mod-td-pred.html#cb71-7" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setPolicy</span>(<span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;7&quot;</span>), pi)</span>
+<span id="cb71-8"><a href="mod-td-pred.html#cb71-8" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">getPolicy</span>()</span>
+<span id="cb71-9"><a href="mod-td-pred.html#cb71-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 × 3</span></span>
+<span id="cb71-10"><a href="mod-td-pred.html#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state action    pr</span></span>
+<span id="cb71-11"><a href="mod-td-pred.html#cb71-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;</span></span>
+<span id="cb71-12"><a href="mod-td-pred.html#cb71-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1     dummy    1  </span></span>
+<span id="cb71-13"><a href="mod-td-pred.html#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 2     left     0.5</span></span>
+<span id="cb71-14"><a href="mod-td-pred.html#cb71-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 2     right    0.5</span></span>
+<span id="cb71-15"><a href="mod-td-pred.html#cb71-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 3     left     0.5</span></span>
+<span id="cb71-16"><a href="mod-td-pred.html#cb71-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 3     right    0.5</span></span>
+<span id="cb71-17"><a href="mod-td-pred.html#cb71-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 4     left     0.5</span></span>
+<span id="cb71-18"><a href="mod-td-pred.html#cb71-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 4     right    0.5</span></span>
+<span id="cb71-19"><a href="mod-td-pred.html#cb71-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 5     left     0.5</span></span>
+<span id="cb71-20"><a href="mod-td-pred.html#cb71-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 5     right    0.5</span></span>
+<span id="cb71-21"><a href="mod-td-pred.html#cb71-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 6     left     0.5</span></span>
+<span id="cb71-22"><a href="mod-td-pred.html#cb71-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 6     right    0.5</span></span>
+<span id="cb71-23"><a href="mod-td-pred.html#cb71-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 7     dummy    1</span></span></code></pre></div>
+<p>Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="mod-td-pred.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">875</span>)</span>
+<span id="cb72-2"><a href="mod-td-pred.html#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="do">## One episode</span></span>
+<span id="cb72-3"><a href="mod-td-pred.html#cb72-3" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateValue</span>(states, <span class="fl">0.5</span>)</span>
+<span id="cb72-4"><a href="mod-td-pred.html#cb72-4" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateValue</span>(<span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;7&quot;</span>), <span class="dv">0</span>)</span>
+<span id="cb72-5"><a href="mod-td-pred.html#cb72-5" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">getStateValues</span>()</span>
+<span id="cb72-6"><a href="mod-td-pred.html#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 2</span></span>
+<span id="cb72-7"><a href="mod-td-pred.html#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Rowwise: </span></span>
+<span id="cb72-8"><a href="mod-td-pred.html#cb72-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   state     v</span></span>
+<span id="cb72-9"><a href="mod-td-pred.html#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;</span></span>
+<span id="cb72-10"><a href="mod-td-pred.html#cb72-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1       0  </span></span>
+<span id="cb72-11"><a href="mod-td-pred.html#cb72-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2       0.5</span></span>
+<span id="cb72-12"><a href="mod-td-pred.html#cb72-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3       0.5</span></span>
+<span id="cb72-13"><a href="mod-td-pred.html#cb72-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 4       0.5</span></span>
+<span id="cb72-14"><a href="mod-td-pred.html#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 5       0.5</span></span>
+<span id="cb72-15"><a href="mod-td-pred.html#cb72-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 6       0.5</span></span>
+<span id="cb72-16"><a href="mod-td-pred.html#cb72-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 7       0</span></span>
+<span id="cb72-17"><a href="mod-td-pred.html#cb72-17" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">policyEvalTD0</span>(env, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">states =</span> <span class="st">&quot;4&quot;</span>, <span class="at">maxE =</span> <span class="dv">1</span>, <span class="at">reset =</span> F)</span>
+<span id="cb72-18"><a href="mod-td-pred.html#cb72-18" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> agent<span class="sc">$</span><span class="fu">getStateValues</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">episodes =</span> <span class="dv">1</span>)</span></code></pre></div></li>
+</ol>
+<div id="QTmw0Hn8j3VKBzsobTS2" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="QTmw0Hn8j3VKBzsobTS2-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title" id="QTmw0Hn8j3VKBzsobTS2-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<div class="sourceCode" id="cb73"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb73-1"><a href="mod-td-pred.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 episodes</span></span>
+<span id="cb73-2"><a href="mod-td-pred.html#cb73-2" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateValue</span>(states, <span class="fl">0.5</span>)</span>
+<span id="cb73-3"><a href="mod-td-pred.html#cb73-3" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateValue</span>(<span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;7&quot;</span>), <span class="dv">0</span>)</span>
+<span id="cb73-4"><a href="mod-td-pred.html#cb73-4" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">policyEvalTD0</span>(env, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">states =</span> <span class="st">&quot;4&quot;</span>, <span class="at">maxE =</span> <span class="dv">10</span>, <span class="at">reset =</span> F)</span>
+<span id="cb73-5"><a href="mod-td-pred.html#cb73-5" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(res, agent<span class="sc">$</span><span class="fu">getStateValues</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">episodes =</span> <span class="dv">10</span>))</span>
+<span id="cb73-6"><a href="mod-td-pred.html#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 100 episodes</span></span>
+<span id="cb73-7"><a href="mod-td-pred.html#cb73-7" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateValue</span>(states, <span class="fl">0.5</span>)</span>
+<span id="cb73-8"><a href="mod-td-pred.html#cb73-8" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">setStateValue</span>(<span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;7&quot;</span>), <span class="dv">0</span>)</span>
+<span id="cb73-9"><a href="mod-td-pred.html#cb73-9" aria-hidden="true" tabindex="-1"></a>agent<span class="sc">$</span><span class="fu">policyEvalTD0</span>(env, <span class="at">gamma =</span> <span class="dv">1</span>, <span class="at">states =</span> <span class="st">&quot;4&quot;</span>, <span class="at">maxE =</span> <span class="dv">100</span>, <span class="at">reset =</span> F)</span>
+<span id="cb73-10"><a href="mod-td-pred.html#cb73-10" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(res, agent<span class="sc">$</span><span class="fu">getStateValues</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">episodes =</span> <span class="dv">100</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb73-11"><a href="mod-td-pred.html#cb73-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">as.numeric</span>(state), <span class="at">episodes =</span> <span class="fu">as.character</span>(episodes)) </span>
+<span id="cb73-12"><a href="mod-td-pred.html#cb73-12" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(res,mdp<span class="sc">$</span><span class="fu">getStateValues</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">as.numeric</span>(state), <span class="at">episodes =</span> <span class="st">&quot;mdp&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb73-13"><a href="mod-td-pred.html#cb73-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(state <span class="sc">&gt;</span> <span class="dv">1</span>, state <span class="sc">&lt;</span> <span class="dv">7</span>)</span>
+<span id="cb73-14"><a href="mod-td-pred.html#cb73-14" aria-hidden="true" tabindex="-1"></a>res <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> state, <span class="at">y =</span> v, <span class="at">col =</span> episodes)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="07_td-pred_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#QTmw0Hn8j3VKBzsobTS2">
+Solution
+</button>
+<p>Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode <code>maxE = 1</code> and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result.</p>
 
 </div>
 </div>
