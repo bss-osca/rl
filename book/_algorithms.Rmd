@@ -482,13 +482,6 @@ RLAgent <- R6Class("RLAgent",
          as.list(self$model[[s]]$actions) 
       },
       
-      #' @description Return and action sampled from the current policy pi.
-      #' @param s The state considered.
-      getActionPi = function(s) {
-         pi <- self$model[[s]]$pi
-         return(sample(names(pi), 1, prob = pi))
-      },
-      
       #' @description Return the current policy as a tibble
       getPolicy = function(states = self$getStateKeys()) {
          map_dfr(states, .f = function(s) {
@@ -549,6 +542,32 @@ RLAgent <- R6Class("RLAgent",
          return(a)
       },
       
+      #' @description Return and action sampled from the current policy pi. Also update the visit counters for both state and selected action.
+      #' @param s The state considered.
+      getActionPi = function(s) {
+         self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+         pi <- self$model[[s]]$pi
+         actions <- names(pi)
+         a <- sample(actions, 1, prob = pi)
+         self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+         return(a)
+      },
+      
+# 
+#       getActionPi = function(s) {
+#          pi <- self$model[[s]]$pi
+#          return(sample(names(pi), 1, prob = pi))
+#       },
+      
+      #' @description Policy evaluation using TD(0)
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param alpha Step-size (use a fixed step-size).
+      #' @param maxE Maximum number of episodes generated.  
+      #' @param maxEL Maximum episode length.
+      #' @param reset If true initialize all state-values to 0.
+      #' @param states Possible start states of each episode (one picked at random).
+      #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
       policyEvalTD0 = function(env, gamma = 1, alpha = 0.1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys()) {
          if (reset) self$setStateValue(self$getStateKeys())      # set to 0
          for (ite in 1:maxE) {
@@ -566,6 +585,52 @@ RLAgent <- R6Class("RLAgent",
          }
       },
       
+      
+      #' @description Policy evaluation using every-visit Monte Carlo sampling.  
+      #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
+      #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
+      #'    the method that decides which action selection method is used. 
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param minIte Minimum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param reset If true initialize all state-values to 0.
+      #' @param states Start states in the episodes, which all are visited using a for loop.
+      #' @param verbose If true then print info for each episode.
+      policyEvalMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), verbose = FALSE) {
+         if (reset) {
+            self$setStateValue()      # set to 0
+            self$setActionCtrValue()   # reset counter
+            self$setStateCtrValue()    # reset counter
+         }
+         for (ite in 1:maxIte) {
+            delta <- 0
+            for (ss in states) {  # for episode with s as start
+               df <- env$getEpisodePi(self, ss)  # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
+               if (nrow(df) == 0) next
+               df <- df %>% mutate(nS = NA, g = NA, oldV = NA, v = NA)
+               gain <- 0
+               for (i in nrow(df):1) {
+                  s <- df$s[i]
+                  a <- df$a[i]
+                  gain <- df$r[i] + gamma * gain
+                  ctr <- self$model[[s]]$n
+                  oldV <- self$model[[s]]$v
+                  stepSize <- (1/ctr)
+                  self$model[[s]]$v <- oldV + stepSize * (gain - oldV)
+                  newV <- self$model[[s]]$v
+                  delta <- max(delta, abs(oldV - newV))
+                  if (verbose) df$g[i] <- gain; df$nS[i] <- ctr; df$oldV[i] <- oldV; df$v[i] <- newV
+               }
+               if (verbose) print(df)
+            }
+            if (delta < theta & ite >= minIte) break
+         }
+         if (ite == maxIte) warning("Polcy eval algorithm stopped at max iterations allowed: ", maxIte)
+         message(str_c("Policy eval algorihm finished in ", ite, " iterations."))
+         return(invisible(NULL))
+      },
+      
       #' @description Generalized policy iteration using on policy every-visit Monte Carlo sampling.  
       #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
       #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
@@ -576,7 +641,8 @@ RLAgent <- R6Class("RLAgent",
       #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
       #' @param reset If true initialize all action-values to 0.
       #' @param states Start states in the episodes, which all are visited using a for loop.
-      #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param verbose If true then print info for each episode.
       gpiOnPolicyMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, verbose = FALSE) {
          if (reset) {
             self$setActionValue()      # set to 0

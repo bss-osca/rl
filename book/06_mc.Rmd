@@ -279,7 +279,45 @@ RLEnvSeasonal <- R6Class("RLEnvSeasonal",
       },
       
       #' @description Returns an episode as a tibble with cols s, a, r (last col the terminal reward).
-      #' @param agent The agent that holds the model with current policy. Use upper-confidence bound action selection.
+      #' @param agent The agent that holds the model with current policy stored in pi. 
+      getEpisodePi = function(agent, startState) {
+         if (startState == "0") {
+            return(tibble::tibble(!!!c("s", "a", "r"), .rows = 0))  # empty tibble
+         }
+         q <- str_split(startState, ",", simplify = T)
+         t <- as.numeric(q[2])
+         q <- as.numeric(q[1])
+         df <- tibble(s = rep(NA_character_, 100 * self$maxInv), a = NA_character_, r = NA_real_)  # a tibble with more rows than used
+         for (i in 1:nrow(df)) {
+            if (q == 0) {
+               df <- df[1:(i-1),]  # remove unused rows
+               break  # have reached terminal state
+            }
+            s <- str_c(q, ",", t)
+            a <- agent$getActionPi(s)
+            if (t == self$maxT) { # sell remaining
+               r <- self$scrapPrice * q
+               q <- 0  # new q value
+            } else {
+               price <- as.numeric(a)
+               d <- self$getDemand(price, t)
+               if (t == 1) {
+                  r <- price * min(q, d) - q * self$purchasePrice
+               } else {
+                  r <- price * min(q, d)
+               }
+               q <- q - min(q, d)  # new q value
+               t <- t + 1 # new t value
+            }
+            df$s[i] <- s
+            df$a[i] <- a
+            df$r[i] <- r
+         }
+         return(df)
+      },
+      
+      #' @description Returns an episode as a tibble with cols s, a, r (last col the terminal reward).
+      #' @param agent The agent that holds the model with current policy. 
       getEpisode = function(agent, startState, coeff = 1, eps = 0.1) {
          if (startState == "0") {
             return(tibble::tibble(!!!c("s", "a", "r"), .rows = 0))  # empty tibble
@@ -726,6 +764,56 @@ dfRL %>%
 As can be seen the the optimal state value for the MDP is not equal the action-value for that action. Should that have been the case if run enough simulations?
 
 
+<!-- Q8 -->
+
+8) Consider the very optimistic policy which set the price to 25 (where possible):
+
+```{r}
+## Set the policy to price 25
+states <- agent$getStateKeys() %>% setdiff("0") 
+states <- states[!str_detect(states, ",15")]
+pi = c("25" = 1)
+agent$setPolicy(states, pi)
+# set last time-step
+states <- agent$getStateKeys() %>% setdiff("0") 
+states <- states[str_detect(states, ",15")]
+pi = c("5" = 1)
+agent$setPolicy(states, pi)
+# set dummy
+pi = c("dummy" = 1)
+agent$setPolicy("0", pi)
+## Check
+agent$getPolicy()
+```
+
+We may generate an episode using:
+
+```{r}
+env$getEpisodePi(agent, "5,1")
+```
+
+Let us try to evaluate this policy in states $(5,1)$ and $(100,10)$:
+
+```{r}
+set.seed(6778)
+agent$policyEvalMC(env, states = "5,1")
+agent$getStateValues("5,1")
+dfMDP %>% filter(state == "5,1")
+agent$policyEvalMC(env, states = "100,10")
+agent$getStateValues("100,10")
+dfMDP %>% filter(state == "100,10")
+```
+
+```{r, solution=TRUE, text="For state $(5,1)$ it is optimal to set the price high for all states in the sample-path and we estimate the optimal policy. For state $(100,10)$ it is not optimal to set the price high, i.e. the state-value we estimate here is not the optimal one."}
+```
+
+Why do we have state-values close and not close to the optimal values for the MDP?
+
+
+```{r links, child="links.md", include=FALSE}
+```
+
+
 ```{r, include=FALSE}
 # for (s in agent$getStateKeys()) {
 #    for (a in agent$getActionKeys(s)) {
@@ -733,9 +821,4 @@ As can be seen the the optimal state value for the MDP is not equal the action-v
 #    } 
 # }
 # agent$getActionValues("5,1")
-```
-
-
-
-```{r links, child="links.md", include=FALSE}
 ```
