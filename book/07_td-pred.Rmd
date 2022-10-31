@@ -185,10 +185,10 @@ ggraph(gr, layout = "linear") +
 
 
 <!-- Q1 -->
-```{r, solution=TRUE, text="The state space is $\\mathcal{S} = \\{ T1, A, \\ldots, E, T2 \\}$ with $\\mathcal{A}(s) = \\{ \\text{left}, \\text{right}\\}$ (transition to the neighbour states) except for terminating states which have no actions (see Figure \\@ref(fig:rw-trans)). Rewards are deterministic $\\mathcal{R} = \\{0, 1\\}$ (see Figure \\@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \\@ref(eq:bm-pol-eval) $$v_\\pi(s) = \\sum_{a \\in \\mathcal{A}}\\pi(a | s)\\left( r(s,a) + \\gamma\\sum_{s' \\in \\mathcal{S}} p(s' | s, a) v_\\pi(s')\\right),$$ which becomes $$\\begin{align}v_\\pi(A) &= 0.5v_\\pi(T1) + 0.5v_\\pi(B) = 0.5v_\\pi(B) \\\\\\ v_\\pi(B) &= 0.5v_\\pi(A) + 0.5v_\\pi( C ) \\\\\\ v_\\pi( C ) &= 0.5v_\\pi(B) + 0.5v_\\pi(D) \\\\\\ v_\\pi(D) &= 0.5v_\\pi( C ) + 0.5v_\\pi(E) \\\\\\ v_\\pi(E) &= 0.5v_\\pi(D) + 0.5(1 + v_\\pi(T2)) = 0.5v_\\pi(D) + 0.5\\\\\\ \\end{align}$$ Solving the equations with a state-value equal to 0 (you may also use that by symmetry $v_\\pi(C ) = 0.5$) for the terminating states gives state-values $\\frac{1}{6}, \\frac{2}{6}, \\frac{3}{6}, \\frac{4}{6}$ and $\\frac{5}{6}$ for A-E, respectively."} 
+```{r, solution=TRUE, text="The state space is $\\mathcal{S} = \\{ 1, 2, \\ldots, 6, 7 \\}$ with $\\mathcal{A}(s) = \\{ \\text{left}, \\text{right}\\}$ (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure \\@ref(fig:rw-trans)). Rewards are deterministic $\\mathcal{R} = \\{0, 1\\}$ (see Figure \\@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \\@ref(eq:bm-pol-eval) $$v_\\pi(s) = \\sum_{a \\in \\mathcal{A}}\\pi(a | s)\\left( r(s,a) + \\gamma\\sum_{s' \\in \\mathcal{S}} p(s' | s, a) v_\\pi(s')\\right),$$ which becomes $$\\begin{align}v_\\pi(2) &= 0.5v_\\pi(1) + 0.5v_\\pi(3) = 0.5v_\\pi(3) \\\\\\ v_\\pi(3) &= 0.5v_\\pi(2) + 0.5v_\\pi( 4 ) \\\\\\ v_\\pi( 4 ) &= 0.5v_\\pi(3) + 0.5v_\\pi(5) \\\\\\ v_\\pi(5) &= 0.5v_\\pi( 4 ) + 0.5v_\\pi(6) \\\\\\ v_\\pi(6) &= 0.5v_\\pi(5) + 0.5(1 + v_\\pi(7)) = 0.5v_\\pi(5) + 0.5\\\\\\ \\end{align}$$ Solving the equations with a state-value equal to 0 for the terminating states gives state-values $\\frac{1}{6}, \\frac{2}{6}, \\frac{3}{6}, \\frac{4}{6}$ and $\\frac{5}{6}$ for 2-6, respectively."} 
 ```
 
-1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state A-E. 
+1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
 
 
 <!-- Q2 -->
@@ -199,10 +199,9 @@ ggraph(gr, layout = "linear") +
 
 ```{r}
 ## Build the MDP
-# Use numbers instead 1 = T1, 2-6 = A-E, 7 = T2
 mdp <- MDPClass$new()
-states <- str_c(2:6)
 mdp$addStateSpace(1:7)   # add state keys
+states <- str_c(2:6)
 for (s in states) {
       mdp$addActionSpace(s, c("left", "right"))
 }
@@ -241,14 +240,13 @@ mdp$getStateValues()
 ```{r, solution=TRUE, text="We use TD(0), i.e. update using $V(S_t) \\leftarrow V(S_t) + \\alpha\\left[R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)\\right]$: $$V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.$$ That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05."}
 ```
 
-3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(A)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
+3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
 
 <!-- Q4 -->
-
 4) Generate 100 episodes and run the TD(0) prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:td0-pred-alg)). Make a plot of the state-value estimate (y-axis) given state 2-6 (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.
 
-   First we need an environment representing the problem
+First we need an environment representing the problem
 
 ```{r}
 library(R6)
@@ -298,7 +296,7 @@ RLEnvRandom <- R6Class("RLEnvRandom",
       #' @description Returns next state and reward given current state and action in a list (with names `r` and `sN`).
       #' @param s Current state.
       #' @param a Current action.
-      getTimeStepData = function(s,a) {
+      getTimeStepData = function(s, a) {
          s <- as.numeric(s)
          if (a == "left" & s > 1 & s < 7) return(list(r = 0, sN = as.character(s-1)))
          if (a == "right" & s > 1 & s < 7) {
@@ -318,12 +316,12 @@ env$getTimeStepData("1", "dummy")
 env$getTimeStepData("6", "right")
 ```
 
-   Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
+Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
 
 ```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
 ```
 
-   We can now define the RL agent and set the policy which must be done before calling TD(0):
+We can now define the RL agent and set the policy which must be done before calling TD(0):
 
 ```{r}
 agent <- RLAgent$new()
@@ -340,7 +338,7 @@ agent$setPolicy(c("1", "7"), pi)
 agent$getPolicy()
 ```
 
-   Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
+Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
 
 ```{r}
 set.seed(875)
@@ -367,23 +365,16 @@ res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>%
 res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
 res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resTD0 <- res %>% mutate(alpha = 0.1, alg = "TD0")
 ```
 
-   Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
+Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
 
 
-
-
-```{r, include=FALSE}
-knitr::knit_exit()
-```
-
-
-4) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes.
-
-```{r}
+<!-- Q5 -->
+```{r, solution=TRUE}
 set.seed(4346)
-env$getEpisodePi(agent, "4")
+env$getEpisodePi(agent, "4")  # test: this is the function used to generate an episode in policyEvalMC
 ## 1 episode
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
@@ -406,12 +397,58 @@ res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>%
 res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
 res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resMC <- res %>% mutate(alpha = 0.1, alg = "MC")
 ```
 
+5) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes. Hint you have to call `policyEvalMC` instead of `policyEvalTD0`.
 
-5) The results are dependent on the value of the step-size parameter. Try estimating the state-values using TD(0) and MC for $\alpha = 0.2, 0.1, 0.05$ and 0.025. Plot the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=A}^E(V(s)-v_\pi(s))^2}$$ (y-axis) given the number of episodes (x-axis).Do you think the conclusions about that TD(0) is better than MC is affected by different  values? 
 
-6) In the right graph of the random walk example, the RMS error of the TD method seems to go down and then up again, particularly at high $\alpha$’s. What could have caused this? Do you think this always occurs, or might it be a function of how the approximate value function was initialized?
+<!-- Q6 -->
+6) Let us join the results for TD(0) and MC and calculate the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=2}^6(V(s)-v_\pi(s))^2}$$.
+```{r}
+resMDP <- mdp$getStateValues() %>% mutate(state = as.numeric(state)) %>% rename(vMDP = v) %>%  print()
+res <- bind_rows(resTD0, resMC) %>% 
+   filter(episodes != "mdp") %>% 
+   left_join(resMDP) %>% 
+   group_by(episodes, alg, alpha) %>% 
+   summarise(rms = sqrt(0.2 * sum(v-vMDP)^2)) %>% 
+   print()
+```
+
+Which algorithm is best in estimating the state-values? Explain.
+
+
+<!-- Q7 -->
+
+7) The results are dependent on the value of the step-size parameter. Let us estimate the state-values using TD(0) for $\alpha = 0.1, 0.2$ and 0.5 and plot the root mean square (RMS) error given the number of episodes:
+
+```{r}
+set.seed(98)
+res <- NULL
+for (run in 1:20) {
+   for (alpha in c(0.1, 0.2, 0.5)) {
+      agent$setStateValue(states, 0.5)
+      agent$setStateValue(c("1", "7"), 0)
+      eOld <- 0
+      for (e in c(1,seq(5, 100, by = 5))) {
+         agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = e - eOld, alpha = alpha, reset = F)
+         eOld <- e
+         res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = e, alpha = alpha, run = run))
+      }
+   }
+}
+resMDP <- mdp$getStateValues() %>% rename(vMDP = v)
+left_join(res, resMDP) %>% 
+   group_by(episodes, alpha, run) %>% 
+   summarise(rms = sqrt(0.2 * sum((v-vMDP)^2))) %>% 
+   group_by(episodes, alpha) %>%
+   summarize(rms = mean(rms)) %>% 
+   ggplot(aes(x = episodes, y = rms, col = factor(alpha))) +
+   geom_line()
+
+```
+
+Explain the plot. 
 
 <!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
 
@@ -421,4 +458,8 @@ res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point
 <!-- Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}. -->
 
 ```{r links, child="links.md", include=FALSE}
+```
+
+```{r, include=FALSE}
+knitr::knit_exit()
 ```
