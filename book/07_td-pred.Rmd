@@ -250,7 +250,7 @@ mdp$getStateValues()
 
    First we need an environment representing the problem
 
-   ```{r}
+```{r}
 library(R6)
 library(hash)
 library(tidyverse)
@@ -258,6 +258,42 @@ library(tidyverse)
 #' R6 Class representing the RL environment for the problem
 RLEnvRandom <- R6Class("RLEnvRandom",
    public = list(
+      #' @description Return all states (keys).
+      getStates = function() {
+         return(str_c(1:7))
+      },
+      
+      #' @description Return all actions (keys) for a state.
+      #' @param s State considered.
+      getActions = function(s) {
+         if (s == "1" | s == "7") return("dummy")
+         return(c("left", "right"))
+      },
+      
+      #' @description Returns an episode as a tibble with cols s, a, r (last col the terminal reward).
+      #' @param agent The agent that holds the model with current policy stored in pi. 
+      getEpisodePi = function(agent, startState) {
+         if (startState == "1" | startState == "7") {
+            return(tibble::tibble(!!!c("s", "a", "r"), .rows = 0))  # empty tibble
+         }
+         s <- as.numeric(startState)
+         df <- tibble(s = rep(NA_character_, 1000), a = NA_character_, r = NA_real_)  # a tibble with more rows than used
+         for (i in 1:nrow(df)) {
+            if (s == 1 | s == 7) {
+               df <- df[1:(i-1),]  # remove unused rows
+               break  # have reached terminal state
+            }
+            r <- 0
+            a <- agent$getActionPi(str_c(s))
+            if (s == 6 & a == "right") r = 1
+            df$s[i] <- s
+            df$a[i] <- a
+            df$r[i] <- r
+            if (a == "right") s <- s + 1
+            if (a == "left") s <- s - 1
+          }
+         return(df)
+      },
       
       #' @description Returns next state and reward given current state and action in a list (with names `r` and `sN`).
       #' @param s Current state.
@@ -284,33 +320,37 @@ env$getTimeStepData("6", "right")
 
    Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
 
-   ```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
-   ```
+```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
+```
 
    We can now define the RL agent and set the policy which must be done before calling TD(0):
 
-   ```{r}
-   agent <- RLAgent$new()
-   ## Set the policy
-   states <- str_c(2:6)
-   pi = c("left" = 0.5, "right" = 0.5)
-   agent$setPolicy(states, pi)
-   pi = c("dummy" = 1)
-   agent$setPolicy(c("1", "7"), pi)
-   agent$getPolicy()
-   ```
+```{r}
+agent <- RLAgent$new()
+agent$addStates(env$getStates())   # add states
+for (s in agent$getStateKeys()) {  # add actions
+   agent$addActions(s, env$getActions(s))
+} 
+## Set the policy
+states <- str_c(2:6)
+pi = c("left" = 0.5, "right" = 0.5)
+agent$setPolicy(states, pi)
+pi = c("dummy" = 1)
+agent$setPolicy(c("1", "7"), pi)
+agent$getPolicy()
+```
 
    Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
 
-   ```{r}
-   set.seed(875)
-   ## One episode
-   agent$setStateValue(states, 0.5)
-   agent$setStateValue(c("1", "7"), 0)
-   agent$getStateValues()
-   agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 1, reset = F)
-   res <- agent$getStateValues() %>% mutate(episodes = 1)
-   ```
+```{r}
+set.seed(875)
+## One episode
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$getStateValues()
+agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 1, reset = F)
+res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+```
 
 ```{r, solution=TRUE}
 ## 10 episodes
@@ -339,13 +379,35 @@ knitr::knit_exit()
 ```
 
 
-
-
-
-
-
-
 4) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes.
+
+```{r}
+set.seed(4346)
+env$getEpisodePi(agent, "4")
+## 1 episode
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$setStateCtrValue(1)    
+agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 1, maxIte = 1, reset = F, verbose = T)
+res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+## 10 episodes
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$setStateCtrValue(1)    
+agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 10, maxIte = 10, reset = F, verbose = T)
+res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+## 100 episodes
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$setStateCtrValue(1)    
+agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 100, maxIte = 100, reset = F)
+res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+   mutate(state = as.numeric(state), episodes = as.character(episodes)) 
+res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+   filter(state > 1, state < 7)
+res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+```
+
 
 5) The results are dependent on the value of the step-size parameter. Try estimating the state-values using TD(0) and MC for $\alpha = 0.2, 0.1, 0.05$ and 0.025. Plot the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=A}^E(V(s)-v_\pi(s))^2}$$ (y-axis) given the number of episodes (x-axis).Do you think the conclusions about that TD(0) is better than MC is affected by different  values? 
 
@@ -354,9 +416,9 @@ knitr::knit_exit()
 <!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
 
 
-### Exercise - Off-policy TD {#ex-td-pred-off-policy}
+<!-- ### Exercise - Off-policy TD {#ex-td-pred-off-policy} -->
 
-Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}.
+<!-- Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}. -->
 
 ```{r links, child="links.md", include=FALSE}
 ```
