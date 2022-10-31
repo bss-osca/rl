@@ -184,13 +184,13 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="uAby7dfZWAlng9PuFkHv" tabindex="-1" role="dialog" aria-labelledby="uAby7dfZWAlng9PuFkHv-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="uAby7dfZWAlng9PuFkHv-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="VK1c6tz4x351QU2EL2LC" tabindex="-1" role="dialog" aria-labelledby="VK1c6tz4x351QU2EL2LC-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="VK1c6tz4x351QU2EL2LC-title">Solution</h4></div><div class="modal-body">
 
-<p>The state space is \(\mathcal{S} = \{ T1, A, \ldots, E, T2 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states which have no actions (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(A) &= 0.5v_\pi(T1) + 0.5v_\pi(B) = 0.5v_\pi(B) \\ v_\pi(B) &= 0.5v_\pi(A) + 0.5v_\pi( C ) \\ v_\pi( C ) &= 0.5v_\pi(B) + 0.5v_\pi(D) \\ v_\pi(D) &= 0.5v_\pi( C ) + 0.5v_\pi(E) \\ v_\pi(E) &= 0.5v_\pi(D) + 0.5(1 + v_\pi(T2)) = 0.5v_\pi(D) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 (you may also use that by symmetry \(v_\pi(C ) = 0.5\)) for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for A-E, respectively.</p>
+<p>The state space is \(\mathcal{S} = \{ 1, 2, \ldots, 6, 7 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(2) &= 0.5v_\pi(1) + 0.5v_\pi(3) = 0.5v_\pi(3) \\ v_\pi(3) &= 0.5v_\pi(2) + 0.5v_\pi( 4 ) \\ v_\pi( 4 ) &= 0.5v_\pi(3) + 0.5v_\pi(5) \\ v_\pi(5) &= 0.5v_\pi( 4 ) + 0.5v_\pi(6) \\ v_\pi(6) &= 0.5v_\pi(5) + 0.5(1 + v_\pi(7)) = 0.5v_\pi(5) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for 2-6, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#uAby7dfZWAlng9PuFkHv">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#VK1c6tz4x351QU2EL2LC">Solution</button>
 
-1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state A-E. 
+1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
 
 
 <!-- Q2 -->
@@ -201,10 +201,9 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 ```r
 ## Build the MDP
-# Use numbers instead 1 = T1, 2-6 = A-E, 7 = T2
 mdp <- MDPClass$new()
-states <- str_c(2:6)
 mdp$addStateSpace(1:7)   # add state keys
+states <- str_c(2:6)
 for (s in states) {
       mdp$addActionSpace(s, c("left", "right"))
 }
@@ -312,20 +311,19 @@ mdp$getStateValues()
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="MQBAyGgIBlizaXeYpei7" tabindex="-1" role="dialog" aria-labelledby="MQBAyGgIBlizaXeYpei7-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="MQBAyGgIBlizaXeYpei7-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="okk4lmDKoCSUgar63O6J" tabindex="-1" role="dialog" aria-labelledby="okk4lmDKoCSUgar63O6J-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="okk4lmDKoCSUgar63O6J-title">Solution</h4></div><div class="modal-body">
 
 <p>We use TD(0), i.e. update using \(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\): \[V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.\] That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#MQBAyGgIBlizaXeYpei7">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#okk4lmDKoCSUgar63O6J">Solution</button>
 
-3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(A)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
+3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
 
 <!-- Q4 -->
-
 4) Generate 100 episodes and run the TD(0) prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:td0-pred-alg)). Make a plot of the state-value estimate (y-axis) given state 2-6 (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.
 
-   First we need an environment representing the problem
+First we need an environment representing the problem
 
 
 ```r
@@ -376,7 +374,7 @@ RLEnvRandom <- R6Class("RLEnvRandom",
       #' @description Returns next state and reward given current state and action in a list (with names `r` and `sN`).
       #' @param s Current state.
       #' @param a Current action.
-      getTimeStepData = function(s,a) {
+      getTimeStepData = function(s, a) {
          s <- as.numeric(s)
          if (a == "left" & s > 1 & s < 7) return(list(r = 0, sN = as.character(s-1)))
          if (a == "right" & s > 1 & s < 7) {
@@ -411,7 +409,7 @@ env$getTimeStepData("6", "right")
 #> [1] "7"
 ```
 
-   Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
+Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
 
 
 ```r
@@ -827,7 +825,7 @@ RLAgent <- R6Class("RLAgent",
 )
 ```
 
-   We can now define the RL agent and set the policy which must be done before calling TD(0):
+We can now define the RL agent and set the policy which must be done before calling TD(0):
 
 
 ```r
@@ -860,7 +858,7 @@ agent$getPolicy()
 #> 12 7     dummy    1
 ```
 
-   Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
+Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
 
 
 ```r
@@ -913,18 +911,400 @@ res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>%
 res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
 res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resTD0 <- res %>% mutate(alpha = 0.1, alg = "TD0")
 ```
 
 <img src="07_td-pred_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" />
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#QTmw0Hn8j3VKBzsobTS2">Solution</button>
 
-   Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
+Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
 
 
+<!-- Q5 -->
+
+<div class="modal fade bs-example-modal-lg" id="JEGtUm3iyJsbq1HJersz" tabindex="-1" role="dialog" aria-labelledby="JEGtUm3iyJsbq1HJersz-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="JEGtUm3iyJsbq1HJersz-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+set.seed(4346)
+env$getEpisodePi(agent, "4")  # test: this is the function used to generate an episode in policyEvalMC
+#> # A tibble: 3 × 3
+#>   s     a         r
+#>   <chr> <chr> <dbl>
+#> 1 4     left      0
+#> 2 3     left      0
+#> 3 2     left      0
+## 1 episode
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$setStateCtrValue(1)    
+agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 1, maxIte = 1, reset = F, verbose = T)
+#> # A tibble: 3 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     left      0     2     0   0.5  0.25
+#> 2 3     left      0     2     0   0.5  0.25
+#> 3 2     left      0     2     0   0.5  0.25
+res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+#> # A tibble: 7 × 3
+#> # Rowwise: 
+#>   state     v episodes
+#>   <chr> <dbl>    <dbl>
+#> 1 1      0           1
+#> 2 2      0.25        1
+#> 3 3      0.25        1
+#> 4 4      0.25        1
+#> 5 5      0.5         1
+#> 6 6      0.5         1
+#> 7 7      0           1
+## 10 episodes
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$setStateCtrValue(1)    
+agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 10, maxIte = 10, reset = F, verbose = T)
+#> # A tibble: 3 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     right     0     2     1   0.5  0.75
+#> 2 5     right     0     2     1   0.5  0.75
+#> 3 6     right     1     2     1   0.5  0.75
+#> # A tibble: 3 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     right     0     3     1  0.75 0.833
+#> 2 5     right     0     3     1  0.75 0.833
+#> 3 6     right     1     3     1  0.75 0.833
+#> # A tibble: 7 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     right     0     5     1 0.867 0.893
+#> 2 5     right     0     6     1 0.884 0.904
+#> 3 6     left      0     5     1 0.867 0.893
+#> 4 5     left      0     6     1 0.861 0.884
+#> 5 4     right     0     5     1 0.833 0.867
+#> 6 5     right     0     6     1 0.833 0.861
+#> 7 6     right     1     5     1 0.833 0.867
+#> # A tibble: 7 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     right     0     7     0 0.766 0.656
+#> 2 5     left      0     7     0 0.904 0.774
+#> 3 4     left      0     7     0 0.893 0.766
+#> 4 3     left      0     3     0 0.333 0.222
+#> 5 2     right     0     3     0 0.333 0.222
+#> 6 3     left      0     3     0 0.5   0.333
+#> 7 2     left      0     3     0 0.5   0.333
+#> # A tibble: 7 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     left      0     9     0 0.583 0.519
+#> 2 3     right     0     6     0 0.154 0.129
+#> 3 4     left      0     9     0 0.656 0.583
+#> 4 3     left      0     6     0 0.185 0.154
+#> 5 2     right     0     5     0 0.178 0.142
+#> 6 3     left      0     6     0 0.222 0.185
+#> 7 2     left      0     5     0 0.222 0.178
+#> # A tibble: 3 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     right     0    10     1 0.519 0.567
+#> 2 5     right     0     8     1 0.774 0.803
+#> 3 6     right     1     6     1 0.893 0.911
+#> # A tibble: 3 × 7
+#>   s     a         r    nS     g  oldV     v
+#>   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 4     left      0    11     0 0.567 0.515
+#> 2 3     left      0     7     0 0.129 0.110
+#> 3 2     left      0     6     0 0.142 0.119
+#> # A tibble: 11 × 7
+#>    s     a         r    nS     g  oldV     v
+#>    <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#>  1 4     left      0    14     1 0.582 0.612
+#>  2 3     right     0    11     1 0.332 0.392
+#>  3 4     left      0    14     1 0.550 0.582
+#>  4 3     left      0    11     1 0.265 0.332
+#>  5 2     right     0     8     1 0.229 0.325
+#>  6 3     left      0    11     1 0.191 0.265
+#>  7 2     right     0     8     1 0.119 0.229
+#>  8 3     right     0    11     1 0.110 0.191
+#>  9 4     right     0    14     1 0.515 0.550
+#> 10 5     right     0     9     1 0.803 0.825
+#> 11 6     right     1     7     1 0.911 0.924
+#> # A tibble: 17 × 7
+#>    s     a         r    nS     g  oldV     v
+#>    <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#>  1 4     right     0    21     0 0.457 0.435
+#>  2 5     left      0    12     0 0.693 0.635
+#>  3 4     left      0    21     0 0.479 0.457
+#>  4 3     right     0    16     0 0.303 0.284
+#>  5 4     right     0    21     0 0.503 0.479
+#>  6 5     left      0    12     0 0.756 0.693
+#>  7 4     left      0    21     0 0.529 0.503
+#>  8 3     right     0    16     0 0.323 0.303
+#>  9 4     left      0    21     0 0.555 0.529
+#> 10 3     right     0    16     0 0.345 0.323
+#> 11 4     right     0    21     0 0.583 0.555
+#> 12 5     left      0    12     0 0.825 0.756
+#> 13 4     left      0    21     0 0.612 0.583
+#> 14 3     left      0    16     0 0.368 0.345
+#> 15 2     right     0    10     0 0.293 0.263
+#> 16 3     left      0    16     0 0.392 0.368
+#> 17 2     left      0    10     0 0.325 0.293
+#> # A tibble: 13 × 7
+#>    s     a         r    nS     g  oldV     v
+#>    <chr> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
+#>  1 4     right     0    25     1 0.500 0.520
+#>  2 5     left      0    16     1 0.699 0.718
+#>  3 4     left      0    25     1 0.479 0.500
+#>  4 3     left      0    18     1 0.324 0.361
+#>  5 2     right     0    11     1 0.263 0.330
+#>  6 3     right     0    18     1 0.284 0.324
+#>  7 4     right     0    25     1 0.457 0.479
+#>  8 5     left      0    16     1 0.679 0.699
+#>  9 4     right     0    25     1 0.435 0.457
+#> 10 5     right     0    16     1 0.658 0.679
+#> 11 6     left      0     9     1 0.932 0.940
+#> 12 5     right     0    16     1 0.635 0.658
+#> 13 6     right     1     9     1 0.924 0.932
+res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+## 100 episodes
+agent$setStateValue(states, 0.5)
+agent$setStateValue(c("1", "7"), 0)
+agent$setStateCtrValue(1)    
+agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 100, maxIte = 100, reset = F)
+res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+   mutate(state = as.numeric(state), episodes = as.character(episodes)) 
+res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+   filter(state > 1, state < 7)
+res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resMC <- res %>% mutate(alpha = 0.1, alg = "MC")
+```
+
+<img src="07_td-pred_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" />
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#JEGtUm3iyJsbq1HJersz">Solution</button>
+
+5) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes. Hint you have to call `policyEvalMC` instead of `policyEvalTD0`.
 
 
+<!-- Q6 -->
+6) Let us join the results for TD(0) and MC and calculate the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=2}^6(V(s)-v_\pi(s))^2}$$.
+
+```r
+resMDP <- mdp$getStateValues() %>% mutate(state = as.numeric(state)) %>% rename(vMDP = v) %>%  print()
+#> # A tibble: 7 × 2
+#>   state  vMDP
+#>   <dbl> <dbl>
+#> 1     1 0    
+#> 2     2 0.167
+#> 3     3 0.333
+#> 4     4 0.500
+#> 5     5 0.667
+#> 6     6 0.833
+#> 7     7 0
+res <- bind_rows(resTD0, resMC) %>% 
+   filter(episodes != "mdp") %>% 
+   left_join(resMDP) %>% 
+   group_by(episodes, alg, alpha) %>% 
+   summarise(rms = sqrt(0.2 * sum(v-vMDP)^2)) %>% 
+   print()
+#> # A tibble: 6 × 4
+#> # Groups:   episodes, alg [6]
+#>   episodes alg   alpha    rms
+#>   <chr>    <chr> <dbl>  <dbl>
+#> 1 1        MC      0.1 0.335 
+#> 2 1        TD0     0.1 0.0224
+#> 3 10       MC      0.1 0.165 
+#> 4 10       TD0     0.1 0.0879
+#> 5 100      MC      0.1 0.215 
+#> 6 100      TD0     0.1 0.0605
+```
+
+Which algorithm is best in estimating the state-values? Explain.
 
 
+<!-- Q7 -->
 
+7) The results are dependent on the value of the step-size parameter. Let us estimate the state-values using TD(0) for $\alpha = 0.1, 0.2$ and 0.5 and plot the root mean square (RMS) error given the number of episodes:
+
+
+```r
+set.seed(98)
+res <- NULL
+for (run in 1:20) {
+   for (alpha in c(0.1, 0.2, 0.5)) {
+      agent$setStateValue(states, 0.5)
+      agent$setStateValue(c("1", "7"), 0)
+      eOld <- 0
+      for (e in c(1,seq(5, 100, by = 5))) {
+         agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = e - eOld, alpha = alpha, reset = F)
+         eOld <- e
+         res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = e, alpha = alpha, run = run))
+      }
+   }
+}
+resMDP <- mdp$getStateValues() %>% rename(vMDP = v)
+left_join(res, resMDP) %>% 
+   group_by(episodes, alpha, run) %>% 
+   summarise(rms = sqrt(0.2 * sum((v-vMDP)^2))) %>% 
+   group_by(episodes, alpha) %>%
+   summarize(rms = mean(rms)) %>% 
+   ggplot(aes(x = episodes, y = rms, col = factor(alpha))) +
+   geom_line()
+```
+
+<img src="07_td-pred_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" />
+
+Explain the plot. 
+
+<!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
+
+
+<!-- ### Exercise - Off-policy TD {#ex-td-pred-off-policy} -->
+
+<!-- Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}. -->
+
+
+[BSS]: https://bss.au.dk/en/
+[bi-programme]: https://kandidat.au.dk/en/businessintelligence/
+
+[course-help]: https://github.com/bss-osca/rl/issues
+[cran]: https://cloud.r-project.org
+[cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
+[course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+
+[DataCamp]: https://www.datacamp.com/
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/cbaee6c73e7d78549a9e32a900793b2d5491ace1824efc1760a6729735948215
+[datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
+[datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
+[datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
+[datacamp-r-communicating-chap3]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/introduction-to-rmarkdown
+[datacamp-r-communicating-chap4]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/customizing-your-rmarkdown-report
+[datacamp-r-intermediate]: https://learn.datacamp.com/courses/intermediate-r
+[datacamp-r-intermediate-chap1]: https://campus.datacamp.com/courses/intermediate-r/chapter-1-conditionals-and-control-flow
+[datacamp-r-intermediate-chap2]: https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops
+[datacamp-r-intermediate-chap3]: https://campus.datacamp.com/courses/intermediate-r/chapter-3-functions
+[datacamp-r-intermediate-chap4]: https://campus.datacamp.com/courses/intermediate-r/chapter-4-the-apply-family
+[datacamp-r-functions]: https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r
+[datacamp-r-tidyverse]: https://learn.datacamp.com/courses/introduction-to-the-tidyverse
+[datacamp-r-strings]: https://learn.datacamp.com/courses/string-manipulation-with-stringr-in-r
+[datacamp-r-dplyr]: https://learn.datacamp.com/courses/data-manipulation-with-dplyr
+[datacamp-r-dplyr-bakeoff]: https://learn.datacamp.com/courses/working-with-data-in-the-tidyverse
+[datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
+[datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
+[dplyr-cran]: https://CRAN.R-project.org/package=dplyr
+[debug-in-r]: https://rstats.wtf/debugging-r-code.html
+
+[google-form]: https://forms.gle/s39GeDGV9AzAXUo18
+[google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
+[GitHub]: https://github.com/
+[git-install]: https://git-scm.com/downloads
+[github-actions]: https://github.com/features/actions
+[github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
+
+[happy-git]: https://happygitwithr.com
+[hg-install-git]: https://happygitwithr.com/install-git.html
+[hg-why]: https://happygitwithr.com/big-picture.html#big-picture
+[hg-github-reg]: https://happygitwithr.com/github-acct.html#github-acct
+[hg-git-install]: https://happygitwithr.com/install-git.html#install-git
+[hg-exist-github-first]: https://happygitwithr.com/existing-github-first.html
+[hg-exist-github-last]: https://happygitwithr.com/existing-github-last.html
+[hg-credential-helper]: https://happygitwithr.com/credential-caching.html
+[hypothes.is]: https://web.hypothes.is/
+
+[osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
+
+[Peergrade]: https://peergrade.io
+[peergrade-signup]: https://app.peergrade.io/join
+[point-and-click]: https://en.wikipedia.org/wiki/Point_and_click
+[pkg-bookdown]: https://bookdown.org/yihui/bookdown/
+[pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
+[pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
+[pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+
+[R]: https://www.r-project.org
+[RStudio]: https://rstudio.com
+[rstudio-cloud]: https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz
+[r-cloud-mod12]: https://rstudio.cloud/spaces/176810/project/2963819
+[r-cloud-mod13]: https://rstudio.cloud/spaces/176810/project/3020139
+[r-cloud-mod14]: https://rstudio.cloud/spaces/176810/project/3020322
+[r-cloud-mod15]: https://rstudio.cloud/spaces/176810/project/3020509
+[r-cloud-mod16]: https://rstudio.cloud/spaces/176810/project/3026754
+[r-cloud-mod17]: https://rstudio.cloud/spaces/176810/project/3034015
+[r-cloud-mod18]: https://rstudio.cloud/spaces/176810/project/3130795
+[r-cloud-mod19]: https://rstudio.cloud/spaces/176810/project/3266132
+[rstudio-download]: https://rstudio.com/products/rstudio/download/#download
+[rstudio-customizing]: https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio
+[rstudio-key-shortcuts]: https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts
+[rstudio-workbench]: https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png
+[r-markdown]: https://rmarkdown.rstudio.com/
+[ropensci-writexl]: https://docs.ropensci.org/writexl/
+[r4ds-pipes]: https://r4ds.had.co.nz/pipes.html
+[r4ds-factors]: https://r4ds.had.co.nz/factors.html
+[r4ds-strings]: https://r4ds.had.co.nz/strings.html
+[r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
+
+[stat-545]: https://stat545.com
+[stat-545-functions-part1]: https://stat545.com/functions-part1.html
+[stat-545-functions-part2]: https://stat545.com/functions-part2.html
+[stat-545-functions-part3]: https://stat545.com/functions-part3.html
+[slides-welcome]: https://bss-osca.github.io/rl/slides/00-rl_welcome.html
+[slides-m1-3]: https://bss-osca.github.io/rl/slides/01-welcome_r_part.html
+[slides-m4-5]: https://bss-osca.github.io/rl/slides/02-programming.html
+[slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
+[slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
+[slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
+
+[tidyverse-main-page]: https://www.tidyverse.org
+[tidyverse-packages]: https://www.tidyverse.org/packages/
+[tidyverse-core]: https://www.tidyverse.org/packages/#core-tidyverse
+[tidyverse-ggplot2]: https://ggplot2.tidyverse.org/
+[tidyverse-dplyr]: https://dplyr.tidyverse.org/
+[tidyverse-tidyr]: https://tidyr.tidyverse.org/
+[tidyverse-readr]: https://readr.tidyverse.org/
+[tidyverse-purrr]: https://purrr.tidyverse.org/
+[tidyverse-tibble]: https://tibble.tidyverse.org/
+[tidyverse-stringr]: https://stringr.tidyverse.org/
+[tidyverse-forcats]: https://forcats.tidyverse.org/
+[tidyverse-readxl]: https://readxl.tidyverse.org
+[tidyverse-googlesheets4]: https://googlesheets4.tidyverse.org/index.html
+[tutorial-markdown]: https://commonmark.org/help/tutorial/
+[tfa-course]: https://bss-osca.github.io/tfa/
+
+[Udemy]: https://www.udemy.com/
+
+[vba-yt-course1]: https://www.youtube.com/playlist?list=PLpOAvcoMay5S_hb2D7iKznLqJ8QG_pde0
+[vba-course1-hello]: https://youtu.be/f42OniDWaIo
+
+[vba-yt-course2]: https://www.youtube.com/playlist?list=PL3A6U40JUYCi4njVx59-vaUxYkG0yRO4m
+[vba-course2-devel-tab]: https://youtu.be/awEOUaw9q58
+[vba-course2-devel-editor]: https://youtu.be/awEOUaw9q58
+[vba-course2-devel-project]: https://youtu.be/fp6PTbU7bXo
+[vba-course2-devel-properties]: https://youtu.be/ks2QYKAd9Xw
+[vba-course2-devel-hello]: https://youtu.be/EQ6tDWBc8G4
+
+[video-install]: https://vimeo.com/415501284
+[video-rstudio-intro]: https://vimeo.com/416391353
+[video-packages]: https://vimeo.com/416743698
+[video-projects]: https://vimeo.com/319318233
+[video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
+[video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
+[video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&index=10&t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&index=10
+[video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
+[video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
+[video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
+[video-tibble-vs-df]: https://www.youtube.com/watch?v=EBk6PnvE1R4
+[video-dplyr]: https://www.youtube.com/watch?v=aywFompr1F4
+
+[wiki-snake-case]: https://en.wikipedia.org/wiki/Snake_case
+[wiki-camel-case]: https://en.wikipedia.org/wiki/Camel_case
+[wiki-interpreted]: https://en.wikipedia.org/wiki/Interpreted_language
+[wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
+[wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
+[wiki-json]: https://en.wikipedia.org/wiki/JSON
 
 
