@@ -91,10 +91,10 @@ How do we find estimates $V$ of $v_\pi$ and the return $G_t$?
 v_\pi(s) &= \mathbb{E}_\pi[G_t | S_t = s] \\
          &= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s] \\
          &= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma \mathbb{E}_\pi[G_{t+1} | S_t = s] \\
-         &= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma v_\pi(S_{t+1}),
+         &= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma \mathbb{E}_\pi[v_\pi(S_{t+1})].
 \end{align}
 
-   * TD: Given a realized reward $R_{t+1}$, an estimate for the return $G_t$ is $R_{t+1} + \gamma V(S_{t+1})$ 
+   * TD: Given a realized reward $R_{t+1}$ and next state $S_{t+1}$, an estimate for the return $G_t$ is $R_{t+1} + \gamma V(S_{t+1})$ 
    * TD update the estimate based on the estimate of the next state (bootstrapping). 
 
 ---
@@ -152,7 +152,7 @@ That is, a larger weight is used for recent observations compared to old observa
 ## The TD error
 
 * The term $$\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t),$$ is denoted the *temporal difference error* (*TD error*).
-* Equals the difference between the current estimate $V(S_t)$ and the better estimate $R_{t+1} + \gamma V(S_{t+1})$.
+* Equals the difference between the current estimate $V(S_t)$ and the updated estimate $R_{t+1} + \gamma V(S_{t+1})$.
 
 ---
 
@@ -172,7 +172,7 @@ knitr::include_graphics("img/td0-pred.png")
 * Since model-free we need to estimate action-values instead so we can improve the policy.
 * Goal is to find $q_*$ for which the optimal action is the greedy action.  
 * To find $q_*$, we first need to predict action-values $q_\pi$ for a policy $\pi$.
-* The incremental update equation must be modified to use $Q$ values: $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\right].$$
+* The incremental update equation must be modified to use $Q$ values: $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)\right].$$
 * Given policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA. 
 * This acronym is used to name the SARSA algorithm for control (next week). 
 * To ensure exploration of all action-values we need e.g. an $\epsilon$-soft behavioural policy.  
