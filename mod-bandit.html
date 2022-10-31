@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-10-17" />
+<meta name="date" content="2022-10-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -148,7 +148,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -161,7 +161,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -474,7 +474,7 @@ Figure 2.2: Which ad to choose?
 <div id="estimating-the-value-of-an-action" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Estimating the value of an action<a href="mod-bandit.html#estimating-the-value-of-an-action" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>How can the value of an action be estimated, i.e. the expected reward of an action <span class="math inline">\(q_*(a) = \mathbb{E}[R_t | A_t = a]\)</span>. Assume that at time <span class="math inline">\(t\)</span> action <span class="math inline">\(a\)</span> has been chosen <span class="math inline">\(N_t(a)\)</span> times. Then the estimated action value is
-<span class="math display">\[\begin{equation} 
+<span class="math display">\[\begin{equation}
     Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
 \end{equation}\]</span>
 Storing <span class="math inline">\(Q_t(a)\)</span> this way is cumbersome since memory and computation requirements grow over time. Instead an <em>incremental</em> approach is better. If we assume that <span class="math inline">\(N_t(a) = n-1\)</span> and set <span class="math inline">\(Q_t(a) = Q_n\)</span> then <span class="math inline">\(Q_{n+1}\)</span> becomes:
@@ -818,7 +818,7 @@ Close
 <button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bBIs4ifgbS5F91wS3KgW">
 Solution
 </button>
-<div id="9UNSaGJghbZYV0FR4kTI" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title">
+<div id="id_9UNSaGJghbZYV0FR4kTI" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="9UNSaGJghbZYV0FR4kTI-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
@@ -870,7 +870,7 @@ Hint
 <li>Run the <span class="math inline">\(\epsilon\)</span>-greedy algorithm with <span class="math inline">\(\epsilon = 0.01, 0.1, 0.5\)</span> over the 10000 steps. What are the estimated CTRs for each action (<span class="math inline">\(Q_t(a)\)</span>)? What is the average number of clicks per user?</li>
 </ol>
 <!-- Q2 -->
-<div id="8ZCXznKGcQH0cwTItGQG" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="8ZCXznKGcQH0cwTItGQG-title">
+<div id="id_8ZCXznKGcQH0cwTItGQG" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="8ZCXznKGcQH0cwTItGQG-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
