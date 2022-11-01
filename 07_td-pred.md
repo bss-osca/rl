@@ -184,11 +184,11 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="BpuG0vYxQIBPvD008kJ1" tabindex="-1" role="dialog" aria-labelledby="BpuG0vYxQIBPvD008kJ1-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BpuG0vYxQIBPvD008kJ1-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="C1yHTbLr8w21jqNQadf8" tabindex="-1" role="dialog" aria-labelledby="C1yHTbLr8w21jqNQadf8-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="C1yHTbLr8w21jqNQadf8-title">Solution</h4></div><div class="modal-body">
 
 <p>The state space is \(\mathcal{S} = \{ 1, 2, \ldots, 6, 7 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(2) &= 0.5v_\pi(1) + 0.5v_\pi(3) = 0.5v_\pi(3) \\ v_\pi(3) &= 0.5v_\pi(2) + 0.5v_\pi( 4 ) \\ v_\pi( 4 ) &= 0.5v_\pi(3) + 0.5v_\pi(5) \\ v_\pi(5) &= 0.5v_\pi( 4 ) + 0.5v_\pi(6) \\ v_\pi(6) &= 0.5v_\pi(5) + 0.5(1 + v_\pi(7)) = 0.5v_\pi(5) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for 2-6, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BpuG0vYxQIBPvD008kJ1">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#C1yHTbLr8w21jqNQadf8">Solution</button>
 
 1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
 
@@ -311,11 +311,11 @@ mdp$getStateValues()
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="YIzqw1tTdu6svxLKtXDh" tabindex="-1" role="dialog" aria-labelledby="YIzqw1tTdu6svxLKtXDh-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="YIzqw1tTdu6svxLKtXDh-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="gZK9y3SQ7A98jvnp7Ya6" tabindex="-1" role="dialog" aria-labelledby="gZK9y3SQ7A98jvnp7Ya6-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gZK9y3SQ7A98jvnp7Ya6-title">Solution</h4></div><div class="modal-body">
 
 <p>We use TD(0), i.e. update using \(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\): \[V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.\] That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#YIzqw1tTdu6svxLKtXDh">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#gZK9y3SQ7A98jvnp7Ya6">Solution</button>
 
 3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
@@ -1155,13 +1155,6 @@ left_join(res, resMDP) %>%
 
 Explain the plot. 
 
-<!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
-
-
-<!-- ### Exercise - Off-policy TD {#ex-td-pred-off-policy} -->
-
-<!-- Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}. -->
-
 
 [BSS]: https://bss.au.dk/en/
 [bi-programme]: https://kandidat.au.dk/en/businessintelligence/
@@ -1306,5 +1299,3 @@ Explain the plot.
 [wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
 [wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
 [wiki-json]: https://en.wikipedia.org/wiki/JSON
-
-
