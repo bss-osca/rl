@@ -450,16 +450,5 @@ left_join(res, resMDP) %>%
 
 Explain the plot. 
 
-<!-- Smaller alpha gives more weight to old obs which is good here since stationary process (sample average is better) -->
-
-
-<!-- ### Exercise - Off-policy TD {#ex-td-pred-off-policy} -->
-
-<!-- Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behaviour policy b, using at each step t the importance sampling ratio $\rho_{t:t}. -->
-
 ```{r links, child="links.md", include=FALSE}
-```
-
-```{r, include=FALSE}
-knitr::knit_exit()
 ```
