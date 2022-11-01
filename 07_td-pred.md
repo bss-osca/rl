@@ -184,11 +184,11 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="VK1c6tz4x351QU2EL2LC" tabindex="-1" role="dialog" aria-labelledby="VK1c6tz4x351QU2EL2LC-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="VK1c6tz4x351QU2EL2LC-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="BpuG0vYxQIBPvD008kJ1" tabindex="-1" role="dialog" aria-labelledby="BpuG0vYxQIBPvD008kJ1-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BpuG0vYxQIBPvD008kJ1-title">Solution</h4></div><div class="modal-body">
 
 <p>The state space is \(\mathcal{S} = \{ 1, 2, \ldots, 6, 7 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(2) &= 0.5v_\pi(1) + 0.5v_\pi(3) = 0.5v_\pi(3) \\ v_\pi(3) &= 0.5v_\pi(2) + 0.5v_\pi( 4 ) \\ v_\pi( 4 ) &= 0.5v_\pi(3) + 0.5v_\pi(5) \\ v_\pi(5) &= 0.5v_\pi( 4 ) + 0.5v_\pi(6) \\ v_\pi(6) &= 0.5v_\pi(5) + 0.5(1 + v_\pi(7)) = 0.5v_\pi(5) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for 2-6, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#VK1c6tz4x351QU2EL2LC">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BpuG0vYxQIBPvD008kJ1">Solution</button>
 
 1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
 
@@ -311,11 +311,11 @@ mdp$getStateValues()
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="okk4lmDKoCSUgar63O6J" tabindex="-1" role="dialog" aria-labelledby="okk4lmDKoCSUgar63O6J-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="okk4lmDKoCSUgar63O6J-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="YIzqw1tTdu6svxLKtXDh" tabindex="-1" role="dialog" aria-labelledby="YIzqw1tTdu6svxLKtXDh-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="YIzqw1tTdu6svxLKtXDh-title">Solution</h4></div><div class="modal-body">
 
 <p>We use TD(0), i.e. update using \(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\): \[V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.\] That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#okk4lmDKoCSUgar63O6J">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#YIzqw1tTdu6svxLKtXDh">Solution</button>
 
 3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
@@ -879,7 +879,7 @@ agent$getStateValues()
 #> 6 6       0.5
 #> 7 7       0
 agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 1, reset = F)
-res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+resTD0 <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
 #> # A tibble: 7 × 3
 #> # Rowwise: 
 #>   state     v episodes
@@ -901,17 +901,17 @@ res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 10, reset = F)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+resTD0 <- bind_rows(resTD0, agent$getStateValues() %>% mutate(episodes = 10))
 ## 100 episodes
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 100, reset = F)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+resTD0 <- bind_rows(resTD0, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
    mutate(state = as.numeric(state), episodes = as.character(episodes)) 
-res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+resTD0 <- bind_rows(resTD0,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
-res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
-resTD0 <- res %>% mutate(alpha = 0.1, alg = "TD0")
+resTD0 %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resTD0 <- resTD0 %>% mutate(alpha = 0.1, alg = "TD0")
 ```
 
 <img src="07_td-pred_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" />
@@ -944,7 +944,7 @@ agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 1, maxIte = 1, reset =
 #> 1 4     left      0     2     0   0.5  0.25
 #> 2 3     left      0     2     0   0.5  0.25
 #> 3 2     left      0     2     0   0.5  0.25
-res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+resMC <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
 #> # A tibble: 7 × 3
 #> # Rowwise: 
 #>   state     v episodes
@@ -1065,18 +1065,18 @@ agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 10, maxIte = 10, reset
 #> 11 6     left      0     9     1 0.932 0.940
 #> 12 5     right     0    16     1 0.635 0.658
 #> 13 6     right     1     9     1 0.924 0.932
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+resMC <- bind_rows(resMC, agent$getStateValues() %>% mutate(episodes = 10))
 ## 100 episodes
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$setStateCtrValue(1)    
 agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 100, maxIte = 100, reset = F)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+resMC <- bind_rows(resMC, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
    mutate(state = as.numeric(state), episodes = as.character(episodes)) 
-res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+resMC <- bind_rows(resMC,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
-res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
-resMC <- res %>% mutate(alpha = 0.1, alg = "MC")
+resMC %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resMC <- resMC %>% mutate(alpha = 0.1, alg = "MC")
 ```
 
 <img src="07_td-pred_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" />
