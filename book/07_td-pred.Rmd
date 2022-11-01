@@ -347,7 +347,7 @@ agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$getStateValues()
 agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 1, reset = F)
-res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+resTD0 <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
 ```
 
 ```{r, solution=TRUE}
@@ -355,17 +355,17 @@ res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 10, reset = F)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+resTD0 <- bind_rows(resTD0, agent$getStateValues() %>% mutate(episodes = 10))
 ## 100 episodes
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 100, reset = F)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+resTD0 <- bind_rows(resTD0, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
    mutate(state = as.numeric(state), episodes = as.character(episodes)) 
-res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+resTD0 <- bind_rows(resTD0,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
-res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
-resTD0 <- res %>% mutate(alpha = 0.1, alg = "TD0")
+resTD0 %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resTD0 <- resTD0 %>% mutate(alpha = 0.1, alg = "TD0")
 ```
 
 Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
@@ -380,24 +380,24 @@ agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$setStateCtrValue(1)    
 agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 1, maxIte = 1, reset = F, verbose = T)
-res <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
+resMC <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
 ## 10 episodes
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$setStateCtrValue(1)    
 agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 10, maxIte = 10, reset = F, verbose = T)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 10))
+resMC <- bind_rows(resMC, agent$getStateValues() %>% mutate(episodes = 10))
 ## 100 episodes
 agent$setStateValue(states, 0.5)
 agent$setStateValue(c("1", "7"), 0)
 agent$setStateCtrValue(1)    
 agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 100, maxIte = 100, reset = F)
-res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
+resMC <- bind_rows(resMC, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
    mutate(state = as.numeric(state), episodes = as.character(episodes)) 
-res <- bind_rows(res,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
+resMC <- bind_rows(resMC,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
    filter(state > 1, state < 7)
-res %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
-resMC <- res %>% mutate(alpha = 0.1, alg = "MC")
+resMC %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
+resMC <- resMC %>% mutate(alpha = 0.1, alg = "MC")
 ```
 
 5) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes. Hint you have to call `policyEvalMC` instead of `policyEvalTD0`.
