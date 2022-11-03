@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-11-01" />
+<meta name="date" content="2022-11-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -414,7 +414,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="mod-td-control" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Module 8</span> Temporal difference methods for control<a href="mod-td-control.html#mod-td-control" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In Module <a href="mod-td-pred.html#mod-td-pred">7</a> temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:</p>
+<p>In Module <a href="mod-td-pred.html#mod-td-pred">7</a> temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:</p>
 <ol style="list-style-type: decimal">
 <li><em>Infinite exploration</em>: all state-action <span class="math inline">\((s,a)\)</span> pairs should be explored infinitely many times as the number of iterations go to infinity (in the limit), i.e. as the number of iterations <span class="math inline">\(k\)</span> goes to infinity the number of visits <span class="math inline">\(n_k\)</span> does too <span class="math display">\[\lim_{k\rightarrow\infty} n_k(s, a) = \infty.\]</span></li>
 <li><em>Greedy in the limit</em>: while we maintain infinite exploration, we do eventually need to converge to the optimal policy:
