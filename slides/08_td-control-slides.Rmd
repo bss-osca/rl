@@ -75,7 +75,7 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 
 * Last week: TD methods for prediction. This week: TD for control (improve the policy).
 * Use generalized policy iteration (GPI) with TD methods (policy evaluation, policy improvement, repeat). 
-* Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. 
+* Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. 
 * An element of exploration are needed to estimate the action-values. 
 * For convergence to the optimal policy a model-free GPI algorithm must satisfy:
   - *Infinite exploration*: state-action pairs should be explored infinitely many times: $$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$

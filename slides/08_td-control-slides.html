@@ -13,10 +13,17 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Temporal difference (TD) methods for control
+]
+.author[
 ### Lars Relund Nielsen
+]
 
 ---
+
+
+
 
 
 
@@ -66,7 +73,7 @@ layout: true
 
 * Last week: TD methods for prediction. This week: TD for control (improve the policy).
 * Use generalized policy iteration (GPI) with TD methods (policy evaluation, policy improvement, repeat). 
-* Since we do not have a model (the transition probability matrix and reward distribution are known) all our action-values are estimates. 
+* Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. 
 * An element of exploration are needed to estimate the action-values. 
 * For convergence to the optimal policy a model-free GPI algorithm must satisfy:
   - *Infinite exploration*: state-action pairs should be explored infinitely many times: `$$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$`
@@ -414,6 +421,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
