@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-11-04" />
+<meta name="date" content="2022-11-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -313,7 +313,7 @@ div.csl-indent {
 <li class="chapter" data-level="5.5" data-path="mod-dp.html"><a href="mod-dp.html#policy-iteration"><i class="fa fa-check"></i><b>5.5</b> Policy Iteration</a></li>
 <li class="chapter" data-level="5.6" data-path="mod-dp.html"><a href="mod-dp.html#value-iteration"><i class="fa fa-check"></i><b>5.6</b> Value Iteration</a></li>
 <li class="chapter" data-level="5.7" data-path="mod-dp.html"><a href="mod-dp.html#generalized-policy-iteration"><i class="fa fa-check"></i><b>5.7</b> Generalized policy iteration</a></li>
-<li class="chapter" data-level="5.8" data-path="mod-dp.html"><a href="mod-dp.html#example---factory-storage"><i class="fa fa-check"></i><b>5.8</b> Example - Factory Storage</a></li>
+<li class="chapter" data-level="5.8" data-path="mod-dp.html"><a href="mod-dp.html#exe-dp-storage"><i class="fa fa-check"></i><b>5.8</b> Example - Factory Storage</a></li>
 <li class="chapter" data-level="5.9" data-path="mod-dp.html"><a href="mod-dp.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
 <li class="chapter" data-level="5.10" data-path="mod-dp.html"><a href="mod-dp.html#exercises"><i class="fa fa-check"></i><b>5.10</b> Exercises</a>
 <ul>
@@ -371,7 +371,10 @@ div.csl-indent {
 <li class="chapter" data-level="8.4" data-path="mod-td-control.html"><a href="mod-td-control.html#q-learning---off-policy-gpi-using-td"><i class="fa fa-check"></i><b>8.4</b> Q-learning - Off-policy GPI using TD</a></li>
 <li class="chapter" data-level="8.5" data-path="mod-td-control.html"><a href="mod-td-control.html#expected-sarsa---gpi-using-td"><i class="fa fa-check"></i><b>8.5</b> Expected SARSA - GPI using TD</a></li>
 <li class="chapter" data-level="8.6" data-path="mod-td-control.html"><a href="mod-td-control.html#summary-6"><i class="fa fa-check"></i><b>8.6</b> Summary</a></li>
-<li class="chapter" data-level="8.7" data-path="mod-td-control.html"><a href="mod-td-control.html#exercises-3"><i class="fa fa-check"></i><b>8.7</b> Exercises</a></li>
+<li class="chapter" data-level="8.7" data-path="mod-td-control.html"><a href="mod-td-control.html#exercises-3"><i class="fa fa-check"></i><b>8.7</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="8.7.1" data-path="mod-td-control.html"><a href="mod-td-control.html#ex-td-control-storage"><i class="fa fa-check"></i><b>8.7.1</b> Exercise - Factory Storage</a></li>
+</ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="mod-r-setup.html"><a href="mod-r-setup.html"><i class="fa fa-check"></i><b>A</b> Setting up R</a></li>
@@ -422,19 +425,19 @@ thisIsCamelCase      # you start each word with a capital letter (except the fir
 <div id="commenting-your-code" class="section level2 hasAnchor" number="11.1">
 <h2><span class="header-section-number">C.1</span> Commenting your code<a href="coding-convention.html#commenting-your-code" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use <a href="https://roxygen2.r-lib.org/">roxygen documentation</a> comments which are widely known.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="coding-convention.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Subtract two vectors</span></span>
-<span id="cb81-2"><a href="coding-convention.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb81-3"><a href="coding-convention.html#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param x First vector.</span></span>
-<span id="cb81-4"><a href="coding-convention.html#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param y Vector to be subtracted.</span></span>
-<span id="cb81-5"><a href="coding-convention.html#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb81-6"><a href="coding-convention.html#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return The difference.</span></span>
-<span id="cb81-7"><a href="coding-convention.html#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb81-8"><a href="coding-convention.html#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
-<span id="cb81-9"><a href="coding-convention.html#cb81-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
-<span id="cb81-10"><a href="coding-convention.html#cb81-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; subtract(x = c(5,5), y = c(2,3))</span></span>
-<span id="cb81-11"><a href="coding-convention.html#cb81-11" aria-hidden="true" tabindex="-1"></a>subtract <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
-<span id="cb81-12"><a href="coding-convention.html#cb81-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">-</span>y)</span>
-<span id="cb81-13"><a href="coding-convention.html#cb81-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="coding-convention.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Subtract two vectors</span></span>
+<span id="cb90-2"><a href="coding-convention.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb90-3"><a href="coding-convention.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param x First vector.</span></span>
+<span id="cb90-4"><a href="coding-convention.html#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param y Vector to be subtracted.</span></span>
+<span id="cb90-5"><a href="coding-convention.html#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb90-6"><a href="coding-convention.html#cb90-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return The difference.</span></span>
+<span id="cb90-7"><a href="coding-convention.html#cb90-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb90-8"><a href="coding-convention.html#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb90-9"><a href="coding-convention.html#cb90-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @examples</span></span>
+<span id="cb90-10"><a href="coding-convention.html#cb90-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; subtract(x = c(5,5), y = c(2,3))</span></span>
+<span id="cb90-11"><a href="coding-convention.html#cb90-11" aria-hidden="true" tabindex="-1"></a>subtract <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
+<span id="cb90-12"><a href="coding-convention.html#cb90-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">-</span>y)</span>
+<span id="cb90-13"><a href="coding-convention.html#cb90-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>You can add a roxygen skeleton automatically using <strong>Code &gt; Insert Roxygen Skeleton</strong> in RStudio.</p>
 </div>
 </div>

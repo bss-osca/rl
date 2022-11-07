@@ -102,7 +102,7 @@ policy-improvement
 policy-iteration
 value-iteration
 generalized-policy-iteration
-example---factory-storage
+exe-dp-storage
 summary-4
 exercises
 ex-dp-gambler
@@ -141,6 +141,7 @@ q-learning---off-policy-gpi-using-td
 expected-sarsa---gpi-using-td
 summary-6
 exercises-3
+ex-td-control-storage
 mod-r-setup
 groups
 coding-convention

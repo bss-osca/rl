@@ -184,11 +184,11 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="NAutGGmdctqDCRPRqsIW" tabindex="-1" role="dialog" aria-labelledby="NAutGGmdctqDCRPRqsIW-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="NAutGGmdctqDCRPRqsIW-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="1Wf679GzWGOd40xv4Fas" tabindex="-1" role="dialog" aria-labelledby="1Wf679GzWGOd40xv4Fas-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="1Wf679GzWGOd40xv4Fas-title">Solution</h4></div><div class="modal-body">
 
 <p>The state space is \(\mathcal{S} = \{ 1, 2, \ldots, 6, 7 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure \@ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure \@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \@ref(eq:bm-pol-eval) \[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),\] which becomes \[\begin{align}v_\pi(2) &= 0.5v_\pi(1) + 0.5v_\pi(3) = 0.5v_\pi(3) \\ v_\pi(3) &= 0.5v_\pi(2) + 0.5v_\pi( 4 ) \\ v_\pi( 4 ) &= 0.5v_\pi(3) + 0.5v_\pi(5) \\ v_\pi(5) &= 0.5v_\pi( 4 ) + 0.5v_\pi(6) \\ v_\pi(6) &= 0.5v_\pi(5) + 0.5(1 + v_\pi(7)) = 0.5v_\pi(5) + 0.5\\ \end{align}\] Solving the equations with a state-value equal to 0 for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for 2-6, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#NAutGGmdctqDCRPRqsIW">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#1Wf679GzWGOd40xv4Fas">Solution</button>
 
 1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
 
@@ -311,11 +311,11 @@ mdp$getStateValues()
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="d6V87iRVAbki6mOMbY9y" tabindex="-1" role="dialog" aria-labelledby="d6V87iRVAbki6mOMbY9y-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="d6V87iRVAbki6mOMbY9y-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="rEbYCiqHOOr0di8i4MQN" tabindex="-1" role="dialog" aria-labelledby="rEbYCiqHOOr0di8i4MQN-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="rEbYCiqHOOr0di8i4MQN-title">Solution</h4></div><div class="modal-body">
 
 <p>We use TD(0), i.e. update using \(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\): \[V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,\] \[V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.\] That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#d6V87iRVAbki6mOMbY9y">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#rEbYCiqHOOr0di8i4MQN">Solution</button>
 
 3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
@@ -550,14 +550,16 @@ RLAgent <- R6Class("RLAgent",
          return(invisible(NULL))
       },
       
-      #' @description Set the greedy policy (stored in piG) based on action-values. 
+      #' @description Set the greedy policy based on action-values. 
       #' @param states States under consideration.
       setGreedyPolicy = function(states = self$getStateKeys()) {
          for (s in states) {
+            pi <- 1
             actions <- self$getActionKeys(s)
-            idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
-            # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
-            self$model[[s]]$piG <- actions[idx]
+            # idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
+            idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max
+            names(pi) <- actions[idx]
+            self$model[[s]]$pi <- pi
          }
          return(invisible(NULL))
       },
@@ -678,6 +680,24 @@ RLAgent <- R6Class("RLAgent",
          return(a)
       },
       
+      #' @description Find maximum action value in a state.
+      #' @return Value.
+      getMaxActionValue = function(s) {
+         q <- unlist(values(self$model[[s]]$actions)["q",])
+         return(max(q))
+      },
+      
+      #' @description Find expected action value in a state based on current policy
+      #' @return Value.
+      getExpActionValue = function(s) {
+         pi <- self$model[[s]]$pi
+         a <- names(pi)
+         for (i in seq_along(pi)) {
+            pi[i] <- pi[i] * self$model[[s]]$actions[[a[i]]]$q
+         }
+         return(sum(pi))
+      },
+      
       #' @description Return and action sampled from the current policy pi. Also update the visit counters for both state and selected action.
       #' @param s The state considered.
       getActionPi = function(s) {
@@ -718,6 +738,7 @@ RLAgent <- R6Class("RLAgent",
                self$model[[s]]$v <- oldV + alpha * (r + gamma * self$model[[sN]]$v - oldV)
                s <- sN
             }
+            if (i == maxEL) break
          }
       },
       
@@ -818,9 +839,120 @@ RLAgent <- R6Class("RLAgent",
          if (ite == maxIte) warning("GPI algorithm stopped at max iterations allowed: ", maxIte)
          message(str_c("GPI algorihm finished in ", ite, " iterations."))
          return(invisible(NULL))
-      }
+      },
       
+      #' @description Generalized policy iteration using on policy SARSA.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOnPolicySARSA = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            a <- self$getActionPi(s)
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               aN <- self$getActionPi(sN)
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * self$model[[sN]]$actions[[aN]]$q - oldQ)
+               if (verbose) cat("(s,a,r,s,a) = (", s, ",", a, ",", r, ",", sN, ",", aN, "), r = ", r, " oldQ = ", oldQ, " Q(sN, aN) = ", self$model[[sN]]$actions[[aN]]$q, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+               a <- aN
+            }
+            if (i == maxEL) break
+         }
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      },
+      
+      #' @description Generalized policy iteration using off policy Q-learning.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOffPolicyQLearning = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               maxQ <- self$getMaxActionValue(sN)
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * maxQ - oldQ)
+               if (verbose) cat("(s,a,r,s) = (", s, ",", a, ",", r, ",", sN, "), r = ", r, " oldQ = ", oldQ, " maxQ(sN) = ", maxQ, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+         self$setGreedyPolicy()
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      },
 
+      #' @description Generalized policy iteration using off policy Q-learning.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOnPolicyExpSARSA = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               expQ <- self$getExpActionValue(sN)
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * expQ - oldQ)
+               if (verbose) cat("(s,a,r,s) = (", s, ",", a, ",", r, ",", sN, "), r = ", r, " oldQ = ", oldQ, " expQ(sN) = ", expQ, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      }
    )
 )
 ```

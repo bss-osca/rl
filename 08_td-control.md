@@ -9,6 +9,19 @@ editor_options:
 
 
 
+
+
+
+<!-- Various algorithms for the RL course -->
+
+
+
+
+
+
+
+
+
 # Temporal difference methods for control {#mod-td-control}
 
 In Module \@ref(mod-td-pred) temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:
@@ -140,13 +153,6 @@ and for expected SARSA the target is: $$T_t = R_{t+1} + \gamma \sum_{a} \pi(a | 
 Expected SARSA can be both on-policy and off-policy. If the behavioural policy and the target policy are different it is off-policy. If they are the same it is on-policy. For instance, expected SARSA is off-policy if the target policy is greedy and the behavioural policy $\epsilon$-greedy. In which case expected SARSA becomes Q-learning since the expectation of a greedy policy is the maximum value ($\pi(s|a) = 1$ here). Hence expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
 
 
-<!-- ## Maximization bias and double learning   -->
-
-<!-- Many control algorithms use a maximisation operator to select actions (either $\epsilon$-greedy or greedy action selection). Hence we implicitly favour positive numbers. If the values of $q_\pi(s,a)$ are near zero and estimates $Q$ have values distributed around zero (both negative and positive) then the maximisation operator will select the positive estimates, despite the true value being near zero. This bias is a so-called \textit{maximisation bias}. -->
-
-<!-- If you consider a RL problem where $q_*(s,a)$ may be near zero then \emph{double learning} may be used in which we learn two independent sets of value estimates $Q_1$ and $Q_2$, then at each time step we choose one of them at random and update it using the other as a target. This produces two unbiased estimates of the action-values (which could be averaged). Below we show an algorithm for \emph{double Q-learning}.  -->
-
-
 
 
 
@@ -159,7 +165,965 @@ Read Chapter 6.9 in @Sutton18.
 
 Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!
 
-<!-- An inventory problem that compares the algorithms -->
+### Exercise - Factory Storage {#ex-td-control-storage}
+
+Consider Example \@ref(exe-dp-storage) where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
+$$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
+If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
+
+An MDP model was formulated in Example \@ref(exe-dp-storage) and solved using policy iteration. Our goal here is to solve the same problem GPI using TD. For this we need an environment representing the problem:
+
+
+```r
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 Class representing the RL environment for the problem
+RLEnvFactory <- R6Class("RLEnvFactory",
+   public = list(
+
+      #' @field pr Probability of 0, 1, 2, and 3 m2 waste
+      pr = c(1/8, 1/2, 1/4, 1/8),
+      
+      #' @description Return all states (keys).
+      getStates = function() {
+         return(str_c(0:4))
+      },
+      
+      #' @description Return all actions (keys) for a state.
+      #' @param s State considered.
+      getActions = function(s) {
+         if (s == "0") return("keep")
+         return(c("empty", "keep"))
+      },
+      
+      #' @description Returns the next state and reward given current state and action as a list (with names `r` and `sN`).
+      #' @param s Current state.
+      #' @param a Current action.
+      getTimeStepData = function(s, a) {
+         s <- as.numeric(s)
+         if (a == "empty") {
+            return(list(r = -(25 + 5*s), sN = as.character(sample(0:3, 1, prob = self$pr))))
+         }
+         if (a == "keep") {
+            sN <- s + sample(0:3, 1, prob = self$pr)
+            rew <- 0
+            if (sN > 4) {
+               rew <- -30 * (sN - 4)
+               sN <- 4
+            }
+            return(list(r = rew, sN = as.character(sN)))
+         }
+         stop("Error finding next state and reward!")
+      }
+   )
+)
+```
+
+Note that for using the GPI algorithms in the agent class we need a method `getTimeStepData` that given a state and action return the reward and the next state. 
+
+<!-- Q1 -->
+
+<div class="modal fade bs-example-modal-lg" id="nufc6vrndFD6Oyoag9Yy" tabindex="-1" role="dialog" aria-labelledby="nufc6vrndFD6Oyoag9Yy-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nufc6vrndFD6Oyoag9Yy-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+env <- RLEnvFactory$new()
+env$getTimeStepData("0", "keep")
+#> $r
+#> [1] 0
+#> 
+#> $sN
+#> [1] "2"
+env$getTimeStepData("4", "keep")
+#> $r
+#> [1] -30
+#> 
+#> $sN
+#> [1] "4"
+env$getTimeStepData("2", "empty")
+#> $r
+#> [1] -35
+#> 
+#> $sN
+#> [1] "1"
+```
+
+
+<p>The method returns the next state and reward given current state and action as a list (with names <code>r</code> and <code>sN</code>).</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nufc6vrndFD6Oyoag9Yy">Solution</button>
+
+1) Consider the `getTimeStepData` method and explain what it does. Generate a reward and next state for $(s,a)$ pairs (0, keep), (4, keep) and (2, empty).
+
+Next we have to add the GPI algorithms to the generic agent class:
+
+
+```r
+library(R6)
+library(hash)
+library(tidyverse)
+
+## Generic RL agent for tabular data (R6 class)
+RLAgent <- R6Class("RLAgent",
+   public = list(
+      #' @field model The model is used to represent the information we have. The
+      #' model is represented using a hash list for the states. Each states contains 
+      #'    - A list with `actions` (a hash #' list with actions).
+      #'    - `pi` (a named vector with policy pr (only positive values).
+      #'    - `piG` the greedy action (a string). 
+      #'    - `n` a visit counter
+      #' The `actions` hash list contains 
+      #'    - The action-values `q`.
+      #'    - `n` a visit counter.
+      model = NULL,  
+      
+      #' @description Create an object (when call new).
+      initialize = function() {
+         self$model <- hash()
+         return(invisible(NULL))
+      },
+
+      #' @description Add state and action to the hash (only if not already added)
+      #' @param s State key/string.
+      #' @param a Action key/string.
+      addStateAction = function(s, a) {
+         if (!has.key(s, self$model)) addStates(s)
+         if (!has.key(a, self$model[[s]]$actions)) self$model[[s]]$actions[[a]] <- list(q = 0, n = 0)
+         return(invisible(NULL))
+      },
+      
+      #' @description Add the states (keys) and define void policy and empty action hash. 
+      #' @param states A vector of states (converted to strings).
+      addStates = function(states) {
+         keys <- make.keys(states)
+         self$model[keys] <- list(pi = NA)   # don't use pi = NULL since then won't be defined 
+         for (s in keys) {
+            self$model[[s]]$v <- NA
+            self$model[[s]]$actions <- hash()
+            self$model[[s]]$n <- 0  # counter visited
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Add the actions to a state
+      #' @param s State (key).
+      #' @param actions A vector of actions (converted to strings).
+      addActions = function(s, actions) {
+         keys <- make.keys(actions)
+         for (a in keys) {
+            self$addStateAction(s, a)
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Add states and actions to the hash with initial values. If already exists nothing happens. 
+      #' @param df A tibble with string columns `s` (states) and `a` (actions).
+      addStatesAndActions = function(df) {
+         for (i in 1:nrow(df)) {
+            self$addStateAction(df$s[i], df$a[i])
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the action-values for all actions.
+      #' @param value The value.
+      setActionValue = function(value = 0) {
+         for (s in keys(self$model)) {
+            for (a in keys(self$model[[s]]$actions)) {
+               self$model[[s]]$actions[[a]]$q = value
+            }
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the state-value of states
+      #' @param states A vector of states.
+      #' @param value The value.
+      setStateValue = function(states = keys(self$model), value = 0) {
+         for (s in states) {
+            self$model[[s]]$v <- value
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the action visit counter values for all actions.
+      #' @param ctrValue Counter value.
+      setActionCtrValue = function(ctrValue = 0) {
+         for (s in keys(self$model)) {
+            for (a in keys(self$model[[s]]$actions)) {
+               self$model[[s]]$actions[[a]]$n = ctrValue
+            }
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the action-values for a single action (including the counter values).
+      #' @param value The value.
+      #' @param ctrValue Counter value.
+      setActionValueSingle = function(value = 0, ctrValue = 0, s, a) {
+         self$model[[s]]$actions[[a]]$q = value
+         self$model[[s]]$actions[[a]]$n = ctrValue
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to a random epsilon-greedy policy.
+      #' @param eps Epsilon used in epsilon-greedy policy.
+      setRandomEpsGreedyPolicy = function(eps) {
+         states <- keys(self$model)
+         for (s in states) {
+            actions <- self$getActionKeys(s)
+            self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
+            names(self$model[[s]]$pi) <- actions
+            piG <- sample(self$getActionKeys(s), 1)
+            self$model[[s]]$pi[piG] <- self$model[[s]]$pi[piG] + 1 - eps
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to the optimal epsilon-greedy policy 
+      #' @param eps Epsilon used in epsilon-greedy policy.
+      #' @param states States under consideration.
+      setEpsGreedyPolicy = function(eps, states) {
+         for (s in states) {
+            actions <- self$getActionKeys(s)
+            self$model[[s]]$pi <- rep(eps/length(actions), length(actions))
+            names(self$model[[s]]$pi) <- actions
+            idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
+            # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
+            # self$model[[s]]$piG <- actions[idx]
+            self$model[[s]]$pi[idx] <- self$model[[s]]$pi[idx] + 1 - eps
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the greedy policy based on action-values. 
+      #' @param states States under consideration.
+      setGreedyPolicy = function(states = self$getStateKeys()) {
+         for (s in states) {
+            pi <- 1
+            actions <- self$getActionKeys(s)
+            # idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
+            idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max
+            names(pi) <- actions[idx]
+            self$model[[s]]$pi <- pi
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the policy to the named vector pi for a set of states
+      #' @param states States under consideration.
+      #' @param pi A named vector with policy pr (only psitive values).
+      setPolicy = function(states, pi) {
+         for (s in states) {
+            self$model[[s]]$pi <- pi
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Set the state visit counter values for all states.
+      #' @param ctrValue Counter value.
+      setStateCtrValue = function(ctrValue = 0) {
+         for (s in keys(self$model)) {
+            self$model[[s]]$n = ctrValue
+         }
+         return(invisible(NULL))
+      },
+      
+      #' @description Return the state keys
+      getStateKeys = function() {
+         keys(self$model)
+      },
+      
+      #' @description Return the state-value for a state and policy using the q/action-values 
+      #' @param s A state.
+      getStateValueQ = function(s) {
+         pi <- self$model[[s]]$pi
+         # print(pi)
+         val <- 0
+         for (a in names(pi)) {
+            val <- val + pi[a] * self$model[[s]]$actions[[a]]$q
+            # print(self$model[[s]]$actions[[a]]$q)
+         }
+         # print(val)
+         return(val)
+      },
+      
+      #' @description Return the state-values as a tibble
+      #' @param s A vector of state keys.
+      getStateValues = function(s = keys(self$model)) {
+         tibble(state = s) %>% rowwise() %>% mutate(v = self$model[[state]]$v) 
+      },
+      
+      #' @description Return the action keys
+      #' @param s The state considered.
+      getActionKeys = function(s) {
+         keys(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return information about actions stored in a state
+      #' @param s The state considered.
+      getActionInfo = function(s) {
+         as.list(self$model[[s]]$actions) 
+      },
+      
+      #' @description Return the current policy as a tibble
+      getPolicy = function(states = self$getStateKeys()) {
+         map_dfr(states, .f = function(s) {
+               list(state = s, action = names(self$model[[s]]$pi), pr = self$model[[s]]$pi)
+            })
+      },
+      
+      #' @description Returns all action-values in a matrix (cols: actions, rows: states)
+      getStateActionQMat = function() {
+         states <- keys(self$model)
+         actions <- unique(unlist(sapply(states, function(s) self$getActionKeys(s))))
+         m <- matrix(NA, nrow = length(states), ncol = length(actions))
+         colnames(m) <- actions
+         rownames(m) <- states
+         for (s in states) {
+            for (a in self$getActionKeys(s)) {
+               m[s, a] <- self$model[[s]]$actions[[a]]$q
+            }
+         }
+         return(m)
+      },
+      
+      #' @description Return the action-values as a tibble
+      #' @param states A vector of state keys.
+      getActionValues = function(states = keys(self$model)) {
+         map_dfr(states, .f = function(s) {
+               list(state = s, action = keys(self$model[[s]]$actions), q = unlist(values(self$model[[s]]$actions)["q",]), n = unlist(values(self$model[[s]]$actions)["n",]))
+            })
+      },
+      
+      #' @description Select next action using upper-confidence bound. Also update the visit counters for both state and selected action.
+      #' @return Action.
+      getActionUCB = function(s, coeff = 1) { 
+         actions <- self$getActionKeys(s)
+         self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+         qV <- unlist(values(self$model[[s]]$actions)["q",])
+         nA <- unlist(values(self$model[[s]]$actions)["n",])
+         nS <- self$model[[s]]$n
+         val <- qV + coeff * sqrt(log(nS + 0.0001)/nA)
+         idx <- which.max(val)
+         a <- actions[idx]
+         self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+         return(a)
+      },
+      
+      #' @description Select next action using epsilon-greedy policy based on action-values. Also update the visit counters for both state and selected action.
+      #' @return Action.
+      getActionEG = function(s, eps) {
+         self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+         q <- unlist(values(self$model[[s]]$actions)["q",])
+         actions <- self$getActionKeys(s)
+         pi <- rep(eps/length(q), length(q))
+         idx <- nnet::which.is.max(q)  # choose among max values at random
+         # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
+         pi[idx] <- pi[idx] + 1 - eps
+         a <- actions[sample(1:length(actions), 1, prob = pi)]
+         self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+         return(a)
+      },
+      
+      #' @description Find maximum action value in a state.
+      #' @return Value.
+      getMaxActionValue = function(s) {
+         q <- unlist(values(self$model[[s]]$actions)["q",])
+         return(max(q))
+      },
+      
+      #' @description Find expected action value in a state based on current policy
+      #' @return Value.
+      getExpActionValue = function(s) {
+         pi <- self$model[[s]]$pi
+         a <- names(pi)
+         for (i in seq_along(pi)) {
+            pi[i] <- pi[i] * self$model[[s]]$actions[[a[i]]]$q
+         }
+         return(sum(pi))
+      },
+      
+      #' @description Return and action sampled from the current policy pi. Also update the visit counters for both state and selected action.
+      #' @param s The state considered.
+      getActionPi = function(s) {
+         self$model[[s]]$n <- self$model[[s]]$n + 1  # visit s
+         pi <- self$model[[s]]$pi
+         actions <- names(pi)
+         a <- sample(actions, 1, prob = pi)
+         self$model[[s]]$actions[[a]]$n <- self$model[[s]]$actions[[a]]$n + 1  # note there is a risk here if use every-visit for an episode then will update more than once implying slower convergence. 
+         return(a)
+      },
+      
+# 
+#       getActionPi = function(s) {
+#          pi <- self$model[[s]]$pi
+#          return(sample(names(pi), 1, prob = pi))
+#       },
+      
+      #' @description Policy evaluation using TD(0)
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param alpha Step-size (use a fixed step-size).
+      #' @param maxE Maximum number of episodes generated.  
+      #' @param maxEL Maximum episode length.
+      #' @param reset If true initialize all state-values to 0.
+      #' @param states Possible start states of each episode (one picked at random).
+      #' @param ... Further arguments passed to `getEpisode` e.g the coefficient used for upper-confidence bound action selection. 
+      policyEvalTD0 = function(env, gamma = 1, alpha = 0.1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys()) {
+         if (reset) self$setStateValue(self$getStateKeys())      # set to 0
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among states
+            for (i in 1:maxEL) {  # for episode with ss as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldV <- self$model[[s]]$v
+               self$model[[s]]$v <- oldV + alpha * (r + gamma * self$model[[sN]]$v - oldV)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+      },
+      
+      
+      #' @description Policy evaluation using every-visit Monte Carlo sampling.  
+      #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
+      #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
+      #'    the method that decides which action selection method is used. 
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param minIte Minimum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param reset If true initialize all state-values to 0.
+      #' @param states Start states in the episodes, which all are visited using a for loop.
+      #' @param verbose If true then print info for each episode.
+      policyEvalMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), verbose = FALSE) {
+         if (reset) {
+            self$setStateValue()      # set to 0
+            self$setActionCtrValue()   # reset counter
+            self$setStateCtrValue()    # reset counter
+         }
+         for (ite in 1:maxIte) {
+            delta <- 0
+            for (ss in states) {  # for episode with s as start
+               df <- env$getEpisodePi(self, ss)  # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
+               if (nrow(df) == 0) next
+               df <- df %>% mutate(nS = NA, g = NA, oldV = NA, v = NA)
+               gain <- 0
+               for (i in nrow(df):1) {
+                  s <- df$s[i]
+                  a <- df$a[i]
+                  gain <- df$r[i] + gamma * gain
+                  ctr <- self$model[[s]]$n
+                  oldV <- self$model[[s]]$v
+                  stepSize <- (1/ctr)
+                  self$model[[s]]$v <- oldV + stepSize * (gain - oldV)
+                  newV <- self$model[[s]]$v
+                  delta <- max(delta, abs(oldV - newV))
+                  if (verbose) df$g[i] <- gain; df$nS[i] <- ctr; df$oldV[i] <- oldV; df$v[i] <- newV
+               }
+               if (verbose) print(df)
+            }
+            if (delta < theta & ite >= minIte) break
+         }
+         if (ite == maxIte) warning("Polcy eval algorithm stopped at max iterations allowed: ", maxIte)
+         message(str_c("Policy eval algorihm finished in ", ite, " iterations."))
+         return(invisible(NULL))
+      },
+      
+      #' @description Generalized policy iteration using on policy every-visit Monte Carlo sampling.  
+      #' @param env The environment which must have a method `getEpisode(agent, s, coeff)` that return an episode as a tibble with 
+      #'    cols s, a, r (last col the terminal reward). This method also must update the visit counters if needed! This is also 
+      #'    the method that decides which action selection method is used. 
+      #' @param gamma Discount rate.
+      #' @param theta Threshold parameter.
+      #' @param minIte Minimum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param maxIte Maximum number of iterations for each start state (all `states` are used a start state in one iteration).
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Start states in the episodes, which all are visited using a for loop.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param verbose If true then print info for each episode.
+      gpiOnPolicyMC = function(env, gamma = 1, theta = 0.1, minIte = 100, maxIte = 1000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()   # reset counter
+            self$setStateCtrValue()    # reset counter
+         }
+         # self$setRandomEpsGreedyPolicy(epsilon)
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         # self$setGreedyPolicy()
+         for (ite in 1:maxIte) {
+            delta <- 0
+            # stable <- TRUE
+            for (ss in states) {  # for episode with s as start
+               df <- env$getEpisode(self, ss, eps)  # an episode stored in a tibble with cols s, a, r (last col the terminal reward)
+               if (nrow(df) == 0) next
+               df <- df %>% mutate(nA = NA, nS = NA, oldQ = NA, q = NA, g = NA, oldV = NA, v = NA)
+               gain <- 0
+               for (i in nrow(df):1) {
+                  s <- df$s[i]
+                  a <- df$a[i]
+                  gain <- df$r[i] + gamma * gain
+                  ctr <- self$model[[s]]$actions[[a]]$n
+                  oldQ <- self$model[[s]]$actions[[a]]$q
+                  oldV <- self$getStateValueQ(s)
+                  stepSize <- (1/ctr)^0.5
+                  self$model[[s]]$actions[[a]]$q <- oldQ + stepSize * (gain - oldQ)
+                  # self$model[[s]]$actions[[a]]$q <- oldQ + 0.1 * (gain - oldQ)
+                  self$setEpsGreedyPolicy(eps, s)
+                  newV <- self$getStateValueQ(s)
+                  delta <- max(delta, abs(oldV - newV))
+                  if (verbose) df$oldQ[i] <- oldQ; df$q[i] <- self$model[[s]]$actions[[a]]$q; df$g[i] <- gain; df$nA[i] <- ctr; df$nS[i] <- self$model[[s]]$n; df$oldV[i] <- oldV; df$v[i] <- newV
+               }
+               if (verbose) print(df)
+            }
+            if (delta < theta & ite >= minIte) break
+         }
+         if (ite == maxIte) warning("GPI algorithm stopped at max iterations allowed: ", maxIte)
+         message(str_c("GPI algorihm finished in ", ite, " iterations."))
+         return(invisible(NULL))
+      },
+      
+      #' @description Generalized policy iteration using on policy SARSA.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOnPolicySARSA = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            a <- self$getActionPi(s)
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               aN <- self$getActionPi(sN)
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * self$model[[sN]]$actions[[aN]]$q - oldQ)
+               if (verbose) cat("(s,a,r,s,a) = (", s, ",", a, ",", r, ",", sN, ",", aN, "), r = ", r, " oldQ = ", oldQ, " Q(sN, aN) = ", self$model[[sN]]$actions[[aN]]$q, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+               a <- aN
+            }
+            if (i == maxEL) break
+         }
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      },
+      
+      #' @description Generalized policy iteration using off policy Q-learning.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOffPolicyQLearning = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               maxQ <- self$getMaxActionValue(sN)
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * maxQ - oldQ)
+               if (verbose) cat("(s,a,r,s) = (", s, ",", a, ",", r, ",", sN, "), r = ", r, " oldQ = ", oldQ, " maxQ(sN) = ", maxQ, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+         self$setGreedyPolicy()
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      },
+
+      #' @description Generalized policy iteration using off policy Q-learning.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOnPolicyExpSARSA = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               expQ <- self$getExpActionValue(sN)
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * expQ - oldQ)
+               if (verbose) cat("(s,a,r,s) = (", s, ",", a, ",", r, ",", sN, "), r = ", r, " oldQ = ", oldQ, " expQ(sN) = ", expQ, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      }
+   )
+)
+```
+
+
+<!-- Q2 -->
+
+<div class="modal fade bs-example-modal-lg" id="Ec6ieQzHwBds8a9fG3OL" tabindex="-1" role="dialog" aria-labelledby="Ec6ieQzHwBds8a9fG3OL-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="Ec6ieQzHwBds8a9fG3OL-title">Solution</h4></div><div class="modal-body">
+
+<p>In general the algorithms use parameters <code>maxE</code> and <code>maxEL</code> to identify the number of iterations and the current policy is stored in <code>pi</code>. Moreover, <code>NA</code> is used to identify end of an episode (if returned from <code>getTimeStepData</code>).</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Ec6ieQzHwBds8a9fG3OL">Solution</button>
+
+2) Consider the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` and try to identify the differences compared to the pseudo code descriptions. Why is expected SARSA here an on-policy algorithm?
+
+In the following let us try to approximate the optimal policy using a discount factor of 0.5. The state-values for the optimal deterministic policy can be seen in Example \@ref(exe-dp-storage).
+
+We define the RL agent:
+
+
+```r
+agent <- RLAgent$new()
+agent$addStates(env$getStates())   # add states
+for (s in agent$getStateKeys()) {  # add actions
+   agent$addActions(s, env$getActions(s))
+} 
+agent$getActionInfo("0")
+#> $keep
+#> $keep$q
+#> [1] 0
+#> 
+#> $keep$n
+#> [1] 0
+agent$getActionInfo("4")
+#> $keep
+#> $keep$q
+#> [1] 0
+#> 
+#> $keep$n
+#> [1] 0
+#> 
+#> 
+#> $empty
+#> $empty$q
+#> [1] 0
+#> 
+#> $empty$n
+#> [1] 0
+```
+
+
+<!-- Q3 -->
+
+<div class="modal fade bs-example-modal-lg" id="gXdzj2mHeSSUkHCrL88J" tabindex="-1" role="dialog" aria-labelledby="gXdzj2mHeSSUkHCrL88J-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gXdzj2mHeSSUkHCrL88J-title">Solution</h4></div><div class="modal-body">
+
+<p>Each iteration generates the sequence \((s,a,r,s,a)\) for SARSA and \((s,a,r,s)\) for Q-learning and expected SARSA. Note SARSA and expected SARSA approximate an epsilon greed policy while Q-learning the deterministic policy.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#gXdzj2mHeSSUkHCrL88J">Solution</button>
+
+3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using `maxEL = 5`, `alpha = 0.1` and `verbose = T` and explain the output:
+
+
+```r
+agent$gpiOnPolicySARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+#> (s,a,r,s,a) = (3,keep,-30,4,empty), r = -30 oldQ = 0 Q(sN, aN) = 0 newQ = -3
+#> (s,a,r,s,a) = (4,empty,-45,1,empty), r = -45 oldQ = 0 Q(sN, aN) = 0 newQ = -4.5
+#> (s,a,r,s,a) = (1,empty,-30,1,keep), r = -30 oldQ = 0 Q(sN, aN) = 0 newQ = -3
+#> (s,a,r,s,a) = (1,keep,0,3,empty), r = 0 oldQ = 0 Q(sN, aN) = 0 newQ = 0
+#> (s,a,r,s,a) = (3,empty,-40,1,keep), r = -40 oldQ = 0 Q(sN, aN) = 0 newQ = -4
+agent$getActionValues()
+#> # A tibble: 9 × 4
+#>   state action     q     n
+#>   <chr> <chr>  <dbl> <dbl>
+#> 1 0     keep     0       0
+#> 2 1     empty   -3       1
+#> 3 1     keep     0       2
+#> 4 2     empty    0       0
+#> 5 2     keep     0       0
+#> 6 3     empty   -4       1
+#> 7 3     keep    -3       1
+#> 8 4     empty   -4.5     1
+#> 9 4     keep     0       0
+agent$getPolicy()
+#> # A tibble: 9 × 3
+#>   state action    pr
+#>   <chr> <chr>  <dbl>
+#> 1 0     keep    1   
+#> 2 1     empty   0.05
+#> 3 1     keep    0.95
+#> 4 2     empty   0.95
+#> 5 2     keep    0.05
+#> 6 3     empty   0.05
+#> 7 3     keep    0.95
+#> 8 4     empty   0.05
+#> 9 4     keep    0.95
+
+agent$gpiOffPolicyQLearning(env, maxEL = 5, verbose = T, gamma = 0.5)
+#> (s,a,r,s) = (4,keep,-30,4), r = -30 oldQ = 0 maxQ(sN) = 0 newQ = -3
+#> (s,a,r,s) = (4,keep,-30,4), r = -30 oldQ = -3 maxQ(sN) = 0 newQ = -5.7
+#> (s,a,r,s) = (4,empty,-45,3), r = -45 oldQ = 0 maxQ(sN) = 0 newQ = -4.5
+#> (s,a,r,s) = (3,keep,0,4), r = 0 oldQ = 0 maxQ(sN) = -4.5 newQ = -0.225
+#> (s,a,r,s) = (4,empty,-45,1), r = -45 oldQ = -4.5 maxQ(sN) = 0 newQ = -8.55
+agent$getActionValues()
+#> # A tibble: 9 × 4
+#>   state action      q     n
+#>   <chr> <chr>   <dbl> <dbl>
+#> 1 0     keep    0         0
+#> 2 1     empty   0         0
+#> 3 1     keep    0         0
+#> 4 2     empty   0         0
+#> 5 2     keep    0         0
+#> 6 3     empty   0         0
+#> 7 3     keep   -0.225     1
+#> 8 4     empty  -8.55      2
+#> 9 4     keep   -5.7       2
+agent$getPolicy()
+#> # A tibble: 5 × 3
+#>   state action    pr
+#>   <chr> <chr>  <dbl>
+#> 1 0     keep       1
+#> 2 1     empty      1
+#> 3 2     empty      1
+#> 4 3     empty      1
+#> 5 4     keep       1
+
+agent$gpiOnPolicyExpSARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+#> (s,a,r,s) = (1,empty,-30,1), r = -30 oldQ = 0 expQ(sN) = 0 newQ = -3
+#> (s,a,r,s) = (1,keep,0,2), r = 0 oldQ = 0 expQ(sN) = 0 newQ = 0
+#> (s,a,r,s) = (2,keep,0,4), r = 0 oldQ = 0 expQ(sN) = 0 newQ = 0
+#> (s,a,r,s) = (4,empty,-45,1), r = -45 oldQ = 0 expQ(sN) = -0.15 newQ = -4.51
+#> (s,a,r,s) = (1,empty,-30,1), r = -30 oldQ = -3 expQ(sN) = -0.15 newQ = -5.71
+agent$getActionValues()
+#> # A tibble: 9 × 4
+#>   state action     q     n
+#>   <chr> <chr>  <dbl> <dbl>
+#> 1 0     keep    0        0
+#> 2 1     empty  -5.71     2
+#> 3 1     keep    0        1
+#> 4 2     empty   0        0
+#> 5 2     keep    0        1
+#> 6 3     empty   0        0
+#> 7 3     keep    0        0
+#> 8 4     empty  -4.51     1
+#> 9 4     keep    0        0
+agent$getPolicy()
+#> # A tibble: 9 × 3
+#>   state action    pr
+#>   <chr> <chr>  <dbl>
+#> 1 0     keep    1   
+#> 2 1     empty   0.05
+#> 3 1     keep    0.95
+#> 4 2     empty   0.95
+#> 5 2     keep    0.05
+#> 6 3     empty   0.05
+#> 7 3     keep    0.95
+#> 8 4     empty   0.05
+#> 9 4     keep    0.95
+```
+
+
+<!-- Q4 -->
+<!-- First solv MDP -->
+
+
+
+
+
+<div class="modal fade bs-example-modal-lg" id="PNxGPqRoD6nx74u4DztO" tabindex="-1" role="dialog" aria-labelledby="PNxGPqRoD6nx74u4DztO-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="PNxGPqRoD6nx74u4DztO-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+set.seed(43)
+ite <- 5000
+agent$gpiOnPolicySARSA(env, maxEL = ite, gamma = 0.5)
+left_join(agent$getActionValues(), agent$getPolicy()) 
+#> # A tibble: 9 × 5
+#>   state action     q     n    pr
+#>   <chr> <chr>  <dbl> <dbl> <dbl>
+#> 1 0     keep   -12.9   269  1   
+#> 2 1     empty  -43.7    58  0.05
+#> 3 1     keep   -15.2  1055  0.95
+#> 4 2     empty  -47.6    74  0.05
+#> 5 2     keep   -29.5  1088  0.95
+#> 6 3     empty  -52.7   403  0.05
+#> 7 3     keep   -40.7   730  0.95
+#> 8 4     empty  -57.2  1235  0.95
+#> 9 4     keep   -62.3    89  0.05
+
+agent$gpiOffPolicyQLearning(env, maxEL = ite, gamma = 0.5)
+left_join(agent$getActionValues(), agent$getPolicy())
+#> # A tibble: 9 × 5
+#>   state action     q     n    pr
+#>   <chr> <chr>  <dbl> <dbl> <dbl>
+#> 1 0     keep   -10.3   255     1
+#> 2 1     empty  -39.9    69    NA
+#> 3 1     keep   -15.2  1034     1
+#> 4 2     empty  -44.5    64    NA
+#> 5 2     keep   -24.9  1069     1
+#> 6 3     empty  -50.0   185    NA
+#> 7 3     keep   -33.5   920     1
+#> 8 4     empty  -54.8  1329     1
+#> 9 4     keep   -66.4    75    NA
+
+agent$gpiOnPolicyExpSARSA(env, maxEL = ite, gamma = 0.5)
+left_join(agent$getActionValues(), agent$getPolicy())
+#> # A tibble: 9 × 5
+#>   state action     q     n    pr
+#>   <chr> <chr>  <dbl> <dbl> <dbl>
+#> 1 0     keep   -11.7   226  1   
+#> 2 1     empty  -42.5    46  0.05
+#> 3 1     keep   -14.6  1015  0.95
+#> 4 2     empty  -46.2    66  0.05
+#> 5 2     keep   -28.9  1045  0.95
+#> 6 3     empty  -52.2   161  0.05
+#> 7 3     keep   -49.0   979  0.95
+#> 8 4     empty  -57.7  1358  0.95
+#> 9 4     keep   -64.8   104  0.05
+```
+
+
+<p>All algorithms seems to approximate the best action with highest probability. Estimates differ a bit but are quite close. Note the SARSA algorithms approximate the epsilon-greed optimal policy.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#PNxGPqRoD6nx74u4DztO">Solution</button>
+
+4) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using `maxEL = 5000` and `alpha = 0.1`. Compare the policy and action-values against the state-values for the optimal deterministic policy found in Example \@ref(exe-dp-storage): 
+
+
+```
+#> # A tibble: 5 × 4
+#>   state     v action    pr
+#>   <chr> <dbl> <chr>  <dbl>
+#> 1 0     -10.7 keep       1
+#> 2 1     -16.3 keep       1
+#> 3 2     -26.3 keep       1
+#> 4 3     -42.0 keep       1
+#> 5 4     -55.7 empty      1
+```
+
+
+<!-- Q5 -->
+
+<div class="modal fade bs-example-modal-lg" id="dlOcUXwSUMHcMmjpzRRA" tabindex="-1" role="dialog" aria-labelledby="dlOcUXwSUMHcMmjpzRRA-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="dlOcUXwSUMHcMmjpzRRA-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+set.seed(4756)
+agent$gpiOffPolicyQLearning(env, maxEL = 5000, gamma = 0.99)
+left_join(agent$getActionValues(), agent$getPolicy())
+#> # A tibble: 9 × 5
+#>   state action     q     n    pr
+#>   <chr> <chr>  <dbl> <dbl> <dbl>
+#> 1 0     keep   -858.   301     1
+#> 2 1     empty  -882.   326    NA
+#> 3 1     keep   -881.  1009     1
+#> 4 2     empty  -894.   430    NA
+#> 5 2     keep   -893.   811     1
+#> 6 3     empty  -904.   562    NA
+#> 7 3     keep   -903.   469     1
+#> 8 4     empty  -919.   833     1
+#> 9 4     keep   -921.   259    NA
+agent$gpiOffPolicyQLearning(env, maxEL = 10000, gamma = 0.99)
+left_join(agent$getActionValues(), agent$getPolicy())
+#> # A tibble: 9 × 5
+#>   state action      q     n    pr
+#>   <chr> <chr>   <dbl> <dbl> <dbl>
+#> 1 0     keep   -1349.   628     1
+#> 2 1     empty  -1371.   573    NA
+#> 3 1     keep   -1370.  2059     1
+#> 4 2     empty  -1383.   769     1
+#> 5 2     keep   -1385.  1737    NA
+#> 6 3     empty  -1395.  1161     1
+#> 7 3     keep   -1399.   931    NA
+#> 8 4     empty  -1400.  1739     1
+#> 9 4     keep   -1401.   403    NA
+agent$gpiOffPolicyQLearning(env, maxEL = 40000, gamma = 0.99)
+left_join(agent$getActionValues(), agent$getPolicy())
+#> # A tibble: 9 × 5
+#>   state action      q     n    pr
+#>   <chr> <chr>   <dbl> <dbl> <dbl>
+#> 1 0     keep   -1763.  2333     1
+#> 2 1     empty  -1786.  1050    NA
+#> 3 1     keep   -1777.  9291     1
+#> 4 2     empty  -1796.  1524    NA
+#> 5 2     keep   -1791.  8908     1
+#> 6 3     empty  -1799.  6824     1
+#> 7 3     keep   -1813.  2588    NA
+#> 8 4     empty  -1809.  6740     1
+#> 9 4     keep   -1833.   742    NA
+```
+
+
+<p>More iterations are needed here to get a good estimate of the state-values due to that we take into account rewards further out into the future.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#dlOcUXwSUMHcMmjpzRRA">Solution</button>
+
+5) Run the algorithm `gpiOffPolicyQLearning` using `gamma = 0.99`, `maxEL = 5000, 10000 and 20000`. Compare the policy and action-values against the state-values for the optimal deterministic policy found in Example \@ref(exe-dp-storage): 
+
+
+```
+#> # A tibble: 5 × 4
+#>   state      v action    pr
+#>   <chr>  <dbl> <chr>  <dbl>
+#> 1 0     -1750. keep       1
+#> 2 1     -1762. keep       1
+#> 3 2     -1776. keep       1
+#> 4 3     -1790. empty      1
+#> 5 4     -1795. empty      1
+```
+
+
+<!-- Q6 -->
+
+<div class="modal fade bs-example-modal-lg" id="daRCKHu15fFj9MaRo05W" tabindex="-1" role="dialog" aria-labelledby="daRCKHu15fFj9MaRo05W-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="daRCKHu15fFj9MaRo05W-title">Solution</h4></div><div class="modal-body">
+
+<p>Small alpha resembles the sample average while a large alpha put a larger weight on the present observations. This may result in larger fluctations in action-value estimates.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#daRCKHu15fFj9MaRo05W">Solution</button>
+
+6) How will the alpha value affect the rate of convergence?
+
+
+
+
+
+
+
 
 
 [BSS]: https://bss.au.dk/en/
@@ -305,3 +1269,8 @@ Below you will find a set of exercises. Always have a look at the exercises befo
 [wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
 [wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
 [wiki-json]: https://en.wikipedia.org/wiki/JSON
+
+
+
+
+
