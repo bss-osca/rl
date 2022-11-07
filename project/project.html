@@ -372,6 +372,8 @@ Business</h1>
 <div id="practicalities" class="section level2">
 <h2>Practicalities</h2>
 <ul>
+<li>Use RMarkdown to write you project, e.g. by copying one of the
+RMarkdown files in you student project.</li>
 <li>We will use Peergrade to make peer feedback on the projects.
 Remember to sign-up using this <a href="https://app.peergrade.io/join/GTKE62">link</a>. It is important
 that you use your university email as login! Please find a guide on how
@@ -379,48 +381,55 @@ to use the system <a href="https://help.peergrade.io/en/collections/437178-getti
 <li>I recommend that you write your project in groups. That is, each
 group only hands in once, and simply select the group members from a
 list in the system.</li>
-<li>All projects must be handed in using <a href="https://peergrade.io">Peergrade</a>. When the peer-grading period
-starts, you must do peer evaluation. This step is done
+<li>All projects must be handed in using <a href="https://peergrade.io">Peergrade</a>. Hand-in both the
+<code>Rmd</code> and <code>html</code> file. When the peer-grading
+period starts, you must do peer evaluation. This step is done
 individually.</li>
 </ul>
 <p>The schedule for the project assignment is:</p>
 <ul>
-<li>14/11 08:00: Project period starts.</li>
-<li>02/12 24:00: Deadline for handing in your solution in <a href="https://peergrade.io">Peergrade</a>.</li>
+<li>14/11 08:00: Project period starts. Sign-up before this date!</li>
+<li>02/12 24:00: Deadline for handing in your solution.</li>
 <li>02/12 24:00: Peer grading starts.</li>
-<li>06/12 10:00: Deadline for completing the peer grading in <a href="https://peergrade.io">Peergrade</a>.</li>
+<li>06/12 10:00: Deadline for completing peer grading.</li>
 </ul>
 </div>
 <div id="format" class="section level2">
 <h2>Format</h2>
-<p>The exam is a 20 min oral individual exam without any preparation.
-Since we nee time for giving you the correct grade, this means that:</p>
+<p>The project report consists of two parts. The first part contains a
+summary of all the exam-topics. For each topic write what you find
+important to emphasize (approx. one page for each topic). You may think
+it as a list you need to remember when you have to present at the exam
+(4-6 minutes).</p>
+<p>The second part consists of an example where you try to solve a
+problem using RL. It is up to you which example you would like. In
+general you need an environment class for representing the problem with
+appropriate methods for generating episodes or <span class="math inline">\(S, A, R&#39;, S&#39;, A&#39;, \ldots\)</span> data
+streams. You can then apply the algorithms of the course. You may also
+be able to define the MDP, so you can compare the approximated RL policy
+to the optimal policy. Some suggestions for examples may be:</p>
 <ul>
-<li>The oral examination lasts 15 minutes exactly.</li>
-<li>You might be interrupted in the middle of a sentence which is not to
-be rude but to make sure we stick to the schedule.</li>
-<li>The exam will begin by you picking one of the exam-topics specified.
-For each topic prepare a 4-6 minutes pitch where you explain the core
-concepts and what you find important and relevant.</li>
-<li>We will use the last minutes to ask questions, e.g. about the
-example in your project report or link your pitch to other topics in the
-curriculum.</li>
+<li>Extend a multi-armed bandit to a problem where we have more than a
+single state.</li>
+<li>Extend and solve the factory storage problem using RL.</li>
+<li>Solve the maintenance problem using RL. You may modify/extend
+it.</li>
+<li>Modify and solve the car rental problem using RL.</li>
+<li>Solve the seasonal inventory and sales planning using temporal
+difference methods. You may modify/extend it.</li>
+<li>Solve an inventory problem where you have at most <span class="math inline">\(M\)</span> inventory. At each time-step demand
+arrive and you have to decide on how much to order. You may have
+different assumptions e.g. lost-sales vs backlogging, stochastic lead
+time etc.</li>
+<li>Spare part sharing, e.g. machines at different locations share an
+expensive spare-part at a central inventory.</li>
+<li>Any other application you can come up with that you find
+interesting.</li>
+<li>You may also try to use a decreasing step-size depending on the
+number of visits in a state-action.</li>
+<li>You may also try to use a decreasing epsilon depending on the number
+of visits in a state.</li>
 </ul>
-</div>
-<div id="exam-topics" class="section level2">
-<h2>Exam-topics</h2>
-<p>The following topics can be selected:</p>
-<ol style="list-style-type: decimal">
-<li>Multi-armed bandits</li>
-<li>Markov decision processes (MDPs)</li>
-<li>Policies and value functions for MDPs</li>
-<li>Dynamic programming</li>
-<li>Monte Carlo methods for prediction and control</li>
-<li>Temporal difference methods for prediction</li>
-<li>Temporal difference methods for control</li>
-</ol>
-<p>Have a look at the learning goals for each topic to get an overview
-over the topic.</p>
 </div>
 
 

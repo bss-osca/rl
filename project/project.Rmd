@@ -14,9 +14,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Practicalities
 
+- Use RMarkdown to write you project, e.g. by copying one of the RMarkdown files in you student project. 
 - We will use Peergrade to make peer feedback on the projects. Remember to sign-up using this [link][peergrade-signup]. It is important that you use your university email as login! Please find a guide on how to use the system [here](https://help.peergrade.io/en/collections/437178-getting-started).
 - I recommend that you write your project in groups. That is, each group only hands in once, and simply select the group members from a list in the system.
-- All projects must be handed in using [Peergrade]. When the peer-grading period starts, you must do peer evaluation. This step is done individually.
+- All projects must be handed in using [Peergrade]. Hand-in both the `Rmd` and `html` file. When the peer-grading period starts, you must do peer evaluation. This step is done individually.
+
 
 The schedule for the project assignment is:
 
@@ -30,26 +32,16 @@ The schedule for the project assignment is:
 
 The project report consists of two parts. The first part contains a summary of all the exam-topics. For each topic write what you find important to emphasize (approx. one page for each topic). You may think it as a list you need to remember when you have to present at the exam (4-6 minutes).
 
-The second part consists of an example where you try to solve a problem using RL. 
+The second part consists of an example where you try to solve a problem using RL. It is up to you which example you would like. In general you need an environment class for representing the problem with appropriate methods for generating episodes or $S, A, R', S', A', \ldots$ data streams. You can then apply the algorithms of the course. You may also be able to define the MDP, so you can compare the approximated RL policy to the optimal policy. Some suggestions for examples may be:
 
+- Extend a multi-armed bandit to a problem where we have more than a single state.
+- Extend and solve the factory storage problem using RL. 
+- Solve the maintenance problem using RL. You may modify/extend it.
+- Modify and solve the car rental problem using RL.
+- Solve the seasonal inventory and sales planning using temporal difference methods. You may modify/extend it.
+- Solve an inventory problem where you have at most $M$ inventory. At each time-step demand arrive and you have to decide on how much to order. You may have different assumptions e.g. lost-sales vs backlogging, stochastic lead time etc.
+- Spare part sharing, e.g. machines at different locations share an expensive spare-part at a central inventory. 
+- Any other application you can come up with that you find interesting. 
+- You may also try to use a decreasing step-size depending on the number of visits in a state-action. 
+- You may also try to use a decreasing epsilon depending on the number of visits in a state. 
 
-The exam is a 20 min oral individual exam without any preparation. Since we nee time for giving you the correct grade, this means that:
-
-- The oral examination lasts 15 minutes exactly.
-- You might be interrupted in the middle of a sentence which is not to be rude but to make sure we stick to the schedule.
-- The exam will begin by you picking one of the exam-topics specified. For each topic prepare a 4-6 minutes pitch where you explain the core concepts and what you find important and relevant.
-- We will use the last minutes to ask questions, e.g. about the example in your project report or link your pitch to other topics in the curriculum.
-
-## Exam-topics
-
-The following topics can be selected:
-
-1) Multi-armed bandits
-2) Markov decision processes (MDPs)
-3) Policies and value functions for MDPs
-4) Dynamic programming
-5) Monte Carlo methods for prediction and control
-6) Temporal difference methods for prediction
-7) Temporal difference methods for control
-
-Have a look at the learning goals for each topic to get an overview over the topic.
