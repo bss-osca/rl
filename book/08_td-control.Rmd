@@ -7,6 +7,9 @@ editor_options:
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
+```{r, child = "_algorithms.Rmd", echo=FALSE}
+```
+
 ```{r}
 knitr::opts_chunk$set(
    echo = TRUE
@@ -138,13 +141,6 @@ and for expected SARSA the target is: $$T_t = R_{t+1} + \gamma \sum_{a} \pi(a | 
 Expected SARSA can be both on-policy and off-policy. If the behavioural policy and the target policy are different it is off-policy. If they are the same it is on-policy. For instance, expected SARSA is off-policy if the target policy is greedy and the behavioural policy $\epsilon$-greedy. In which case expected SARSA becomes Q-learning since the expectation of a greedy policy is the maximum value ($\pi(s|a) = 1$ here). Hence expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
 
 
-<!-- ## Maximization bias and double learning   -->
-
-<!-- Many control algorithms use a maximisation operator to select actions (either $\epsilon$-greedy or greedy action selection). Hence we implicitly favour positive numbers. If the values of $q_\pi(s,a)$ are near zero and estimates $Q$ have values distributed around zero (both negative and positive) then the maximisation operator will select the positive estimates, despite the true value being near zero. This bias is a so-called \textit{maximisation bias}. -->
-
-<!-- If you consider a RL problem where $q_*(s,a)$ may be near zero then \emph{double learning} may be used in which we learn two independent sets of value estimates $Q_1$ and $Q_2$, then at each time step we choose one of them at random and update it using the other as a target. This produces two unbiased estimates of the action-values (which could be averaged). Below we show an algorithm for \emph{double Q-learning}.  -->
-
-
 
 
 
@@ -157,7 +153,275 @@ Read Chapter 6.9 in @Sutton18.
 
 `r strExercises`
 
-<!-- An inventory problem that compares the algorithms -->
+### Exercise - Factory Storage {#ex-td-control-storage}
+
+Consider Example \@ref(exe-dp-storage) where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
+$$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
+If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
+
+An MDP model was formulated in Example \@ref(exe-dp-storage) and solved using policy iteration. Our goal here is to solve the same problem GPI using TD. For this we need an environment representing the problem:
+
+```{r}
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 Class representing the RL environment for the problem
+RLEnvFactory <- R6Class("RLEnvFactory",
+   public = list(
+
+      #' @field pr Probability of 0, 1, 2, and 3 m2 waste
+      pr = c(1/8, 1/2, 1/4, 1/8),
+      
+      #' @description Return all states (keys).
+      getStates = function() {
+         return(str_c(0:4))
+      },
+      
+      #' @description Return all actions (keys) for a state.
+      #' @param s State considered.
+      getActions = function(s) {
+         if (s == "0") return("keep")
+         return(c("empty", "keep"))
+      },
+      
+      #' @description Returns the next state and reward given current state and action as a list (with names `r` and `sN`).
+      #' @param s Current state.
+      #' @param a Current action.
+      getTimeStepData = function(s, a) {
+         s <- as.numeric(s)
+         if (a == "empty") {
+            return(list(r = -(25 + 5*s), sN = as.character(sample(0:3, 1, prob = self$pr))))
+         }
+         if (a == "keep") {
+            sN <- s + sample(0:3, 1, prob = self$pr)
+            rew <- 0
+            if (sN > 4) {
+               rew <- -30 * (sN - 4)
+               sN <- 4
+            }
+            return(list(r = rew, sN = as.character(sN)))
+         }
+         stop("Error finding next state and reward!")
+      }
+   )
+)
+```
+
+Note that for using the GPI algorithms in the agent class we need a method `getTimeStepData` that given a state and action return the reward and the next state. 
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="The method returns the next state and reward given current state and action as a list (with names `r` and `sN`)."}
+env <- RLEnvFactory$new()
+env$getTimeStepData("0", "keep")
+env$getTimeStepData("4", "keep")
+env$getTimeStepData("2", "empty")
+```
+
+1) Consider the `getTimeStepData` method and explain what it does. Generate a reward and next state for $(s,a)$ pairs (0, keep), (4, keep) and (2, empty).
+
+Next we have to add the GPI algorithms to the generic agent class:
+
+```{r ref.label='RLAgent', eval=TRUE}
+```
+
+
+<!-- Q2 -->
+```{r, solution=TRUE, text="In general the algorithms use parameters `maxE` and `maxEL` to identify the number of iterations and the current policy is stored in `pi`. Moreover, `NA` is used to identify end of an episode (if returned from `getTimeStepData`)."}
+```
+
+2) Consider the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` and try to identify the differences compared to the pseudo code descriptions. Why is expected SARSA here an on-policy algorithm?
+
+In the following let us try to approximate the optimal policy using a discount factor of 0.5. The state-values for the optimal deterministic policy can be seen in Example \@ref(exe-dp-storage).
+
+We define the RL agent:
+
+```{r}
+agent <- RLAgent$new()
+agent$addStates(env$getStates())   # add states
+for (s in agent$getStateKeys()) {  # add actions
+   agent$addActions(s, env$getActions(s))
+} 
+agent$getActionInfo("0")
+agent$getActionInfo("4")
+```
+
+
+<!-- Q3 -->
+```{r, solution=TRUE, text="Each iteration generates the sequence $(s,a,r,s,a)$ for SARSA and $(s,a,r,s)$ for Q-learning and expected SARSA. Note SARSA and expected SARSA approximate an epsilon greed policy while Q-learning the deterministic policy."}
+```
+
+3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using `maxEL = 5`, `alpha = 0.1` and `verbose = T` and explain the output:
+
+```{r}
+agent$gpiOnPolicySARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+agent$getActionValues()
+agent$getPolicy()
+
+agent$gpiOffPolicyQLearning(env, maxEL = 5, verbose = T, gamma = 0.5)
+agent$getActionValues()
+agent$getPolicy()
+
+agent$gpiOnPolicyExpSARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+agent$getActionValues()
+agent$getPolicy()
+```
+
+
+<!-- Q4 -->
+<!-- First solv MDP -->
+```{r ref.label='MDP-class', include=FALSE}
+``` 
+
+```{r, include=FALSE}
+#' Expected reward of an action
+#' @param s Waste amount (state).
+#' @param a Action (keep or empty).
+#' @return The expected reward
+reward <-function(s, a) {
+   i <- as.numeric(s)
+   p<-c(1/8, 1/2, 1/4, 1/8)
+   if (a=="keep") {
+      if (i<2) return(0)   # no excess waste
+      k <- (4-i+1):3
+      return(-30*sum( (i+k-4)*p[k+1] ) )
+   }
+   if (a=="empty") {
+      return(-1*(25 + 5*i))
+   }
+   return(NULL)
+}
+
+#' Find transition probabilities
+#' @param s Waste amount (state).
+#' @param a Action (keep or empty).
+#' @return The trans pr and id 
+transPr<-function(s, a) {
+   i <- as.numeric(s)
+   p<-c(1/8, 1/2, 1/4, 1/8)
+   pr<-NULL
+   id<-NULL
+   if (a=="keep") {
+      if (i<4) for (j in i:3) {
+         pr<-c(pr,p[j-i+1])
+         id<-c(id,j)
+      }
+      if (i>0) {
+         pr<-c(pr,sum(p[(4-i):3+1]))
+         id<-c(id,4)
+      }
+   }
+   if (a=="empty") {
+      for (j in 0:3) {
+         pr<-c(pr,p[j+1])
+         id<-c(id,j)
+      }
+   }
+   names(pr) <- id
+   return(pr)
+}
+
+mdp <- MDPClass$new()
+mdp$addStateSpace(0:4)   # add state keys
+for (s in mdp$getStateKeys()) mdp$addActionSpace(s, c("empty", "keep"))  # add action keys
+# Add trans pr and rewards
+for (s in mdp$getStateKeys()) {
+   for (a in mdp$getActionKeys(s)) {
+      mdp$addAction(s, a, r = reward(s,a), pr = transPr(s,a))
+   }
+}
+
+mdp$policyIte(gamma = 0.5)
+res <- left_join(mdp$getStateValues(), mdp$getPolicy())
+
+mdp$policyIte(gamma = 0.99)
+res1 <- left_join(mdp$getStateValues(), mdp$getPolicy())
+```
+
+```{r, solution=TRUE, text="All algorithms seems to approximate the best action with highest probability. Estimates differ a bit but are quite close. Note the SARSA algorithms approximate the epsilon-greed optimal policy.", cache=TRUE}
+set.seed(43)
+ite <- 5000
+agent$gpiOnPolicySARSA(env, maxEL = ite, gamma = 0.5)
+left_join(agent$getActionValues(), agent$getPolicy()) 
+
+agent$gpiOffPolicyQLearning(env, maxEL = ite, gamma = 0.5)
+left_join(agent$getActionValues(), agent$getPolicy())
+
+agent$gpiOnPolicyExpSARSA(env, maxEL = ite, gamma = 0.5)
+left_join(agent$getActionValues(), agent$getPolicy())
+```
+
+4) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using `maxEL = 5000` and `alpha = 0.1`. Compare the policy and action-values against the state-values for the optimal deterministic policy found in Example \@ref(exe-dp-storage): 
+
+```{r, echo=FALSE}
+res
+```
+
+
+<!-- Q5 -->
+```{r, solution=TRUE, text="More iterations are needed here to get a good estimate of the state-values due to that we take into account rewards further out into the future.", cache=TRUE}
+set.seed(4756)
+agent$gpiOffPolicyQLearning(env, maxEL = 5000, gamma = 0.99)
+left_join(agent$getActionValues(), agent$getPolicy())
+agent$gpiOffPolicyQLearning(env, maxEL = 10000, gamma = 0.99)
+left_join(agent$getActionValues(), agent$getPolicy())
+agent$gpiOffPolicyQLearning(env, maxEL = 40000, gamma = 0.99)
+left_join(agent$getActionValues(), agent$getPolicy())
+```
+
+5) Run the algorithm `gpiOffPolicyQLearning` using `gamma = 0.99`, `maxEL = 5000, 10000 and 20000`. Compare the policy and action-values against the state-values for the optimal deterministic policy found in Example \@ref(exe-dp-storage): 
+
+```{r, echo=FALSE}
+res1
+```
+
+
+<!-- Q6 -->
+```{r, solution=TRUE, text="Small alpha resembles the sample average while a large alpha put a larger weight on the present observations. This may result in larger fluctations in action-value estimates.", cache=TRUE}
+```
+
+6) How will the alpha value affect the rate of convergence?
+
+
+
+
+
+
+
 
 ```{r links, child="links.md", include=FALSE}
 ```
+
+```{r, include=FALSE}
+knitr::knit_exit()
+```
+
+```{r, cache=TRUE}
+## old stuff
+
+set.seed(894)
+res <- NULL
+for (alph in seq(0.01, 0.1, by = 0.01)) {  #seq(0.01, 0.1, by = 0.01), c(0.1, 0.05, 0.01)
+   for (ite in c(100, 5000)) {
+      agent$gpiOffPolicyQLearning(env, maxEL = ite, gamma = 0.5, alpha = alph)
+      res <- bind_rows(res, left_join(agent$getActionValues(), agent$getPolicy()) %>% mutate(alpha = alph, ite = ite))
+   }
+}
+
+res %>% 
+   group_by(alpha, ite) %>% 
+   summarise(val = sum(q * pr, na.rm = T)) %>% 
+   ggplot(aes(x = alpha, y = val, col = factor(ite))) +
+   geom_line() + 
+   geom_point()
+```
+
+
+
+
+
+
+
+
+
+

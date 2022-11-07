@@ -414,14 +414,16 @@ RLAgent <- R6Class("RLAgent",
          return(invisible(NULL))
       },
       
-      #' @description Set the greedy policy (stored in piG) based on action-values. 
+      #' @description Set the greedy policy based on action-values. 
       #' @param states States under consideration.
       setGreedyPolicy = function(states = self$getStateKeys()) {
          for (s in states) {
+            pi <- 1
             actions <- self$getActionKeys(s)
-            idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
-            # idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max 
-            self$model[[s]]$piG <- actions[idx]
+            # idx <- nnet::which.is.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose among max values at random
+            idx <- which.max(unlist(values(self$model[[s]]$actions)["q",]))  # choose first max
+            names(pi) <- actions[idx]
+            self$model[[s]]$pi <- pi
          }
          return(invisible(NULL))
       },
@@ -542,6 +544,24 @@ RLAgent <- R6Class("RLAgent",
          return(a)
       },
       
+      #' @description Find maximum action value in a state.
+      #' @return Value.
+      getMaxActionValue = function(s) {
+         q <- unlist(values(self$model[[s]]$actions)["q",])
+         return(max(q))
+      },
+      
+      #' @description Find expected action value in a state based on current policy
+      #' @return Value.
+      getExpActionValue = function(s) {
+         pi <- self$model[[s]]$pi
+         a <- names(pi)
+         for (i in seq_along(pi)) {
+            pi[i] <- pi[i] * self$model[[s]]$actions[[a[i]]]$q
+         }
+         return(sum(pi))
+      },
+      
       #' @description Return and action sampled from the current policy pi. Also update the visit counters for both state and selected action.
       #' @param s The state considered.
       getActionPi = function(s) {
@@ -582,6 +602,7 @@ RLAgent <- R6Class("RLAgent",
                self$model[[s]]$v <- oldV + alpha * (r + gamma * self$model[[sN]]$v - oldV)
                s <- sN
             }
+            if (i == maxEL) break
          }
       },
       
@@ -682,9 +703,120 @@ RLAgent <- R6Class("RLAgent",
          if (ite == maxIte) warning("GPI algorithm stopped at max iterations allowed: ", maxIte)
          message(str_c("GPI algorihm finished in ", ite, " iterations."))
          return(invisible(NULL))
-      }
+      },
       
+      #' @description Generalized policy iteration using on policy SARSA.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOnPolicySARSA = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            a <- self$getActionPi(s)
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               aN <- self$getActionPi(sN)
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * self$model[[sN]]$actions[[aN]]$q - oldQ)
+               if (verbose) cat("(s,a,r,s,a) = (", s, ",", a, ",", r, ",", sN, ",", aN, "), r = ", r, " oldQ = ", oldQ, " Q(sN, aN) = ", self$model[[sN]]$actions[[aN]]$q, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+               a <- aN
+            }
+            if (i == maxEL) break
+         }
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      },
+      
+      #' @description Generalized policy iteration using off policy Q-learning.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOffPolicyQLearning = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               maxQ <- self$getMaxActionValue(sN)
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * maxQ - oldQ)
+               if (verbose) cat("(s,a,r,s) = (", s, ",", a, ",", r, ",", sN, "), r = ", r, " oldQ = ", oldQ, " maxQ(sN) = ", maxQ, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+         self$setGreedyPolicy()
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      },
 
+      #' @description Generalized policy iteration using off policy Q-learning.  
+      #' @param env The environment which must have a method `getTimeStepData(s,a)` that return a list with elements `r` (reward) and `sN` (next state). 
+      #' @param gamma Discount rate.
+      #' @param maxE Maximum number of episodes generated.
+      #' @param maxEL Maximum length of episode. If model with continuing tasks use this to set the length of training.
+      #' @param reset If true initialize all action-values to 0.
+      #' @param states Possible start states of an episode. One selected randomly.
+      #' @param eps Epsilon used for the epsilon-greedy policy.
+      #' @param alpha Step-size (use a fixed step-size).
+      gpiOnPolicyExpSARSA = function(env, gamma = 1, maxE = 1000, maxEL = 10000, reset = TRUE, states = self$getStateKeys(), eps = 0.1, alpha = 0.1, verbose = FALSE) {
+         if (reset) {
+            self$setActionValue()      # set to 0
+            self$setActionCtrValue()
+         }
+         self$setEpsGreedyPolicy(eps, self$getStateKeys())
+         for (ite in 1:maxE) {
+            s <- sample(states, 1)  # pick start state among possible start states
+            for (i in 1:maxEL) {  # for episode with s as start (max length 100000)
+               a <- self$getActionPi(s)
+               dat <- env$getTimeStepData(s,a)  # get next state and reward
+               r <- dat$r
+               sN <- dat$sN
+               if (is.na(sN) | is.na(a)) break  # start generating new episode
+               oldQ <- self$model[[s]]$actions[[a]]$q  
+               expQ <- self$getExpActionValue(sN)
+               self$model[[s]]$actions[[a]]$q <- oldQ + alpha * (r + gamma * expQ - oldQ)
+               if (verbose) cat("(s,a,r,s) = (", s, ",", a, ",", r, ",", sN, "), r = ", r, " oldQ = ", oldQ, " expQ(sN) = ", expQ, " newQ = ", self$model[[s]]$actions[[a]]$q, "\n", sep = "")
+               self$setEpsGreedyPolicy(eps, s)
+               s <- sN
+            }
+            if (i == maxEL) break
+         }
+         message("GPI algorithm stopped with ", ite, " episodes.")
+         message("GPI algorithm stopped with episode of length ", i, ".")
+         return(invisible(NULL))
+      }
    )
 )
 ```

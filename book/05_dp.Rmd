@@ -176,7 +176,7 @@ GPI works and will convergence to the optimal policy and optimal value function 
 
 
 
-## Example - Factory Storage
+## Example - Factory Storage {#exe-dp-storage}
 
 Let us consider Exercise \@ref(ex-mdp-1-storage) where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
 $$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
@@ -313,7 +313,7 @@ mdp$getStateValues()
 Finally, let us try to solve the problem with a discount rate of 0.99:
 
 ```{r}
-mdp$policyIte(gamma =0.99)
+mdp$policyIte(gamma = 0.99)
 mdp$getPolicy()
 mdp$getStateValues()
 ```
