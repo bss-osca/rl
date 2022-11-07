@@ -159,7 +159,7 @@ Consider Example \@ref(exe-dp-storage) where a factory has a storage tank with a
 $$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
 If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
 
-An MDP model was formulated in Example \@ref(exe-dp-storage) and solved using policy iteration. Our goal here is to solve the same problem GPI using TD. For this we need an environment representing the problem:
+An MDP model was formulated in Example \@ref(exe-dp-storage) and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD. For this we need an environment representing the problem:
 
 ```{r}
 library(R6)
@@ -384,9 +384,26 @@ res1
 
 
 
+### Exercise - Car Rental {#ex-td-control-car}
+
+Consider the car rental problem in Exercise \@ref(ex-mdp-2-car) and \@ref(ex-dp-rental). An MDP model was formulated in Exercise \@ref(ex-dp-rental) and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD. 
+
+<!-- Q1 -->
+1) Code an environment representing the problem and test your `getTimeStepData` method.
+
+<!-- Q2 -->
+2) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using a few iterations with a discount rate $\gamma = 0.5$, `verbose = T` and explain the output.
 
 
+<!-- Q3 -->
+3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` with a discount rate $\gamma = 0.5$ using a high number of iterations. Compare the policy with the optimal deterministic policy found in Exercise \@ref(ex-dp-rental), e.g. make a plot of the optimal policy with $x$ on the y-axis and $y$ on the x-axis, plotting the action. What is the optimal action in state $(1,15)$? What is the state-value in state $(10,3)$ and its interpretation? 
 
+<!-- Q4 -->
+4) Run the `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.9$ using a high number of iterations and compare the policy and action-values against the state-values for the optimal deterministic policy found in Exercise \@ref(ex-dp-rental).
+
+
+<!-- Q5 -->
+5) Run the `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.9$ using different alpha values to test the convergence. 
 
 
 ```{r links, child="links.md", include=FALSE}
