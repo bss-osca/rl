@@ -142,6 +142,7 @@ expected-sarsa---gpi-using-td
 summary-6
 exercises-3
 ex-td-control-storage
+ex-td-control-car
 mod-r-setup
 groups
 coding-convention
