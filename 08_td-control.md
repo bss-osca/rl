@@ -225,7 +225,7 @@ Note that for using the GPI algorithms in the agent class we need a method `getT
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="EDurtUFWLjp4Kqmsa9Vw" tabindex="-1" role="dialog" aria-labelledby="EDurtUFWLjp4Kqmsa9Vw-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="EDurtUFWLjp4Kqmsa9Vw-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="dJPYXyKrLG7I6DaEPwWY" tabindex="-1" role="dialog" aria-labelledby="dJPYXyKrLG7I6DaEPwWY-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="dJPYXyKrLG7I6DaEPwWY-title">Solution</h4></div><div class="modal-body">
 
 ```{.r .fold-show}
 env <- RLEnvFactory$new()
@@ -234,10 +234,10 @@ env$getTimeStepData("0", "keep")
 #> [1] 0
 #> 
 #> $sN
-#> [1] "2"
+#> [1] "1"
 env$getTimeStepData("4", "keep")
 #> $r
-#> [1] -30
+#> [1] 0
 #> 
 #> $sN
 #> [1] "4"
@@ -252,7 +252,7 @@ env$getTimeStepData("2", "empty")
 
 <p>The method returns the next state and reward given current state and action as a list (with names <code>r</code> and <code>sN</code>).</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#EDurtUFWLjp4Kqmsa9Vw">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#dJPYXyKrLG7I6DaEPwWY">Solution</button>
 
 1) Consider the `getTimeStepData` method and explain what it does. Generate a reward and next state for $(s,a)$ pairs (0, keep), (4, keep) and (2, empty).
 
@@ -807,11 +807,11 @@ RLAgent <- R6Class("RLAgent",
 
 <!-- Q2 -->
 
-<div class="modal fade bs-example-modal-lg" id="cmHvDnCYbiXgjVR78sgm" tabindex="-1" role="dialog" aria-labelledby="cmHvDnCYbiXgjVR78sgm-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="cmHvDnCYbiXgjVR78sgm-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="0Y78ckK3Bx9tsyFl5mfw" tabindex="-1" role="dialog" aria-labelledby="0Y78ckK3Bx9tsyFl5mfw-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="0Y78ckK3Bx9tsyFl5mfw-title">Solution</h4></div><div class="modal-body">
 
 <p>In general the algorithms use parameters <code>maxE</code> and <code>maxEL</code> to identify the number of iterations and the current policy is stored in <code>pi</code>. Moreover, <code>NA</code> is used to identify end of an episode (if returned from <code>getTimeStepData</code>).</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cmHvDnCYbiXgjVR78sgm">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#0Y78ckK3Bx9tsyFl5mfw">Solution</button>
 
 2) Consider the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` and try to identify the differences compared to the pseudo code descriptions. Why is expected SARSA here an on-policy algorithm?
 
@@ -853,35 +853,35 @@ agent$getActionInfo("4")
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="jj2QfofedPsloDlucsjj" tabindex="-1" role="dialog" aria-labelledby="jj2QfofedPsloDlucsjj-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="jj2QfofedPsloDlucsjj-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="Ww9a9kgV8J6K2Jca7zNQ" tabindex="-1" role="dialog" aria-labelledby="Ww9a9kgV8J6K2Jca7zNQ-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="Ww9a9kgV8J6K2Jca7zNQ-title">Solution</h4></div><div class="modal-body">
 
 <p>Each iteration generates the sequence \((s,a,r,s,a)\) for SARSA and \((s,a,r,s)\) for Q-learning and expected SARSA. Note SARSA and expected SARSA approximate an epsilon greed policy while Q-learning the deterministic policy.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#jj2QfofedPsloDlucsjj">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Ww9a9kgV8J6K2Jca7zNQ">Solution</button>
 
 3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using `maxEL = 5`, `alpha = 0.1` and `verbose = T` and explain the output:
 
 
 ```r
 agent$gpiOnPolicySARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
-#> (s,a,r,s,a) = (3,keep,0,4,keep), r = 0 oldQ = 0 Q(sN, aN) = 0 newQ = 0
-#> (s,a,r,s,a) = (4,keep,-60,4,empty), r = -60 oldQ = 0 Q(sN, aN) = 0 newQ = -6
-#> (s,a,r,s,a) = (4,empty,-45,1,empty), r = -45 oldQ = 0 Q(sN, aN) = 0 newQ = -4.5
-#> (s,a,r,s,a) = (1,empty,-30,1,empty), r = -30 oldQ = 0 Q(sN, aN) = -3 newQ = -3
-#> (s,a,r,s,a) = (1,empty,-30,3,empty), r = -30 oldQ = -3 Q(sN, aN) = 0 newQ = -5.7
+#> (s,a,r,s,a) = (1,empty,-30,2,keep), r = -30 oldQ = 0 Q(sN, aN) = 0 newQ = -3
+#> (s,a,r,s,a) = (2,keep,0,4,empty), r = 0 oldQ = 0 Q(sN, aN) = 0 newQ = 0
+#> (s,a,r,s,a) = (4,empty,-45,2,keep), r = -45 oldQ = 0 Q(sN, aN) = 0 newQ = -4.5
+#> (s,a,r,s,a) = (2,keep,0,2,keep), r = 0 oldQ = 0 Q(sN, aN) = 0 newQ = 0
+#> (s,a,r,s,a) = (2,keep,0,2,keep), r = 0 oldQ = 0 Q(sN, aN) = 0 newQ = 0
 agent$getActionValues()
 #> # A tibble: 9 × 4
 #>   state action     q     n
 #>   <chr> <chr>  <dbl> <dbl>
 #> 1 0     keep     0       0
-#> 2 1     empty   -5.7     2
+#> 2 1     empty   -3       1
 #> 3 1     keep     0       0
 #> 4 2     empty    0       0
-#> 5 2     keep     0       0
-#> 6 3     empty    0       1
-#> 7 3     keep     0       1
+#> 5 2     keep     0       4
+#> 6 3     empty    0       0
+#> 7 3     keep     0       0
 #> 8 4     empty   -4.5     1
-#> 9 4     keep    -6       1
+#> 9 4     keep     0       0
 agent$getPolicy()
 #> # A tibble: 9 × 3
 #>   state action    pr
@@ -891,26 +891,26 @@ agent$getPolicy()
 #> 3 1     keep    0.95
 #> 4 2     empty   0.05
 #> 5 2     keep    0.95
-#> 6 3     empty   0.95
-#> 7 3     keep    0.05
-#> 8 4     empty   0.95
-#> 9 4     keep    0.05
+#> 6 3     empty   0.05
+#> 7 3     keep    0.95
+#> 8 4     empty   0.05
+#> 9 4     keep    0.95
 
 agent$gpiOffPolicyQLearning(env, maxEL = 5, verbose = T, gamma = 0.5)
-#> (s,a,r,s) = (2,empty,-35,0), r = -35 oldQ = 0 maxQ(sN) = 0 newQ = -3.5
-#> (s,a,r,s) = (0,keep,0,1), r = 0 oldQ = 0 maxQ(sN) = 0 newQ = 0
-#> (s,a,r,s) = (1,empty,-30,0), r = -30 oldQ = 0 maxQ(sN) = 0 newQ = -3
-#> (s,a,r,s) = (0,keep,0,1), r = 0 oldQ = 0 maxQ(sN) = 0 newQ = 0
-#> (s,a,r,s) = (1,empty,-30,2), r = -30 oldQ = -3 maxQ(sN) = 0 newQ = -5.7
+#> (s,a,r,s) = (0,keep,0,2), r = 0 oldQ = 0 maxQ(sN) = 0 newQ = 0
+#> (s,a,r,s) = (2,empty,-35,1), r = -35 oldQ = 0 maxQ(sN) = 0 newQ = -3.5
+#> (s,a,r,s) = (1,empty,-30,1), r = -30 oldQ = 0 maxQ(sN) = 0 newQ = -3
+#> (s,a,r,s) = (1,keep,0,2), r = 0 oldQ = 0 maxQ(sN) = 0 newQ = 0
+#> (s,a,r,s) = (2,keep,0,3), r = 0 oldQ = 0 maxQ(sN) = 0 newQ = 0
 agent$getActionValues()
 #> # A tibble: 9 × 4
 #>   state action     q     n
 #>   <chr> <chr>  <dbl> <dbl>
-#> 1 0     keep     0       2
-#> 2 1     empty   -5.7     2
-#> 3 1     keep     0       0
+#> 1 0     keep     0       1
+#> 2 1     empty   -3       1
+#> 3 1     keep     0       1
 #> 4 2     empty   -3.5     1
-#> 5 2     keep     0       0
+#> 5 2     keep     0       1
 #> 6 3     empty    0       0
 #> 7 3     keep     0       0
 #> 8 4     empty    0       0
@@ -926,37 +926,37 @@ agent$getPolicy()
 #> 5 4     empty      1
 
 agent$gpiOnPolicyExpSARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
-#> (s,a,r,s) = (3,empty,-40,3), r = -40 oldQ = 0 expQ(sN) = 0 newQ = -4
-#> (s,a,r,s) = (3,keep,-60,4), r = -60 oldQ = 0 expQ(sN) = 0 newQ = -6
-#> (s,a,r,s) = (4,keep,-30,4), r = -30 oldQ = 0 expQ(sN) = 0 newQ = -3
-#> (s,a,r,s) = (4,empty,-45,0), r = -45 oldQ = 0 expQ(sN) = 0 newQ = -4.5
 #> (s,a,r,s) = (0,keep,0,1), r = 0 oldQ = 0 expQ(sN) = 0 newQ = 0
+#> (s,a,r,s) = (1,empty,-30,3), r = -30 oldQ = 0 expQ(sN) = 0 newQ = -3
+#> (s,a,r,s) = (3,empty,-40,0), r = -40 oldQ = 0 expQ(sN) = 0 newQ = -4
+#> (s,a,r,s) = (0,keep,0,2), r = 0 oldQ = 0 expQ(sN) = 0 newQ = 0
+#> (s,a,r,s) = (2,empty,-35,2), r = -35 oldQ = 0 expQ(sN) = 0 newQ = -3.5
 agent$getActionValues()
 #> # A tibble: 9 × 4
 #>   state action     q     n
 #>   <chr> <chr>  <dbl> <dbl>
-#> 1 0     keep     0       1
-#> 2 1     empty    0       0
+#> 1 0     keep     0       2
+#> 2 1     empty   -3       1
 #> 3 1     keep     0       0
-#> 4 2     empty    0       0
+#> 4 2     empty   -3.5     1
 #> 5 2     keep     0       0
 #> 6 3     empty   -4       1
-#> 7 3     keep    -6       1
-#> 8 4     empty   -4.5     1
-#> 9 4     keep    -3       1
+#> 7 3     keep     0       0
+#> 8 4     empty    0       0
+#> 9 4     keep     0       0
 agent$getPolicy()
 #> # A tibble: 9 × 3
 #>   state action    pr
 #>   <chr> <chr>  <dbl>
 #> 1 0     keep    1   
-#> 2 1     empty   0.95
-#> 3 1     keep    0.05
+#> 2 1     empty   0.05
+#> 3 1     keep    0.95
 #> 4 2     empty   0.05
 #> 5 2     keep    0.95
-#> 6 3     empty   0.95
-#> 7 3     keep    0.05
-#> 8 4     empty   0.05
-#> 9 4     keep    0.95
+#> 6 3     empty   0.05
+#> 7 3     keep    0.95
+#> 8 4     empty   0.95
+#> 9 4     keep    0.05
 ```
 
 
@@ -967,7 +967,7 @@ agent$getPolicy()
 
 
 
-<div class="modal fade bs-example-modal-lg" id="XdJknPeqruJmiy8zk99l" tabindex="-1" role="dialog" aria-labelledby="XdJknPeqruJmiy8zk99l-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="XdJknPeqruJmiy8zk99l-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="3lf6X6PdRDYqH5DfNq5s" tabindex="-1" role="dialog" aria-labelledby="3lf6X6PdRDYqH5DfNq5s-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="3lf6X6PdRDYqH5DfNq5s-title">Solution</h4></div><div class="modal-body">
 
 ```{.r .fold-show}
 set.seed(43)
@@ -1021,7 +1021,7 @@ left_join(agent$getActionValues(), agent$getPolicy())
 
 <p>All algorithms seems to approximate the best action with highest probability. Estimates differ a bit but are quite close. Note the SARSA algorithms approximate the epsilon-greed optimal policy.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#XdJknPeqruJmiy8zk99l">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#3lf6X6PdRDYqH5DfNq5s">Solution</button>
 
 4) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using `maxEL = 5000` and `alpha = 0.1`. Compare the policy and action-values against the state-values for the optimal deterministic policy found in Example \@ref(exe-dp-storage): 
 
@@ -1124,22 +1124,494 @@ left_join(agent$getActionValues(), agent$getPolicy())
 
 Consider the car rental problem in Exercise \@ref(ex-mdp-2-car) and \@ref(ex-dp-rental). An MDP model was formulated in Exercise \@ref(ex-dp-rental) and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD. 
 
+
+<!-- MDP model -->
+
+
+
 <!-- Q1 -->
+
+<div class="modal fade bs-example-modal-lg" id="b1bMmuSjIDDN4qMLVeFx" tabindex="-1" role="dialog" aria-labelledby="b1bMmuSjIDDN4qMLVeFx-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="b1bMmuSjIDDN4qMLVeFx-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 Class representing the RL environment for the problem
+RLEnvCar <- R6Class("RLEnvCar",
+   public = list(
+
+      #' @field pr Mean demand rate at location 1 and 2.
+      lD = c(3,4),
+      
+      #' @field pr Mean return rate at location 1 and 2.
+      lH = c(3,2),
+      
+      #' @description Return all states (keys).
+      getStates = function() {
+         states <- expand_grid(x = 0:20, y = 0:20) %>% 
+            mutate (state = str_c(x,",",y)) %>% 
+            pull(state)
+         return(states)
+      },
+      
+      #' @description Return all actions (keys) for a state.
+      #' @param s State considered.
+      getActions = function(s) {
+         x <- str_split(s, ",", simplify = T)
+         y <- as.numeric(x[2])
+         x <- as.numeric(x[1])
+         a <- (-min(5, y, 20-x)):(min(5, x, 20-y))
+         return(as.character(a))
+      },
+      
+      #' @description Returns the next state and reward given current state and action as a list (with names `r` and `sN`).
+      #' @param s Current state.
+      #' @param a Current action.
+      getTimeStepData = function(s, a) {
+         x <- str_split(s, ",", simplify = T)
+         y <- as.numeric(x[2])
+         x <- as.numeric(x[1])
+         a <- as.numeric(a)
+         xBar <- x-a
+         yBar <- y+a
+         dX <- rpois(1, lD[1])
+         dY <- rpois(1, lD[2])
+         hX <- rpois(1, lH[1])
+         hY <- rpois(1, lH[2])
+         xN <- min(20, xBar - min(dX, xBar) + hX)
+         yN <- min(20, yBar - min(dY, yBar) + hY)
+         sN <- str_c(xN, ",", yN)
+         r <- 10 * (min(dX, xBar) + min(dY, yBar)) - 2 * abs(a)
+         return(list(r = r, sN = sN))
+      }
+   )
+)
+env <- RLEnvCar$new()
+env$getTimeStepData("0,0", "0")
+#> $r
+#> [1] 0
+#> 
+#> $sN
+#> [1] "6,3"
+env$getTimeStepData("4,20", "-5")
+#> $r
+#> [1] 30
+#> 
+#> $sN
+#> [1] "10,16"
+env$getTimeStepData("20,20", "14")
+#> $r
+#> [1] 12
+#> 
+#> $sN
+#> [1] "9,20"
+```
+
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#b1bMmuSjIDDN4qMLVeFx">Solution</button>
+
 1) Code an environment representing the problem and test your `getTimeStepData` method.
 
+
+
 <!-- Q2 -->
+
+<div class="modal fade bs-example-modal-lg" id="nDjYnP1ZLxHY0BemFjZS" tabindex="-1" role="dialog" aria-labelledby="nDjYnP1ZLxHY0BemFjZS-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nDjYnP1ZLxHY0BemFjZS-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+agent <- RLAgent$new()
+agent$addStates(env$getStates())   # add states
+for (s in agent$getStateKeys()) {  # add actions
+   agent$addActions(s, env$getActions(s))
+} 
+agent$getActionInfo("0,0")
+#> $`0`
+#> $`0`$q
+#> [1] 0
+#> 
+#> $`0`$n
+#> [1] 0
+agent$getActionInfo("8,2")
+#> $`-1`
+#> $`-1`$q
+#> [1] 0
+#> 
+#> $`-1`$n
+#> [1] 0
+#> 
+#> 
+#> $`-2`
+#> $`-2`$q
+#> [1] 0
+#> 
+#> $`-2`$n
+#> [1] 0
+#> 
+#> 
+#> $`0`
+#> $`0`$q
+#> [1] 0
+#> 
+#> $`0`$n
+#> [1] 0
+#> 
+#> 
+#> $`1`
+#> $`1`$q
+#> [1] 0
+#> 
+#> $`1`$n
+#> [1] 0
+#> 
+#> 
+#> $`2`
+#> $`2`$q
+#> [1] 0
+#> 
+#> $`2`$n
+#> [1] 0
+#> 
+#> 
+#> $`3`
+#> $`3`$q
+#> [1] 0
+#> 
+#> $`3`$n
+#> [1] 0
+#> 
+#> 
+#> $`4`
+#> $`4`$q
+#> [1] 0
+#> 
+#> $`4`$n
+#> [1] 0
+#> 
+#> 
+#> $`5`
+#> $`5`$q
+#> [1] 0
+#> 
+#> $`5`$n
+#> [1] 0
+
+agent$gpiOnPolicySARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+#> (s,a,r,s,a) = (6,6,-1,78,8,6,5), r = 78 oldQ = 0 Q(sN, aN) = 0 newQ = 7.8
+#> (s,a,r,s,a) = (8,6,5,50,3,10,2), r = 50 oldQ = 0 Q(sN, aN) = 0 newQ = 5
+#> (s,a,r,s,a) = (3,10,2,26,5,12,1), r = 26 oldQ = 0 Q(sN, aN) = 0 newQ = 2.6
+#> (s,a,r,s,a) = (5,12,1,28,4,15,4), r = 28 oldQ = 0 Q(sN, aN) = 0 newQ = 2.8
+#> (s,a,r,s,a) = (4,15,4,32,4,16,1), r = 32 oldQ = 0 Q(sN, aN) = 0 newQ = 3.2
+right_join(agent$getActionValues(), agent$getPolicy()) %>% 
+   arrange(desc(q))
+#> # A tibble: 3,701 × 5
+#>    state action     q     n     pr
+#>    <chr> <chr>  <dbl> <dbl>  <dbl>
+#>  1 6,6   -1       7.8     1 0.909 
+#>  2 8,6   5        5       1 0.909 
+#>  3 4,15  4        3.2     1 0.91  
+#>  4 5,12  1        2.8     1 0.909 
+#>  5 3,10  2        2.6     1 0.911 
+#>  6 0,0   0        0       0 1     
+#>  7 0,1   -1       0       0 0.05  
+#>  8 0,1   0        0       0 0.95  
+#>  9 0,10  -1       0       0 0.0167
+#> 10 0,10  -2       0       0 0.0167
+#> # … with 3,691 more rows
+#> # ℹ Use `print(n = ...)` to see more rows
+
+agent$gpiOffPolicyQLearning(env, maxEL = 5, verbose = T, gamma = 0.5)
+#> (s,a,r,s) = (0,1,-1,8,3,0), r = 8 oldQ = 0 maxQ(sN) = 0 newQ = 0.8
+#> (s,a,r,s) = (3,0,2,26,7,1), r = 26 oldQ = 0 maxQ(sN) = 0 newQ = 2.6
+#> (s,a,r,s) = (7,1,1,58,9,1), r = 58 oldQ = 0 maxQ(sN) = 0 newQ = 5.8
+#> (s,a,r,s) = (9,1,0,30,10,0), r = 30 oldQ = 0 maxQ(sN) = 0 newQ = 3
+#> (s,a,r,s) = (10,0,1,38,8,2), r = 38 oldQ = 0 maxQ(sN) = 0 newQ = 3.8
+right_join(agent$getActionValues(), agent$getPolicy()) %>% 
+   arrange(desc(q))
+#> # A tibble: 441 × 5
+#>    state action     q     n    pr
+#>    <chr> <chr>  <dbl> <dbl> <dbl>
+#>  1 7,1   1        5.8     1     1
+#>  2 10,0  1        3.8     1     1
+#>  3 9,1   0        3       1     1
+#>  4 3,0   2        2.6     1     1
+#>  5 0,1   -1       0.8     1     1
+#>  6 0,0   0        0       0     1
+#>  7 0,10  -1       0       0     1
+#>  8 0,11  -1       0       0     1
+#>  9 0,12  -1       0       0     1
+#> 10 0,13  -1       0       0     1
+#> # … with 431 more rows
+#> # ℹ Use `print(n = ...)` to see more rows
+
+agent$gpiOnPolicyExpSARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+#> (s,a,r,s) = (1,6,1,28,5,6), r = 28 oldQ = 0 expQ(sN) = 0 newQ = 2.8
+#> (s,a,r,s) = (5,6,-2,76,3,1), r = 76 oldQ = 0 expQ(sN) = 0 newQ = 7.6
+#> (s,a,r,s) = (3,1,2,26,1,5), r = 26 oldQ = 0 expQ(sN) = 0 newQ = 2.6
+#> (s,a,r,s) = (1,5,-4,32,3,1), r = 32 oldQ = 0 expQ(sN) = 2.39 newQ = 3.32
+#> (s,a,r,s) = (3,1,2,36,2,4), r = 36 oldQ = 2.6 expQ(sN) = 0 newQ = 5.94
+right_join(agent$getActionValues(), agent$getPolicy()) %>% 
+   arrange(desc(q))
+#> # A tibble: 3,701 × 5
+#>    state action     q     n     pr
+#>    <chr> <chr>  <dbl> <dbl>  <dbl>
+#>  1 5,6   -2      7.6      1 0.909 
+#>  2 3,1   2       5.94     2 0.92  
+#>  3 1,5   -4      3.32     1 0.914 
+#>  4 1,6   1       2.8      1 0.914 
+#>  5 0,0   0       0        0 1     
+#>  6 0,1   -1      0        0 0.05  
+#>  7 0,1   0       0        0 0.95  
+#>  8 0,10  -1      0        0 0.917 
+#>  9 0,10  -2      0        0 0.0167
+#> 10 0,10  -3      0        0 0.0167
+#> # … with 3,691 more rows
+#> # ℹ Use `print(n = ...)` to see more rows
+```
+
+
+<p>It can be seen that we estimate the state values a few places since the state space is high and we only have done a few iterations.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#nDjYnP1ZLxHY0BemFjZS">Solution</button>
+
 2) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using a few iterations with a discount rate $\gamma = 0.5$, `verbose = T` and explain the output.
 
 
 <!-- Q3 -->
-3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` with a discount rate $\gamma = 0.5$ using a high number of iterations. Compare the policy with the optimal deterministic policy found in Exercise \@ref(ex-dp-rental), e.g. make a plot of the optimal policy with $x$ on the y-axis and $y$ on the x-axis, plotting the action. What is the optimal action in state $(1,15)$? What is the state-value in state $(10,3)$ and its interpretation? 
+
+<div class="modal fade bs-example-modal-lg" id="wQ6W7CXfbQ0QbbsLQv9h" tabindex="-1" role="dialog" aria-labelledby="wQ6W7CXfbQ0QbbsLQv9h-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="wQ6W7CXfbQ0QbbsLQv9h-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+dfMDP <- dfMDP05 %>% mutate (aStar = action, vMDP = v) %>% select(-action, -a, -v)
+
+# Generic test function
+runAlg <- function(maxEL, gamma, alpha, eps, SARSA = T, ExpSARSA = T, QLear = T, ...) {
+   dfRL <- NULL
+   for (ite in maxEL) {
+      for (gam in gamma) {
+         for (alph in alpha) {
+            for (e in eps) {
+               if (SARSA) {
+                  agent$gpiOnPolicySARSA(env, maxEL = ite, gamma = gam, alpha = alph, eps = e, ...)
+                  res <- left_join(agent$getActionValues(), agent$getPolicy()) %>% 
+                     separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+                     mutate(label = str_c("SARSA ite = ", ite, " gam = ", gam, " alpha = ", alph, " eps = ", e),
+                            alg = "SARSA", iterations  = ite, gamma = gam, alpha = alph, eps = e) %>% 
+                     group_by(state) %>% 
+                     mutate(nS = sum(n)) %>% 
+                     slice_max(q, n = 1, with_ties = F) 
+                  dfRL <- bind_rows(dfRL, res) 
+               }
+               if (ExpSARSA) {
+                  agent$gpiOnPolicyExpSARSA(env, maxEL = ite, gamma = gam, alpha = alph, eps = e, ...)
+                  res <- left_join(agent$getActionValues(), agent$getPolicy()) %>% 
+                     separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+                     mutate(label = str_c("ExpSARSA ite = ", ite, " gam = ", gam, " alpha = ", alph, " eps = ", e),
+                            alg = "ExpSARSA", iterations  = ite, gamma = gam, alpha = alph, eps = e) %>% 
+                     group_by(state) %>% 
+                     mutate(nS = sum(n)) %>% 
+                     slice_max(q, n = 1, with_ties = F) 
+                  dfRL <- bind_rows(dfRL, res) 
+               }
+               if (QLear) {
+                  agent$gpiOffPolicyQLearning(env, maxEL = ite, gamma = gam, alpha = alph, eps = e, ...)
+                  res <- left_join(agent$getActionValues(), agent$getPolicy()) %>% 
+                     separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+                     mutate(label = str_c("SARSA ite = ", ite, " gam = ", gam, " alpha = ", alph, " eps = ", e),
+                            alg = "QLear", iterations  = ite, gamma = gam, alpha = alph, eps = e) %>% 
+                     group_by(state) %>% 
+                     mutate(nS = sum(n)) %>% 
+                     slice_max(q, n = 1, with_ties = F) 
+                  dfRL <- bind_rows(dfRL, res) 
+               }
+            }
+         }
+      }
+   }
+   dfRL <- dfRL %>% 
+      ungroup() %>% 
+      select(x, y, a = action, n = nS, alg, q, iterations, gamma, alpha, eps) 
+   ## print rms
+   dfRMS <- left_join(dfRL, dfMDP) %>% 
+      group_by(alg, iterations, gamma, alpha, eps) %>% 
+      summarise(rms = sqrt(1/n() * sum(q-vMDP)^2)) %>% print
+   return(dfRL %>% filter(n > 0))
+}
+
+set.seed(9833)
+dfRL1 <- runAlg(maxEL = c(25000, 50000, 100000), gamma = 0.5, alpha = 0.1, eps = 0.1)
+#> # A tibble: 9 × 6
+#> # Groups:   alg, iterations, gamma, alpha [9]
+#>   alg      iterations gamma alpha   eps   rms
+#>   <chr>         <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 ExpSARSA      25000   0.5   0.1   0.1 1724.
+#> 2 ExpSARSA      50000   0.5   0.1   0.1 1469.
+#> 3 ExpSARSA     100000   0.5   0.1   0.1 1265.
+#> 4 QLear         25000   0.5   0.1   0.1 1654.
+#> 5 QLear         50000   0.5   0.1   0.1 1461.
+#> 6 QLear        100000   0.5   0.1   0.1 1191.
+#> 7 SARSA         25000   0.5   0.1   0.1 1739.
+#> 8 SARSA         50000   0.5   0.1   0.1 1435.
+#> 9 SARSA        100000   0.5   0.1   0.1 1311.
+
+ggplot(dfRL1, aes(x = y, y = x, col = a, size = n)) +
+      geom_point() +
+      facet_grid(alg~iterations, labeller = labeller(alg = label_wrap_gen(30))) +
+      scale_fill_brewer(palette = "Set2") + 
+      labs(title = str_c("Run with q=0 ini values")) +
+      theme(strip.text.x = element_text(size = 5))
+```
+
+<img src="08_td-control_files/figure-html/unnamed-chunk-22-1.png" width="960" style="display: block; margin: auto;" />
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#wQ6W7CXfbQ0QbbsLQv9h">Solution</button>
+
+3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` with a discount rate $\gamma = 0.5$ using a high number of iterations, e.g. 25000, 50000 and 100000. Compare the policy with the optimal deterministic policy found in Exercise \@ref(ex-dp-rental), e.g. make a plot of the optimal policy with $x$ on the y-axis and $y$ on the x-axis, plotting the action:
+
+
+```r
+ggplot(dfMDP05, aes(x = y, y = x, col = factor(a))) +
+      geom_point() +
+      scale_fill_brewer(palette = "Set2") + 
+      labs(title = str_c("Optimal MDP policy")) 
+```
+
+<img src="08_td-control_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" />
+
+
+
 
 <!-- Q4 -->
-4) Run the `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.9$ using a high number of iterations and compare the policy and action-values against the state-values for the optimal deterministic policy found in Exercise \@ref(ex-dp-rental).
+
+<div class="modal fade bs-example-modal-lg" id="ShBZYSiiyTBofpBzevrj" tabindex="-1" role="dialog" aria-labelledby="ShBZYSiiyTBofpBzevrj-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="ShBZYSiiyTBofpBzevrj-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+dfRL1 %>% 
+   filter(((x == 5 & y == 5) | (x == 15 & y == 18)) & iterations == 100000 & alg == "QLear")
+#> # A tibble: 2 × 10
+#>       x     y a         n alg       q iterations gamma alpha   eps
+#>   <int> <int> <chr> <dbl> <chr> <dbl>      <dbl> <dbl> <dbl> <dbl>
+#> 1    15    18 -5        1 QLear  10.1     100000   0.5   0.1   0.1
+#> 2     5     5 3       820 QLear 101.      100000   0.5   0.1   0.1
+```
+
+
+<p>In state \((5,5)\) and \((15,18)\) the best action is 3 and -5, respectively. However, these actions have been approximated quite differently. In state \((5,5)\) the best action-value is 101, i.e. the weighted average of the total discounted return. It is based on 820 samples of that state while for state \((15,18)\) we only have estimated the best action-value using a single visit to that state.</p>
+
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#ShBZYSiiyTBofpBzevrj">Solution</button>
+
+4) Consider Q-learning with 100000 iterations. What is the optimal action in state $(5,5)$? What is the state-value in state $(5,5)$ and $(15,18)$ and its interpretation? 
+
 
 
 <!-- Q5 -->
-5) Run the `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.9$ using different alpha values to test the convergence. 
+
+<div class="modal fade bs-example-modal-lg" id="y8HHPhaeVpW36UK3GuKM" tabindex="-1" role="dialog" aria-labelledby="y8HHPhaeVpW36UK3GuKM-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="y8HHPhaeVpW36UK3GuKM-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+setQToVStar <- function(dfMDP) {
+   for (i in 1:nrow(dfMDP)) {
+      s <- dfMDP$state[i]
+      q <- dfMDP$v[i]
+      for (a in agent$getActionKeys(s)) {
+         agent$setActionValueSingle(q,0,s,a)
+      }
+   }
+}
+setQToVStar(dfMDP05)
+dfRL <- runAlg(maxEL = 25000, gamma = 0.5, alpha = 0.1, eps = 0.1, SARSA = F, ExpSARSA = F, reset = F)
+#> # A tibble: 1 × 6
+#> # Groups:   alg, iterations, gamma, alpha [1]
+#>   alg   iterations gamma alpha   eps   rms
+#>   <chr>      <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 QLear      25000   0.5   0.1   0.1  14.3
+setQToVStar(dfMDP05)
+res <- runAlg(maxEL = 50000, gamma = 0.5, alpha = 0.1, eps = 0.1, SARSA = F, ExpSARSA = F, reset = F)
+#> # A tibble: 1 × 6
+#> # Groups:   alg, iterations, gamma, alpha [1]
+#>   alg   iterations gamma alpha   eps   rms
+#>   <chr>      <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 QLear      50000   0.5   0.1   0.1  31.0
+dfRL <- bind_rows(dfRL, res)
+setQToVStar(dfMDP05)
+res <- runAlg(maxEL = 100000, gamma = 0.5, alpha = 0.1, eps = 0.1, SARSA = F, ExpSARSA = F, reset = F)
+#> # A tibble: 1 × 6
+#> # Groups:   alg, iterations, gamma, alpha [1]
+#>   alg   iterations gamma alpha   eps   rms
+#>   <chr>      <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 QLear     100000   0.5   0.1   0.1  34.2
+dfRL2 <- bind_rows(dfRL, res)
+ggplot(dfRL2, aes(x = y, y = x, col = a, size = n)) +
+   geom_point() +
+   facet_grid(alg~iterations, labeller = labeller(alg = label_wrap_gen(30))) +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Run with v* values")) +
+   theme(strip.text.x = element_text(size = 5))
+```
+
+<img src="08_td-control_files/figure-html/unnamed-chunk-25-1.png" width="960" style="display: block; margin: auto;" />
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#y8HHPhaeVpW36UK3GuKM">Solution</button>
+
+5) Run the algorithm `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.5$ using a high number of iterations, e.g. 25000, 50000 and 100000. However set the start actions-values equal to the optimal state-value in a state found by the MDP. Compare the policy with the policies found in Question 3. 
+
+
+
+
+<!-- Q6 -->
+
+<div class="modal fade bs-example-modal-lg" id="vmiiokLDxmLUZcjb0cEy" tabindex="-1" role="dialog" aria-labelledby="vmiiokLDxmLUZcjb0cEy-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="vmiiokLDxmLUZcjb0cEy-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+dfRL3 <- runAlg(maxEL = 100000, gamma = 0.5, alpha = 0.1, eps = c(0.2, 0.5, 1), SARSA = F, ExpSARSA = F)
+#> # A tibble: 3 × 6
+#> # Groups:   alg, iterations, gamma, alpha [1]
+#>   alg   iterations gamma alpha   eps   rms
+#>   <chr>      <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 QLear     100000   0.5   0.1   0.2 1293.
+#> 2 QLear     100000   0.5   0.1   0.5 1335.
+#> 3 QLear     100000   0.5   0.1   1   1473.
+ggplot(dfRL3, aes(x = y, y = x, col = a, size = n)) +
+   geom_point() +
+   facet_grid(alg~eps, labeller = labeller(alg = label_wrap_gen(30))) +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Run with q=0 ini values")) +
+   theme(strip.text.x = element_text(size = 5))
+```
+
+<img src="08_td-control_files/figure-html/unnamed-chunk-26-1.png" width="960" style="display: block; margin: auto;" />
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#vmiiokLDxmLUZcjb0cEy">Solution</button>
+
+6) Run the algorithm `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.5$ and 100000 iterations. Test the effect of different epsilon-greedy behaviour policies, e.g. epsilon = 0.2, 0.5 and 1.
+
+
+
+
+<!-- Q7 -->
+
+<div class="modal fade bs-example-modal-lg" id="HYfRjpybykYk58L7AWO2" tabindex="-1" role="dialog" aria-labelledby="HYfRjpybykYk58L7AWO2-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="HYfRjpybykYk58L7AWO2-title">Solution</h4></div><div class="modal-body">
+
+```{.r .fold-show}
+dfRL4 <- runAlg(maxEL = 100000, gamma = 0.5, alpha = c(0.05, 0.2, 0.5), eps = 0.1, SARSA = F, ExpSARSA = F)
+#> # A tibble: 3 × 6
+#> # Groups:   alg, iterations, gamma, alpha [3]
+#>   alg   iterations gamma alpha   eps   rms
+#>   <chr>      <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 QLear     100000   0.5  0.05   0.1 1459.
+#> 2 QLear     100000   0.5  0.2    0.1 1072.
+#> 3 QLear     100000   0.5  0.5    0.1  841.
+ggplot(dfRL4, aes(x = y, y = x, col = a, size = n)) +
+   geom_point() +
+   facet_wrap(alg~alpha, labeller = labeller(alg = label_wrap_gen(30))) +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Run with q=0 ini values")) +
+   theme(strip.text.x = element_text(size = 5))
+```
+
+<img src="08_td-control_files/figure-html/unnamed-chunk-27-1.png" width="960" style="display: block; margin: auto;" />
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#HYfRjpybykYk58L7AWO2">Solution</button>
+
+7) Run the algorithm `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.5$ and 100000 iterations. Test the effect of different step-sizes, e.g. alpha = 0.05, 0.2, 0.5.
+
 
 
 
@@ -1286,8 +1758,6 @@ Consider the car rental problem in Exercise \@ref(ex-mdp-2-car) and \@ref(ex-dp-
 [wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
 [wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
 [wiki-json]: https://en.wikipedia.org/wiki/JSON
-
-
 
 
 
