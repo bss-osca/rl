@@ -388,22 +388,364 @@ res1
 
 Consider the car rental problem in Exercise \@ref(ex-mdp-2-car) and \@ref(ex-dp-rental). An MDP model was formulated in Exercise \@ref(ex-dp-rental) and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD. 
 
+
+<!-- MDP model -->
+```{r, include=FALSE, cache=TRUE}
+library(tidyverse)
+
+# Mean of min(D,z). Assume z >= 0
+meanMinD <- function(z, lambda) {
+   if (z == 0) return(0)
+   sum(dpois(0:(z-1), lambda) * 0:(z-1)) + ppois(z-1, lambda, lower.tail = F) * z
+}
+
+reward <- function(x, y, a) {
+   10 * meanMinD(x-a, 3) + 10 * meanMinD(y+a, 4) - 2 * abs(a)
+}
+
+lD <- c(3,4)
+lH <- c(3,2)
+
+# Pr(min(D_i, k) = d)
+# assume that d<=k
+prMin <- function(i, k, d) {
+   if (k == 0) return(1)
+   v <- c(dpois(0:(k-1), lD[i]), ppois(k-1, lD[i], lower.tail = F))
+   return(v[d+1])
+   # if (d == k) return(1 - pD[i, d])     # 1-pr(D <= d-1)
+   # if (d < k) return(dD[i, d+1])
+   # return(NA)
+}
+
+# Pr(xN | x, a)
+transPrX <- function(xN, xBar) {
+   if (xN == 20) {
+      return(sum(prMin(1, xBar, 0:(xBar)) * ppois(xN - xBar + 0:(xBar) - 1, lH[1], lower.tail = F)))
+   }
+   if (xN < 20) {
+      return(sum(prMin(1, xBar, 0:(xBar)) * dpois(xN - xBar + 0:(xBar), lH[1])))
+   }
+   error("Error in calculations!")
+}
+
+# Pr(yN | y, a)
+transPrY <- function(yN, yBar) {
+   if (yN == 20) {
+      return(sum(prMin(2, yBar, 0:(yBar)) * ppois(yN - yBar + 0:(yBar) - 1, lH[2], lower.tail = F)))
+   }
+   if (yN < 20) {
+      return(sum(prMin(2, yBar, 0:(yBar)) * dpois(yN - yBar + 0:(yBar), lH[2])))
+   }
+   error("Error in calculations!")
+}
+
+mat <- matrix(0, nrow = 21, ncol = 21)
+colnames(mat) <- str_c(0:20)
+rownames(mat) <- str_c(0:20)
+matTransPrX <- mat     # matTransPrX[r,c] = Pr(xN = c-1 | xBar = r-1)
+matTransPrY <- mat
+for (r in 1:21) {
+   xBar <- r-1
+   for (c in 1:21) {
+      xN <- c-1
+      matTransPrX[r,c] <- transPrX(xN, xBar)
+      matTransPrY[r,c] <- transPrY(xN, xBar)
+   }
+}
+
+
+mdp <- MDPClass$new()      # initialize mdp object
+states <- expand_grid(x = 0:20, y = 0:20) %>% 
+   mutate (state = str_c(x,",",y)) %>% 
+   pull(state)
+mdp$addStateSpace(states)   # add states (states are keys in a hash and are always converted to strings)
+for (s in mdp$getStateKeys()) {  # add actions for each state (only the key of the action)
+    x <- str_split(s, ",", simplify = T)
+    y <- as.numeric(x[2])
+    x <- as.numeric(x[1])
+    a <- (-min(5, y, 20-x)):(min(5, x, 20-y))
+    mdp$addActionSpace(s, a)
+}
+
+# Add trans pr and expected reward to the actions. This may take some time!!
+states <- expand_grid(x = 0:20, y = 0:20) %>% 
+   mutate (state = str_c(x,",",y), pr = 0) 
+for (s in mdp$getStateKeys()) {
+   for (aS in mdp$getActionKeys(s)) {
+      x <- str_split(s, ",", simplify = T)
+      y <- as.numeric(x[2])
+      x <- as.numeric(x[1])
+      a <- as.numeric(aS) 
+      xBar <- x-a
+      yBar <- y+a
+      for (i in 1:nrow(states)) {
+         states$pr[i] <- matTransPrX[xBar+1, states$x[i] + 1] * matTransPrX[yBar+1, states$y[i] + 1]
+      }
+      transPr <- states$pr
+      names(transPr) <- states$state
+      mdp$addAction(s, aS, r = reward(x, y, a), pr = transPr)
+   }
+}
+
+
+mdp$policyIte(gamma = 0.5, theta = 0.9)
+dfMDP05 <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+   select(-pr) %>% 
+   separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+   mutate(a = as.numeric(action))
+
+mdp$policyIte(gamma = 0.9, theta = 0.9)
+dfMDP09 <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
+   select(-pr) %>% 
+   separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+   mutate(a = as.numeric(action))
+```
+
+
 <!-- Q1 -->
+```{r, solution=TRUE}
+library(R6)
+library(hash)
+library(tidyverse)
+
+#' R6 Class representing the RL environment for the problem
+RLEnvCar <- R6Class("RLEnvCar",
+   public = list(
+
+      #' @field pr Mean demand rate at location 1 and 2.
+      lD = c(3,4),
+      
+      #' @field pr Mean return rate at location 1 and 2.
+      lH = c(3,2),
+      
+      #' @description Return all states (keys).
+      getStates = function() {
+         states <- expand_grid(x = 0:20, y = 0:20) %>% 
+            mutate (state = str_c(x,",",y)) %>% 
+            pull(state)
+         return(states)
+      },
+      
+      #' @description Return all actions (keys) for a state.
+      #' @param s State considered.
+      getActions = function(s) {
+         x <- str_split(s, ",", simplify = T)
+         y <- as.numeric(x[2])
+         x <- as.numeric(x[1])
+         a <- (-min(5, y, 20-x)):(min(5, x, 20-y))
+         return(as.character(a))
+      },
+      
+      #' @description Returns the next state and reward given current state and action as a list (with names `r` and `sN`).
+      #' @param s Current state.
+      #' @param a Current action.
+      getTimeStepData = function(s, a) {
+         x <- str_split(s, ",", simplify = T)
+         y <- as.numeric(x[2])
+         x <- as.numeric(x[1])
+         a <- as.numeric(a)
+         xBar <- x-a
+         yBar <- y+a
+         dX <- rpois(1, lD[1])
+         dY <- rpois(1, lD[2])
+         hX <- rpois(1, lH[1])
+         hY <- rpois(1, lH[2])
+         xN <- min(20, xBar - min(dX, xBar) + hX)
+         yN <- min(20, yBar - min(dY, yBar) + hY)
+         sN <- str_c(xN, ",", yN)
+         r <- 10 * (min(dX, xBar) + min(dY, yBar)) - 2 * abs(a)
+         return(list(r = r, sN = sN))
+      }
+   )
+)
+env <- RLEnvCar$new()
+env$getTimeStepData("0,0", "0")
+env$getTimeStepData("4,20", "-5")
+env$getTimeStepData("20,20", "14")
+```
+
 1) Code an environment representing the problem and test your `getTimeStepData` method.
 
+
+
 <!-- Q2 -->
+```{r, solution=TRUE, text="It can be seen that we estimate the state values a few places since the state space is high and we only have done a few iterations."}
+agent <- RLAgent$new()
+agent$addStates(env$getStates())   # add states
+for (s in agent$getStateKeys()) {  # add actions
+   agent$addActions(s, env$getActions(s))
+} 
+agent$getActionInfo("0,0")
+agent$getActionInfo("8,2")
+
+agent$gpiOnPolicySARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+right_join(agent$getActionValues(), agent$getPolicy()) %>% 
+   arrange(desc(q))
+
+agent$gpiOffPolicyQLearning(env, maxEL = 5, verbose = T, gamma = 0.5)
+right_join(agent$getActionValues(), agent$getPolicy()) %>% 
+   arrange(desc(q))
+
+agent$gpiOnPolicyExpSARSA(env, maxEL = 5, verbose = T, gamma = 0.5)
+right_join(agent$getActionValues(), agent$getPolicy()) %>% 
+   arrange(desc(q))
+```
+
 2) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` using a few iterations with a discount rate $\gamma = 0.5$, `verbose = T` and explain the output.
 
 
 <!-- Q3 -->
-3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` with a discount rate $\gamma = 0.5$ using a high number of iterations. Compare the policy with the optimal deterministic policy found in Exercise \@ref(ex-dp-rental), e.g. make a plot of the optimal policy with $x$ on the y-axis and $y$ on the x-axis, plotting the action. What is the optimal action in state $(1,15)$? What is the state-value in state $(10,3)$ and its interpretation? 
+```{r, solution=TRUE, cache=TRUE, fig.height = 10, fig.width = 10}
+dfMDP <- dfMDP05 %>% mutate (aStar = action, vMDP = v) %>% select(-action, -a, -v)
+
+# Generic test function
+runAlg <- function(maxEL, gamma, alpha, eps, SARSA = T, ExpSARSA = T, QLear = T, ...) {
+   dfRL <- NULL
+   for (ite in maxEL) {
+      for (gam in gamma) {
+         for (alph in alpha) {
+            for (e in eps) {
+               if (SARSA) {
+                  agent$gpiOnPolicySARSA(env, maxEL = ite, gamma = gam, alpha = alph, eps = e, ...)
+                  res <- left_join(agent$getActionValues(), agent$getPolicy()) %>% 
+                     separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+                     mutate(label = str_c("SARSA ite = ", ite, " gam = ", gam, " alpha = ", alph, " eps = ", e),
+                            alg = "SARSA", iterations  = ite, gamma = gam, alpha = alph, eps = e) %>% 
+                     group_by(state) %>% 
+                     mutate(nS = sum(n)) %>% 
+                     slice_max(q, n = 1, with_ties = F) 
+                  dfRL <- bind_rows(dfRL, res) 
+               }
+               if (ExpSARSA) {
+                  agent$gpiOnPolicyExpSARSA(env, maxEL = ite, gamma = gam, alpha = alph, eps = e, ...)
+                  res <- left_join(agent$getActionValues(), agent$getPolicy()) %>% 
+                     separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+                     mutate(label = str_c("ExpSARSA ite = ", ite, " gam = ", gam, " alpha = ", alph, " eps = ", e),
+                            alg = "ExpSARSA", iterations  = ite, gamma = gam, alpha = alph, eps = e) %>% 
+                     group_by(state) %>% 
+                     mutate(nS = sum(n)) %>% 
+                     slice_max(q, n = 1, with_ties = F) 
+                  dfRL <- bind_rows(dfRL, res) 
+               }
+               if (QLear) {
+                  agent$gpiOffPolicyQLearning(env, maxEL = ite, gamma = gam, alpha = alph, eps = e, ...)
+                  res <- left_join(agent$getActionValues(), agent$getPolicy()) %>% 
+                     separate(state, into = c("x", "y"), sep = ",", remove = F, convert = T) %>% 
+                     mutate(label = str_c("SARSA ite = ", ite, " gam = ", gam, " alpha = ", alph, " eps = ", e),
+                            alg = "QLear", iterations  = ite, gamma = gam, alpha = alph, eps = e) %>% 
+                     group_by(state) %>% 
+                     mutate(nS = sum(n)) %>% 
+                     slice_max(q, n = 1, with_ties = F) 
+                  dfRL <- bind_rows(dfRL, res) 
+               }
+            }
+         }
+      }
+   }
+   dfRL <- dfRL %>% 
+      ungroup() %>% 
+      select(x, y, a = action, n = nS, alg, q, iterations, gamma, alpha, eps) 
+   ## print rms
+   dfRMS <- left_join(dfRL, dfMDP) %>% 
+      group_by(alg, iterations, gamma, alpha, eps) %>% 
+      summarise(rms = sqrt(1/n() * sum(q-vMDP)^2)) %>% print
+   return(dfRL %>% filter(n > 0))
+}
+
+set.seed(9833)
+dfRL1 <- runAlg(maxEL = c(25000, 50000, 100000), gamma = 0.5, alpha = 0.1, eps = 0.1)
+
+ggplot(dfRL1, aes(x = y, y = x, col = a, size = n)) +
+      geom_point() +
+      facet_grid(alg~iterations, labeller = labeller(alg = label_wrap_gen(30))) +
+      scale_fill_brewer(palette = "Set2") + 
+      labs(title = str_c("Run with q=0 ini values")) +
+      theme(strip.text.x = element_text(size = 5))
+```
+
+3) Run the algorithms `gpiOnPolicySARSA`, `gpiOffPolicyQLearning` and `gpiOnPolicyExpSARSA` with a discount rate $\gamma = 0.5$ using a high number of iterations, e.g. 25000, 50000 and 100000. Compare the policy with the optimal deterministic policy found in Exercise \@ref(ex-dp-rental), e.g. make a plot of the optimal policy with $x$ on the y-axis and $y$ on the x-axis, plotting the action:
+
+```{r}
+ggplot(dfMDP05, aes(x = y, y = x, col = factor(a))) +
+      geom_point() +
+      scale_fill_brewer(palette = "Set2") + 
+      labs(title = str_c("Optimal MDP policy")) 
+```
+
+
+
 
 <!-- Q4 -->
-4) Run the `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.9$ using a high number of iterations and compare the policy and action-values against the state-values for the optimal deterministic policy found in Exercise \@ref(ex-dp-rental).
+```{r, solution=TRUE, cache=TRUE, text = "In state $(5,5)$ and $(15,18)$ the best action is 3 and -5, respectively. However, these actions have been approximated quite differently. In state $(5,5)$ the best action-value is 101, i.e. the weighted average of the total discounted return. It is based on 820 samples of that state while for state $(15,18)$ we only have estimated the best action-value using a single visit to that state."}
+dfRL1 %>% 
+   filter(((x == 5 & y == 5) | (x == 15 & y == 18)) & iterations == 100000 & alg == "QLear")
+```
+
+4) Consider Q-learning with 100000 iterations. What is the optimal action in state $(5,5)$? What is the state-value in state $(5,5)$ and $(15,18)$ and its interpretation? 
+
 
 
 <!-- Q5 -->
-5) Run the `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.9$ using different alpha values to test the convergence. 
+```{r, solution=TRUE, cache=TRUE, fig.height = 10, fig.width = 10}
+setQToVStar <- function(dfMDP) {
+   for (i in 1:nrow(dfMDP)) {
+      s <- dfMDP$state[i]
+      q <- dfMDP$v[i]
+      for (a in agent$getActionKeys(s)) {
+         agent$setActionValueSingle(q,0,s,a)
+      }
+   }
+}
+setQToVStar(dfMDP05)
+dfRL <- runAlg(maxEL = 25000, gamma = 0.5, alpha = 0.1, eps = 0.1, SARSA = F, ExpSARSA = F, reset = F)
+setQToVStar(dfMDP05)
+res <- runAlg(maxEL = 50000, gamma = 0.5, alpha = 0.1, eps = 0.1, SARSA = F, ExpSARSA = F, reset = F)
+dfRL <- bind_rows(dfRL, res)
+setQToVStar(dfMDP05)
+res <- runAlg(maxEL = 100000, gamma = 0.5, alpha = 0.1, eps = 0.1, SARSA = F, ExpSARSA = F, reset = F)
+dfRL2 <- bind_rows(dfRL, res)
+ggplot(dfRL2, aes(x = y, y = x, col = a, size = n)) +
+   geom_point() +
+   facet_grid(alg~iterations, labeller = labeller(alg = label_wrap_gen(30))) +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Run with v* values")) +
+   theme(strip.text.x = element_text(size = 5))
+```
+
+5) Run the algorithm `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.5$ using a high number of iterations, e.g. 25000, 50000 and 100000. However set the start actions-values equal to the optimal state-value in a state found by the MDP. Compare the policy with the policies found in Question 3. 
+
+
+
+
+<!-- Q6 -->
+```{r, solution=TRUE, cache=TRUE, fig.height = 10, fig.width = 10}
+dfRL3 <- runAlg(maxEL = 100000, gamma = 0.5, alpha = 0.1, eps = c(0.2, 0.5, 1), SARSA = F, ExpSARSA = F)
+ggplot(dfRL3, aes(x = y, y = x, col = a, size = n)) +
+   geom_point() +
+   facet_grid(alg~eps, labeller = labeller(alg = label_wrap_gen(30))) +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Run with q=0 ini values")) +
+   theme(strip.text.x = element_text(size = 5))
+```
+
+6) Run the algorithm `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.5$ and 100000 iterations. Test the effect of different epsilon-greedy behaviour policies, e.g. epsilon = 0.2, 0.5 and 1.
+
+
+
+
+<!-- Q7 -->
+```{r, solution=TRUE, cache=TRUE, fig.height = 10, fig.width = 10}
+dfRL4 <- runAlg(maxEL = 100000, gamma = 0.5, alpha = c(0.05, 0.2, 0.5), eps = 0.1, SARSA = F, ExpSARSA = F)
+ggplot(dfRL4, aes(x = y, y = x, col = a, size = n)) +
+   geom_point() +
+   facet_wrap(alg~alpha, labeller = labeller(alg = label_wrap_gen(30))) +
+   scale_fill_brewer(palette = "Set2") + 
+   labs(title = str_c("Run with q=0 ini values")) +
+   theme(strip.text.x = element_text(size = 5))
+```
+
+7) Run the algorithm `gpiOffPolicyQLearning` with a discount rate $\gamma = 0.5$ and 100000 iterations. Test the effect of different step-sizes, e.g. alpha = 0.05, 0.2, 0.5.
+
 
 
 ```{r links, child="links.md", include=FALSE}
@@ -413,25 +755,6 @@ Consider the car rental problem in Exercise \@ref(ex-mdp-2-car) and \@ref(ex-dp-
 knitr::knit_exit()
 ```
 
-```{r, cache=TRUE}
-## old stuff
-
-set.seed(894)
-res <- NULL
-for (alph in seq(0.01, 0.1, by = 0.01)) {  #seq(0.01, 0.1, by = 0.01), c(0.1, 0.05, 0.01)
-   for (ite in c(100, 5000)) {
-      agent$gpiOffPolicyQLearning(env, maxEL = ite, gamma = 0.5, alpha = alph)
-      res <- bind_rows(res, left_join(agent$getActionValues(), agent$getPolicy()) %>% mutate(alpha = alph, ite = ite))
-   }
-}
-
-res %>% 
-   group_by(alpha, ite) %>% 
-   summarise(val = sum(q * pr, na.rm = T)) %>% 
-   ggplot(aes(x = alpha, y = val, col = factor(ite))) +
-   geom_line() + 
-   geom_point()
-```
 
 
 
