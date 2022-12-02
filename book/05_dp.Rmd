@@ -902,7 +902,7 @@ mdp$getActionInfo("20,0")
 sum(mdp$getActionInfo("20,20")$"0"$pr)
 ```
 
-```{r, hint=TRUE}
+```{r, hint=TRUE, eval=FALSE}
 mdp <- MDPClass$new()      # initialize mdp object
 states <- expand_grid(x = 0:20, y = 0:20) %>% 
    mutate (state = str_c(x,",",y)) %>% 

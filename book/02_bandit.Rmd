@@ -442,7 +442,7 @@ testEG(0.5)
 env$optimalAction()
 env$mV
 ```
-```{r, hint=TRUE}
+```{r, hint=TRUE, eval=FALSE}
 set.seed(327)  # to get same results 
 
 #' Performance of the bandit algorithm.
@@ -501,7 +501,7 @@ testEG <- function(epsilon, steps = 10000) {
 testEG(0.01)$plt
 testEG(0.5)$plt
 ```
-```{r, hint=TRUE}
+```{r, hint=TRUE, eval=FALSE}
 ## Test function modified with plot feature
 testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
@@ -553,7 +553,7 @@ testEG(0.5)
 # True average reward values
 env$mV * c(10, 8, 5, 15, 2)
 ```
-```{r, hint=TRUE}
+```{r, hint=TRUE, eval=FALSE}
 ## Test function modified with rewards
 testEG <- function(epsilon, steps = 10000) {
    agent <- RLAgent$new(k = 5, epsilon = epsilon)
@@ -668,7 +668,7 @@ testUCB(5)
 testUCB(10)
 testUCB(20)
 ```
-```{r, hint=TRUE}
+```{r, hint=TRUE, eval=FALSE}
 testUCB <- function(c = 2, steps = 10000) {
    agent <- RLAgent$new(k = 5)
    rewards <- c(10, 8, 5, 15, 2)
