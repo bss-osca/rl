@@ -546,10 +546,10 @@ RLEnvCar <- R6Class("RLEnvCar",
          a <- as.numeric(a)
          xBar <- x-a
          yBar <- y+a
-         dX <- rpois(1, lD[1])
-         dY <- rpois(1, lD[2])
-         hX <- rpois(1, lH[1])
-         hY <- rpois(1, lH[2])
+         dX <- rpois(1, self$lD[1])
+         dY <- rpois(1, self$lD[2])
+         hX <- rpois(1, self$lH[1])
+         hY <- rpois(1, self$lH[2])
          xN <- min(20, xBar - min(dX, xBar) + hX)
          yN <- min(20, yBar - min(dY, yBar) + hY)
          sN <- str_c(xN, ",", yN)
