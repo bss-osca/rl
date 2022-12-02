@@ -931,7 +931,7 @@ Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement l
 [slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
 [slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
 [slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
-[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
 
 [tidyverse-main-page]: https://www.tidyverse.org
 [tidyverse-packages]: https://www.tidyverse.org/packages/

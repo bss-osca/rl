@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 description: "Course notes for 'Reinforcement Learning for Business'"
 favicon: assets/favicon.ico
-date: "2022-11-14"
+date: "2022-12-02"
 editor_options: 
   chunk_output_type: console
 ---
@@ -297,7 +297,7 @@ A template in RMarkdown of the course notes and exercises are available at [GitH
 [slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
 [slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
 [slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
-[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
 
 [tidyverse-main-page]: https://www.tidyverse.org
 [tidyverse-packages]: https://www.tidyverse.org/packages/
