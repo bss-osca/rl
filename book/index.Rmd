@@ -127,7 +127,7 @@ This module gives a short introduction to the course. Next, the site consists of
 
    * [Part I](#mod-rl-intro) gives you a general introduction to RL and the bandit problem. 
 
-   * [Part II](#mod-bandit) consider RL sequential decision problems where the state and state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module \@ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module \@ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module  \@ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module \@ref(mod-mc) and ...
+   * [Part II](#mod-bandit) consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module \@ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module \@ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module  \@ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module \@ref(mod-mc) and ...
    
 
 <!-- The next three chapters describe three fundamental classes of methods for solving finite -->
@@ -211,7 +211,7 @@ A template in RMarkdown of the course notes and exercises are available at [GitH
 
    1) Open R studio and do: **File > New Project ... > Version Control > Git**. Add `https://github.com/bss-osca/rl-student` as repository url and create the project.
    2) Run `renv::restore()` from the R command line to install needed packages (this may take some time). If you experience errors then try to install the packages one at a time using `install.packages("pkg name")`.
-   3) Open e.g. the file `01_rl-intro.Rmd` and try to knit it using the Knit button in the upper left corner. A html file with the output will be made. You should be able to add you own notes and solve the exercises using the Rmd file for each module. 
+   3) Open e.g. the file `01_rl-intro.Rmd` and try to knit it using the Knit button in the upper left corner. A html file with the output will be made. You should be able to add your own notes and solve the exercises using the Rmd file for each module. 
 
 
 ```{r links, child="links.md"}

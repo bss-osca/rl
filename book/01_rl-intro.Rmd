@@ -213,7 +213,7 @@ The reward $R_t$ is a number representing the reward at time $t$ (negative if a 
 
 The goal is to find a policy that maximize the total future reward. A *policy* is the agent’s behaviour and is a map from state to action, i.e. a function $$a = \pi(s)$$ saying that given the agent is in state $s$ we choose action $a$.
 
-The total future reward is a currently not defined clearly. Let the *value function* denote the future reward in state $s$ and define it as the expected discounted future reward: $$V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).$$ Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states $$\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).$$
+The total future reward is currently not defined clearly. Let the *value function* denote the future reward in state $s$ and define it as the expected discounted future reward: $$V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).$$ Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states $$\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).$$
 
 The value of the discount rate is important:
 
@@ -228,7 +228,7 @@ The value of the discount rate is important:
 
 ## Exploitation vs Exploration
 
-A key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently know as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? *Exploitation* takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). *Exploration* does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.  
+A key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? *Exploitation* takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). *Exploration* does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.  
 
 Examples in the exploration and exploitation dilemma are for instance movie recommendations: recommending the user’s best rated movie type (exploitation) or trying another movie type (exploration) or oil drilling: drilling at the best known location (exploitation) or trying a new location (exploration).
 
@@ -242,7 +242,7 @@ library(hash)
 library(zoo)
 ```
 
-The current state of the board is represented by a row-wise concatenation of the players' marks in a 3x3 grid. For example, the 9 character long string `"......X.O"` denotes a board state in which player X has placed a mark in the first field of the third column whereas player O has placed a mark in the third field of the third column:
+The current state of the board is represented by a row-wise concatenation of the players' marks in a 3x3 grid. For example, the 9 character long string `"......X.O"` denotes a board state in which player X has placed a mark in the third row and first column whereas player O has placed a mark in the third row and the third column:
 
 ```{css, echo=FALSE}
 .table-bordered th, .table-bordered td {
@@ -283,7 +283,7 @@ The game is continued until all fields are filled or the game is over (win or lo
 
 <!-- All states are observed from the perspective of player X who is also assumed to have played first.  -->
 
-The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for 'win', 0.5 for 'draw', and 0 for 'loss'. These values can be seen as the probability of winning. 
+The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for 'win', 0.5 for 'draw', and 0 for 'loss'. These values can be seen as the probabilities of winning. 
 
 Examples of winning, loosing and a draw from player Xs point of view:
 ```{r, message=FALSE, echo=FALSE}
@@ -302,7 +302,7 @@ tblD <- plot_board_state("XXOOOXXXO")
  </tbody>
 </table>
 
-Note a state can be also be represented using a *state vector* of length 9:
+Note a state can also be represented using a *state vector* of length 9:
 
 ```{r, echo=TRUE}
 stateStr <- function(sV) {
@@ -347,7 +347,7 @@ win("O", sV)
 win("X", sV)
 ```
 
-We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then then a *draw* game may look as in Figure \@ref(fig:hgf). We start with an empty board state $S_0$, and the opponent makes a move, next we choose a move $A_0$ (among the empty fields) and we end up in state $S_1$. This continues until the game is over. 
+We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a *draw* game may look as in Figure \@ref(fig:hgf). We start with an empty board state $S_0$, and the opponent makes a move, next we choose a move $A_0$ (among the empty fields) and we end up in state $S_1$. This continues until the game is over. 
 
 ```{r hgf, echo=FALSE, out.width="100%", fig.cap="A draw."}
 set.seed(567)
