@@ -177,9 +177,14 @@
     "bibtex": {
       "Package": "bibtex",
       "Version": "0.5.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "29fcec18cbab0a51605d78b5bfdd311a",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "bibtex",
+      "RemoteUsername": "ROpenSci",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "869055af9cb474973dde69c0ea36de9f75497995",
+      "Hash": "f02c536cfaaf3de4715e2448cba783a3",
       "Requirements": [
         "backports"
       ]
@@ -377,9 +382,14 @@
     "countdown": {
       "Package": "countdown",
       "Version": "0.4.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b44ad5a5e287637c3b8ca0e9bb64bb18",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "countdown",
+      "RemoteUsername": "gadenbuie",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "ed61a5a97ea596ad1538baeca1887a8c8a8300be",
+      "Hash": "a85f825b2faffebd8726791626337a05",
       "Requirements": [
         "htmltools",
         "prismatic",
