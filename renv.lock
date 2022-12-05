@@ -1061,7 +1061,6 @@
         "rappdirs",
         "rlang",
         "rstudioapi",
-        "stringr",
         "xml2"
       ]
     },
