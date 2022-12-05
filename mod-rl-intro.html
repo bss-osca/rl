@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-12-02" />
+<meta name="date" content="2022-12-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -571,7 +571,7 @@ Figure 1.5: State and action.
 <li>Vehicle routing (transportation cost).</li>
 </ul>
 <p>The goal is to find a policy that maximize the total future reward. A <em>policy</em> is the agent’s behaviour and is a map from state to action, i.e. a function <span class="math display">\[a = \pi(s)\]</span> saying that given the agent is in state <span class="math inline">\(s\)</span> we choose action <span class="math inline">\(a\)</span>.</p>
-<p>The total future reward is a currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
+<p>The total future reward is currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
 <p>The value of the discount rate is important:</p>
 <ul>
 <li>Discount rate <span class="math inline">\(\gamma=0\)</span>: Only care about present reward.</li>
@@ -582,12 +582,12 @@ Figure 1.5: State and action.
 </div>
 <div id="exploitation-vs-exploration" class="section level2 hasAnchor" number="1.9">
 <h2><span class="header-section-number">1.9</span> Exploitation vs Exploration<a href="mod-rl-intro.html#exploitation-vs-exploration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently know as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.</p>
+<p>A key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.</p>
 <p>Examples in the exploration and exploitation dilemma are for instance movie recommendations: recommending the user’s best rated movie type (exploitation) or trying another movie type (exploration) or oil drilling: drilling at the best known location (exploitation) or trying a new location (exploration).</p>
 </div>
 <div id="rl-in-action-tic-tac-toe" class="section level2 hasAnchor" number="1.10">
 <h2><span class="header-section-number">1.10</span> RL in action (Tic-Tac-Toe)<a href="mod-rl-intro.html#rl-in-action-tic-tac-toe" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The current state of the board is represented by a row-wise concatenation of the players’ marks in a 3x3 grid. For example, the 9 character long string <code>"......X.O"</code> denotes a board state in which player X has placed a mark in the first field of the third column whereas player O has placed a mark in the third field of the third column:</p>
+<p>The current state of the board is represented by a row-wise concatenation of the players’ marks in a 3x3 grid. For example, the 9 character long string <code>"......X.O"</code> denotes a board state in which player X has placed a mark in the third row and first column whereas player O has placed a mark in the third row and the third column:</p>
 <style type="text/css">
 .table-bordered th, .table-bordered td {
     border: 1px solid black !important; 
@@ -671,7 +671,7 @@ That is, we index the fields row-wise:<br />
 </table>
 <p>The game is continued until all fields are filled or the game is over (win or loose).</p>
 <!-- All states are observed from the perspective of player X who is also assumed to have played first.  -->
-<p>The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probability of winning.</p>
+<p>The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probabilities of winning.</p>
 <p>Examples of winning, loosing and a draw from player Xs point of view:</p>
 <table style="width: 100%; border: 0px !important">
 <tbody>
@@ -796,7 +796,7 @@ O
 </tr>
 </tbody>
 </table>
-<p>Note a state can be also be represented using a <em>state vector</em> of length 9:</p>
+<p>Note a state can also be represented using a <em>state vector</em> of length 9:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="mod-rl-intro.html#cb1-1" aria-hidden="true" tabindex="-1"></a>stateStr <span class="ot">&lt;-</span> <span class="cf">function</span>(sV) {</span>
 <span id="cb1-2"><a href="mod-rl-intro.html#cb1-2" aria-hidden="true" tabindex="-1"></a>   str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb1-3"><a href="mod-rl-intro.html#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(str)</span>
@@ -836,7 +836,7 @@ O
 <span id="cb2-25"><a href="mod-rl-intro.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
 <span id="cb2-26"><a href="mod-rl-intro.html#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">win</span>(<span class="st">&quot;X&quot;</span>, sV)</span>
 <span id="cb2-27"><a href="mod-rl-intro.html#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code></pre></div>
-<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then then a <em>draw</em> game may look as in Figure <a href="mod-rl-intro.html#fig:hgf">1.6</a>. We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
+<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a <em>draw</em> game may look as in Figure <a href="mod-rl-intro.html#fig:hgf">1.6</a>. We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:hgf"></span>
 <img src="01_rl-intro_files/figure-html/hgf-1.png" alt="A draw." width="100%" />
 <p class="caption">
