@@ -28,10 +28,10 @@ jobs:
         with:
           use-public-rspm: true
           
-      - name: Test renv problem
-        run: |
-          install.packages('stringr')
-        shell: Rscript {0}
+      # - name: Test renv problem
+      #   run: |
+      #     install.packages('stringr')
+      #   shell: Rscript {0}
           
       - name: Install Dependencies
         run: sudo apt install libcurl4-openssl-dev libssl-dev libharfbuzz-dev libfribidi-dev libglpk-dev
