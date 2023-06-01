@@ -138,10 +138,8 @@ layout: false
 
 ## Note
 
-- Reward can be delayed (current decisions have an impact on the future)
 - Seek a policy `\(\pi: s \rightarrow a\)` (agent’s behaviour) 
-- Objective: expected discounted future reward (given in state `\(s\)`):
-`$$V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).$$` 
+- Objective: expected discounted future reward (given in state `\(s\)`)
 - Goal is to find a **policy** that **maximize** the **total discounted reward**.
 
 
@@ -162,12 +160,9 @@ RL can be seen as
 * An approach for learning good decision making under uncertainty from experience.
 * The agent does not know the underlying setting and, thus, is bound to learn from experience.
 
-
-
 ---
 
 ## Challenges I
-
 
 - Time really matters (sequential/dynamic system, non iid data).
 - Forecasts change depending on the actions.
@@ -176,9 +171,13 @@ RL can be seen as
 
 ---
 
-## Challenges II 
+## Challenges II
 
-- Not able to model transitions
+- Time really matters (sequential/dynamic system, non iid data).
+- Forecasts change depending on the actions.
+- Agent’s actions affect the subsequent data stream.
+- Curse of dimensionality
+- Not able to model transitions (RL)
 - Exploitation vs exploration dilemma
   - We need to explore to find potential better actions
   - We need to exploit to get the best reward 
@@ -258,6 +257,12 @@ layout: true
 &lt;p class="caption"&gt;Pig pen&lt;/p&gt;
 &lt;/div&gt;
 ]
+
+---
+
+layout: false
+
+background-image: url("img/thats-all.png")
 
 
 
