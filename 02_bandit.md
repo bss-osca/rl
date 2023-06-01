@@ -54,6 +54,7 @@ You do not have to look at them before the lecture!
 </div>
 ```
 
+
 ## The k-armed bandit problem
 
 Multi-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work. 
@@ -765,7 +766,7 @@ testUCB(20)
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#J1yBcvDXBqroH1V8bpsm">Solution</button>
 
-<div class="modal fade bs-example-modal-lg" id="UUQrBS46oTgD01U7DmnL" tabindex="-1" role="dialog" aria-labelledby="UUQrBS46oTgD01U7DmnL-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="UUQrBS46oTgD01U7DmnL-title">Hint</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="S46oTgD01U7DmnLBA4bB" tabindex="-1" role="dialog" aria-labelledby="S46oTgD01U7DmnLBA4bB-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="S46oTgD01U7DmnLBA4bB-title">Hint</h4></div><div class="modal-body">
 
 ```r
 testUCB <- function(c = 2, steps = 10000) {
@@ -784,7 +785,7 @@ testUCB(20)
 ```
 
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UUQrBS46oTgD01U7DmnL">Hint</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#S46oTgD01U7DmnLBA4bB">Hint</button>
 
    4) Test the UCB algorithm for $c$ values $(0.1, 5, 10, 20)$. Which algorithm seems to find the best average reward?
 
@@ -796,21 +797,21 @@ Consider a game where you choose to flip one of two (possibly unfair) coins. You
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="BA4bBzteJ1obnKYNQ5V8" tabindex="-1" role="dialog" aria-labelledby="BA4bBzteJ1obnKYNQ5V8-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BA4bBzteJ1obnKYNQ5V8-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="zteJ1obnKYNQ5V8P7dFb" tabindex="-1" role="dialog" aria-labelledby="zteJ1obnKYNQ5V8P7dFb-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="zteJ1obnKYNQ5V8P7dFb-title">Solution</h4></div><div class="modal-body">
 
 <p>This is a 2-bandit problem with actions of choosing coin 1 or 2.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BA4bBzteJ1obnKYNQ5V8">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#zteJ1obnKYNQ5V8P7dFb">Solution</button>
 
    (1) Model this as a K-armed bandit problem: define the action set.
    
 <!-- Q2 -->
 
-<div class="modal fade bs-example-modal-lg" id="P7dFb49aFJkDFbk23jW9" tabindex="-1" role="dialog" aria-labelledby="P7dFb49aFJkDFbk23jW9-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="P7dFb49aFJkDFbk23jW9-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="49aFJkDFbk23jW9ai1yX" tabindex="-1" role="dialog" aria-labelledby="49aFJkDFbk23jW9ai1yX-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="49aFJkDFbk23jW9ai1yX-title">Solution</h4></div><div class="modal-body">
 
 <p>The reward is stochastic. If consider coin \(i\) then \(\mathbb{E}[R_t | a_i] = \Pr(H)\cdot 1.\)</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#P7dFb49aFJkDFbk23jW9">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#49aFJkDFbk23jW9ai1yX">Solution</button>
 
    (2) Is the reward a deterministic or stochastic function of your action?
 
@@ -818,21 +819,21 @@ Consider a game where you choose to flip one of two (possibly unfair) coins. You
 
 
 
-<div class="modal fade bs-example-modal-lg" id="RDpiFx5KmYmybxoEch0d" tabindex="-1" role="dialog" aria-labelledby="RDpiFx5KmYmybxoEch0d-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="RDpiFx5KmYmybxoEch0d-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="mYmybxoEch0de9XpG4cJ" tabindex="-1" role="dialog" aria-labelledby="mYmybxoEch0de9XpG4cJ-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="mYmybxoEch0de9XpG4cJ-title">Solution</h4></div><div class="modal-body">
 
-<p>The estimates are \[Q_t(a_1) = (-1+1+1-1-1-1)/6 = -1/3\] and \[Q_t(a_2) = (1-1+1+1+1-1)/6 = 1/3\].</p>
+<p>The estimates are $$Q_t(a_1) = (-1+1+1-1-1-1)/6 = -&amp;frac13;$$ and $$Q_t(a_2) = (1-1+1+1+1-1)/6 = &amp;frac13;$$.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#RDpiFx5KmYmybxoEch0d">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#mYmybxoEch0de9XpG4cJ">Solution</button>
 
    (3) You do not know the coin flip probabilities. Instead, you are able to view 6 sample flips for each coin respectively: (T,H,H,T,T,T) and (H,T,H,H,H,T). Use the sample average formula \@ref(eq:avg) to compute the estimates of the value of each action.
 
 <!-- Q4 -->
 
-<div class="modal fade bs-example-modal-lg" id="e9XpG4cJ6DEQQnnTVXFW" tabindex="-1" role="dialog" aria-labelledby="e9XpG4cJ6DEQQnnTVXFW-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="e9XpG4cJ6DEQQnnTVXFW-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="TVXFW5KHk8ud6WVEyBXa" tabindex="-1" role="dialog" aria-labelledby="TVXFW5KHk8ud6WVEyBXa-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="TVXFW5KHk8ud6WVEyBXa-title">Solution</h4></div><div class="modal-body">
 
 <p>Coin 2 is chosen since the best action-value.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#e9XpG4cJ6DEQQnnTVXFW">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#TVXFW5KHk8ud6WVEyBXa">Solution</button>
 
    (4) Decide on which coin to flip next assuming that you exploit.
 

@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="libs/slides.css" type="text/css" />
   </head>
   <body>
@@ -21,6 +21,10 @@ class: center, middle, inverse, title-slide
 ]
 
 ---
+
+
+
+
 
 
 
@@ -82,6 +86,14 @@ layout: true
 ]
 
 .right-column-small[
+
+```
+## Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+```
+
 &lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="img/mdp-1-unnamed-chunk-5-1.png" alt="Agent-environment representation." width="100%" /&gt;
 &lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
@@ -315,7 +327,7 @@ Hence we have a single MDP model for both problems with episodes and problems wi
 [slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
 [slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
 [slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
-[sutton-notation]: https://bss-osca.github.io/rl/sutton-notation.pdf
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
 
 [tidyverse-main-page]: https://www.tidyverse.org
 [tidyverse-packages]: https://www.tidyverse.org/packages/

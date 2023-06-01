@@ -49,6 +49,7 @@ You do not have to look at them before the lecture!
 
 
 
+
 ## What is reinforcement learning
 
 RL can be seen as
@@ -238,6 +239,8 @@ The current state of the board is represented by a row-wise concatenation of the
   </tr>
 </tbody>
 </table>
+
+
 That is, we index the fields row-wise:     
 <table border: solid black class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <tbody>
@@ -258,6 +261,8 @@ That is, we index the fields row-wise:
   </tr>
 </tbody>
 </table>
+
+
 
 The game is continued until all fields are filled or the game is over (win or loose). 
 
@@ -788,7 +793,7 @@ Many tic-tac-toe positions appear different but are really the same because of s
 
 <div class="modal fade bs-example-modal-lg" id="IIRPKknZ89OkYuHcNaWd" tabindex="-1" role="dialog" aria-labelledby="IIRPKknZ89OkYuHcNaWd-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="IIRPKknZ89OkYuHcNaWd-title">Solution</h4></div><div class="modal-body">
 
-<p>As seen in Section \@ref(rl-intro-tic-learn) using \(\epsilon = 0\) may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behaviour over time.</p>
+<p>As seen in Section @ref(rl-intro-tic-learn) using \(\epsilon = 0\) may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behaviour over time.</p>
 
 </div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IIRPKknZ89OkYuHcNaWd">Solution</button>
 Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
@@ -799,30 +804,30 @@ Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), 
 Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
 
 
-<div class="modal fade bs-example-modal-lg" id="LOX2DR9PtrhKp94rIneB" tabindex="-1" role="dialog" aria-labelledby="LOX2DR9PtrhKp94rIneB-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="LOX2DR9PtrhKp94rIneB-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="X2DR9PtrhKp94rIneBIb" tabindex="-1" role="dialog" aria-labelledby="X2DR9PtrhKp94rIneBIb-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="X2DR9PtrhKp94rIneBIb-title">Solution</h4></div><div class="modal-body">
 
 <p>The probability set \(V(s)\) found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set \(V(s)\) found by applying learning from exploration is the probability of winning including the active exploration policy.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#LOX2DR9PtrhKp94rIneB">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#X2DR9PtrhKp94rIneBIb">Solution</button>
    1. What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves? 
    
 
-<div class="modal fade bs-example-modal-lg" id="Ibl1qkUxovBsWeWFlQLn" tabindex="-1" role="dialog" aria-labelledby="Ibl1qkUxovBsWeWFlQLn-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="Ibl1qkUxovBsWeWFlQLn-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="vBsWeWFlQLnBTGvBeNRy" tabindex="-1" role="dialog" aria-labelledby="vBsWeWFlQLnBTGvBeNRy-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="vBsWeWFlQLnBTGvBeNRy-title">Solution</h4></div><div class="modal-body">
 
 <p>The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Ibl1qkUxovBsWeWFlQLn">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#vBsWeWFlQLnBTGvBeNRy">Solution</button>
    2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
 
 
 ### Exercise - Other Improvements {#ex-r-intro-other}
 
 
-<div class="modal fade bs-example-modal-lg" id="BTGvBeNRyOGjZmjI1gW3" tabindex="-1" role="dialog" aria-labelledby="BTGvBeNRyOGjZmjI1gW3-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BTGvBeNRyOGjZmjI1gW3-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="OGjZmjI1gW3bXUoHltk3" tabindex="-1" role="dialog" aria-labelledby="OGjZmjI1gW3bXUoHltk3-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="OGjZmjI1gW3bXUoHltk3-title">Solution</h4></div><div class="modal-body">
 
-<p>Altering the exploration rate/learning based on the variance in the opponent&#39;s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.</p>
+<p>Altering the exploration rate/learning based on the variance in the opponent’s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BTGvBeNRyOGjZmjI1gW3">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#OGjZmjI1gW3bXUoHltk3">Solution</button>
 Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?
    
 

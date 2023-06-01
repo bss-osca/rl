@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Module 5 Dynamic programming | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Module 5 Dynamic programming | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-12-05" />
+<meta name="date" content="2023-06-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +54,12 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="libs/datatables-binding-0.28/datatables.js"></script>
+<link href="libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
 <link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
 <script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
 <link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
@@ -175,6 +175,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -1045,14 +1049,14 @@ Finally, the transition probabilities are:
 <h3><span class="header-section-number">5.10.1</span> Exercise - Gambler’s problem<a href="mod-dp.html#ex-dp-gambler" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider the gambler’s problem in Exercise <a href="mod-mdp-1.html#ex-mdp-1-gambler">3.6.3</a>.</p>
 <!-- Q1 -->
-<div id="BXuiWbA4lBwWTQc3II0t" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="BXuiWbA4lBwWTQc3II0t-title">
+<div id="jXQmBIHU77bx0sQ0zEfe" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="jXQmBIHU77bx0sQ0zEfe-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="BXuiWbA4lBwWTQc3II0t-title">
+<h4 class="modal-title" id="jXQmBIHU77bx0sQ0zEfe-title">
 Solution
 </h4>
 </div>
@@ -1098,21 +1102,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BXuiWbA4lBwWTQc3II0t">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#jXQmBIHU77bx0sQ0zEfe">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Build the model in R.</li>
 </ol>
 <!-- Q2 -->
-<div id="id_8XVxuqiieMNn3YHz466C" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="8XVxuqiieMNn3YHz466C-title">
+<div id="id_8tJO7DBsw0Np9pHliVZw" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="8tJO7DBsw0Np9pHliVZw-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="8XVxuqiieMNn3YHz466C-title">
+<h4 class="modal-title" id="8tJO7DBsw0Np9pHliVZw-title">
 Solution
 </h4>
 </div>
@@ -1150,21 +1154,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#8XVxuqiieMNn3YHz466C">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#8tJO7DBsw0Np9pHliVZw">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Solve the problem using value iteration with <span class="math inline">\(p_h = 0.4\)</span>. Plot the policy with states 1-99 on the x-axis and action on the y-axis. Plot the state-values given states 1-99 on the x-axis. Your policy may not look like the policy in the book, why?</li>
 </ol>
 <!-- Q3 -->
-<div id="id_0RRgIPkseBylU9omwSfP" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="0RRgIPkseBylU9omwSfP-title">
+<div id="kFfrShkvm0f7pPl3kvxa" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="kFfrShkvm0f7pPl3kvxa-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="0RRgIPkseBylU9omwSfP-title">
+<h4 class="modal-title" id="kFfrShkvm0f7pPl3kvxa-title">
 Solution
 </h4>
 </div>
@@ -1198,7 +1202,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#0RRgIPkseBylU9omwSfP">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#kFfrShkvm0f7pPl3kvxa">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
@@ -1214,14 +1218,14 @@ Solution
 <p>The cost of an enforced repair upon failure is <span class="math inline">\(C_{f}\)</span> and the cost of a preemptive repair in working condition <span class="math inline">\(s\)</span> is <span class="math inline">\(C_{p,s}\)</span>. We wish to determine a maintenance rule which minimizes the repair cost.</p>
 <p>The problem can be formulated as an MDP. Since an enforced repair takes two days and the state of the system has to be defined at the beginning of each day, we need an auxiliary state for the situation in which an enforced repair is in progress already for one day.</p>
 <!-- Q1 -->
-<div id="IEzzSU5OOaQUEw0cnXvq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="IEzzSU5OOaQUEw0cnXvq-title">
+<div id="FkN2gOVFjY0Kqccogjg2" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="FkN2gOVFjY0Kqccogjg2-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="IEzzSU5OOaQUEw0cnXvq-title">
+<h4 class="modal-title" id="FkN2gOVFjY0Kqccogjg2-title">
 Solution
 </h4>
 </div>
@@ -1238,27 +1242,27 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IEzzSU5OOaQUEw0cnXvq">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#FkN2gOVFjY0Kqccogjg2">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>, i.e. the the set of possible states of the system.</li>
 </ol>
 <!-- Q2 -->
-<div id="bh1Xh54ZjnOeK5soOHzQ" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="bh1Xh54ZjnOeK5soOHzQ-title">
+<div id="DIb8BHIiYiknCxHBf4rq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="DIb8BHIiYiknCxHBf4rq-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="bh1Xh54ZjnOeK5soOHzQ-title">
+<h4 class="modal-title" id="DIb8BHIiYiknCxHBf4rq-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-The set of possible actions in state <span class="math inline">\(s\)</span> is chosen as <span class="math display">\[\mathcal{A}(1)=\{0\},\ \mathcal{A}(s)=\{0,1\} \text{ for } 1&lt;s&lt;N, \mathcal{A}(N)=\mathcal{A}(N+1)=\{2\}.\]</span>
+The set of possible actions in state <span class="math inline">\(s\)</span> is chosen as <span class="math display">\[\mathcal{A}(1)=\{0\},\ \mathcal{A}(s)=\{0,1\} \text{ for } 1&amp;lt;s&amp;lt;N, \mathcal{A}(N)=\mathcal{A}(N+1)=\{2\}.\]</span>
 </p>
 </div>
 <div class="modal-footer">
@@ -1269,7 +1273,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bh1Xh54ZjnOeK5soOHzQ">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#DIb8BHIiYiknCxHBf4rq">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
@@ -1284,20 +1288,20 @@ a=\left\{\begin{array}{ll}
 Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span> for all states <span class="math inline">\(s\)</span>.</li>
 </ol>
 <!-- Q3 -->
-<div id="FW7GVyTAAjcQQ1g5avZo" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="FW7GVyTAAjcQQ1g5avZo-title">
+<div id="HiSlqplK3OhGFLvoA3Wo" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="HiSlqplK3OhGFLvoA3Wo-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="FW7GVyTAAjcQQ1g5avZo-title">
+<h4 class="modal-title" id="HiSlqplK3OhGFLvoA3Wo-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-The expected reward is <span class="math inline">\(r(N+1,2) = 0\)</span> and for <span class="math inline">\(0 &lt; s &lt; N\)</span> is <span class="math inline">\(r(s,0) = 0\)</span>, <span class="math inline">\(r(s,1) = -C_{ps}\)</span>. Finally, <span class="math inline">\(r(N,2) = -C_{f}\)</span> and <span class="math inline">\(r(N+1,2) = 0\)</span>.
+The expected reward is <span class="math inline">\(r(N+1,2) = 0\)</span> and for <span class="math inline">\(0 &amp;lt; s &amp;lt; N\)</span> is <span class="math inline">\(r(s,0) = 0\)</span>, <span class="math inline">\(r(s,1) = -C_{ps}\)</span>. Finally, <span class="math inline">\(r(N,2) = -C_{f}\)</span> and <span class="math inline">\(r(N+1,2) = 0\)</span>.
 </p>
 </div>
 <div class="modal-footer">
@@ -1308,27 +1312,27 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#FW7GVyTAAjcQQ1g5avZo">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#HiSlqplK3OhGFLvoA3Wo">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
 <li>Assume that the number of possible working conditions equals <span class="math inline">\(N=5\)</span>. What is the expected reward <span class="math inline">\(r(s,a)\)</span>?</li>
 </ol>
 <!-- Q4 -->
-<div id="a6jcUsxjLQEkhq3b6LUs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="a6jcUsxjLQEkhq3b6LUs-title">
+<div id="q9YzaexnQYcTf3WGQJr7" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="q9YzaexnQYcTf3WGQJr7-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="a6jcUsxjLQEkhq3b6LUs-title">
+<h4 class="modal-title" id="q9YzaexnQYcTf3WGQJr7-title">
 Solution
 </h4>
 </div>
 <div class="modal-body">
 <p>
-The transition probabilities <span class="math inline">\(p(s&#39;|s,a)\)</span>: <span class="math display">\[p(s&#39;|s,0) = q_{ij}, \text{ for } 1 \leq s&lt;N,\]</span> <span class="math display">\[p(1|s,1) = 1 \text{ for } 1&lt;s&lt;N,\]</span> <span class="math display">\[p(N+1|N,2) = p(1|N+1,2) =1,\]</span> and zero otherwise.
+The transition probabilities <span class="math inline">\(p(s&#39;|s,a)\)</span>: <span class="math display">\[p(s&#39;|s,0) = q_{ij}, \text{ for } 1 \leq s&amp;lt;N,\]</span> <span class="math display">\[p(1|s,1) = 1 \text{ for } 1&amp;lt;s&amp;lt;N,\]</span> <span class="math display">\[p(N+1|N,2) = p(1|N+1,2) =1,\]</span> and zero otherwise.
 </p>
 </div>
 <div class="modal-footer">
@@ -1339,7 +1343,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#a6jcUsxjLQEkhq3b6LUs">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#q9YzaexnQYcTf3WGQJr7">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
@@ -1350,14 +1354,14 @@ Solution
 <li>Try make a drawing of the state-expanded hypergraph for stage <span class="math inline">\(t\)</span> and <span class="math inline">\(t+1\)</span>.</li>
 </ol>
 <!-- Q6 -->
-<div id="IvLEJiZWhsGuipyqesjc" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="IvLEJiZWhsGuipyqesjc-title">
+<div id="seJyxCFrijyGTsW9UulC" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="seJyxCFrijyGTsW9UulC-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="IvLEJiZWhsGuipyqesjc-title">
+<h4 class="modal-title" id="seJyxCFrijyGTsW9UulC-title">
 Solution
 </h4>
 </div>
@@ -1465,7 +1469,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IvLEJiZWhsGuipyqesjc">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#seJyxCFrijyGTsW9UulC">
 Solution
 </button>
 <ol start="6" style="list-style-type: decimal">
@@ -1484,14 +1488,14 @@ Solution
 <p>Build the MDP in R.</p></li>
 </ol>
 <!-- Q7 -->
-<div id="id_2MIlBoMlRiPp5hWB9YO7" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="2MIlBoMlRiPp5hWB9YO7-title">
+<div id="A7uYr1bCZocbCuEEWf3K" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="A7uYr1bCZocbCuEEWf3K-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="2MIlBoMlRiPp5hWB9YO7-title">
+<h4 class="modal-title" id="A7uYr1bCZocbCuEEWf3K-title">
 Solution
 </h4>
 </div>
@@ -1522,21 +1526,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#2MIlBoMlRiPp5hWB9YO7">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#A7uYr1bCZocbCuEEWf3K">
 Solution
 </button>
 <ol start="7" style="list-style-type: decimal">
 <li>Find the optimal policy given a discount rate of <span class="math inline">\(\gamma = 0.6\)</span>. What is the average discounted cost of being in state 3?</li>
 </ol>
 <!-- Q8 -->
-<div id="q82eXAlfL6kabkp1PkuO" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="q82eXAlfL6kabkp1PkuO-title">
+<div id="OYyP9ApA1aiQnzUqYEi6" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="OYyP9ApA1aiQnzUqYEi6-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="q82eXAlfL6kabkp1PkuO-title">
+<h4 class="modal-title" id="OYyP9ApA1aiQnzUqYEi6-title">
 Solution
 </h4>
 </div>
@@ -1577,7 +1581,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#q82eXAlfL6kabkp1PkuO">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#OYyP9ApA1aiQnzUqYEi6">
 Solution
 </button>
 <ol start="8" style="list-style-type: decimal">
@@ -1687,14 +1691,14 @@ Similar for Location 2, if <span class="math inline">\(\bar{y}= y+a\)</span> we 
 <span id="cb46-56"><a href="mod-dp.html#cb46-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 </span></span>
 <span id="cb46-57"><a href="mod-dp.html#cb46-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1</span></span></code></pre></div>
 <!-- Q1 -->
-<div id="h7jN9kboqRQhLP85mGom" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="h7jN9kboqRQhLP85mGom-title">
+<div id="wn9SiBCHZpg0R5aICyjO" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="wn9SiBCHZpg0R5aICyjO-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="h7jN9kboqRQhLP85mGom-title">
+<h4 class="modal-title" id="wn9SiBCHZpg0R5aICyjO-title">
 Solution
 </h4>
 </div>
@@ -2417,17 +2421,17 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#h7jN9kboqRQhLP85mGom">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#wn9SiBCHZpg0R5aICyjO">
 Solution
 </button>
-<div id="DuNc5scHOempQJUv9uc9" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="DuNc5scHOempQJUv9uc9-title">
+<div id="v4XVogvrtw57sl8l5Zuz" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="v4XVogvrtw57sl8l5Zuz-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="DuNc5scHOempQJUv9uc9-title">
+<h4 class="modal-title" id="v4XVogvrtw57sl8l5Zuz-title">
 Hint
 </h4>
 </div>
@@ -2480,21 +2484,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#DuNc5scHOempQJUv9uc9">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#v4XVogvrtw57sl8l5Zuz">
 Hint
 </button>
 <ol style="list-style-type: decimal">
 <li>Build the model in R.</li>
 </ol>
 <!-- Q2 -->
-<div id="id_6L8vmyHlPsYoZ70JwWuf" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="6L8vmyHlPsYoZ70JwWuf-title">
+<div id="yl0DkdHTiAuNu5GakQFr" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="yl0DkdHTiAuNu5GakQFr-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="6L8vmyHlPsYoZ70JwWuf-title">
+<h4 class="modal-title" id="yl0DkdHTiAuNu5GakQFr-title">
 Solution
 </h4>
 </div>
@@ -2528,21 +2532,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#6L8vmyHlPsYoZ70JwWuf">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#yl0DkdHTiAuNu5GakQFr">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Solve the problem using policy iteration with a discount rate <span class="math inline">\(\gamma = 0.5\)</span> and threshold parameter <span class="math inline">\(\theta = 0.9\)</span>. What is the optimal action in state <span class="math inline">\((1,15)\)</span>? What is the expected total discounted reward of being in state <span class="math inline">\((10,3)\)</span>? How do theta affect the state-values? Make a plot of the optimal policy with <span class="math inline">\(x\)</span> on the y-axis and <span class="math inline">\(y\)</span> on the x-axis, plotting the action.</li>
 </ol>
 <!-- Q3 -->
-<div id="E3HO0weoAeLsgtLyOjFV" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="E3HO0weoAeLsgtLyOjFV-title">
+<div id="zLFGOYoF18DCLuse34ap" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="zLFGOYoF18DCLuse34ap-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="E3HO0weoAeLsgtLyOjFV-title">
+<h4 class="modal-title" id="zLFGOYoF18DCLuse34ap-title">
 Solution
 </h4>
 </div>
@@ -2565,21 +2569,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#E3HO0weoAeLsgtLyOjFV">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#zLFGOYoF18DCLuse34ap">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
 <li>Solve the problem using value iteration. Check if the policy and state-values are the same as in Question 1. If not why could this be okay?</li>
 </ol>
 <!-- Q4 -->
-<div id="XAQUfGr43KlV5MnGQeu8" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="XAQUfGr43KlV5MnGQeu8-title">
+<div id="bQFjYQQ5nHcHS66NdeqA" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="bQFjYQQ5nHcHS66NdeqA-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="XAQUfGr43KlV5MnGQeu8-title">
+<h4 class="modal-title" id="bQFjYQQ5nHcHS66NdeqA-title">
 Solution
 </h4>
 </div>
@@ -2594,22 +2598,21 @@ Solution
 <span id="cb51-8"><a href="mod-dp.html#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    state     x     y     v action     a</span></span>
 <span id="cb51-9"><a href="mod-dp.html#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;</span></span>
 <span id="cb51-10"><a href="mod-dp.html#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 0,0       0     0  531. 0          0</span></span>
-<span id="cb51-11"><a href="mod-dp.html#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 0,1       0     1  542. 0          0</span></span>
-<span id="cb51-12"><a href="mod-dp.html#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 0,10      0    10  623. -3        -3</span></span>
-<span id="cb51-13"><a href="mod-dp.html#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 0,11      0    11  629. -3        -3</span></span>
+<span id="cb51-11"><a href="mod-dp.html#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 0,1       0     1  541. 0          0</span></span>
+<span id="cb51-12"><a href="mod-dp.html#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 0,10      0    10  622. -3        -3</span></span>
+<span id="cb51-13"><a href="mod-dp.html#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 0,11      0    11  628. -3        -3</span></span>
 <span id="cb51-14"><a href="mod-dp.html#cb51-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 0,12      0    12  634. -3        -3</span></span>
 <span id="cb51-15"><a href="mod-dp.html#cb51-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 0,13      0    13  639. -4        -4</span></span>
 <span id="cb51-16"><a href="mod-dp.html#cb51-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 0,14      0    14  643. -4        -4</span></span>
 <span id="cb51-17"><a href="mod-dp.html#cb51-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 0,15      0    15  647. -4        -4</span></span>
-<span id="cb51-18"><a href="mod-dp.html#cb51-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 0,16      0    16  651. -5        -5</span></span>
+<span id="cb51-18"><a href="mod-dp.html#cb51-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 0,16      0    16  650. -5        -5</span></span>
 <span id="cb51-19"><a href="mod-dp.html#cb51-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 0,17      0    17  654. -5        -5</span></span>
-<span id="cb51-20"><a href="mod-dp.html#cb51-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 431 more rows</span></span>
-<span id="cb51-21"><a href="mod-dp.html#cb51-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows</span></span>
-<span id="cb51-22"><a href="mod-dp.html#cb51-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> x, <span class="at">label =</span> a, <span class="at">col =</span> <span class="fu">factor</span>(a))) <span class="sc">+</span></span>
-<span id="cb51-23"><a href="mod-dp.html#cb51-23" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_label</span>() <span class="sc">+</span></span>
-<span id="cb51-24"><a href="mod-dp.html#cb51-24" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb51-25"><a href="mod-dp.html#cb51-25" aria-hidden="true" tabindex="-1"></a>   <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">&quot;Optimal policy for gamma = 0.9&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb51-26"><a href="mod-dp.html#cb51-26" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<span id="cb51-20"><a href="mod-dp.html#cb51-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 431 more rows</span></span>
+<span id="cb51-21"><a href="mod-dp.html#cb51-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> x, <span class="at">label =</span> a, <span class="at">col =</span> <span class="fu">factor</span>(a))) <span class="sc">+</span></span>
+<span id="cb51-22"><a href="mod-dp.html#cb51-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_label</span>() <span class="sc">+</span></span>
+<span id="cb51-23"><a href="mod-dp.html#cb51-23" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb51-24"><a href="mod-dp.html#cb51-24" aria-hidden="true" tabindex="-1"></a>   <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">&quot;Optimal policy for gamma = 0.9&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb51-25"><a href="mod-dp.html#cb51-25" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
 <img src="05_dp_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" />
 <p>
 A higher discount rate result in higher discounted rewards since look further into the future.
@@ -2623,7 +2626,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#XAQUfGr43KlV5MnGQeu8">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#bQFjYQQ5nHcHS66NdeqA">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
@@ -2696,7 +2699,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

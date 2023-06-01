@@ -5,18 +5,26 @@
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="libs/slides.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Reinforcement Learning for Business
+]
+.author[
 ### Lars Relund Nielsen
+]
 
 ---
+
+
+
+
 
 
 
@@ -104,8 +112,8 @@ This can also be seen as learning the reward of our actions.
 
 
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/rl-ml.png" alt="Adopted from ." width="100%" /&gt;
-&lt;p class="caption"&gt;Adopted from .&lt;/p&gt;
+&lt;img src="img/rl-ml.png" alt="Adopted from Silver (2015)." width="100%" /&gt;
+&lt;p class="caption"&gt;Adopted from Silver (2015).&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -146,6 +154,8 @@ This can also be seen as learning the reward of our actions.
 [git-install]: https://git-scm.com/downloads
 [github-actions]: https://github.com/features/actions
 [github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
 
 [happy-git]: https://happygitwithr.com
 [hg-install-git]: https://happygitwithr.com/install-git.html
@@ -189,6 +199,7 @@ This can also be seen as learning the reward of our actions.
 [r4ds-strings]: https://r4ds.had.co.nz/strings.html
 [r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
 
+
 [stat-545]: https://stat545.com
 [stat-545-functions-part1]: https://stat545.com/functions-part1.html
 [stat-545-functions-part2]: https://stat545.com/functions-part2.html
@@ -199,6 +210,7 @@ This can also be seen as learning the reward of our actions.
 [slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
 [slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
 [slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
 
 [tidyverse-main-page]: https://www.tidyverse.org
 [tidyverse-packages]: https://www.tidyverse.org/packages/
@@ -299,6 +311,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

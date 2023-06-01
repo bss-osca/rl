@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Module 4 Policies and value functions for MDPs | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Module 4 Policies and value functions for MDPs | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-12-05" />
+<meta name="date" content="2023-06-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +54,12 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="libs/datatables-binding-0.28/datatables.js"></script>
+<link href="libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
 <link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
 <script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
 <link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
@@ -175,6 +175,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -594,14 +598,14 @@ q_*(s, a) = r(s,a) + \sum_{s&#39; \in \mathcal{S}} p(s&#39; | s, a) \gamma(s&#39
 Figure 4.1: A simple MDP.
 </p>
 </div>
-<div id="KbTMTxKAPMKOBHNWvest" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="KbTMTxKAPMKOBHNWvest-title">
+<div id="NpDjN7MksuKFGU8hbf62" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="NpDjN7MksuKFGU8hbf62-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="KbTMTxKAPMKOBHNWvest-title">
+<h4 class="modal-title" id="NpDjN7MksuKFGU8hbf62-title">
 Solution
 </h4>
 </div>
@@ -629,7 +633,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#KbTMTxKAPMKOBHNWvest">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#NpDjN7MksuKFGU8hbf62">
 Solution
 </button>
 <p>Consider the transition diagram for an MDP shown in Figure <a href="mod-mdp-2.html#fig:simple">4.1</a> with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
@@ -645,14 +649,14 @@ Solution
 <p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>
 <p>Formulate the problem as an finite MDP where the time-steps are days.</p>
 <!-- Q1 -->
-<div id="id_0rRDfLn3O9sbXzi9Kyko" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="0rRDfLn3O9sbXzi9Kyko-title">
+<div id="Yx9Ro0JVQW76TP55rBtf" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Yx9Ro0JVQW76TP55rBtf-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="0rRDfLn3O9sbXzi9Kyko-title">
+<h4 class="modal-title" id="Yx9Ro0JVQW76TP55rBtf-title">
 Solution
 </h4>
 </div>
@@ -669,21 +673,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#0rRDfLn3O9sbXzi9Kyko">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Yx9Ro0JVQW76TP55rBtf">
 Solution
 </button>
 <ol style="list-style-type: decimal">
 <li>Define the state space (with states <span class="math inline">\((x,y)\)</span>) equal the number of cars at each location at the end of the day.</li>
 </ol>
 <!-- Q2 -->
-<div id="hoOov24g5m6G7eFAjV3r" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="hoOov24g5m6G7eFAjV3r-title">
+<div id="GskNRVKF8bVF3sE7zRFu" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="GskNRVKF8bVF3sE7zRFu-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="hoOov24g5m6G7eFAjV3r-title">
+<h4 class="modal-title" id="GskNRVKF8bVF3sE7zRFu-title">
 Solution
 </h4>
 </div>
@@ -700,21 +704,21 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#hoOov24g5m6G7eFAjV3r">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#GskNRVKF8bVF3sE7zRFu">
 Solution
 </button>
 <ol start="2" style="list-style-type: decimal">
 <li>Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1.</li>
 </ol>
 <!-- Q3 -->
-<div id="id_4WVQqBNvdqO5HsiMACgI" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="4WVQqBNvdqO5HsiMACgI-title">
+<div id="Et1ohjsebvabMEaU79IG" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Et1ohjsebvabMEaU79IG-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="4WVQqBNvdqO5HsiMACgI-title">
+<h4 class="modal-title" id="Et1ohjsebvabMEaU79IG-title">
 Solution
 </h4>
 </div>
@@ -731,7 +735,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#4WVQqBNvdqO5HsiMACgI">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Et1ohjsebvabMEaU79IG">
 Solution
 </button>
 <ol start="3" style="list-style-type: decimal">
@@ -739,14 +743,14 @@ Solution
 </ol>
 <p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x - a\)</span> and after rental requests <span class="math inline">\(x - a - \min(D_1, x-a)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(x - a - \min(D_1, x-a) + H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).\]</span></p>
 <!-- Q4 -->
-<div id="aD3fIfTEIiXPE2B2fFFK" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="aD3fIfTEIiXPE2B2fFFK-title">
+<div id="C5N5W9GxngHhOMwdnGHv" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="C5N5W9GxngHhOMwdnGHv-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="aD3fIfTEIiXPE2B2fFFK-title">
+<h4 class="modal-title" id="C5N5W9GxngHhOMwdnGHv-title">
 Solution
 </h4>
 </div>
@@ -763,7 +767,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#aD3fIfTEIiXPE2B2fFFK">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#C5N5W9GxngHhOMwdnGHv">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
@@ -836,7 +840,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

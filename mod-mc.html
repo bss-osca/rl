@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)</title>
   <meta name="description" content="Course notes for ‘Reinforcement Learning for Business’" />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Module 6 Monte Carlo methods for prediction and control | Reinforcement Learning for Business (RL)" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Lars Relund Nielsen" />
 
 
-<meta name="date" content="2022-12-05" />
+<meta name="date" content="2023-06-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +54,12 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="libs/datatables-binding-0.28/datatables.js"></script>
+<link href="libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
 <link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
 <script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
 <link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
@@ -175,6 +175,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -814,8 +818,7 @@ Figure 6.5: Optimal policy for the MDP.
 <span id="cb56-15"><a href="mod-mc.html#cb56-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 67,1     67     1  353. 20    </span></span>
 <span id="cb56-16"><a href="mod-mc.html#cb56-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 59,1     59     1  352. 20    </span></span>
 <span id="cb56-17"><a href="mod-mc.html#cb56-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 68,1     68     1  351. 20    </span></span>
-<span id="cb56-18"><a href="mod-mc.html#cb56-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 90 more rows</span></span>
-<span id="cb56-19"><a href="mod-mc.html#cb56-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows</span></span></code></pre></div>
+<span id="cb56-18"><a href="mod-mc.html#cb56-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 90 more rows</span></span></code></pre></div>
 <p>This is approx around 64 items. If ordering 100 items we would loose:</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="mod-mc.html#cb57-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>v[<span class="dv">1</span>] <span class="sc">-</span> dfMDP <span class="sc">%&gt;%</span> </span>
 <span id="cb57-2"><a href="mod-mc.html#cb57-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">&quot;100,1&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(v)</span>
@@ -1616,14 +1619,14 @@ Solution
 <li>Let us consider two extreme states <span class="math inline">\((1,1)\)</span> and <span class="math inline">\((100,15)\)</span>. From an intuitively point of view, what is the optimal action/price to do in these states?</li>
 </ol>
 <!-- Q4 -->
-<div id="yzXPhW8qUIm7pChXQz4c" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="yzXPhW8qUIm7pChXQz4c-title">
+<div id="PhW8qUIm7pChXQz4cdJ7" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="PhW8qUIm7pChXQz4cdJ7-title">
 <div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
 </button>
-<h4 class="modal-title" id="yzXPhW8qUIm7pChXQz4c-title">
+<h4 class="modal-title" id="PhW8qUIm7pChXQz4cdJ7-title">
 Solution
 </h4>
 </div>
@@ -1640,7 +1643,7 @@ Close
 </div>
 </div>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#yzXPhW8qUIm7pChXQz4c">
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#PhW8qUIm7pChXQz4cdJ7">
 Solution
 </button>
 <ol start="4" style="list-style-type: decimal">
@@ -1912,8 +1915,7 @@ Solution
 <span id="cb68-26"><a href="mod-mc.html#cb68-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 1,15  5          1</span></span>
 <span id="cb68-27"><a href="mod-mc.html#cb68-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 1,2   25         1</span></span>
 <span id="cb68-28"><a href="mod-mc.html#cb68-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 1,3   25         1</span></span>
-<span id="cb68-29"><a href="mod-mc.html#cb68-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 1,491 more rows</span></span>
-<span id="cb68-30"><a href="mod-mc.html#cb68-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows</span></span></code></pre></div>
+<span id="cb68-29"><a href="mod-mc.html#cb68-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,491 more rows</span></span></code></pre></div>
 <p>We may generate an episode using:</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="mod-mc.html#cb69-1" aria-hidden="true" tabindex="-1"></a>env<span class="sc">$</span><span class="fu">getEpisodePi</span>(agent, <span class="st">&quot;5,1&quot;</span>)</span>
 <span id="cb69-2"><a href="mod-mc.html#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 3</span></span>
@@ -2047,7 +2049,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');
