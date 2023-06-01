@@ -330,12 +330,12 @@ plotHypergraph<-function(gridDim, states=NULL, actions=NULL, showGrid=FALSE,
       for (i in seq_along(actions)) {
          head <- actions[[i]]$state
          tails <- actions[[i]]$trans
-         lwd <- if_else(is.null(actions[[i]]$lwd), 1, actions[[i]]$lwd)
-         lty <- if_else(is.null(actions[[i]]$lty), 1, actions[[i]]$lty)
-         col <- if_else(is.null(actions[[i]]$col), "black", actions[[i]]$col)
-         label <- if_else(is.null(actions[[i]]$label), "", actions[[i]]$label)
+         lwd <- ifelse(is.null(actions[[i]]$lwd), 1, actions[[i]]$lwd)
+         lty <- ifelse(is.null(actions[[i]]$lty), 1, actions[[i]]$lty)
+         col <- ifelse(is.null(actions[[i]]$col), "black", actions[[i]]$col)
+         label <- ifelse(is.null(actions[[i]]$label), "", actions[[i]]$label)
          if (str_length(label) != 0) label <- parse(text = label)
-         highlight <- if_else(is.null(actions[[i]]$highlight), F, actions[[i]]$highlight)
+         highlight <- ifelse(is.null(actions[[i]]$highlight), F, actions[[i]]$highlight)
          if (highlight) lwd <- lwd + 1
          pt <- splitarrow(to = pos[gMap(tails), ], from = pos[gMap(head),], lwd=lwd, lty=lty, arr.type = "none",
                           # arr.side = 1, arr.pos = 0.7, arr.type="curved", arr.lwd = 0.5, arr.length = 0.25, arr.width = 0.2, 

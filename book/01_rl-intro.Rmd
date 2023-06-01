@@ -157,7 +157,7 @@ plotRL <- function(active = c('F', 'T', 'F'), label = c("A[0]", "O[0]", "R[1]"),
        cap = c(circle(20, 'mm'), circle(20, 'mm'), circle(10, 'mm')))
    gr <- tbl_graph(nodes, edges) 
    p <- ggraph(gr, layout = "manual", x = c(1, 1, 1), y = c(1, 2, 2.1)) +
-      geom_edge_fan2(
+      geom_edge_fan(
          aes(label = label, end_cap = cap, col = active), 
          arrow = arrow(length = unit(4, 'mm')),
          hjust = 1.5, 
