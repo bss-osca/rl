@@ -21,6 +21,9 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Install Dependencies
+        run: sudo apt install libcurl4-openssl-dev libssl-dev libharfbuzz-dev libfribidi-dev libglpk-dev
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -33,9 +36,6 @@ jobs:
       #     install.packages('stringr')
       #   shell: Rscript {0}
           
-      - name: Install Dependencies
-        run: sudo apt install libcurl4-openssl-dev libssl-dev libharfbuzz-dev libfribidi-dev libglpk-dev
-
       - uses: r-lib/actions/setup-renv@v2
 
       - name: Cache bookdown results
