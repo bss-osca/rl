@@ -346,7 +346,7 @@ Examples of winning, loosing and a draw from player Xs point of view:
 Note a state can also be represented using a *state vector* of length 9:
 
 
-```r
+``` r
 stateStr <- function(sV) {
    str <- str_c(sV, collapse = "")
    return(str)
@@ -363,7 +363,7 @@ sV
 Given a state vector, we can check if we win or loose:
 
 
-```r
+``` r
 #' Check board state
 #'
 #' @param pfx Player prefix (the char used on the board).
@@ -407,7 +407,7 @@ Assume that we initially define a value $V(S)$ of each state $S$ to be 1 if we w
 Let us implement a RL player using a [R6 class](https://adv-r.hadley.nz/r6.html) and store the values using a [hash list](https://github.com/decisionpatterns/r-hash). We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method `move` takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state (after our move) and update the value function (if exploit). The player explore with probability `epsilon` if there is not a next state that makes us win. 
 
 
-```r
+``` r
 PlayerRL <- R6Class("PlayerRL",
    public = list(
       pfx = "",  # player prefix
@@ -471,14 +471,14 @@ PlayerRL <- R6Class("PlayerRL",
 
 We then can define a player using:
 
-```r
+``` r
 playerA <- PlayerRL$new(pfx = "A", control = list(epsilon = 0.5, alpha = 0.1))   
 ```
 
 Other players may be defined similarly, e.g. a player which moves randomly (if can not win in the next move):
 
 
-```r
+``` r
 PlayerRandom <- R6Class("PlayerRandom",
    public = list(
       pfx = NA,
@@ -513,7 +513,7 @@ PlayerRandom <- R6Class("PlayerRandom",
 A player which always place at the lowest field index:
 
 
-```r
+``` r
 PlayerFirst <- R6Class("PlayerFirst",
    public = list(
       pfx = NA,
@@ -534,7 +534,7 @@ PlayerFirst <- R6Class("PlayerFirst",
 We define a game which returns the prefix of the winner (`NA` if a draw):
 
 
-```r
+``` r
 #' @param player1 A player R6 object. This player starts the game
 #' @param player2 A player R6 object.
 #' @param verbose Print gameplay.
@@ -572,7 +572,7 @@ playGame <- function(player1, player2, verbose = FALSE) {
 Let us play a game between `playerA` and `playerR`:
 
 
-```r
+``` r
 playerR <- PlayerRandom$new(pfx = "R")
 playGame(playerA, playerR, verbose = T)
 #> Player A:
@@ -621,7 +621,7 @@ playGame(playerA, playerR, verbose = T)
 Note `playerA` has been learning when playing the game. The current estimates that are stored in the hash list are:
 
 
-```r
+``` r
 playerA$hV
 #> <hash> containing 22 key-value pair(s).
 #>   ......... : 0.5
@@ -653,7 +653,7 @@ playerA$hV
 With a single game only a few states are explored and estimates are not good. Let us instead play a sequence of games and learn along the way:
 
 
-```r
+``` r
 #' @param playerA Player A (R6 object).
 #' @param playerB Player B (R6 object).
 #' @param games Number of games
@@ -696,7 +696,7 @@ playGames <- function(playerA, playerB, games, prA = 0.5) {
 
 Let us now play games against a player who moves randomly using $\epsilon = 0.1$ (explore probability) and $\alpha = 0.1$ (step size).
 
-```r
+``` r
 playerA <- PlayerRL$new(pfx = "A", control = list(epsilon = 0.1, alpha = 0.1)) 
 playerR <- PlayerRandom$new(pfx = "R")
 res <- playGames(playerA, playerR, games = 2000)
@@ -720,7 +720,7 @@ Here a high step size and a low exploration probability is good and the RL playe
 This is different if the RL player A play against another clever (RL) player B. 
 
 
-```r
+``` r
 playerA <- PlayerRL$new(pfx = "A", control = list(epsilon = 0, alpha = 0.1))
 playerB <- PlayerRL$new(pfx = "B", control = list(epsilon = 0, alpha = 0.1))
 ```
@@ -764,38 +764,38 @@ played against itself. What do you think would happen in this case? Would it lea
 Many tic-tac-toe positions appear different but are really the same because of symmetries. 
 
 
-<div class="modal fade bs-example-modal-lg" id="h3PK8zC5ZcxNA5XDZAyj" tabindex="-1" role="dialog" aria-labelledby="h3PK8zC5ZcxNA5XDZAyj-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="h3PK8zC5ZcxNA5XDZAyj-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="8zC5ZcxNA5XDZAyj3X7P" tabindex="-1" role="dialog" aria-labelledby="8zC5ZcxNA5XDZAyj3X7P-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="8zC5ZcxNA5XDZAyj3X7P-title">Solution</h4></div><div class="modal-body">
 
 <p>It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#h3PK8zC5ZcxNA5XDZAyj">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#8zC5ZcxNA5XDZAyj3X7P">Solution</button>
    1. How might we amend the reinforcement learning algorithm described above to take advantage of this?
    
 
-<div class="modal fade bs-example-modal-lg" id="3X7Pr2VBGuv9kFu9l1Hc" tabindex="-1" role="dialog" aria-labelledby="3X7Pr2VBGuv9kFu9l1Hc-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="3X7Pr2VBGuv9kFu9l1Hc-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="BGuv9kFu9l1Hcf5n1IWG" tabindex="-1" role="dialog" aria-labelledby="BGuv9kFu9l1Hcf5n1IWG-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="BGuv9kFu9l1Hcf5n1IWG-title">Solution</h4></div><div class="modal-body">
 
 <p>A smaller state space would increase the speed of learning and reduce the memory required.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#3X7Pr2VBGuv9kFu9l1Hc">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#BGuv9kFu9l1Hcf5n1IWG">Solution</button>
    2. In what ways would this improve the algorithm? 
    
 
-<div class="modal fade bs-example-modal-lg" id="f5n1IWGphKaCpoeHkKdU" tabindex="-1" role="dialog" aria-labelledby="f5n1IWGphKaCpoeHkKdU-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="f5n1IWGphKaCpoeHkKdU-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="KaCpoeHkKdUIIRPKknZ8" tabindex="-1" role="dialog" aria-labelledby="KaCpoeHkKdUIIRPKknZ8-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="KaCpoeHkKdUIIRPKknZ8-title">Solution</h4></div><div class="modal-body">
 
 <p>If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#f5n1IWGphKaCpoeHkKdU">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#KaCpoeHkKdUIIRPKknZ8">Solution</button>
    3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
 
 
 ### Exercise - Greedy Play {#ex-r-intro-greedy}
 
 
-<div class="modal fade bs-example-modal-lg" id="IIRPKknZ89OkYuHcNaWd" tabindex="-1" role="dialog" aria-labelledby="IIRPKknZ89OkYuHcNaWd-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="IIRPKknZ89OkYuHcNaWd-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="HcNaWdLOX2DR9PtrhKp9" tabindex="-1" role="dialog" aria-labelledby="HcNaWdLOX2DR9PtrhKp9-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="HcNaWdLOX2DR9PtrhKp9-title">Solution</h4></div><div class="modal-body">
 
 <p>As seen in Section @ref(rl-intro-tic-learn) using \(\epsilon = 0\) may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behaviour over time.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#IIRPKknZ89OkYuHcNaWd">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#HcNaWdLOX2DR9PtrhKp9">Solution</button>
 Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
 
 
@@ -804,30 +804,30 @@ Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), 
 Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
 
 
-<div class="modal fade bs-example-modal-lg" id="X2DR9PtrhKp94rIneBIb" tabindex="-1" role="dialog" aria-labelledby="X2DR9PtrhKp94rIneBIb-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="X2DR9PtrhKp94rIneBIb-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="xovBsWeWFlQLnBTGvBeN" tabindex="-1" role="dialog" aria-labelledby="xovBsWeWFlQLnBTGvBeN-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="xovBsWeWFlQLnBTGvBeN-title">Solution</h4></div><div class="modal-body">
 
 <p>The probability set \(V(s)\) found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set \(V(s)\) found by applying learning from exploration is the probability of winning including the active exploration policy.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#X2DR9PtrhKp94rIneBIb">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#xovBsWeWFlQLnBTGvBeN">Solution</button>
    1. What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves? 
    
 
-<div class="modal fade bs-example-modal-lg" id="vBsWeWFlQLnBTGvBeNRy" tabindex="-1" role="dialog" aria-labelledby="vBsWeWFlQLnBTGvBeNRy-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="vBsWeWFlQLnBTGvBeNRy-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="gW3bXUoHltk3H3dvYa91" tabindex="-1" role="dialog" aria-labelledby="gW3bXUoHltk3H3dvYa91-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gW3bXUoHltk3H3dvYa91-title">Solution</h4></div><div class="modal-body">
 
 <p>The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#vBsWeWFlQLnBTGvBeNRy">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#gW3bXUoHltk3H3dvYa91">Solution</button>
    2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
 
 
 ### Exercise - Other Improvements {#ex-r-intro-other}
 
 
-<div class="modal fade bs-example-modal-lg" id="OGjZmjI1gW3bXUoHltk3" tabindex="-1" role="dialog" aria-labelledby="OGjZmjI1gW3bXUoHltk3-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="OGjZmjI1gW3bXUoHltk3-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="MmI8241cpwtd0Ivmn4RT" tabindex="-1" role="dialog" aria-labelledby="MmI8241cpwtd0Ivmn4RT-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="MmI8241cpwtd0Ivmn4RT-title">Solution</h4></div><div class="modal-body">
 
 <p>Altering the exploration rate/learning based on the variance in the opponent’s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#OGjZmjI1gW3bXUoHltk3">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#MmI8241cpwtd0Ivmn4RT">Solution</button>
 Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?
    
 

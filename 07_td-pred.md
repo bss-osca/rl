@@ -185,11 +185,11 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 <!-- Q1 -->
 
-<div class="modal fade bs-example-modal-lg" id="y5efeJ18nfqbakcs4TEo" tabindex="-1" role="dialog" aria-labelledby="y5efeJ18nfqbakcs4TEo-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="y5efeJ18nfqbakcs4TEo-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="cHDKY4mhiP96a24tFPz0" tabindex="-1" role="dialog" aria-labelledby="cHDKY4mhiP96a24tFPz0-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="cHDKY4mhiP96a24tFPz0-title">Solution</h4></div><div class="modal-body">
 
 <p>The state space is \(\mathcal{S} = \{ 1, 2, \ldots, 6, 7 \}\) with \(\mathcal{A}(s) = \{ \text{left}, \text{right}\}\) (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure @ref(fig:rw-trans)). Rewards are deterministic \(\mathcal{R} = \{0, 1\}\) (see Figure @ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations @ref(eq:bm-pol-eval) $$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),$$ which becomes $$\begin{align}v_\pi(2) &amp;= 0.5v_\pi(1) + 0.5v_\pi(3) = 0.5v_\pi(3) \\\ v_\pi(3) &amp;= 0.5v_\pi(2) + 0.5v_\pi( 4 ) \\\ v_\pi( 4 ) &amp;= 0.5v_\pi(3) + 0.5v_\pi(5) \\\ v_\pi(5) &amp;= 0.5v_\pi( 4 ) + 0.5v_\pi(6) \\\ v_\pi(6) &amp;= 0.5v_\pi(5) + 0.5(1 + v_\pi(7)) = 0.5v_\pi(5) + 0.5\\\ \end{align}$$ Solving the equations with a state-value equal to 0 for the terminating states gives state-values \(\frac{1}{6}, \frac{2}{6}, \frac{3}{6}, \frac{4}{6}\) and \(\frac{5}{6}\) for 2-6, respectively.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#y5efeJ18nfqbakcs4TEo">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#cHDKY4mhiP96a24tFPz0">Solution</button>
 
 1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
 
@@ -200,7 +200,7 @@ Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transit
 
 
 
-```r
+``` r
 ## Build the MDP
 mdp <- MDPClass$new()
 mdp$addStateSpace(1:7)   # add state keys
@@ -312,11 +312,11 @@ mdp$getStateValues()
 
 <!-- Q3 -->
 
-<div class="modal fade bs-example-modal-lg" id="Sw8B1ZmvmRYVV3iDxiey" tabindex="-1" role="dialog" aria-labelledby="Sw8B1ZmvmRYVV3iDxiey-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="Sw8B1ZmvmRYVV3iDxiey-title">Solution</h4></div><div class="modal-body">
+<div class="modal fade bs-example-modal-lg" id="saSutNqiUmL6FcRJcpX5" tabindex="-1" role="dialog" aria-labelledby="saSutNqiUmL6FcRJcpX5-title"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="saSutNqiUmL6FcRJcpX5-title">Solution</h4></div><div class="modal-body">
 
 <p>We use TD(0), i.e. update using \(V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right]\): $$V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.$$ That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05.</p>
 
-</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Sw8B1ZmvmRYVV3iDxiey">Solution</button>
+</div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div><button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#saSutNqiUmL6FcRJcpX5">Solution</button>
 
 3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
 
@@ -327,7 +327,7 @@ mdp$getStateValues()
 First we need an environment representing the problem
 
 
-```r
+``` r
 library(R6)
 library(hash)
 library(tidyverse)
@@ -413,7 +413,7 @@ env$getTimeStepData("6", "right")
 Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
 
 
-```r
+``` r
 library(R6)
 library(hash)
 library(tidyverse)
@@ -961,7 +961,7 @@ RLAgent <- R6Class("RLAgent",
 We can now define the RL agent and set the policy which must be done before calling TD(0):
 
 
-```r
+``` r
 agent <- RLAgent$new()
 agent$addStates(env$getStates())   # add states
 for (s in agent$getStateKeys()) {  # add actions
@@ -994,7 +994,7 @@ agent$getPolicy()
 Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
 
 
-```r
+``` r
 set.seed(875)
 ## One episode
 agent$setStateValue(states, 0.5)
@@ -1221,7 +1221,7 @@ resMC <- resMC %>% mutate(alpha = 0.1, alg = "MC")
 <!-- Q6 -->
 6) Let us join the results for TD(0) and MC and calculate the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=2}^6(V(s)-v_\pi(s))^2}$$.
 
-```r
+``` r
 resMDP <- mdp$getStateValues() %>% mutate(state = as.numeric(state)) %>% rename(vMDP = v) %>%  print()
 #> # A tibble: 7 × 2
 #>   state  vMDP
@@ -1259,7 +1259,7 @@ Which algorithm is best in estimating the state-values? Explain.
 7) The results are dependent on the value of the step-size parameter. Let us estimate the state-values using TD(0) for $\alpha = 0.1, 0.2$ and 0.5 and plot the root mean square (RMS) error given the number of episodes:
 
 
-```r
+``` r
 set.seed(98)
 res <- NULL
 for (run in 1:20) {
@@ -1282,6 +1282,7 @@ left_join(res, resMDP) %>%
    summarize(rms = mean(rms)) %>% 
    ggplot(aes(x = episodes, y = rms, col = factor(alpha))) +
    geom_line()
+
 ```
 
 <img src="07_td-pred_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" />
