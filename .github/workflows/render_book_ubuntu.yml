@@ -48,6 +48,13 @@ jobs:
       - name: Render book
         run: Rscript book/render_book.R
         
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        with:
+          branch: gh-pages
+          folder: book/_book
+          
       - name: Update student folder
         run: Rscript push-rl-student.R        
 
@@ -60,13 +67,8 @@ jobs:
           source-directory: student/
           destination-github-username: 'bss-osca'
           destination-repository-name: 'rl-student'
-          user-email: junk@relund.dk
+          # user-email: junk@relund.dk
           commit-message: See ORIGIN_COMMIT from $GITHUB_REF
           target-branch: master
 
-      - name: Deploy to GitHub pages 🚀
-        if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
-        with:
-          branch: gh-pages
-          folder: book/_book
+
