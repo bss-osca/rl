@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        
+      - name: Install Dependencies
+        run: sudo apt install libcurl4-openssl-dev libssl-dev libharfbuzz-dev libfribidi-dev libglpk-dev
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
