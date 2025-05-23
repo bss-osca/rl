@@ -1,0 +1,7 @@
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+# Setting up Python {#mod-python-setup} 
+
+[To do]
+

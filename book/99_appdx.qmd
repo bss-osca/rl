@@ -1,18 +1,14 @@
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-# (APPENDIX) Appendix {- #mod-apdx}
+# Setting up Python {#mod-python-setup} 
 
-# Setting up R {#mod-r-setup} 
-
-[R] is a programming language and free software environment. The R language is widely used among statisticians and data miners for developing statistical software and data analysis. For a further overview and description of the history of R see [Chapter 2](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html) in @rdpeng. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work.
-
-R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. During this course **it is recommend to use RStudio on your laptop** since there is no limit on CPU usage. If you need to install R and RStudio on your laptop [check this out](https://bss-osca.github.io/tfa/mod-r-install.html#r-install).
-
-If you need a brushup on R have a look at DataCamp. First, signup for a [course group](https://www.datacamp.com/groups/shared_links/f0b49a9981de99c5822b7cbe9b90fc9f82f28774a33642896b39d59efe219eb9). Next, have a look at the free courses such as [Introduction to R][datacamp-r-intro]. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here. 
+[To do]
 
 
 # Working in groups {#groups}
+
+[Edit]
 
 During the course you have been allocated into groups. You are expected to solve the exercises and write the project report in your group. Before you start, it is a good idea to agree on a set of group rules. First, agree on a [coding convention](#coding-convention) when you are going to use R. Most people in the R community use snake case but camel case is also okay. Next, setup rules on when to meet and how you will organize the work. For instance, it is a good idea that all try to solve some of the exercises before you meet and you then discuss the answers, problems etc. Finally, it is a good idea to have a common place for your code. You have different options:
 
@@ -26,16 +22,118 @@ During the course you have been allocated into groups. You are expected to solve
 
 The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I'm talking about, think of it as the "Track Changes" features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see [Why Git? Why GitHub?][hg-why].
 
-<!-- ## Joint R project structure {-} -->
-
-<!-- I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.   -->
 
 
 # Coding/naming convention {#coding-convention}
 
 The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible. 
 
-Different ways of naming you variables exists. You are advised to adopt a naming convention; some use [snake case][wiki-snake-case] others use [camel case][wiki-camel-case]. The R community mostly use snake case but camel case is also okay. Choose the naming convention you like best in your study group. But stick only to one of them. A few examples:
+Different ways of naming you variables exists. You are advised to adopt a naming convention; 
+
+The most common and widely accepted coding convention in Python is defined by **PEP 8** — the *Python Enhancement Proposal 8*, titled **"Style Guide for Python Code."**
+
+---
+
+### 🧭 Key PEP 8 Conventions
+
+Here’s a summary of the most important and widely used conventions:
+
+#### ✅ **Naming Conventions**
+
+* **Variables / functions**: `lowercase_with_underscores`
+* **Classes**: `CamelCase`
+* **Constants**: `ALL_CAPS_WITH_UNDERSCORES`
+* **Private/internal names**: `_single_leading_underscore`
+* **"Magic" methods**: `__double_underscores__` (e.g. `__init__`)
+
+#### ✅ **Indentation**
+
+* **Use 4 spaces per indentation level**
+* Do **not** use tabs (or mix tabs and spaces)
+
+#### ✅ **Line Length**
+
+* **Limit lines to 79 characters**
+* For docstrings or comments: 72 characters is the recommendation
+
+#### ✅ **Imports**
+
+* One import per line:
+
+  ```python
+  import os
+  import sys
+  ```
+* Standard library imports come first, then third-party, then local imports:
+
+  ```python
+  import os
+  import sys
+
+  import numpy as np
+
+  import mymodule
+  ```
+
+#### ✅ **Whitespace**
+
+* No extra spaces in function calls or definitions:
+
+  ```python
+  def func(a, b):   # ✅
+      return a + b
+
+  def func( a, b ): # ❌
+  ```
+* Avoid whitespace around `=` in keyword arguments or default values:
+
+  ```python
+  def connect(host="localhost"):  # ✅
+      pass
+  ```
+
+#### ✅ **Comments and Docstrings**
+
+* Use full sentences, capitalize, and use punctuation.
+* **Inline comments**: brief and after `#`
+* **Block comments**: above the code they're describing
+* **Docstrings**: triple-quoted (`"""Docstring here."""`) — recommended for all public modules, functions, classes, and methods.
+
+#### ✅ **Boolean checks**
+
+Use `if x:` instead of `if x != []` or `if len(x) > 0` when testing emptiness.
+
+---
+
+### 🔧 Tools to Enforce PEP 8
+
+Use these tools in your development environment:
+
+* `flake8` – for style checking
+* `black` – auto-formatter
+* `pylint` – linter for code quality
+* `isort` – for organizing imports
+
+---
+
+### 🎯 Summary
+
+**PEP 8** is the most universally adopted convention in Python. Following it:
+
+* Makes your code more readable and consistent
+* Eases collaboration with other Python developers
+* Helps in professional and open-source projects
+
+If you're working on a team, always check if they follow PEP 8 strictly or use a customized version (some teams might use tools like `black` that take slight liberties with PEP 8 for consistency).
+
+
+
+
+
+
+
+
+some use [snake case][wiki-snake-case] others use [camel case][wiki-camel-case]. The R community mostly use snake case but camel case is also okay. Choose the naming convention you like best in your study group. But stick only to one of them. A few examples:
 
 ```
 this_is_snake_case   # note you do not use capital letters here
@@ -47,6 +145,7 @@ When defining variables and functions, it is in general good practice to use nou
 ## Commenting your code
 
 It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. 
+
 
 ```{r, eval=FALSE, echo=TRUE}
 #' Subtract two vectors
