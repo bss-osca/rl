@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Install Dependencies
-        run: sudo apt install libcurl4-openssl-dev libssl-dev libharfbuzz-dev libfribidi-dev libglpk-dev
+        run: sudo apt install libcurl4-openssl-dev libssl-dev libharfbuzz-dev libfribidi-dev libglpk-dev  
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
@@ -36,6 +36,7 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          path: book
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
