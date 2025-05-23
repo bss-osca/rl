@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; An introduction to RL – Reinforcement Learning for Business (RL)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./index.html" rel="prev">
+<link href="./assets/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-bc548e22d71989e349486c32e0d27f55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="assets/style.css">
+<meta property="og:title" content="1&nbsp; An introduction to RL – Reinforcement Learning for Business (RL)">
+<meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
+<meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
+<meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_rl-intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">An introduction to RL</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./img/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Reinforcement Learning for Business (RL)</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/bss-osca/rl/tree/master/book/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the course notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Introduction to RL</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_rl-intro.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#mod-rl-intro-lo" id="toc-mod-rl-intro-lo" class="nav-link active" data-scroll-target="#mod-rl-intro-lo"><span class="header-section-number">1.1</span> Learning outcomes</a></li>
+  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">1.2</span> Textbook readings</a></li>
+  <li><a href="#what-is-reinforcement-learning" id="toc-what-is-reinforcement-learning" class="nav-link" data-scroll-target="#what-is-reinforcement-learning"><span class="header-section-number">1.3</span> What is reinforcement learning</a></li>
+  <li><a href="#rl-and-business-analytics" id="toc-rl-and-business-analytics" class="nav-link" data-scroll-target="#rl-and-business-analytics"><span class="header-section-number">1.4</span> RL and Business Analytics</a></li>
+  <li><a href="#rl-in-different-research-deciplines" id="toc-rl-in-different-research-deciplines" class="nav-link" data-scroll-target="#rl-in-different-research-deciplines"><span class="header-section-number">1.5</span> RL in different research deciplines</a></li>
+  <li><a href="#rl-and-machine-learning" id="toc-rl-and-machine-learning" class="nav-link" data-scroll-target="#rl-and-machine-learning"><span class="header-section-number">1.6</span> RL and machine learning</a></li>
+  <li><a href="#the-rl-data-stream" id="toc-the-rl-data-stream" class="nav-link" data-scroll-target="#the-rl-data-stream"><span class="header-section-number">1.7</span> The RL data-stream</a></li>
+  <li><a href="#states-actions-rewards-and-policies" id="toc-states-actions-rewards-and-policies" class="nav-link" data-scroll-target="#states-actions-rewards-and-policies"><span class="header-section-number">1.8</span> States, actions, rewards and policies</a></li>
+  <li><a href="#exploitation-vs-exploration" id="toc-exploitation-vs-exploration" class="nav-link" data-scroll-target="#exploitation-vs-exploration"><span class="header-section-number">1.9</span> Exploitation vs Exploration</a></li>
+  <li><a href="#rl-in-action-tic-tac-toe" id="toc-rl-in-action-tic-tac-toe" class="nav-link" data-scroll-target="#rl-in-action-tic-tac-toe"><span class="header-section-number">1.10</span> RL in action (Tic-Tac-Toe)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">1.11</span> Summary</a></li>
+  <li><a href="#sec-rl-intro-ex" id="toc-sec-rl-intro-ex" class="nav-link" data-scroll-target="#sec-rl-intro-ex"><span class="header-section-number">1.12</span> Exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="mod-rl-intro" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This module gives a short introduction to Reinforcement learning.</p>
+<section id="mod-rl-intro-lo" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="mod-rl-intro-lo"><span class="header-section-number">1.1</span> Learning outcomes</h2>
+<p>By the end of this module, you are expected to:</p>
+<ul>
+<li>Describe what RL is.</li>
+<li>Be able to identify different sequential decision problems.</li>
+<li>Know what Business Analytics are and identify RL in that framework.</li>
+<li>Memorise different names for RL and how it fits in a Machine Learning framework.</li>
+<li>Formulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).</li>
+<li>Run your first RL algorithm and evaluate on its solution.</li>
+</ul>
+<p>The learning outcomes relate to the <a href="#mod-lg-course">overall learning goals</a> number 3, 5, 6, 9 and 11 of the course.</p>
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+</section>
+<section id="textbook-readings" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">1.2</span> Textbook readings</h2>
+<p>For this week, you will need to read Chapter 1-1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/01_rl-intro-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+</div>
+</div>
+</section>
+<section id="what-is-reinforcement-learning" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="what-is-reinforcement-learning"><span class="header-section-number">1.3</span> What is reinforcement learning</h2>
+<p>RL can be seen as</p>
+<ul>
+<li>An approach of modelling sequential decision making problems.</li>
+<li>An approach for learning good decision making under uncertainty from experience.</li>
+<li>Mathematical models for learning-based decision making.</li>
+<li>Trying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.</li>
+<li>Estimating and finding near optimal decisions of a stochastic process with sequential decision making.</li>
+<li>A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.</li>
+</ul>
+<p>Sequential decision problems are problems where you take decisions/actions over time. As an agent, you base your decision on the current state of the system (a state is a function of the information/data available). At the next time-step, the system have moved (stochastically) to the next stage. Here new information may be available and you receive a reward and take a new action. Examples of sequential decision problems are (with possible actions):</p>
+<ul>
+<li>Playing backgammon (how to move the checkers).</li>
+<li><a href="https://arxiv.org/pdf/1807.00412.pdf">Driving a car</a> (left, right, forward, back, break, stop, …).</li>
+<li>How to <a href="https://medium.com/ibm-data-ai/reinforcement-learning-the-business-use-case-part-2-c175740999">invest/maintain a portfolio of stocks</a> (buy, sell, amount).<br>
+</li>
+<li><a href="https://www.youtube.com/watch?v=pxWkg2N0l9c">Control an inventory</a> (wait, buy, amount).</li>
+<li>Vehicle routing (routes).</li>
+<li>Maintain a spare-part (wait, maintain).</li>
+<li><a href="https://arxiv.org/pdf/2103.14295.pdf">Robot operations</a> (sort, move, …)</li>
+<li><a href="http://dx.doi.org/10.1016/j.ejor.2019.01.050">Dairy cow treatment/replacement</a> (treat, replace, …)</li>
+<li>Recommender systems e.g.&nbsp;<a href="https://scale.com/blog/Netflix-Recommendation-Personalization-TransformX-Scale-AI-Insights">Netflix recommendations</a> (videos)</li>
+</ul>
+<p>Since RL involves a scalar reward signal, the goal is to choose actions such that the total reward is maximized. Note actions have an impact on the future and may have long term consequences. As such, you cannot simply choose the action that maximize the current reward. It may, in fact, be better to sacrifice immediate reward to gain more long term reward.</p>
+<p>RL can be seen as a way of modelling intuition. An RL model has specific states, actions and reward structure and our goal as an agent is to find good decisions/actions that maximize the total reward. The agent learn using, for instance:</p>
+<ul>
+<li>totally random trials (in the start),</li>
+<li>sophisticated tactics and superhuman skills (in the end).</li>
+</ul>
+<p>That is, as the agent learn, the reward estimate of a given action becomes better.</p>
+<p>As humans, we often learn by trial and error too:</p>
+<ul>
+<li>Learning to walk (by falling/pain).</li>
+<li>Learning to play (strategy is based on the game rules and what we have experienced works based on previous plays).</li>
+</ul>
+<p>This can also be seen as learning the reward of our actions.</p>
+</section>
+<section id="rl-and-business-analytics" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="rl-and-business-analytics"><span class="header-section-number">1.4</span> RL and Business Analytics</h2>
+<p><a href="https://en.wikipedia.org/wiki/Business_analytics">Business Analytics</a> (BA) (or just <a href="http://connect.informs.org/analytics/home">Analytics</a>) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using “big” data sources.</p>
+<p><strong>Descriptive Analytics</strong>: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.</p>
+<p><strong>Predictive Analytics</strong>: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).</p>
+<p><strong>Prescriptive Analytics</strong>: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since RL focus optimizing decisions it is Prescriptive Analytics also known as sequential decision analytics.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/analytics_plot9.png" class="img-fluid figure-img"></p>
+<figcaption>Business Analytics and competive advantage.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Companies who use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. This enterprise approach generates a companywide respect for applying descriptive, predictive and prescriptive analytics in areas such as supply chain, marketing and human resources. Focusing on BA gives a company a competive advantage (see Figure @ref(fig:analytics)).</p>
+<p><strong>BA and related areas</strong>: In the past <em>Business Intelligence</em> traditionally focuses on querying, reporting, online analytical processing, i.e.&nbsp;descriptive analytics. However, a more modern definition of Business Intelligence is the union of descriptive and predictive analytics. <em>Operations Research</em> or <em>Management Science</em> deals with the application of advanced analytical methods to help make better decisions and can hence be seen as prescriptive analytics. However, traditionally it has been taking a more theoretical approach and focusing on problem-driven research while BA takes a more data-driven approach. <em>Logistics</em> is a cross-functional area focusing on the effective and efficient flows of goods and services, and the related flows of information and cash. <em>Supply Chain Management</em> adds a process-oriented and cross-company perspective. Both can be seen as prescriptive analytics with a more problem-driven research focus. Advanced Analytics is often used as a classification of both predictive and prescriptive analytics. <em>Data science</em> is an interdisciplinary field about scientific methods, processes, and systems to extract knowledge or insights from data in various forms, either structured or unstructured and can be seen as Business analytics applied to a wider range of data.</p>
+</section>
+<section id="rl-in-different-research-deciplines" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="rl-in-different-research-deciplines"><span class="header-section-number">1.5</span> RL in different research deciplines</h2>
+<p>RL is used in many research fields using different names:</p>
+<ul>
+<li>RL (most used) originated from computer science and AI.</li>
+<li><em>Approximate dynamic programming (ADP)</em> is mostly used within operations research.</li>
+<li><em>Neuro-dynamic programming</em> (when states are represented using a neural network).</li>
+<li>RL is closely related to <em>Markov decision processes</em> (a mathematical model for a sequential decision problem).</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/rl-names.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Adopted from <span class="citation" data-cites="Silver15">Silver (<a href="references.html#ref-Silver15" role="doc-biblioref">2015</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="rl-and-machine-learning" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="rl-and-machine-learning"><span class="header-section-number">1.6</span> RL and machine learning</h2>
+<p>Different ways of learning:</p>
+<ul>
+<li><strong>Supervised learning:</strong> Given data <span class="math inline">\((x_i, y_i)\)</span> learn to predict <span class="math inline">\(y\)</span> from <span class="math inline">\(x\)</span>, i.e.&nbsp;find <span class="math inline">\(y \approx f(x)\)</span> (e.g.&nbsp;regression).</li>
+<li><strong>Unsupervised learning:</strong> Given data <span class="math inline">\((x_i)\)</span> learn patterns using <span class="math inline">\(x\)</span>, i.e.&nbsp;find <span class="math inline">\(f(x)\)</span> (e.g.&nbsp;clustering). <!-- * Often assume that data are independent and identically distributed (iid).  --></li>
+<li><strong>RL:</strong> Given state <span class="math inline">\(x\)</span> you take an action and observe the reward <span class="math inline">\(r\)</span> and the new state <span class="math inline">\(x'\)</span>.
+<ul>
+<li>There is no supervisor <span class="math inline">\(y\)</span>, only a reward signal <span class="math inline">\(r\)</span>.</li>
+<li>Your goal is to find a policy that optimize the total reward function.</li>
+</ul></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/rl-ml.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Adopted from <span class="citation" data-cites="Silver15">Silver (<a href="references.html#ref-Silver15" role="doc-biblioref">2015</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-rl-data-stream" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="the-rl-data-stream"><span class="header-section-number">1.7</span> The RL data-stream</h2>
+<p>RL considers an agent in an environment:</p>
+<ul>
+<li>Agent: The one who takes the action (computer, robot, decision maker).</li>
+<li>Environment: The system/world where observations and rewards are found.</li>
+</ul>
+<p>Data are revealed sequentially as you take actions <span class="math display">\[(O_0, A_0, R_1, O_1, A_1, R_2, O_2, \ldots).\]</span> At time <span class="math inline">\(t\)</span> the agent have been taken action <span class="math inline">\(A_{t-1}\)</span> and observed observation <span class="math inline">\(O_t\)</span> and reward <span class="math inline">\(R_t\)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Agent-environment representation.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This gives us the <em>history</em> at time <span class="math inline">\(t\)</span> is the sequence of observations, actions and rewards <span class="math display">\[H_t = (O_0, A_0, R_1, O_1, \ldots, A_{t-1}, R_t, O_t).\]</span></p>
+</section>
+<section id="states-actions-rewards-and-policies" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="states-actions-rewards-and-policies"><span class="header-section-number">1.8</span> States, actions, rewards and policies</h2>
+<p>The (agent) state <span class="math inline">\(S_t\)</span> is the information used to take the next action <span class="math inline">\(A_t\)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>State and action.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A state depends on the history, i.e.&nbsp;a state is a function of the history <span class="math inline">\(S_t = f(H_t)\)</span>. Different strategies for defining a state may be considered. Choosing <span class="math inline">\(S_t = H_t\)</span> is bad since the size of a state representation grows very fast. A better strategy is to just store the information needed for taking the next action. Moreover, it is good to have Markov states where given the present state the future is independent of the past. That is, the current state holds just as much information as the history, i.e.&nbsp;it holds all useful information of the history. Symbolically, we call a state <span class="math inline">\(S_t\)</span> Markov iff</p>
+<p><span class="math display">\[\Pr[S_{t+1} | S_t] = \Pr[S_{t+1} | S_1,...,S_t].\]</span></p>
+<p>That is, the probability of seeing some next state <span class="math inline">\(S_{t+1}\)</span> given the current state is exactly equal to the probability of that next state given the entire history of states. Note that we can always find some Markov state. Though the smaller the state, the more “valuable” it is. In the worst case, <span class="math inline">\(H_t\)</span> is Markov, since it represents all known information about itself.</p>
+<p>The reward <span class="math inline">\(R_t\)</span> is a number representing the reward at time <span class="math inline">\(t\)</span> (negative if a cost). Examples of rewards are</p>
+<ul>
+<li>Playing backgammon (0 (when play), 1 (when win), -1 (when loose)).</li>
+<li>How to invest/maintain a portfolio of stocks (the profit).<br>
+</li>
+<li>Control an inventory (inventory cost, lost sales cost).</li>
+<li>Vehicle routing (transportation cost).</li>
+</ul>
+<p>The goal is to find a policy that maximize the total future reward. A <em>policy</em> is the agent’s behaviour and is a map from state to action, i.e.&nbsp;a function <span class="math display">\[a = \pi(s)\]</span> saying that given the agent is in state <span class="math inline">\(s\)</span> we choose action <span class="math inline">\(a\)</span>.</p>
+<p>The total future reward is currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
+<p>The value of the discount rate is important:</p>
+<ul>
+<li>Discount rate <span class="math inline">\(\gamma=0\)</span>: Only care about present reward.</li>
+<li>Discount rate <span class="math inline">\(\gamma=1\)</span>: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.</li>
+<li>Discount rate <span class="math inline">\(\gamma&lt;1\)</span>: Rewards near to the present more beneficial. Note <span class="math inline">\(V(s)\)</span> will converge to a number even if the time-horizon is infinite.</li>
+</ul>
+<!-- ## Model free vs Model based -->
+</section>
+<section id="exploitation-vs-exploration" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="exploitation-vs-exploration"><span class="header-section-number">1.9</span> Exploitation vs Exploration</h2>
+<p>A key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.</p>
+<p>Examples in the exploration and exploitation dilemma are for instance movie recommendations: recommending the user’s best rated movie type (exploitation) or trying another movie type (exploration) or oil drilling: drilling at the best known location (exploitation) or trying a new location (exploration).</p>
+</section>
+<section id="rl-in-action-tic-tac-toe" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="rl-in-action-tic-tac-toe"><span class="header-section-number">1.10</span> RL in action (Tic-Tac-Toe)</h2>
+<p>The current state of the board is represented by a row-wise concatenation of the players’ marks in a 3x3 grid. For example, the 9 character long string <code>"......X.O"</code> denotes a board state in which player X has placed a mark in the third row and first column whereas player O has placed a mark in the third row and the third column:</p>
+<div class="cell" data-layout-align="center">
+<style type="text/css">
+.table-bordered th, .table-bordered td {
+    border: 1px solid black !important; 
+}
+</style>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table table-bordered caption-top table-sm table-striped small" data-quarto-postprocess="true" border:="" data-solid="" data-black="">
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">.</td>
+<td style="text-align: center;">.</td>
+<td style="text-align: center;">.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">.</td>
+<td style="text-align: center;">.</td>
+<td style="text-align: center;">.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">X</td>
+<td style="text-align: center;">.</td>
+<td style="text-align: center;">O</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>That is, we index the fields row-wise:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table table-bordered caption-top table-sm table-striped small" data-quarto-postprocess="true" border:="" data-solid="" data-black="">
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The game is continued until all fields are filled or the game is over (win or loose).</p>
+<!-- All states are observed from the perspective of player X who is also assumed to have played first.  -->
+<p>The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probabilities of winning.</p>
+<p>Examples of winning, loosing and a draw from player Xs point of view:</p>
+<table style="width: 100%; border: 0px !important">
+<tbody>
+<tr style="border: 0px !important;">
+<td style="border: 0px !important;">
+<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td style="border: 0px !important;">
+<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+.
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+.
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td style="border: 0px !important;">
+<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+O
+</td>
+<td style="text-align:center;">
+X
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+X
+</td>
+<td style="text-align:center;">
+O
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note a state can also be represented using a <em>state vector</em> of length 9:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stateStr <span class="ot">&lt;-</span> <span class="cf">function</span>(sV) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>   str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(str)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>stateVec <span class="ot">&lt;-</span> <span class="cf">function</span>(s) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>   sV <span class="ot">&lt;-</span> <span class="fu">str_split</span>(s, <span class="st">""</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(sV)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sV <span class="ot">&lt;-</span> <span class="fu">stateVec</span>(<span class="st">"X.X.X.OOO"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>sV</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "X" "." "X" "." "X" "." "O" "O" "O"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Given a state vector, we can check if we win or loose:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Check board state</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param pfx Player prefix (the char used on the board).</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param sV Board state vector.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return A number 1 (win), 0 (loose) or 0.5 (draw/unknown)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>win <span class="ot">&lt;-</span> <span class="cf">function</span>(pfx, sV) {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>   idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> pfx)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>   mineV <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>   mineV[idx] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>   mineM <span class="ot">&lt;-</span> <span class="fu">matrix</span>(mineV, <span class="dv">3</span>, <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">rowSums</span>(mineM) <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">||</span>  <span class="co"># win</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">any</span>(<span class="fu">colSums</span>(mineM) <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">||</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(<span class="fu">diag</span>(mineM)) <span class="sc">==</span> <span class="dv">3</span> <span class="sc">||</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(mineM[<span class="dv">1</span>,<span class="dv">3</span>] <span class="sc">+</span> mineM[<span class="dv">2</span>,<span class="dv">2</span>] <span class="sc">+</span> mineM[<span class="dv">3</span>,<span class="dv">1</span>]) <span class="sc">==</span> <span class="dv">3</span>) <span class="fu">return</span>(<span class="dv">1</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>   idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">"."</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>   mineV[idx] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>   mineM <span class="ot">&lt;-</span> <span class="fu">matrix</span>(mineV, <span class="dv">3</span>, <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">rowSums</span>(mineM) <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">||</span>  <span class="co"># loose</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">any</span>(<span class="fu">colSums</span>(mineM) <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">||</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(<span class="fu">diag</span>(mineM)) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">||</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(mineM[<span class="dv">1</span>,<span class="dv">3</span>] <span class="sc">+</span> mineM[<span class="dv">2</span>,<span class="dv">2</span>] <span class="sc">+</span> mineM[<span class="dv">3</span>,<span class="dv">1</span>]) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="dv">0</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fl">0.5</span>)  <span class="co"># draw</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">win</span>(<span class="st">"O"</span>, sV)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">win</span>(<span class="st">"X"</span>, sV)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a <em>draw</em> game may look as in Figure @ref(fig:hgf). We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/hgf-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>A draw.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="players-and-learning-to-play" class="level3" data-number="1.10.1">
+<h3 data-number="1.10.1" class="anchored" data-anchor-id="players-and-learning-to-play"><span class="header-section-number">1.10.1</span> Players and learning to play</h3>
+<p>Assume that we initially define a value <span class="math inline">\(V(S)\)</span> of each state <span class="math inline">\(S\)</span> to be 1 if we win, 0 if we loose and 0.5 otherwise. Most of the time we <em>exploit</em> our knowledge, i.e.&nbsp;choose the action which gives us the highest estimated reward (probability of winning). However, some times (with probability <span class="math inline">\(\epsilon\)</span>) we <em>explore</em> and choose another action/move than what seems optimal. These moves make us experience states we may otherwise never see. If we exploit we update the value of a state using <span class="math display">\[V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))\]</span> where <span class="math inline">\(\alpha\)</span> is the <em>step-size</em> parameter which influences the rate of learning.</p>
+<p>Let us implement a RL player using a <a href="https://adv-r.hadley.nz/r6.html">R6 class</a> and store the values using a <a href="https://github.com/decisionpatterns/r-hash">hash list</a>. We keep the hash list minimal by dynamically adding only states which has been explored or needed for calculations. Note using R6 is an object oriented approach and objects are modified by reference. The internal method <code>move</code> takes the previous state (from our point of view) and the current state (before we make a move) and returns the next state (after our move) and update the value function (if exploit). The player explore with probability <code>epsilon</code> if there is not a next state that makes us win.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>PlayerRL <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">"PlayerRL"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">pfx =</span> <span class="st">""</span>,  <span class="co"># player prefix</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">hV =</span> <span class="cn">NA</span>,   <span class="co"># empty hash list (states are stored using a string key)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>), </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">clearLearning =</span> <span class="cf">function</span>() <span class="fu">clear</span>(self<span class="sc">$</span>hV),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(<span class="at">pfx =</span> <span class="st">""</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)) {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>pfx <span class="ot">&lt;-</span> pfx</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>control <span class="ot">&lt;-</span> control</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>hV <span class="ot">&lt;-</span> <span class="fu">hash</span>()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">finalize =</span> <span class="cf">function</span>() {</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat("FIN\n")</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">clear</span>(self<span class="sc">$</span>hV)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">move =</span> <span class="cf">function</span>(sP, sV) { <span class="co"># previous state (before opponent move) and current state (before we move)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">"."</span>)  <span class="co"># possible places to place our move</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>         state <span class="ot">&lt;-</span> <span class="fu">stateStr</span>(sP)    <span class="co"># state as a string</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="sc">!</span><span class="fu">has.key</span>(state, self<span class="sc">$</span>hV)) self<span class="sc">$</span>hV[[state]] <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co"># if the state hasn't a value then set it to 0.5 (default)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>         <span class="co"># find possible moves and add missing states</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>         keys <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>         keysV <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> idx) {  <span class="co"># find possible moves</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> self<span class="sc">$</span>pfx</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>            str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>            keys <span class="ot">&lt;-</span> <span class="fu">c</span>(keys, str)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>            keysV <span class="ot">&lt;-</span> <span class="fu">rbind</span>(keysV, sV)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> <span class="st">"."</span>   <span class="co"># set the value back to default</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>         <span class="co"># add missing states of next sP</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">has.key</span>(keys, self<span class="sc">$</span>hV))</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(keysV)) {</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>               self<span class="sc">$</span>hV[keys[i]] <span class="ot">&lt;-</span> <span class="fu">win</span>(self<span class="sc">$</span>pfx, keysV[i,])</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat("Player", pfx, "\n")</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>         <span class="co"># print(self$hV)</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>         <span class="co"># update and find next state</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>         val <span class="ot">&lt;-</span> <span class="fu">values</span>(self<span class="sc">$</span>hV[keys])</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat("Moves:"); print(val)</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>         m <span class="ot">&lt;-</span> <span class="fu">max</span>(val)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> (<span class="fu">rbinom</span>(<span class="dv">1</span>,<span class="dv">1</span>, self<span class="sc">$</span>control<span class="sc">$</span>epsilon) <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> <span class="fu">any</span>(val <span class="sc">&lt;</span> m) <span class="sc">&amp;</span> m <span class="sc">&lt;</span> <span class="dv">1</span>) { <span class="co"># explore</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> <span class="fu">which</span>(val <span class="sc">&lt;</span> m)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> idx[<span class="fu">sample</span>(<span class="fu">length</span>(idx), <span class="dv">1</span>)]</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>            nextS <span class="ot">&lt;-</span> <span class="fu">names</span>(val)[idx] </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            <span class="co"># cat("Explore - ")</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>         } <span class="cf">else</span> { <span class="co"># exploit</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> <span class="fu">which</span>(val <span class="sc">==</span> m)</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>            idx <span class="ot">&lt;-</span> idx[<span class="fu">sample</span>(<span class="fu">length</span>(idx), <span class="dv">1</span>)]</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>            nextS <span class="ot">&lt;-</span> <span class="fu">names</span>(val)[idx] <span class="co"># pick one</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>            self<span class="sc">$</span>hV[[state]] <span class="ot">&lt;-</span> self<span class="sc">$</span>hV[[state]] <span class="sc">+</span> self<span class="sc">$</span>control<span class="sc">$</span>alpha <span class="sc">*</span> (m <span class="sc">-</span> self<span class="sc">$</span>hV[[state]])</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>            <span class="co"># cat("Exploit - ")</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>         <span class="co"># cat("Next:", nextS, "\n")</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(<span class="fu">str_split</span>(nextS, <span class="st">""</span>)[[<span class="dv">1</span>]])</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We then can define a player using:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">"A"</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Other players may be defined similarly, e.g.&nbsp;a player which moves randomly (if can not win in the next move):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>PlayerRandom <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">"PlayerRandom"</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">pfx =</span> <span class="cn">NA</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(pfx) {</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>pfx <span class="ot">&lt;-</span> pfx</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">move =</span> <span class="cf">function</span>(sP, sV) {  <span class="co"># previous state (before opponent move) and current state (before we move)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">"."</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>         state <span class="ot">&lt;-</span> <span class="fu">stateStr</span>(sV)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>         keys <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>         keysV <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> idx) {  <span class="co"># find possible moves</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> self<span class="sc">$</span>pfx</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            str <span class="ot">&lt;-</span> <span class="fu">str_c</span>(sV, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            keys <span class="ot">&lt;-</span> <span class="fu">c</span>(keys, str)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            keysV <span class="ot">&lt;-</span> <span class="fu">rbind</span>(keysV, sV)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            sV[i] <span class="ot">&lt;-</span> <span class="st">"."</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>         <span class="co"># check if can win in one move</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(keysV)) {</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (<span class="fu">win</span>(self<span class="sc">$</span>pfx, keysV[i,]) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>               <span class="fu">return</span>(keysV[i,])  <span class="co"># next state is the win state</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>         }</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>         <span class="co"># else pick one random</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(keysV[<span class="fu">sample</span>(<span class="fu">nrow</span>(keysV), <span class="dv">1</span>),])</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A player which always place at the lowest field index:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>PlayerFirst <span class="ot">&lt;-</span> <span class="fu">R6Class</span>(<span class="st">"PlayerFirst"</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">pfx =</span> <span class="cn">NA</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">initialize =</span> <span class="cf">function</span>(pfx) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         self<span class="sc">$</span>pfx <span class="ot">&lt;-</span> pfx</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">move =</span> <span class="cf">function</span>(sP, sV) { <span class="co"># previous state (before opponent move) and current state (before we move)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>         idx <span class="ot">&lt;-</span> <span class="fu">which</span>(sV <span class="sc">==</span> <span class="st">"."</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>         sV[idx[<span class="dv">1</span>]] <span class="ot">&lt;-</span> self<span class="sc">$</span>pfx</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(sV)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="gameplay" class="level3" data-number="1.10.2">
+<h3 data-number="1.10.2" class="anchored" data-anchor-id="gameplay"><span class="header-section-number">1.10.2</span> Gameplay</h3>
+<p>We define a game which returns the prefix of the winner (<code>NA</code> if a draw):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param player1 A player R6 object. This player starts the game</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param player2 A player R6 object.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param verbose Print gameplay.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return The winners prefix or NA if a tie.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>playGame <span class="ot">&lt;-</span> <span class="cf">function</span>(player1, player2, <span class="at">verbose =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>   sP2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"."</span>, <span class="dv">9</span>)  <span class="co"># start state / game state</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>   sP1 <span class="ot">&lt;-</span> sP2          <span class="co"># state from player 1s viewpoint</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) { <span class="co"># at most 4.5 rounds</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="do">## player 1</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">"Player "</span>, player1<span class="sc">$</span>pfx, <span class="st">":</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      sP1 <span class="ot">&lt;-</span> player1<span class="sc">$</span><span class="fu">move</span>(sP1, sP2)  <span class="co"># new state from player 1s viewpoint</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># states &lt;- c(states, stateChr(sV))</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># cat(stateStr(sV), " | ", sep = "")</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">plot_board_state_cat</span>(<span class="fu">stateStr</span>(sP1))</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">win</span>(player1<span class="sc">$</span>pfx, sP1) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(player1<span class="sc">$</span>pfx)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>         <span class="cf">break</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">5</span>) <span class="cf">break</span>  <span class="co"># a draw</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="do">## player 2</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">"Player "</span>, player2<span class="sc">$</span>pfx, <span class="st">":</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      sP2 <span class="ot">&lt;-</span> player2<span class="sc">$</span><span class="fu">move</span>(sP2, sP1)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># states &lt;- c(states, stateChr(sV))</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="co"># cat(stateStr(sV), " | ", sep = "")</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">plot_board_state_cat</span>(<span class="fu">stateStr</span>(sP2))</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">win</span>(player2<span class="sc">$</span>pfx, sP2) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>         <span class="fu">return</span>(player2<span class="sc">$</span>pfx)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>         <span class="cf">break</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let us play a game between <code>playerA</code> and <code>playerR</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>playerR <span class="ot">&lt;-</span> PlayerRandom<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">"R"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">playGame</span>(playerA, playerR, <span class="at">verbose =</span> T)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player A:</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  .   |  .  |</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player R:</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  .   |  .  |</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player A:</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  A   |  .  |</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  .   |  .  |</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player R:</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  A   |  .  |</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  R   |  .  |</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Player A:</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  R  |  .   |  .  |</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  A  |  A   |  A  |</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |  .  |  R   |  .  |</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; |------------------|</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "A"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note <code>playerA</code> has been learning when playing the game. The current estimates that are stored in the hash list are:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>playerA<span class="sc">$</span>hV</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;hash&gt; containing 22 key-value pair(s).</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ......... : 0.5</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ........A : 0.5</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .......A. : 0.5</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ......A.. : 0.5</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .....A... : 0.5</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ....A.... : 0.5</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ...A..... : 0.5</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ..A...... : 0.5</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .A....... : 0.5</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   A........ : 0.5</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A....A : 0.5</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A...A. : 0.5</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A..A.. : 0.5</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..A.A... : 0.5</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AA.... : 0.55</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AA..RA : 0.5</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AA.AR. : 0.5</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R..AAA.R. : 1</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R.AA..... : 0.5</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   R.AAA..R. : 0.5</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   RA.A..... : 0.5</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   RA.AA..R. : 0.5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rl-intro-tic-learn" class="level3" data-number="1.10.3">
+<h3 data-number="1.10.3" class="anchored" data-anchor-id="rl-intro-tic-learn"><span class="header-section-number">1.10.3</span> Learning by a sequence of games</h3>
+<p>With a single game only a few states are explored and estimates are not good. Let us instead play a sequence of games and learn along the way:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param playerA Player A (R6 object).</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param playerB Player B (R6 object).</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param games Number of games</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param prA Probability of `playerA` starts.</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return A list with results (a data frame and a plot).  </span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>playGames <span class="ot">&lt;-</span> <span class="cf">function</span>(playerA, playerB, games, <span class="at">prA =</span> <span class="fl">0.5</span>) {</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>   winSeq <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, games)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>games) {</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># find start player</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">c</span>(prA, <span class="dv">1</span><span class="sc">-</span>prA)) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>         player1 <span class="ot">&lt;-</span> playerA</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>         player2 <span class="ot">&lt;-</span> playerB</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>         player2 <span class="ot">&lt;-</span> playerA</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>         player1 <span class="ot">&lt;-</span> playerB</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>      winSeq[g] <span class="ot">&lt;-</span> <span class="fu">playGame</span>(player1, player2)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>   <span class="co"># process the data</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>   dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">game =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(winSeq), <span class="at">winner =</span> winSeq) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">players =</span> <span class="fu">str_c</span>(playerA<span class="sc">$</span>pfx, playerB<span class="sc">$</span>pfx),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">winA :=</span> <span class="fu">case_when</span>(</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>            winner <span class="sc">==</span> playerA<span class="sc">$</span>pfx <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>            winner <span class="sc">==</span> playerB<span class="sc">$</span>pfx <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fl">0.5</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>         ),</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">winsA_r =</span> <span class="fu">rollapply</span>(winA, <span class="fu">ceiling</span>(games<span class="sc">/</span><span class="dv">10</span>), mean, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)  <span class="co">#, fill = 0, partial = T</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>   <span class="co"># make a plot</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>   pt <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> game, <span class="at">y =</span> winA)) <span class="sc">+</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> winsA_r), <span class="at">size =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">str_c</span>(<span class="st">"Avg. wins player "</span>, playerA<span class="sc">$</span>pfx),</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">"Wins "</span>, playerA<span class="sc">$</span>pfx, <span class="st">" = "</span>, <span class="fu">round</span>(<span class="fu">mean</span>(dat<span class="sc">$</span>winA), <span class="dv">2</span>), <span class="st">" "</span>, playerB<span class="sc">$</span>pfx, <span class="st">" = "</span>, <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(dat<span class="sc">$</span>winA), <span class="dv">2</span>)))</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">dat =</span> dat, <span class="at">plot =</span> pt))</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let us now play games against a player who moves randomly using <span class="math inline">\(\epsilon = 0.1\)</span> (explore probability) and <span class="math inline">\(\alpha = 0.1\)</span> (step size).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">"A"</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>)) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>playerR <span class="ot">&lt;-</span> PlayerRandom<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">"R"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">playGames</span>(playerA, playerR, <span class="at">games =</span> <span class="dv">2000</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The black curve is the moving average of winning with a trend line. Note the values of the parameters have an effect on our learning:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In general we do not need to explore (<span class="math inline">\(\epsilon = 0\)</span>) (the other player explore enough for us) and a high explore probability (<span class="math inline">\(\epsilon = 0.9\)</span>) make us loose. Moreover, using a high step size seems to work best.</p>
+<p>Other players may give different results. If the RL player play against a player which always move to first free field index:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here a high step size and a low exploration probability is good and the RL player will soon figure out how to win all the time.</p>
+<p>This is different if the RL player A play against another clever (RL) player B.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>playerA <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">"A"</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>playerB <span class="ot">&lt;-</span> PlayerRL<span class="sc">$</span><span class="fu">new</span>(<span class="at">pfx =</span> <span class="st">"B"</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">epsilon =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If both players play using the same control parameters, one would expect that they after learning should win/loose with probability 0.5. However if there is no exploration (<span class="math inline">\(\epsilon = 0\)</span>) this is not always true:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Depending on how the game starts a player may learn a better strategy and win/loose more. That is, exploration is important. Finally let us play against a player B with fixed control parameters.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In general it is best to explore using the same probability otherwise you loose more and a higher step size than your opponent will make you win.</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">1.11</span> Summary</h2>
+<p>Read Chapter 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+</section>
+<section id="sec-rl-intro-ex" class="level2" data-number="1.12">
+<h2 data-number="1.12" class="anchored" data-anchor-id="sec-rl-intro-ex"><span class="header-section-number">1.12</span> Exercises</h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<section id="ex-r-intro-self" class="level3" data-number="1.12.1">
+<h3 data-number="1.12.1" class="anchored" data-anchor-id="ex-r-intro-self"><span class="header-section-number">1.12.1</span> Exercise - Self-Play</h3>
+<p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="ex-r-intro-sym" class="level3" data-number="1.12.2">
+<h3 data-number="1.12.2" class="anchored" data-anchor-id="ex-r-intro-sym"><span class="header-section-number">1.12.2</span> Exercise - Symmetries</h3>
+<p>Many tic-tac-toe positions appear different but are really the same because of symmetries.</p>
+<ol type="1">
+<li><p>How might we amend the reinforcement learning algorithm described above to take advantage of this?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.</p>
+</div>
+</div>
+</div></li>
+<li><p>In what ways would this improve the algorithm?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A smaller state space would increase the speed of learning and reduce the memory required.</p>
+</div>
+</div>
+</div></li>
+<li><p>Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.</p>
+</div>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="ex-r-intro-greedy" class="level3" data-number="1.12.3">
+<h3 data-number="1.12.3" class="anchored" data-anchor-id="ex-r-intro-greedy"><span class="header-section-number">1.12.3</span> Exercise - Greedy Play</h3>
+<p>Consider Tic-Tac-Toe and suppose the RL player is only greedy (<span class="math inline">\(\epsilon = 0\)</span>), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>As seen in Section @ref(rl-intro-tic-learn) using <span class="math inline">\(\epsilon = 0\)</span> may be okay for this game if the opponent use a simple strategy (e.g.&nbsp;random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="ex-r-intro-exploit" class="level3" data-number="1.12.4">
+<h3 data-number="1.12.4" class="anchored" data-anchor-id="ex-r-intro-exploit"><span class="header-section-number">1.12.4</span> Exercise - Learning from Exploration</h3>
+<p>Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.</p>
+<ol type="1">
+<li><p>What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The probability set <span class="math inline">\(V(s)\)</span> found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set <span class="math inline">\(V(s)\)</span> found by applying learning from exploration is the probability of winning including the active exploration policy.</p>
+</div>
+</div>
+</div></li>
+<li><p>Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.</p>
+</div>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="ex-r-intro-other" class="level3" data-number="1.12.5">
+<h3 data-number="1.12.5" class="anchored" data-anchor-id="ex-r-intro-other"><span class="header-section-number">1.12.5</span> Exercise - Other Improvements</h3>
+<p>Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Altering the exploration rate/learning based on the variance in the opponent’s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.</p>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Silver15" class="csl-entry" role="listitem">
+Silver, David. 2015. <span>“Lectures on Reinforcement Learning.”</span> <a href="https://www.davidsilver.uk/teaching/">https://www.davidsilver.uk/teaching/</a>.
+</div>
+<div id="ref-Sutton18" class="csl-entry" role="listitem">
+Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="About the course notes">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">About the course notes</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
