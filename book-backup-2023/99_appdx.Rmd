@@ -1,0 +1,184 @@
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+# (APPENDIX) Appendix {- #mod-apdx}
+
+# Setting up R {#mod-r-setup} 
+
+[R] is a programming language and free software environment. The R language is widely used among statisticians and data miners for developing statistical software and data analysis. For a further overview and description of the history of R see [Chapter 2](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html) in @rdpeng. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work.
+
+R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. During this course **it is recommend to use RStudio on your laptop** since there is no limit on CPU usage. If you need to install R and RStudio on your laptop [check this out](https://bss-osca.github.io/tfa/mod-r-install.html#r-install).
+
+If you need a brushup on R have a look at DataCamp. First, signup for a [course group](https://www.datacamp.com/groups/shared_links/f0b49a9981de99c5822b7cbe9b90fc9f82f28774a33642896b39d59efe219eb9). Next, have a look at the free courses such as [Introduction to R][datacamp-r-intro]. DataCamp runs all the courses in your browser. That is, R is run on a server and you do not use RStudio here. 
+
+
+# Working in groups {#groups}
+
+During the course you have been allocated into groups. You are expected to solve the exercises and write the project report in your group. Before you start, it is a good idea to agree on a set of group rules. First, agree on a [coding convention](#coding-convention) when you are going to use R. Most people in the R community use snake case but camel case is also okay. Next, setup rules on when to meet and how you will organize the work. For instance, it is a good idea that all try to solve some of the exercises before you meet and you then discuss the answers, problems etc. Finally, it is a good idea to have a common place for your code. You have different options:
+
+1) Use a cloud storage services such as Dropbox, OneDrive or Google Drive.
+2) Use a version control system such as Git together with [GitHub]. GitHub is a code sharing and publishing service and may be seen as a social networking site for programmers. 
+3) If you use RStudio Cloud then one person in the group can create a shared workspace with projects: 
+   - First create a new workspace named e.g. _Shared_. 
+   - Press _Members_ and add the group members as moderators.
+   - Now go back to _Projects_ in the _RL_ workspace and move one project to the shared workspace. Rename it to e.g. _Group Project_. 
+   Members will now have access to this project where you can share code. NOTE you can not work collectively on a file simultaneously. That is, only one member can change a file at a time! Hence it is a good idea to have your own private project to work on and use this project as a place where you can share code. If you want to download a project to your laptop then press the export button. 
+
+The benefit of a cloud storage service is that it is well known to you and easy to setup. Cons are that you cannot work on the same file simultaneously. The benefit of Git and GitHub is that it manages the evolution of a set of files – called a repository – in a sane, highly structured way. If you have no idea what I'm talking about, think of it as the "Track Changes" features from Microsoft Word on steroids. Here you can work on files simultaneously. Moreover, it can be used from within RStudio. Cons are that it is harder to setup and learn. For a detailed description see [Why Git? Why GitHub?][hg-why].
+
+<!-- ## Joint R project structure {-} -->
+
+<!-- I suggest to have an R project with subfolders `joint`, `[student1 name]`, `[student2 name]`, ..., `[student5 name]`. Student folders contain files only a single student work on (good when you do some exercises before class). Folder `joint` contains joint work. That could for instance be a joint answer of an exercise (based on the work you did in the student folders) and a sub-folder with the project report.   -->
+
+
+# Coding/naming convention {#coding-convention}
+
+The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible. 
+
+Different ways of naming you variables exists. You are advised to adopt a naming convention; some use [snake case][wiki-snake-case] others use [camel case][wiki-camel-case]. The R community mostly use snake case but camel case is also okay. Choose the naming convention you like best in your study group. But stick only to one of them. A few examples:
+
+```
+this_is_snake_case   # note you do not use capital letters here
+thisIsCamelCase      # you start each word with a capital letter (except the first)
+```
+When defining variables and functions, it is in general good practice to use nouns for variables and verbs for functions.
+
+
+## Commenting your code
+
+It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. 
+
+```{r, eval=FALSE, echo=TRUE}
+#' Subtract two vectors
+#'
+#' @param x First vector.
+#' @param y Vector to be subtracted.
+#'
+#' @return The difference.
+#' @export
+#'
+#' @examples
+#' subtract(x = c(5,5), y = c(2,3))
+subtract <- function(x, y) {
+  return(x-y)
+}
+```
+
+You can add a roxygen skeleton automatically using **Code > Insert Roxygen Skeleton** in RStudio. 
+
+
+# Annotate the course notes {#annotate}
+
+I recommend using [hypothes.is] to annotate the online course notes. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help me indicate spell errors, unclear content etc. in the notes. 
+
+
+# Getting help {#help}
+
+We all get stuck sometimes and need some help. Below are some advises on how to help yourself and ask for help:
+
+If you have a question related to the theory of RL:
+
+  * Ask it during the lecture or in the breaks
+  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap. 
+
+If you have a question related to R:
+
+  * First try to understand the error message and solve the problem. You may try to debug your code by inserting `browser()` in your R code. Further details about debugging can be seen [here][debug-in-r].  
+  * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "r dplyr filter", "r tidyverse", "r subset vector", etc.
+  * Do you need help for a specific function in R then try `?[function-name]` such as `?geom_line`, `?mutate`, etc. Mostly, focus on the last section with examples. Moreover, some packages may have written vignettes try `browseVignettes(package = "package_name")` to check.
+  * Have a look at **Help > Cheatsheets** in RStudio.
+  * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.
+  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap.   
+
+__Note help using mail correspondence is not supported!__
+
+
+
+# Learning goals {#mod-lg-course}
+
+The purpose of this course is to give you an introduction and knowledge about reinforcement learning (RL). After having participated in the course, you must, in addition to achieving general academic skills, demonstrate: 
+
+Knowledge of
+
+   1.	RL for Bandit problems 
+   2.	Markov decision processes and ways to optimize them
+   3.	the exploration vs exploitation challenge in RL and approaches for addressing this challenge 
+   4.	the role of policy evaluation with stochastic approximation in the context of RL
+
+Skills to
+
+   5.	define the key features of RL that distinguishes it from other machine learning techniques
+   6.	discuss fundamental concepts in RL
+   7.	describe the mathematical framework of Markov decision processes
+   8.	formulate and solve Markov and semi-Markov decision processes for realistic problems with finite state space under different objectives
+   9.	apply fundamental techniques, results and concepts of RL on selected RL problems.
+   10. given an application problem, decide if it should be formulated as a RL problem and define it formally (in terms of the state space, action space, dynamics and reward model)
+
+Competences to
+
+   11. identify areas where RL are valuable
+   12. select and apply the appropriate RL model for a given business problem
+   13. interpret and communicate the results from RL
+
+
+
+
+<!-- # Schedule {}  -->
+
+<!-- The schedule for the course is given below. -->
+
+<!-- ```{r, echo=FALSE, message=FALSE, cache=FALSE, eval=FALSE} -->
+<!-- source("common.R") -->
+<!-- library(googlesheets4) -->
+<!-- sheets_deauth() -->
+<!-- sheet <- read_sheet("https://docs.google.com/spreadsheets/d/1-fSG3KWip0Vm5Uwf9T6vUMuH0ReBhpITHT3rl896vwc/edit?usp=sharing", -->
+<!--            sheet = "Schedule") -->
+<!-- knitr::kable(sheet) -->
+<!-- ``` -->
+
+<!-- <p><iframe width="1300" height="600" frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRka2NKE77BvtIoJc1GW-Dr_oABzQdQhMC94KpPjW7DpSTnepN9RV3m6w1ILKe3YoQwUj0C6JAe3K1T/pubhtml?gid=1591856300&amp;single=true&amp;widget=true&amp;headers=false"></iframe></p> -->
+
+
+
+
+# Colophon {}
+
+These notes was written in [bookdown](http://bookdown.org/) inside [RStudio](http://www.rstudio.com/ide/). 
+<!-- The website [stat545.com](https://stat545.com) is hosted with [Netlify](https://www.netlify.com), and automatically updated after every commit by [Travis-CI](https://travis-ci.org). The complete source is available from [GitHub](https://github.com/rstudio-education/stat545). -->
+
+This version of the notes was built with:
+
+```{r message = FALSE, warning = FALSE, echo = FALSE}
+# needed because new_session is set to true in _bookdown.yml
+all_pkgs <- renv::dependencies(path = "DESCRIPTION") %>% 
+  pull(Package) 
+
+session <- devtools::session_info(pkgs = all_pkgs)
+
+session$platform
+```
+
+Along with these packages:
+
+```{r message = FALSE, warning = FALSE, echo = FALSE}
+session$packages %>% 
+  select(package, loadedversion, date, source) %>% 
+  DT::datatable(rownames = FALSE,
+                class = 'cell-border stripe',
+                filter = list(position = 'top'),
+                options = list(pageLength = nrow(session$packages), 
+                           autoWidth = TRUE,
+                           bInfo = FALSE,
+                           paging = FALSE))
+```
+
+
+```{r include = FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+```{r links, child="links.md"}
+```

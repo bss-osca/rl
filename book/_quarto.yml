@@ -1,0 +1,81 @@
+project:
+  type: book
+  preview: 
+    watch-inputs: true
+    navigate: true
+
+book:
+  title: "Reinforcement Learning for Business (RL)"
+  subtitle: "Course notes"
+  # cover-image: img/logo.png
+  favicon: assets/favicon.ico
+  date: "2025-05-20"
+  url: https://bss-osca.github.io/rl/
+  author:
+    - Lars Relund Nielsen
+  sidebar: 
+    # background: "#F5F5F5"
+    logo: img/logo.png
+    search: true
+  repo-url: https://github.com/bss-osca/rl/
+  repo-subdir: book
+  repo-branch: master
+  repo-actions: [edit, issue, source]
+  image: mg/logo.png
+  comments:
+    giscus:
+      repo: bss-osca/rl/
+  open-graph:
+    image: https://github.com/bss-osca/rl/raw/master/book/img/logo.png
+    description: Course notes for the 'Reinforcement Learning for Business' course.
+    
+  chapters:
+    - index.qmd
+    - part: "Introduction to RL"
+    - 01_rl-intro.qmd
+    # - part: "Tabular methods"
+    # - 02_bandit.qmd
+    # - 03_mdp-1.qmd
+    # - 04_mdp-2.qmd
+    # - 05_dp.qmd
+    # - 06_mc.qmd
+    # - 07_td-pred.qmd
+    # - 08_td-control.qmd
+    - references.qmd
+  # appendices:
+  #   - 99_1_appdx.qmd
+  #   - 99_2_appdx.qmd
+
+bibliography:
+  - rl.bib
+  - packages.bib
+biblio-style: apalike
+link-citations: true
+
+# crossref:
+#   appendix-title: "App."
+#   appendix-delim: ":"
+
+comments:
+  hypothesis: true
+  
+format:
+  html:
+    # theme: 
+    #   light: minty #cosmo
+    # number-sections: true
+    number-depth: 3
+    callout-appearance: simple
+    smooth-scroll: true
+    code-fold: false
+    toc-depth: 2
+    split-by: chapter
+    # sharing: false
+    css: assets/style.css
+
+language:
+  ui:
+    chapter_name: 'Module '
+
+# good themes: default, cosmo, flatly, lumen, minty, pulse, sandstone, solar, united
+# favourites: minty, cosmo

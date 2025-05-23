@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>mdp-2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="04_mdp-2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="04_mdp-2_files/libs/quarto-html/quarto.js"></script>
+<script src="04_mdp-2_files/libs/quarto-html/popper.min.js"></script>
+<script src="04_mdp-2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="04_mdp-2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="04_mdp-2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="04_mdp-2_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="04_mdp-2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="04_mdp-2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="04_mdp-2_files/libs/bootstrap/bootstrap-c0367b04c37547644fece4185067e4a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="mod-mdp-2" class="level1">
+<h1>Policies and value functions for MDPs</h1>
+<p>This module go deeper in the theory of finite Markov decision processes (MDPs). The concept of a policy and value functions is considered. Once the problem is formulated as an MDP, finding the optimal policy can be found using value functions.</p>
+<section id="learning-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, you are expected to:</p>
+<!-- * Identify the different elements of a Markov Decision Processes (MDP). -->
+<!-- * Describe how the dynamics of an MDP are defined. -->
+<!-- * Understand how the agent-environment RL description relates to an MDP. -->
+<!-- * Interpret the graphical representation of a Markov Decision Process. -->
+<!-- * Describe how rewards are used to define the objective function (expected return). -->
+<!-- * Interpret the discount rate and its effect on the objective function. -->
+<!-- * Identify episodes and how to formulate an MDP by adding an absorbing state.  -->
+<ul>
+<li>Identify a policy as a distribution over actions for each possible state.</li>
+<li>Define value functions for a state and action.</li>
+<li>Derive the Bellman equation for a value function.</li>
+<li>Understand how Bellman equations relate current and future values.</li>
+<li>Define an optimal policy.</li>
+<li>Derive the Bellman optimality equation for a value function.</li>
+</ul>
+<p>The learning outcomes relate to the <a href="#mod-lg-course">overall learning goals</a> number 2, 7, 10, and 12 of the course.</p>
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+</section>
+<section id="textbook-readings" class="level2">
+<h2 class="anchored" data-anchor-id="textbook-readings">Textbook readings</h2>
+<p>For this week, you will need to read Chapter 3.5-3.7 in <span class="citation" data-cites="Sutton18">@Sutton18</span>. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+</div>
+</div>
+</section>
+<section id="policies-and-value-functions" class="level2">
+<h2 class="anchored" data-anchor-id="policies-and-value-functions">Policies and value functions</h2>
+<p>A <em>policy</em> <span class="math inline">\(\pi\)</span> is a distribution over actions, given some state:</p>
+<p><span class="math display">\[\pi(a | s) = \Pr(A_t = a | S_t = s).\]</span> Since the MDP is stationary the policy is time-independent, i.e.&nbsp;given a state, we choose the same action no matter the time-step. If <span class="math inline">\(\pi(a | s) = 1\)</span> for a single state, i.e.&nbsp;an action is chosen with probability one always then the policy is called <em>deterministic</em>. Otherwise a policy is called <em>stochastic</em>.</p>
+<p>Given a policy we can define some value functions. The <em>state-value function</em> <span class="math inline">\(v_\pi(s)\)</span> denote the expected return starting from state <span class="math inline">\(s\)</span> when following the policy <span class="math inline">\(\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
+\end{align}
+\]</span> Note the last equal sign comes from <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</p>
+<p>The <em>action-value function</em> <span class="math inline">\(q_\pi(s, a)\)</span>, denote the expected return starting from state <span class="math inline">\(s\)</span>, taking action <span class="math inline">\(a\)</span> and from thereon following policy <span class="math inline">\(\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
+\end{align}
+\]</span></p>
+<p>This action-value, also known as “q-value”, is very important, as it tells us directly what action to pick in a particular state. Given the definition of q-values, the state-value function is an average over the q-values of all actions we could take in that state:</p>
+<p><span class="math display">\[\begin{equation}
+v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a)
+(\#eq:vq)
+\end{equation}\]</span></p>
+<p>A q-value (action-value) is equal to the expected reward <span class="math inline">\(r(s,a)\)</span> that we get from choosing action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span>, plus a discounted amount of the average state-value of all the future states:</p>
+<p><span class="math display">\[q_\pi(s, a) = r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\]</span></p>
+<p>Joining the equations, the state-value of a particular state <span class="math inline">\(s\)</span> now becomes the sum of weighted state-values of all possible subsequent states <span class="math inline">\(s'\)</span>, where the weights are the policy probabilities:</p>
+<p><span class="math display">\[
+\begin{align}
+  v_\pi(s) &amp;= \sum_{a \in \mathcal{A}}\pi(a | s)q_\pi(s, a) \\
+  &amp;= \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),
+\end{align}
+(\#eq:bell-state)
+\]</span> which is known as the <em>Bellman equation</em>. <!-- in exactly the same way we can define a q-value as a weighted sum of the --> <!-- q-values of all states we could reach given we pick the action of the q-value: --></p>
+<!-- $$ -->
+<!-- \begin{align} -->
+<!-- q_\pi(s, a) &= \mathcal{R}_s^a + \gamma\sum_{s' \in \mathcal{S}} P_{ss'}^a v_\pi(s') \\ -->
+<!-- &= \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a \sum_{a' \in \mathcal{A}} \pi(a'|s')q_\pi(s',a') -->
+<!-- \end{align} -->
+<!-- $$ -->
+</section>
+<section id="sec-mdp-opt" class="level2">
+<h2 class="anchored" data-anchor-id="sec-mdp-opt">Optimal policies and value functions</h2>
+<p>The objective function of an MDP can now be stated mathematically which is to find an optimal policy <span class="math inline">\(\pi_*\)</span> with state-value function:</p>
+<p><span class="math display">\[v_*(s) = \max_\pi v_\pi(s).\]</span> That is, a policy <span class="math inline">\(\pi'\)</span> is defined as better than policy <span class="math inline">\(\pi\)</span> if its expected return is higher for all states. Note the objective function is not a scalar here but if the agent start in state <span class="math inline">\(s_0\)</span> then we may reformulate the objective function maximize the expected return to <span class="math display">\[v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)\]</span></p>
+<p>If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy <span class="math inline">\(\pi_*\)</span> which is better than or just as good as all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the <em>optimal state-value function</em> (v_*).</p>
+<p>We may rewrite <span class="math inline">\(v_*(s)\)</span> using Eq. @ref(eq:vq): <span class="math display">\[
+\begin{align}
+  v_*(s) &amp;= \max_\pi v_\pi(s) \\
+         &amp;= \max_\pi \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a) \\
+         &amp;= \max_\pi \max_a q_\pi(s, a)\qquad \text{(set $\pi(a|s) = 1$ where $q_\pi$ is maximal)} \\
+         &amp;= \max_a \max_\pi q_\pi(s, a) \\
+         &amp;= \max_a q_*(s, a), \\
+\end{align}
+\]</span> where the <em>optimal q-value/action-value function</em> (q_*) is:</p>
+<p><span class="math display">\[
+\begin{align}
+q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+          &amp;= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s') \\
+          &amp;= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) \max_{a'} q_*(s', a').
+\end{align}
+\]</span> This is the the <em>Bellman optimality equation</em> for <span class="math inline">\(q_*\)</span> and the optimal policy is:</p>
+<p><span class="math display">\[
+\pi_*(a | s) =
+\begin{cases}
+1 \text{ if } a = \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
+0 \text { otherwise.}
+\end{cases}
+\]</span> Or we may define a deterministic policy as <span class="math display">\[
+\begin{align}
+\pi_*(s) &amp;= \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
+         &amp;= \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).
+\end{align}
+(\#eq:bell-opt-state-policy)
+\]</span></p>
+<p>Similar we can write the <em>Bellman optimality equation</em> for <span class="math inline">\(v_*\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  v_*(s) &amp;= \max_a q_*(s, a) \\
+         &amp;= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
+\end{align}
+(\#eq:bell-opt-state)
+\]</span></p>
+<p>Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal value functions. Using (v_*), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store <span class="math inline">\(v_*\)</span>, we can find <span class="math inline">\(v_*\)</span> by a one-step-ahead search using <span class="math inline">\(q_*\)</span>, acting greedy.</p>
+</section>
+<section id="optimality-vs-approximation" class="level2">
+<h2 class="anchored" data-anchor-id="optimality-vs-approximation">Optimality vs approximation</h2>
+<p>In Section @ref(sec-mdp-opt) optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g.&nbsp;if the number of states is huge. Consider a state <span class="math inline">\(s = (x_1,\ldots,x_n)\)</span> with state variables <span class="math inline">\(x_i\)</span> each taking two possible values, then the number of states is <span class="math inline">\(|\mathcal{S}| = 2^n\)</span>. That is, the state space grows exponentially with the number of state variables also known as the <em>curse of dimensionality</em>.</p>
+<p>Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability.</p>
+<!-- \subsection{Key Takeaways} -->
+<!-- \begin{itemize} -->
+<!-- \item We summarise our goal for the agent as a \textit{reward}; its objective is to maximise the cumulative sum of future rewards -->
+<!-- \item For episodic tasks, returns terminate (and are backpropogated) when the episode ends. For the continuous control case, returns are discounted so they do not run to infinity.  -->
+<!-- \item A state signal that succeeds in retaining all relevant information about the past is \textit{Markov}.  -->
+<!-- \item Markov Decision Processes (MDPs) are the mathematically idealised version of the RL problem. They have system dynamics: $p(s', r | s, a) = Pr \{R_{r+1} = r, S_{t+1} = s' | S_t, A_t\}$ -->
+<!-- \item Policies are a (probabilistic) mapping from states to actions. -->
+<!-- \item Value functions estimate how good it is for an agent to be in a state ($v_\pi$) or to take an action from a state ($q_\pi$). They are always defined w.r.t policies as the value of a state depends on the policy one takes in that state. Value functions are the \textit{expected cumulative sum of future rewards} from a state or state-action pair. -->
+<!-- \item Knowing our policy and system dynamics, we can define the state value function is defined by the Bellman equation: $v_\pi(s) = \sum_{a} \pi(a|s) \sum_{s',r} p(s', r | s, a) \left[r + \gamma v_\pi(s')\right]$ -->
+<!-- \item An optimal policy ($\pi_*$) is the policy that maximises expected cumulative reward from all states. From the optimal policy we can derive the optimal value functions $q_*$ and $v_*$. -->
+<!-- \end{itemize} -->
+</section>
+<section id="semi-mdps-non-fixed-time-length" class="level2">
+<h2 class="anchored" data-anchor-id="semi-mdps-non-fixed-time-length">Semi-MDPs (non-fixed time length)</h2>
+<p>So far we have considered MDPs with a fixed length between each time-step. The model can be extended to MDPs with non-fixed time-lengths known as semi-MDPs. Let <span class="math inline">\(l(s'|s,a)\)</span> denote the length of a time-step given that the system is in state <span class="math inline">\(s\)</span>, action <span class="math inline">\(a\)</span> is chosen and makes a transition to state <span class="math inline">\(s'\)</span>. Then the discount rate over a time-step with length <span class="math inline">\(l(s'|s,a)\)</span> is then</p>
+<p><span class="math display">\[\gamma(s'|s,a) = \gamma^{l(s'|s,a)},\]</span></p>
+<p>and the Bellman optimality equations becomes:</p>
+<p><span class="math display">\[
+v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s'),
+\]</span></p>
+<p>and <span class="math display">\[
+q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a').
+\]</span></p>
+<p>That is, the discount rate now is a part of the sum since it depends on the length which depends on the transition.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Read Chapter 3.8 in <span class="citation" data-cites="Sutton18">@Sutton18</span>.</p>
+</section>
+<section id="sec-mdp-2-ex" class="level2">
+<h2 class="anchored" data-anchor-id="sec-mdp-2-ex">Exercises</h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<section id="ex-mdp-2-policy" class="level3">
+<h3 class="anchored" data-anchor-id="ex-mdp-2-policy">Exercise - Optimal policy</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/simple-mdp.png" class="img-fluid figure-img" width="400"></p>
+<figcaption>A simple MDP.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>::: {.cell layout-align=“center” solution=‘true’ text=’Let <span class="math inline">\(\pi_L\)</span> and <span class="math inline">\(\pi_R\)</span> denote the left and right policy, respectively. Recall the Bellman equation: <span class="math display">\[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s\' \in \mathcal{S}} p(s\' | s, a) v_\pi(s\')\right).\]</span> For the left policy this reduces to <span class="math display">\[v_{\pi_L}(s) = 1 + \gamma(v_\pi(s\')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).\]</span> Isolating <span class="math inline">\(v_{\pi_L}(s)\)</span> gives us <span class="math display">\[v_{\pi_L}(s) = 1/(1-\gamma^2).\]</span> Similar for the right policy we get <span class="math display">\[v_{\pi_R}(s) = 0 + \gamma(v_\pi(s\')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).\]</span> Isolating <span class="math inline">\(v_{\pi_R}(s)\)</span> gives us <span class="math display">\[v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).\]</span> Now</p>
+<ul>
+<li>for <span class="math inline">\(\gamma=0\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 1\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 0\)</span>, i.e.&nbsp;left policy optimal.</li>
+<li>for <span class="math inline">\(\gamma=0.9\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 5.26\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 9.47\)</span>, i.e.&nbsp;right policy optimal.</li>
+<li>for <span class="math inline">\(\gamma=0.5\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 1.33\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 1.33\)</span>, i.e.&nbsp;both policies optimal.’ str_id=‘0PBS30k3M2i3ZteYvjHq’}</li>
+</ul>
+<div id="0PBS30k3M2i3ZteYvjHq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="0PBS30k3M2i3ZteYvjHq-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title anchored" id="0PBS30k3M2i3ZteYvjHq-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Let (_L) and (<em>R) denote the left and right policy, respectively. Recall the Bellman equation: <span class="math display">\[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).\]</span> For the left policy this reduces to <span class="math display">\[v_{\pi_L}(s) = 1 + \gamma(v_\pi(s')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).\]</span> Isolating (v</em>{<em>L}(s)) gives us <span class="math display">\[v_{\pi_L}(s) = 1/(1-\gamma^2).\]</span> Similar for the right policy we get <span class="math display">\[v_{\pi_R}(s) = 0 + \gamma(v_\pi(s')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).\]</span> Isolating (v</em>{_R}(s)) gives us <span class="math display">\[v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).\]</span> Now
+</p>
+<ul>
+<li>
+for () we get (v_{<em>L}(s) = 1) and (v</em>{_R}(s) = 0), i.e.&nbsp;left policy optimal.
+</li>
+<li>
+for () we get (v_{<em>L}(s) = 5.26) and (v</em>{_R}(s) = 9.47), i.e.&nbsp;right policy optimal.
+</li>
+<li>
+for () we get (v_{<em>L}(s) = 1.33) and (v</em>{_R}(s) = 1.33), i.e.&nbsp;both policies optimal.
+</li>
+</ul>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#0PBS30k3M2i3ZteYvjHq">
+Solution
+</button>
+<p>:::</p>
+<p>Consider the transition diagram for an MDP shown in Figure @ref(fig:simple) with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
+<!-- Let $\pi_L$ and $\pi_R$ denote the left and right policy, respectively. Recall the Bellman equation: $$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).$$ For the left policy this reduces to $$v_{\pi_L}(s) = 1 + \gamma(v_\pi(s')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).$$ Isolating $v_{\pi_L}(s)$ gives us $$v_{\pi_L}(s) = 1/(1-\gamma^2).$$ Similar for the right policy we get $$v_{\pi_R}(s) = 0 + \gamma(v_\pi(s')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).$$ Isolating $v_{\pi_R}(s)$ gives us $$v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).$$ Now  -->
+<!-- * for $\gamma=0$ we get $v_{\pi_L}(s) = 1$ and $v_{\pi_R}(s) = 0$, i.e. left policy optimal. -->
+<!-- * for $\gamma=0.9$ we get $v_{\pi_L}(s) = 5.26$ and $v_{\pi_R}(s) = 9.47$, i.e. right policy optimal. -->
+<!-- * for $\gamma=0.5$ we get $v_{\pi_L}(s) = 1.33$ and $v_{\pi_R}(s) = 1.33$, i.e. both policies optimal. -->
+</section>
+<section id="ex-mdp-2-car" class="level3">
+<h3 class="anchored" data-anchor-id="ex-mdp-2-car">Exercise - Car rental</h3>
+<p>Consider a rental company with two locations, each with a capacity of 20 cars. Each day, customers arrive at each location to rent cars. If a car is available, it is rented out with a reward of $10. Otherwise the opportunity is lost. Cars become available for renting the day after they are returned.</p>
+<p>The number of cars rental requests <span class="math inline">\(D_i\)</span> at Location <span class="math inline">\(i=1,2\)</span> are Poisson distributed with mean 3 and 4. Similar, the number of cars returned <span class="math inline">\(H_i\)</span> at Location <span class="math inline">\(i=1,2\)</span> are Poisson distributed with mean 3 and 2. Cars returned resulting in more cars than the capacity are lost (and thus disappear from the problem).</p>
+<p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>
+<p>Formulate the problem as an finite MDP where the time-steps are days.</p>
+<!-- Q1 -->
+<div class="cell" data-layout-align="center" data-solution="true" data-text="$$\mathcal{S} = { (x,y) | 0 \leq x \leq 20, 0 \leq y \leq 20 }$$" data-str_id="KpMmUtqp9JALRl9CH6YH">
+<div id="KpMmUtqp9JALRl9CH6YH" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="KpMmUtqp9JALRl9CH6YH-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title anchored" id="KpMmUtqp9JALRl9CH6YH-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+<span class="math display">\[\mathcal{S} = \{ (x,y) | 0 \leq x \leq 20, 0 \leq y \leq 20 \}\]</span>
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#KpMmUtqp9JALRl9CH6YH">
+Solution
+</button>
+</div>
+<ol type="1">
+<li>Define the state space (with states <span class="math inline">\((x,y)\)</span>) equal the number of cars at each location at the end of the day.</li>
+</ol>
+<!-- Q2 -->
+<div class="cell" data-layout-align="center" data-solution="true" data-text="$$\mathcal{A}(s) = { a | -\min(5,y,20-x) \leq a \leq min(5,x,20-y) }$$" data-str_id="08aeuIKdua6DLTZJsmUm">
+<div id="08aeuIKdua6DLTZJsmUm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="08aeuIKdua6DLTZJsmUm-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title anchored" id="08aeuIKdua6DLTZJsmUm-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+<span class="math display">\[\mathcal{A}(s) = \{ a | -\min(5,y,20-x) \leq a \leq min(5,x,20-y) \}\]</span>
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#08aeuIKdua6DLTZJsmUm">
+Solution
+</button>
+</div>
+<ol start="2" type="1">
+<li>Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e.&nbsp;negative if move from Location 2 to 1.</li>
+</ol>
+<!-- Q3 -->
+<div class="cell" data-layout-align="center" data-solution="true" data-text="The reward equals the reward of rentals minus the cost of movements. Note we have $\bar{x} = x - a$ and $\bar{y} = x + a$ after movement. Hence $$r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]$$ where $$\mathbb{E}[\min(D, z)] = \sum_{i=0}^z ip(D = i) + (1-p(D\leq z))z.$$" data-str_id="lc0LnLxg9HgQvA1W8mJq">
+<div id="lc0LnLxg9HgQvA1W8mJq" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="lc0LnLxg9HgQvA1W8mJq-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title anchored" id="lc0LnLxg9HgQvA1W8mJq-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+The reward equals the reward of rentals minus the cost of movements. Note we have ({x} = x - a) and ({y} = x + a) after movement. Hence <span class="math display">\[r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]\]</span> where <span class="math display">\[\mathbb{E}[\min(D, z)] = \sum_{i=0}^z ip(D = i) + (1-p(D\leq z))z.\]</span>
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#lc0LnLxg9HgQvA1W8mJq">
+Solution
+</button>
+</div>
+<ol start="3" type="1">
+<li>Calculate the expected reward <span class="math inline">\(r(s,a)\)</span>.</li>
+</ol>
+<p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x - a\)</span> and after rental requests <span class="math inline">\(x - a - \min(D_1, x-a)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(x - a - \min(D_1, x-a) +  H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e.&nbsp;the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).\]</span></p>
+<!-- Q4 -->
+<div class="cell" data-layout-align="center" data-solution="true" data-text="Only difference is that cars moved to Location 2 is $a$ (and not $-a$): $$Y = \min(20, y + a - \min(D_2, y+a) + H_2)).$$" data-str_id="G3jugOgMhPv8OQhfFNPT">
+<div id="G3jugOgMhPv8OQhfFNPT" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="G3jugOgMhPv8OQhfFNPT-title">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+<h4 class="modal-title anchored" id="G3jugOgMhPv8OQhfFNPT-title">
+Solution
+</h4>
+</div>
+<div class="modal-body">
+<p>
+Only difference is that cars moved to Location 2 is (a) (and not (-a)): <span class="math display">\[Y = \min(20, y + a - \min(D_2, y+a) + H_2)).\]</span>
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn btn-default" data-dismiss="modal">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#G3jugOgMhPv8OQhfFNPT">
+Solution
+</button>
+</div>
+<ol start="4" type="1">
+<li>Give the inventory dynamics for Location 2.</li>
+</ol>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

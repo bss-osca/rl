@@ -1,0 +1,425 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+
+# Markov decision processes (MDPs) {#mod-mdp-1}
+
+This module gives an introduction to Markov decision processes (MDPs) with a finite number of states and actions. This gives us a full model of a sequential decision problem. MDPs are a classical formalization of sequential decision making, where actions influence not just immediate rewards, but also what will be the next state, and hence future rewards. Thus MDPs involve delayed reward and the need to consider the trade-off between immediate and delayed reward. MDPs are a mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found. Often in a RL problem some parts of this description is unknown and we hereby have to estimate the best policy by learning. For example, in the bandit problem the rewards was unknown.  
+
+
+## Learning outcomes 
+
+By the end of this module, you are expected to:
+
+* Identify the different elements of a Markov Decision Processes (MDP).
+* Describe how the dynamics of an MDP are defined.
+* Understand how the agent-environment RL description relates to an MDP.
+* Interpret the graphical representation of a Markov Decision Process.
+* Describe how rewards are used to define the objective function (expected return).
+* Interpret the discount rate and its effect on the objective function.
+* Identify episodes and how to formulate an MDP by adding an absorbing state. 
+
+<!-- * Identify a policy as a distribution over actions for each possible state. -->
+<!-- * Define value functions for a state and action.  -->
+<!-- * Derive the Bellman equation for a value function. -->
+<!-- * Understand how Bellman equations relate current and future values. -->
+<!-- * Define an optimal policy. -->
+<!-- * Derive the Bellman optimality equation for a value function. -->
+
+The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 7, 10, and 12 of the course.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings
+
+For this week, you will need to read Chapter 3-3.4 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
+
+```{r, echo=FALSE}
+link_slide_file_text("03", "mdp-1")
+```
+
+## An MDP as a model for the agent-environment
+
+```{r, include=FALSE}
+## plot an RL (agent/environment relation)
+library(ggraph)
+library(tidygraph)
+library(tidyverse)
+
+plotRL <- function(active = c('F', 'T', 'F'), label = c("A[0]", "O[0]", "R[1]"), lblAgent = "") {
+   nodes <- tibble(name = c('Environment', 'Agent', lblAgent))
+   # lbl <- str_c(c("A[", "O[", "R["), t, c("]", "]", "]"))
+   edges <-tibble(
+       from = c(2, 1, 1),
+       to =   c(1, 2, 2),
+       label = label,
+       active = active,
+       cap = c(circle(20, 'mm'), circle(20, 'mm'), circle(10, 'mm')))
+   gr <- tbl_graph(nodes, edges) 
+   p <- ggraph(gr, layout = "manual", x = c(1, 1, 1), y = c(1, 2, 2.1)) +
+      geom_edge_fan(
+         aes(label = label, end_cap = cap, col = active), 
+         arrow = arrow(length = unit(4, 'mm')),
+         hjust = 1.5, 
+         label_parse = TRUE,
+         strength = -1,
+         fontface = "bold",
+         show.legend = F, 
+         label_colour = NA,
+         label_size = 8
+      ) +
+      scale_edge_color_manual(values = c('T' = "black", 'F' = NA)) +
+      geom_node_label(aes(filter = name != lblAgent, label = name), label.padding = unit(1, "lines"), fontface = "bold", size = 10) +
+      geom_node_text(aes(filter = name == lblAgent, label = name), parse = TRUE, size = 7) +
+      theme_graph(base_size = 30, background = NA, border = T, plot_margin = margin(30,30,10,50)) + 
+      coord_cartesian(clip = "off")
+   return(p)
+}
+```
+
+Let us recall the RL problem which considers an agent in an environment:
+
+- Agent: The one who takes the action (computer, robot, decision maker), i.e. the decision making component of a system. Everything else is the environment. A general rule is that anything that the agent does not have absolute control over forms part of the environment. 
+- Environment: The system/world where observations and rewards are found. 
+
+At time step $t$ the agent is in state $S_t$ and takes action $A_{t}$ and observe the new state $S_{t+1}$ and reward $R_{t+1}$:
+
+```{r, echo=FALSE, fig.cap = "Agent-environment representation."}
+plotRL(active = c('T', 'T', 'T'), label = c("A[t]", "S[t+1]", "R[t+1]"), lblAgent = "S[t]")
+```
+
+Note we here assume that the *Markov property* is satisfied and the current state holds just as much information as the history of observations. That is, given the present state the future is independent of the past:
+
+$$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$
+That is, the probability of seeing some next state $S_{t+1}$ given the current state is exactly equal to the probability of that next state given the entire history of states. 
+
+A Markov decision process (MDP) is a mathematical model that for each time-step $t$ have defined states $S_t \in \mathcal{S}$, possible actions $A_t \in \mathcal{A}(s)$ given a state and rewards $R_t \in \mathcal{R} \subset \mathbb{R}$. Consider the example in Figure \@ref(fig:hgf1). Each time-step have five states $\mathcal{S} = \{1,2,3,4,5\}$. Assume that the agent start in state $s_0$ with two actions to choose among $\mathcal{A}(s_0) = \{a_1, a_2\}$. After choosing $a_1$ a transition to $s_1$ happens with reward $R_1 = r_1$. Next, in state $s_1$ the agent chooses action $a_2$ and a transition to $s_2$ happens with reward $r_2$. This continues as time evolves.
+
+```{r hgf1, echo=FALSE, fig.cap="State-expanded hypergraph", fig.width=6, fig.height = 5}
+set.seed(56789)
+stateN <- 5   # states/stage
+stages <- 3   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+# states <- states %>% mutate(draw = if_else(sId %in% c(1,2,4,5), F, T))
+states$label[3] <- "s[0]"
+states$label[9] <- "s[1]"
+states$label[12] <- "s[2]"
+# path <- c(3, 7, 13, 19, 22, 27)
+# states$label[path] <- str_c("S[", seq_along(path)-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(9,10),
+   label = "a[1]",
+   reward = c("r[1]", ""),
+   lwd = 2
+))
+actions <- addHArc(actions, list(
+   state = 3,
+   trans = c(6,7,8,9),
+   label = "a[2]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(13,12,15),
+   label = "a[1]"
+))
+actions <- addHArc(actions, list(
+   state = 9,
+   trans = c(11,12),
+   label = "a[2]",
+   reward = c("", "r[2]"),
+   lwd = 2
+))
+
+
+plotHypergraphV2<-function(gridDim, states=NULL, actions=NULL, showGrid=FALSE, 
+                         radx = 0.03, rady=0.05, cex=1, marX=0.035, marY=0.15, ...)
+{
+   # internal functions
+   gMap<-function(sId) return(states$gId[states$sId %in% sId])		# return gId given sId
+   sMap<-function(gId) return(states$sId[states$gId %in% gId])		# return sId given gId
+
+   pos <- coordinates(rep(gridDim[1], gridDim[2]), hor = F)  # coordinates of each point in the grid
+   posT <- matrix(c(unique(pos[,1]), rep(0, gridDim[2])), ncol = 2)
+   colnames(posT) <- colnames(pos)
+   
+   par(oma=c(0,0,0,0), mar = c(0,0,0,0))
+   openplotmat(xlim=c(min(pos[,1])-marX,max(pos[,1])+marX), 
+               ylim=c(0-marY,max(pos[,2])+marY) )  #main = "State expanded hypergraph"
+   # plot time index
+   for (i in 1:gridDim[2] - 1) textempty(posT[i+1, ], lab = parse(text = str_c("italic(t == ", i, ")")), cex=cex)
+   
+   # plot actions
+   if (!is.null(actions)) {
+      for (i in seq_along(actions)) {
+         head <- actions[[i]]$state
+         tails <- actions[[i]]$trans
+         lwd <- ifelse(is.null(actions[[i]]$lwd), 1, actions[[i]]$lwd)
+         lty <- ifelse(is.null(actions[[i]]$lty), 1, actions[[i]]$lty)
+         col <- ifelse(is.null(actions[[i]]$col), "black", actions[[i]]$col)
+         label <- ifelse(is.null(actions[[i]]$label), "", actions[[i]]$label)
+         if (str_length(label) != 0) label <- parse(text = str_c("italic(", label, ")"))
+         highlight <- ifelse(is.null(actions[[i]]$highlight), F, actions[[i]]$highlight)
+         if (highlight) lwd <- lwd + 1
+         pt <- splitarrow(to = pos[gMap(tails), ], from = pos[gMap(head),], lwd=lwd, lty=lty, arr.type = "none",
+                          # arr.side = 1, arr.pos = 0.7, arr.type="curved", arr.lwd = 0.5, arr.length = 0.25, arr.width = 0.2, 
+                          lcol=col)
+         # misc coordinates
+         meanFrom <- colMeans(matrix(ncol = 2, data = pos[gMap(head),]))  # head coord
+         meanTo <- colMeans(matrix(ncol = 2, data = pos[gMap(tails),]))   # mean coord of tails
+         centre <- meanFrom + 0.5 * (meanTo - meanFrom)  # centre point where split
+         meanFT <- colMeans(matrix(c(meanFrom,centre), ncol = 2, byrow = T))  # coord between from and centre
+         # add centre point
+         textellipse(centre, radx = 0.2*radx, rady = 0.2*rady, shadow.size = 0, box.col = "black")
+         # add label
+         textempty(meanFT, lab=label, adj=c(0, 0), cex=cex, ...)
+         # add rewards
+         if (!is.null(actions[[i]]$reward)) {
+            rew <- actions[[i]]$reward
+            idx <- which(rew != "")
+            for (j in idx) {
+               label <- parse(text = str_c("italic(", rew[j], ")"))
+               meanCT <- meanFT <- colMeans(matrix(c(pos[gMap(tails[j]), ],centre), ncol = 2, byrow = T))  # coord middle
+               textempty(meanCT, lab=label, adj=c(0, 0), cex=cex, ...)
+            }
+         }
+      }
+   }	
+   
+   # plot states
+   if (!is.null(states)) {
+      for (i in 1:length(states$gId)) { 
+         label <- ""
+         if (str_length(states$label[i]) != 0) label <- parse(text = str_c("italic(", states$label[i], ")"))
+         if (states$draw[i]) textellipse(pos[states$gId[i], ], lab = label, radx = radx, rady=rady, shadow.size = 0, lwd=0.5, cex=cex) 
+      }
+   }
+   
+   # visual view of the point numbers (for figuring out how to map stateId to gridId)
+   if (showGrid) {
+      for (i in 1:dim(pos)[1]) textrect(pos[i, ], lab = i, radx = 0.0, cex=cex)
+   }
+   return(invisible(NULL))
+}
+plotHypergraphV2(gridDim, states, actions, showGrid = F)
+```
+
+In a *finite* MDP, the sets of states, actions, and rewards all have a finite number of elements. In this case, the random variables have well defined discrete probability distributions dependent only on the preceding state and action which defines the dynamics of the system:
+\begin{equation}
+    p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
+\end{equation}
+which can be used to find the *transition probabilities*:
+\begin{equation}
+    p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
+\end{equation}
+and the *expected reward*:
+\begin{equation}
+    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
+\end{equation}
+
+That is, to define an MDP the following are needed:
+
+* A finite number of states and actions. That is, we can store values using tabular methods. 
+* All states $S \in \mathcal{S}$ and actions $A \in \mathcal{A}(s)$ are known.  
+* The transition probabilities $p(s' | s, a)$ and expected rewards $r(s, a)$ are given. Alternatively, $p(s', r | s, a)$.
+
+Moreover, for now a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.  
+
+
+## Rewards and the objective function (goal)
+
+The *reward hypothesis* is a central assumption in reinforcement learning:
+
+> All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
+
+This assumption can be questioned but in this course we assume it holds. The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
+
+The return $G_t$ can be defined as the sum of future rewards; however, if the time horizon is infinite the return is also infinite. Hence we use a *discount rate* $0 \leq \gamma \leq 1$ and define the return as 
+
+\begin{equation}
+	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
+\end{equation}
+
+Discounting is important since it allows us to work with finite returns because if $\gamma < 1$ and the reward is bounded by a number $B$ then the return is always finite:
+
+\begin{equation}
+G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k  = B \frac{1}{1 - \gamma}
+\end{equation}
+
+Note gamma close to one put weight on future rewards while a gamma close to zero put weight on present rewards. Moreover, an infinite time-horizon is assumed. 
+
+An MDP modelling a problem over a finite time-horizon can be transformed into an infinite time-horizon using an *absorbing state* with transitions only to itself and a reward of zero. This breaks the agent-environment interaction into *episodes* (e.g playing a board game). Each episode ends in the absorbing state, possibly with a different reward. Each starts independently of the last, with some distribution of starting states. Sequences of interaction without an absorbing state are called *continuing tasks*. 
+
+The *objective function* is to choose actions such that the expected return is maximized. We will formalize this mathematically in the [next module](https://bss-osca.github.io/rl/mod-mdp-2.html). 
+
+
+## Summary
+
+* MDPs formalize the problem of an agent interacting with an environment. 
+* The agent and environment interact at discrete time steps. 
+* At each time, the agent observes the current state of the environment. Then selects an action and the the environment transitions to a new state with a reward. 
+* An agent's choices have long-term consequences (delayed reward). 
+* Selected actions influences future states and rewards. 
+* The objective is to maximize the expected discounted return. 
+* With a discount rate less than one, we can guarantee the return remains finite. 
+* The value of the discount rate defines how much we care about short-term rewards versus long-term rewards.
+* A first step in applying reinforcement learning is to formulate the problem as an MDP. 
+
+
+## Exercises {#sec-mdp-1-ex}
+
+`r strExercises`
+
+### Exercise - Sequential decision problems {#ex-mdp-1-seq}
+
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="Examples could be: \n\n1) Ludo - State: position on the board. Actions: Possible movements. Rewards: In a win state e.g. 1, in a loose state -1 and 0 otherwise. \n\n2) Inventory management - State: inventory level. Actions: Order $x$ units, wait. Rewards: a negative number representing inventory holding cost plus ordering cost. \n\n3) Investment - State: current portfolio, KPI's from considered companies. Actions: Buy/sell $x$ stocks of company $y.$ Rewards: returns - costs."}
+```
+
+   1) Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words. 
+  
+<!-- Q2 -->
+```{r, echo=FALSE, solution=TRUE, text="For the k-bandit problem we only have a single state representing before we chose an action. We have $k$ actions and the rewards are the probability distribution from each slot machine. Note the k-bandit problem is trivial if we know the MDP, since then we know the expected reward of each action and hence the action with best expected reward will be optimal."}
+library(tidygraph)
+library(ggraph)
+rstat_nodes <- data.frame(name = c("s", "s", "s"))
+rstat_edges <- data.frame(from = c(1, 1, 1, 2, 2, 2),
+                            to = c(2, 2, 2, 3, 3, 3),
+                           lbl = c("a1", "a2", "a3", "a1", "a2", "a3")
+                          )
+gr <- tbl_graph(nodes = rstat_nodes, edges = rstat_edges)
+ggraph(gr, layout = "linear") + 
+    geom_edge_fan2(aes(label = lbl), angle_calc = 'along', label_dodge = unit(3, 'mm'), arrow = arrow(length = unit(4, 'mm')), end_cap = circle(8, 'mm')) + 
+    geom_node_label(aes(label = name), label.size = 0.25, size = 10, label.padding = unit(0.7, "lines"), label.r = unit(1.2, "lines")) +
+    theme_graph(background = "white")
+```  
+  
+   2) How do the states, actions and rewards look like for the bandit problem? Try drawing the state-expanded hypergraph. 
+   
+
+### Exercise - Expected return {#ex-mdp-1-exp-return}
+
+<!-- Q1 -->
+```{r, solution=TRUE}
+gam <- 0.8
+g <-0
+r <- c(-3, 5, 2, 7, 1)
+for (i in 4:0) {
+   g <- r[i+1] +  gam*g
+}
+g
+```
+
+   1) Suppose $\gamma=0.8$ and we observe the following sequence of rewards: $R_1 = -3$, $R_2 = 5$, $R_3=2$, $R_4 = 7$, and $R_5 = 1$ with a finite time-horizon of $T=5$. What is $G_0$? Hint: work backwards and recall that $G_t = R_{t+1} + \gamma G_{t+1}$.
+   
+   
+<!-- Q2 -->
+```{r, solution=TRUE}
+# recall sum_k  g^k = 1/(1-g)
+g1 <- 7 * 1/(1-0.9)
+g1
+g0 <- 2 + 0.9 * 70
+g0
+```
+
+   2) Suppose $\gamma=0.9$ and we observe rewards: $R_1 = 2$, $R_t = 7$, $t>1$ given a infinite time-horizon. What is $G_0$ and $G_1$? 
+
+
+
+### Exercise - Gambler's problem {#ex-mdp-1-gambler} 
+
+A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. The coin may be an unequal coin where there is not equal probability $p_H$ for a head (H) and a tail (T). If the coin comes up heads, the gambler wins as many dollars as he has staked on that flip; if it is tails, he loses his stake. The game ends when the gambler reaches his goal of a capital equal 100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP, where we assume that the gambler starts with a capital $0 < s_0 < 100$. 
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="Capital of the gambler: $$\\mathcal{S} = \\{0, \\ldots, 100 \\}.$$ Terminal states are 0 and 100 (loose or win)."}
+```
+
+   1) Define the state space $\mathcal{S}$. Which states are terminal states?
+   
+<!-- Q2 -->
+```{r, solution=TRUE, text="Given his capital choose to gamble $a$: $$\\mathcal{A}(s) = \\{ a\\in \\mathcal{S} | 0 \\leq a \\leq \\min(s, 100-s) \\}.$$"}
+```
+
+   2) Define the action space $\mathcal{A}(s)$.
+   
+<!-- Q3 -->
+```{r, solution=TRUE, text="The expected reward is: $$r(s,a) = \\mathbb{E}[R_a] = p_H a$$ where $p_H$ denote the probability of head. The state-value denote the expected reward."}
+```
+   
+   3) Let $R_a$ denote the reward given bet $a$. Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?
+
+<!-- Q4 -->
+```{r, solution=TRUE, text="Since $r(s,a) = 0$ for all states and actions, the state-value is the probability of winning."}
+```
+
+   4) Let $R_a$ be zero for all bets $a$ and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?
+
+<!-- Q5 -->
+```{r, solution=TRUE, text="If $C$ denote a Bernoulli variable equal 1 if head. Then $$p(s' | s, a) = \\Pr(s' = s + Ca - (1-C)a).$$ Hence there are two transitions: if $s' = s - a$ then $p(s' | s, a) = 1-p_H$ and if $s' = s + a$ then $p(s' | s, a) = p_H$."}
+```
+
+   5) Calculate the transition probabilities.
+
+
+```{r links, child="links.md", include=FALSE}
+```
+
+
+### Exercise - Factory storage {#ex-mdp-1-storage}
+
+A factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
+$$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
+If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
+
+The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week $n$ just before the regular removal opportunity.
+
+<!-- Q1 -->
+```{r, solution=TRUE, text="$$\\mathcal{S} = \\{ 0,1,2,3,4 \\}$$"}
+```
+
+   1) Define the state space $\mathcal{S}$.
+   
+<!-- Q2 -->
+```{r, solution=TRUE, text="Let $e$ and $k$ denote empty and keep the waste from the tank. Then the action space is $$\\mathcal{A}(s) = \\{ e, k \\}.$$"}
+```
+
+   2) Define the action space $\mathcal{A}(s)$.
+ 
+<!-- Q3 -->
+```{r, solution=TRUE, text="The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence $$r(s, e) = -(25 + 5s)$$and$$r(s,k) = -30\\sum_{i>4-s} (s+i-4)p_i$$"}
+```
+
+   3) Calculate the expected rewards $r(s,a)$.
+
+<!-- Q4 -->
+```{r, solution=TRUE, text="The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\\text{ if } s\\leq s' \\leq 3$$ $$p(4|s,k) = \\sum_{i\\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\\text{ if }  0\\leq s' \\leq 4$$ $$p(s'|s,a) =  0 \\text{ otherwise.}$$"}
+```
+
+   4) Calculate the transition probabilities $p(s'|s,a)$.
+
+
+```{r links, child="links.md", include=FALSE}
+```
