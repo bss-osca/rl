@@ -46,9 +46,8 @@ book:
   #   - 99_1_appdx.qmd
   #   - 99_2_appdx.qmd
 
-bibliography:
-  - rl.bib
-  - packages.bib
+bibliography: rl.bib
+  # - packages.bib
 biblio-style: apalike
 link-citations: true
 
