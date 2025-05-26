@@ -6,7 +6,7 @@ sessionInfo()
 ## render book
 
 ## copy slides 
-dir.create("book/_book/slides", showWarnings = FALSE)
+dir.create("book/_book/slides", showWarnings = FALSE, recursive = T)
 setwd("slides")
 file.copy(list.files(pattern = ".html"), "../book/_book/slides/", overwrite = T)
 file.copy("libs", "../book/_book/slides/", recursive = T)
