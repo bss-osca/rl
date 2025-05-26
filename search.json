@@ -14,7 +14,7 @@
     "href": "index.html#learning-outcomes",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "Learning outcomes",
-    "text": "Learning outcomes\nBy the end of this module, you are expected to:\n\nUnderstand the prerequisites and the goals for the course.\nHave downloaded the textbook.\nKnow how the course is organized.\nInstalled R and RStudio.\nAnnotated the online notes.\n\nThe learning outcomes relate to the overall learning goals number 3, 5 and 6 of the course.",
+    "text": "Learning outcomes\nBy the end of this module, you are expected to:\n\nUnderstand the prerequisites and the goals for the course.\nHave downloaded the textbook.\nKnow how the course is organized. \nAnnotated the online notes.\n\nThe learning outcomes relate to the overall learning goals number 3, 5 and 6 of the course.",
     "crumbs": [
       "About the course notes"
     ]
@@ -30,8 +30,8 @@
     ]
   },
   {
-    "objectID": "index.html#learning-goals-of-the-course",
-    "href": "index.html#learning-goals-of-the-course",
+    "objectID": "index.html#sec-lg-course",
+    "href": "index.html#sec-lg-course",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "Learning goals of the course",
     "text": "Learning goals of the course\nAfter having participated in the course, you must, in addition to achieving general academic skills, demonstrate:\nKnowledge of\n\nRL for Bandit problems\nMarkov decision processes and ways to optimize them\nthe exploration vs exploitation challenge in RL and approaches for addressing this challenge\nthe role of policy evaluation with stochastic approximation in the context of RL\n\nSkills to\n\ndefine the key features of RL that distinguishes it from other machine learning techniques\ndiscuss fundamental concepts in RL\ndescribe the mathematical framework of Markov decision processes\nformulate and solve Markov and semi-Markov decision processes for realistic problems with finite state space under different objectives\napply fundamental techniques, results and concepts of RL on selected RL problems.\ngiven an application problem, decide if it should be formulated as a RL problem and define it formally (in terms of the state space, action space, dynamics and reward model)\n\nCompetences to\n\nidentify areas where RL are valuable\nselect and apply the appropriate RL model for a given business problem\ninterpret and communicate the results from RL",
@@ -54,7 +54,7 @@
     "href": "index.html#course-organization",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "Course organization",
-    "text": "Course organization\nEach week considers a learning module. A learning module is related to a chapter in the textbook. The learning path in a typical week are\n\nBefore lectures: Read the chapter in the textbook and consider the extra module material.\nLectures (at campus).\nAfter lectures: Module Exercises (in groups).\n\nLectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials are given and we focus on a specific RL problem.\nThis module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:\n\nPart I gives you a general introduction to RL and the bandit problem.\nPart II consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module @ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module @ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module @ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module @ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module @ref(mod-mc) and …\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n   \n   \nThe appendix contains different modules that may be helpful for you including hints on how to work in groups, how to get help if you are stuck and how to annotate the course notes.",
+    "text": "Course organization\nEach week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path in a typical week are\n\nBefore lectures: Read the chapter in the textbook or tutorial.\nLectures (at campus).\nAfter lectures: Module Exercises (in groups).\n\nLectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials or cases are given and we focus on a specific RL problem.\nThis module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:\n\nPart I gives you a general introduction to RL and the bandit problem.\nPart II consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module @ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module @ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module @ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module @ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module @ref(mod-mc) and …\nPart III\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n   \n   \nThe appendix contains different modules that may be helpful for you including hints on how to work in groups, how to get help if you are stuck and how to annotate the course notes.",
     "crumbs": [
       "About the course notes"
     ]
@@ -64,7 +64,7 @@
     "href": "index.html#programming-software",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "Programming software",
-    "text": "Programming software\nWe use R as programming software and it is assumed that you are familiar with using R. R is a programming language and free software environment. R can be run from a terminal but in general you use an IDE (integrated development environment) RStudio for running R and to saving your work. R and RStudio can either be run from your laptop or using RStudio Cloud which run R in the cloud using your browser.\nIt is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module @ref(mod-r-setup) in the appendix.",
+    "text": "Programming software\nWe use Python as programming software and it is assumed that you are familiar with using Python. Python is a programming language and free software environment. Python can be run from a terminal but in general you use an IDE (integrated development environment) such as Positron, PyCharm or VSCode for running Python and to saving your work. Moreover, you may use a Jupyter notebook to weave you code together with text.\nDuring this course we are going to use Google Colab which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer.\nIt is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module @ref(mod-python-setup) in Appendix A — Setting up Python and an introduction.\nEven though Python will be used in the course, algorithms can also be coded in R if you prefer to it.",
     "crumbs": [
       "About the course notes"
     ]
@@ -74,7 +74,17 @@
     "href": "index.html#ack",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "Acknowledgements and license",
-    "text": "Acknowledgements and license\nMaterials are taken from various places:\n\nThe notes are based on Sutton and Barto (2018).\nThe bookdown skeleton and some notes are based on the Tools for Analytics course.\nSome notes are adopted from Scott Jeen, Bryn Elesedy and Peter Goldsborough.\nSome slides are inspired by the RL specialization at Coursera.\nSome exercises are taken from Sutton and Barto (2018) and modified slightly.\n\nI would like to thank all for their inspiration.\n\nThis work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International CC BY-NC-SA 4.0.\n## Exercises {#sec-intro-ex -}\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\nExercise - How to annotate\nThe online course notes can be annotated using hypothes.is. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes.\n\n\nSign-up at hypothes.is. If you are using Chrome you may also install the Chrome extension.\nGo back to this page and login in the upper right corner (there should be some icons e.g. &lt;).\nSelect some text and try to annotate it using both a private and public annotation (you may delete it again afterwards).\nGo to the slides for this module and try to annotate the page with a private comment.\n\n\n\nExercise - Templates\nA template in RMarkdown of the course notes and exercises are available at GitHub. You can download the repository and keep your own notes during the course by having an R project with it.\n\nOpen R studio and do: File &gt; New Project … &gt; Version Control &gt; Git. Add https://github.com/bss-osca/rl-student as repository url and create the project.\nRun renv::restore() from the R command line to install needed packages (this may take some time). If you experience errors then try to install the packages one at a time using install.packages(\"pkg name\").\nOpen e.g. the file 01_rl-intro.Rmd and try to knit it using the Knit button in the upper left corner. A html file with the output will be made. You should be able to add your own notes and solve the exercises using the Rmd file for each module.\n\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "text": "Acknowledgements and license\nMaterials are taken from various places:\n\nThe notes are based on Sutton and Barto (2018).\nSome notes are adopted from Scott Jeen, Bryn Elesedy and Peter Goldsborough.\nSome slides are inspired by the RL specialization at Coursera.\nSome exercises are taken from Sutton and Barto (2018) and modified slightly.\n\nI would like to thank all for their inspiration.\nThis work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International CC BY-NC-SA 4.0.",
+    "crumbs": [
+      "About the course notes"
+    ]
+  },
+  {
+    "objectID": "index.html#sec-intro-ex",
+    "href": "index.html#sec-intro-ex",
+    "title": "Reinforcement Learning for Business (RL)",
+    "section": "Exercises",
+    "text": "Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\nExercise - How to annotate\nThe online course notes can be annotated using hypothes.is. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes.\n\n\nSign-up at hypothes.is. If you are using Chrome you may also install the Chrome extension.\nGo back to this page and login in the upper right corner (there should be some icons e.g. &lt;).\nSelect some text and try to annotate it using both a private and public annotation (you may delete it again afterwards).\nGo to the slides for this module and try to annotate the page with a private comment.\n\n\n\nExercise - Colab\nDuring this course we are going to use Google Colab which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer.\nTo be familiar with Colab do the following:\n\nIf you do not have a Google account create one. Note if you have a gMail then you already have a Google account.\nOpen and do this tutorial.\n\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
       "About the course notes"
     ]
@@ -90,8 +100,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#mod-rl-intro-lo",
-    "href": "01_rl-intro.html#mod-rl-intro-lo",
+    "objectID": "01_rl-intro.html#sec-rl-intro-lo",
+    "href": "01_rl-intro.html#sec-rl-intro-lo",
     "title": "1  An introduction to RL",
     "section": "",
     "text": "Describe what RL is.\nBe able to identify different sequential decision problems.\nKnow what Business Analytics are and identify RL in that framework.\nMemorise different names for RL and how it fits in a Machine Learning framework.\nFormulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).\nRun your first RL algorithm and evaluate on its solution.",
@@ -217,6 +227,50 @@
     "text": "Silver, David. 2015. “Lectures on Reinforcement Learning.”\nhttps://www.davidsilver.uk/teaching/.\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An\nIntroduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
       "References"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html",
+    "href": "99_1_appdx.html",
+    "title": "Appendix A — Setting up Python and an introduction",
+    "section": "",
+    "text": "A.1 Laptop setup\n[Python] is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you’re analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.\nIf you prefer to have [Python] installed on your laptop, then do the following:\nTo verify the installation, open a terminal or command prompt and type:\nTo install an IDE for working with your code, you may install Visual Studio Code (VSCode):\nYou’re now ready to start coding in Python!",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html#laptop-setup",
+    "href": "99_1_appdx.html#laptop-setup",
+    "title": "Appendix A — Setting up Python and an introduction",
+    "section": "",
+    "text": "Go to the official Python website: https://www.python.org/downloads\nClick the download button for your operating system (Windows, macOS, or Linux).\nRun the installer.\nImportant: Make sure to check the box that says “Add Python to PATH” during installation.\nFollow the prompts to complete the installation.\n\n\npython --version\n\n\nGo to the VSCode website: https://code.visualstudio.com\nDownload and install the version for your operating system.\nOpen VSCode after installation.\nInstall the Python extension in VSCode:\n\nGo to the Extensions tab (or press Ctrl+Shift+X)\nSearch for “Python” and install the one published by Microsoft",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html#learning-python",
+    "href": "99_1_appdx.html#learning-python",
+    "title": "Appendix A — Setting up Python and an introduction",
+    "section": "A.2 Learning Python",
+    "text": "A.2 Learning Python\nIf you are new to Python you may have a look at some [DataCamp] Courses. First you HAVE TO SIGNUP using [this link][datacamp-signup]. Afterwards have a look at these courses:\n\nIntroduction to Python - Learn the basics of Python programming, including variables, data types, and control flow.\nIntermediate Python - Build on your basic knowledge with functions, loops, and working with Python libraries.\nData Manipulation with pandas - pandas is the world’s most popular Python library, used for everything from data manipulation to data analysis.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html#r-and-python-packages",
+    "href": "99_1_appdx.html#r-and-python-packages",
+    "title": "Appendix A — Setting up Python and an introduction",
+    "section": "A.3 R and Python packages",
+    "text": "A.3 R and Python packages\nIf you are used to do data transformation in R then this table may be useful.\n\n\n\n\n\n\n\n\n\nR Package\nPurpose\nPython Equivalent(s)\nNotes\n\n\n\n\ndplyr\nData manipulation (filter, mutate, etc.)\npandas, dfply, siuba\npandas is standard; dfply and siuba mimic dplyr syntax with pipes and tidy verbs\n\n\nggplot2\nData visualization (Grammar of Graphics)\nplotnine\nClosest match in syntax and philosophy; uses + for layers like ggplot2\n\n\ntidyr\nData tidying (pivoting, reshaping)\npandas, pyjanitor\npandas handles pivot, melt; pyjanitor adds more tidy-like helpers\n\n\nreadr\nRead/write CSV\npandas\nUse read_csv(), to_csv()\n\n\njsonlite\nRead/write JSON\njson (standard), pandas\njson for raw files; pandas.read_json() for tabular JSON\n\n\nreadxl / writexl\nRead/write Excel\npandas, openpyxl, xlsxwriter\npandas integrates with Excel libraries for reading/writing .xlsx\n\n\ngooglesheets4\nGoogle Sheets I/O\ngspread, gspread-pandas\nPython requires Google API setup; gspread-pandas integrates with DataFrames",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
     ]
   }
 ]

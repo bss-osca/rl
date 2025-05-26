@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Reinforcement Learning or …</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lars Relund Nielsen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Reinforcement Learning or …
+]
+.author[
+### Lars Relund Nielsen
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+layout: true
+
+## Sequential decision making 
+
+
+
+- Sequential decision analytics
+- Markov decision processes (a mathematical model for a sequential decision problem)
+
+---
+
+---
+
+&lt;img src="img/pecha-kucha-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+&lt;img src="img/pecha-kucha-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+&lt;img src="img/pecha-kucha-unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+&lt;img src="img/pecha-kucha-unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/pecha-kucha-unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+layout: true
+
+## The data-stream
+
+
+
+---
+
+.left-column-wide[
+- Agent: The one who takes the action (computer, robot, decision maker).
+- Environment: The system/world where observations and rewards are found. 
+- Data are revealed sequentially as you take actions:
+  * `\((S_0, A_0)\)`
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/pecha-kucha-unnamed-chunk-15-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+.left-column-wide[
+- Agent: The one who takes the action (computer, robot, decision maker).
+- Environment: The system/world where observations and rewards are found. 
+- Data are revealed sequentially as you take actions:
+  * `\((S_0, A_0, R_1, S_1)\)`
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/pecha-kucha-unnamed-chunk-16-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+.left-column-wide[
+- Agent: The one who takes the action (computer, robot, decision maker).
+- Environment: The system/world where observations and rewards are found. 
+- Data are revealed sequentially as you take actions:
+  * `\((S_0, A_0, R_1, S_1, A_1, R_2, S_2, \ldots)\)`
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/pecha-kucha-unnamed-chunk-17-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+layout: false
+
+## Note
+
+- Seek a policy `\(\pi: s \rightarrow a\)` (agent’s behaviour) 
+- Objective: expected discounted future reward (given in state `\(s\)`)
+- Goal is to find a **policy** that **maximize** the **total discounted reward**.
+
+
+
+---
+
+layout: false
+
+## What is Reinforcement Learning (RL)
+
+- Full model (model based): Markov Decision Process (stochastic dynamic programming)
+- Model free: Don't know the transition probabilities but have data (RL)
+
+--
+
+RL can be seen as 
+
+* An approach for learning good decision making under uncertainty from experience.
+* The agent does not know the underlying setting and, thus, is bound to learn from experience.
+
+---
+
+## Challenges I
+
+- Time really matters (sequential/dynamic system, non iid data).
+- Forecasts change depending on the actions.
+- Agent’s actions affect the subsequent data stream.
+- Curse of dimensionality
+
+---
+
+## Challenges II
+
+- Time really matters (sequential/dynamic system, non iid data).
+- Forecasts change depending on the actions.
+- Agent’s actions affect the subsequent data stream.
+- Curse of dimensionality
+- Not able to model transitions (RL)
+- Exploitation vs exploration dilemma
+  - We need to explore to find potential better actions
+  - We need to exploit to get the best reward 
+
+---
+
+layout: true
+
+## Application - Milk production
+
+---
+
+.left-column-wide[
+- Sensor data 2-3 times a day (yield, hormone levels, feed intake)
+- Objective: Economic value of the cow during a lactation cycle
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="./img/milking-robot.jpg" alt="Milking robot" width="100%" /&gt;
+&lt;p class="caption"&gt;Milking robot&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+.left-column-wide[
+- Sensor data 2-3 times a day (yield, hormone levels, feed intake)
+- Objective: Economic value of the cow during a lactation cycle
+- Use a state space model (SSM) or dynamic linear model (West and Harrison) for predicting daily milk yield
+- Use a Markov decision process (MDP) for calculating the optimal strategy with the SSM embedded
+- Actions: replace, keep
+- State: expected production potential, expected local production effect, calving week 
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="./img/milking-robot.jpg" alt="Milking robot" width="100%" /&gt;
+&lt;p class="caption"&gt;Milking robot&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+layout: true
+
+## Application - Pig production
+
+---
+
+.left-column-wide[
+- Sensor data (camera, feed intake, ir)
+- Objective: Economic value of the pigs during growth
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="./img/pig-pen.jpg" alt="Pig pen" width="100%" /&gt;
+&lt;p class="caption"&gt;Pig pen&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+.left-column-wide[
+- Sensor data (camera, feed intake, ir)
+- Objective: Economic value of the pigs during growth
+- Use a state space model (SSM) for predicting weight and growth 
+- Use a Markov decision process (MDP) for calculating the optimal strategy with the SSM embedded
+- Actions: feed-mix, keep, replace
+- State: week, feed-mix, pigs, expected weight, expected growth
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="./img/pig-pen.jpg" alt="Pig pen" width="100%" /&gt;
+&lt;p class="caption"&gt;Pig pen&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+layout: false
+
+background-image: url("img/thats-all.png")
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+setInterval(function() {slideshow.gotoNextSlide();}, 20000);
+(function(time) {
+  var d2 = function(number) {
+    return ('0' + number).slice(-2); // left-pad 0 to minutes/seconds
+  },
+
+  time_format = function(total) {
+    var secs = Math.abs(total) / 1000;
+    var h = Math.floor(secs / 3600);
+    var m = Math.floor(secs % 3600 / 60);
+    var s = Math.round(secs % 60);
+    var res = d2(m) + ':' + d2(s);
+    if (h > 0) res = h + ':' + res;
+    return res;  // [hh:]mm:ss
+  },
+
+  slide_number_div = function(i) {
+    return document.getElementsByClassName('remark-slide-number').item(i);
+  },
+
+  current_page_number = function(i) {
+    return slide_number_div(i).firstChild.textContent;  // text "i / N"
+  };
+
+  var timer = document.createElement('span'); timer.id = 'slide-time-left';
+  var time_left = time, k = slideshow.getCurrentSlideIndex(),
+      last_page_number = current_page_number(k);
+
+  setInterval(function() {
+    time_left = time_left - 1000;
+    timer.innerHTML = ' ' + time_format(time_left);
+    if (time_left < 0) timer.style.color = 'red';
+  }, 1000);
+
+  slide_number_div(k).appendChild(timer);
+
+  slideshow.on('showSlide', function(slide) {
+    var i = slide.getSlideIndex(), n = current_page_number(i);
+    // reset timer when a new slide is shown and the page number is changed
+    if (last_page_number !== n) {
+      time_left = time; last_page_number = n;
+      timer.innerHTML = ' ' + time_format(time); timer.style.color = null;
+    }
+    slide_number_div(i).appendChild(timer);
+  });
+})(20000);
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

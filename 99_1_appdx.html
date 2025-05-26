@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Lars Relund Nielsen">
-<meta name="dcterms.date" content="2025-05-20">
 
-<title>Reinforcement Learning for Business (RL)</title>
+<title>Appendix A — Setting up Python and an introduction – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,27 +20,42 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -52,7 +65,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01_rl-intro.html" rel="next">
+<link href="./references.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -101,7 +114,7 @@ div.csl-indent {
 
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="Appendix A — Setting up Python and an introduction – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -116,7 +129,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">About the course notes</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./99_1_appdx.html">Appendices</a></li><li class="breadcrumb-item"><a href="./99_1_appdx.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Setting up Python and an introduction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -149,7 +162,7 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About the course notes</span></a>
   </div>
 </li>
@@ -180,7 +193,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./99_1_appdx.html" class="sidebar-item-text sidebar-link">
+  <a href="./99_1_appdx.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Setting up Python and an introduction</span></span></a>
   </div>
 </li>
@@ -196,46 +209,25 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-intro" id="toc-sec-intro" class="nav-link active" data-scroll-target="#sec-intro">About the course notes</a>
-  <ul class="collapse">
-  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes">Learning outcomes</a></li>
-  <li><a href="#purpose-of-the-course" id="toc-purpose-of-the-course" class="nav-link" data-scroll-target="#purpose-of-the-course">Purpose of the course</a></li>
-  <li><a href="#sec-lg-course" id="toc-sec-lg-course" class="nav-link" data-scroll-target="#sec-lg-course">Learning goals of the course</a></li>
-  <li><a href="#reinforcement-learning-textbook" id="toc-reinforcement-learning-textbook" class="nav-link" data-scroll-target="#reinforcement-learning-textbook">Reinforcement learning textbook</a></li>
-  <li><a href="#course-organization" id="toc-course-organization" class="nav-link" data-scroll-target="#course-organization">Course organization</a></li>
-  <li><a href="#programming-software" id="toc-programming-software" class="nav-link" data-scroll-target="#programming-software">Programming software</a></li>
-  <li><a href="#ack" id="toc-ack" class="nav-link" data-scroll-target="#ack">Acknowledgements and license</a></li>
-  <li><a href="#sec-intro-ex" id="toc-sec-intro-ex" class="nav-link" data-scroll-target="#sec-intro-ex">Exercises</a></li>
-  </ul></li>
+  <li><a href="#laptop-setup" id="toc-laptop-setup" class="nav-link active" data-scroll-target="#laptop-setup"><span class="header-section-number">A.1</span> Laptop setup</a></li>
+  <li><a href="#learning-python" id="toc-learning-python" class="nav-link" data-scroll-target="#learning-python"><span class="header-section-number">A.2</span> Learning Python</a></li>
+  <li><a href="#r-and-python-packages" id="toc-r-and-python-packages" class="nav-link" data-scroll-target="#r-and-python-packages"><span class="header-section-number">A.3</span> R and Python packages</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/99_1_appdx.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/99_1_appdx.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./99_1_appdx.html">Appendices</a></li><li class="breadcrumb-item"><a href="./99_1_appdx.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Setting up Python and an introduction</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Reinforcement Learning for Business (RL)</h1>
-<p class="subtitle lead">Course notes</p>
+<h1 class="title"><span id="sec-python-setup" class="quarto-section-identifier">Appendix A — Setting up Python and an introduction</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Lars Relund Nielsen </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 20, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -245,156 +237,106 @@ div.csl-indent {
 </header>
 
 
-<section id="sec-intro" class="level1 unnumbered">
-<h1 class="unnumbered">About the course notes</h1>
-<p>This site contains course notes for the course “Reinforcement Learning for Business” held at <a href="https://bss.au.dk/en/">Aarhus BSS</a>. It consists of a set of learning modules. The course is an elective course mainly for the <a href="https://kandidat.au.dk/en/operationsandsupplychainanalytics/">Operations and Supply Chain Analytics</a> and <a href="https://masters.au.dk/businessintelligence">Business Intelligence</a> programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.</p>
-<section id="learning-outcomes" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="learning-outcomes">Learning outcomes</h2>
-<p>By the end of this module, you are expected to:</p>
-<ul>
-<li>Understand the prerequisites and the goals for the course.</li>
-<li>Have downloaded the textbook.</li>
-<li>Know how the course is organized. <!-- * Installed R and RStudio. --></li>
-<li>Annotated the online notes.</li>
-</ul>
-<p>The learning outcomes relate to the <a href="#sec-lg-course">overall learning goals</a> number 3, 5 and 6 of the course.</p>
-<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
-<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
-<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
-<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
-</section>
-<section id="purpose-of-the-course" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="purpose-of-the-course">Purpose of the course</h2>
-<p>The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).</p>
-<p>RL may be seen as</p>
-<ul>
-<li>An approach of modelling sequential decision making problems.</li>
-<li>An approach for learning good decision making under uncertainty from experience.</li>
-<li>Mathematical models for learning-based decision making.</li>
-<li>Trying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.</li>
-<li>Estimating and finding near optimal decisions of a stochastic process with sequential decision making.</li>
-<li>A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.</li>
-</ul>
-<p>RL can also be seen as a way of modelling intuition. As humans, we often learn by trial and error. For instance, when playing a game, our strategy is based on the game rules and what we have experienced works based on previous plays. In a RL setting, the system has specific states, actions and reward structure, that is, the rules of the game, and it is up to the agent how to solve the game, i.e.&nbsp;find actions that maximize the reward. Typically, the agent starts with totally random trials and finishes with sophisticated tactics and superhuman skills. By leveraging the power of search and many trials, RL is an effective way to find good actions.</p>
-<p>A classic RL example is the bandit problem: You are in a casino and want to choose one of many slot machines (one-armed bandits) in each round. However, you do not know the distribution of the payouts of the machines. In the beginning, you will probably just try out machines (exploration) and then, after some learning, you will prefer the best ones (exploitation). Now the problem arises that if you use a slot machine frequently, you will not be able to gain information about the others and may not even find the best machine (exploration-exploitation dilemma). RL focuses on finding a balance between exploration of uncharted territory and exploitation of current knowledge.</p>
-<p>The course starts by giving a general overview over RL and introducing bandit problems. Next, the mathematical framework of Markov decision processes (MDPs) is given as a classical formalization of sequential decision making. In this case, actions influence not just immediate rewards, but also subsequent situations, or states, and therefore also future rewards. An MDP assumes that the dynamics of the underlying process and the reward structure are known explicitly by the decision maker. In the last part of the course, we go beyond the case of decision making in known environments and study RL methods for stochastic control.</p>
-</section>
-<section id="sec-lg-course" class="level2">
-<h2 class="anchored" data-anchor-id="sec-lg-course">Learning goals of the course</h2>
-<p>After having participated in the course, you must, in addition to achieving general academic skills, demonstrate:</p>
-<p>Knowledge of</p>
+<p>[Python] is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you’re analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.</p>
+<section id="laptop-setup" class="level2" data-number="A.1">
+<h2 data-number="A.1" class="anchored" data-anchor-id="laptop-setup"><span class="header-section-number">A.1</span> Laptop setup</h2>
+<p>If you prefer to have [Python] installed on your laptop, then do the following:</p>
 <ol type="1">
-<li>RL for Bandit problems</li>
-<li>Markov decision processes and ways to optimize them</li>
-<li>the exploration vs exploitation challenge in RL and approaches for addressing this challenge</li>
-<li>the role of policy evaluation with stochastic approximation in the context of RL</li>
+<li>Go to the official Python website: <a href="https://www.python.org/downloads">https://www.python.org/downloads</a></li>
+<li>Click the download button for your operating system (Windows, macOS, or Linux).</li>
+<li>Run the installer.</li>
+<li><strong>Important</strong>: Make sure to check the box that says <strong>“Add Python to PATH”</strong> during installation.</li>
+<li>Follow the prompts to complete the installation.</li>
 </ol>
-<p>Skills to</p>
-<ol start="5" type="1">
-<li>define the key features of RL that distinguishes it from other machine learning techniques</li>
-<li>discuss fundamental concepts in RL</li>
-<li>describe the mathematical framework of Markov decision processes</li>
-<li>formulate and solve Markov and semi-Markov decision processes for realistic problems with finite state space under different objectives</li>
-<li>apply fundamental techniques, results and concepts of RL on selected RL problems.</li>
-<li>given an application problem, decide if it should be formulated as a RL problem and define it formally (in terms of the state space, action space, dynamics and reward model)</li>
-</ol>
-<p>Competences to</p>
-<ol start="11" type="1">
-<li>identify areas where RL are valuable</li>
-<li>select and apply the appropriate RL model for a given business problem</li>
-<li>interpret and communicate the results from RL</li>
-</ol>
-</section>
-<section id="reinforcement-learning-textbook" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="reinforcement-learning-textbook">Reinforcement learning textbook</h2>
-<p>The course uses the free textbook <em>Reinforcement Learning: An Introduction</em> by <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. The book is essential reading for anyone wishing to learn the theory and practice of modern Reinforcement learning. Read the weekly readings before the lecture to understand the material better, and perform better in the course.</p>
-<p>Sutton and Barto’s book is the most cited publication in RL research, and is responsible for making RL accessible to people around the world. The new edition, released in 2018, offers improved notation and explanations, additional algorithms, advanced topics, and many new examples; and it’s totally free. Just follow the citation link to download it.</p>
-</section>
-<section id="course-organization" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="course-organization">Course organization</h2>
-<p>Each week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path in a typical week are</p>
-<ul>
-<li>Before lectures: Read the chapter in the textbook or tutorial.</li>
-<li>Lectures (at campus).</li>
-<li>After lectures: Module Exercises (in groups).</li>
-</ul>
-<p>Lectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials or cases are given and we focus on a specific RL problem.</p>
-<p>This module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:</p>
-<ul>
-<li><p><a href="01_rl-intro.html">Part I</a> gives you a general introduction to RL and the bandit problem.</p></li>
-<li><p><a href="#sec-bandit">Part II</a> consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module @ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module @ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module @ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module @ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e.&nbsp;methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module @ref(mod-mc) and …</p></li>
-<li><p><a href="??">Part III</a></p></li>
-</ul>
-<!-- The next three chapters describe three fundamental classes of methods for solving finite -->
-<!-- Markov decision problems: dynamic programming, Monte Carlo methods, and temporaldi↵ -->
-<!-- erence learning. Each class of methods has its strengths and weaknesses. Dynamic -->
-<!-- programming methods are well developed mathematically, but require a complete and -->
-<!-- accurate model of the environment. Monte Carlo methods don’t require a model and are -->
-<!-- conceptually simple, but are not well suited for step-by-step incremental computation. -->
-<!-- Finally, temporal-di↵erence methods require no model and are fully incremental, but are -->
-<!-- more complex to analyze. The methods also di↵er in several ways with respect to their -->
-<!-- efficiency and speed of convergence. -->
-<!-- The remaining two chapters describe how these three classes of methods can be -->
-<!-- combined to obtain the best features of each of them. In one chapter we describe how -->
-<!-- the strengths of Monte Carlo methods can be combined with the strengths of temporaldi↵ -->
-<!-- erence methods via multi-step bootstrapping methods. In the final chapter of this part -->
-<!-- of the book we show how temporal-di↵erence learning methods can be combined with -->
-<!-- model learning and planning methods (such as dynamic programming) for a complete -->
-<!-- and unified solution to the tabular reinforcement learning problem. -->
-<p><!-- * [Part III](#sec-vba-random-numbers) contains extra modules useful when coding in VBA.  --> <!-- * [Part IV](#sec-vba-project) presents the mandatory VBA project. --> <!-- * [Part V](#sec-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). --> <!-- * [Part VI](#sec-r-loops-cond) gives you an overview over programming in R including loops and conditionals (Module \@ref(mod-r-loops-cond)) and functions (Module \@ref(mod-r-functions)). --></p>
-<p><!-- * [Part VII](#sec-r-tidyverse-intro) the focus is on import/export, tidy and transformation of data. Module \@ref(mod-r-tidyverse-intro) first gives you an introduction to the [tidyverse][tidyverse-main-page] packages and introduces you to literal programming using R Markdown. Next, Module \@ref(mod-r-io) shows you how to export and import data. Finally, Module \@ref(mod-r-transform) focuses on transformation of data. --> <!-- * [Part VIII](#sec-r-plot) considers visualization of data in R (Module \@ref(mod-r-plot)). --> <!-- * [Part IX](#sec-project) presents the mandatory R project. --> <!-- * [Part X](#sec-r-maps) contains extra modules useful when coding in R.  --></p>
-<p>The appendix contains different modules that may be helpful for you including hints on <a href="#groups">how to work in groups</a>, <a href="#help">how to get help</a> if you are stuck and <a href="#annotate">how to annotate</a> the course notes.</p>
-</section>
-<section id="programming-software" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="programming-software">Programming software</h2>
-<p>We use <a href="https://www.python.org/">Python</a> as programming software and it is assumed that you are familiar with using Python. <a href="https://www.python.org/">Python</a> is a programming language and free software environment. Python can be run from a terminal but in general you use an IDE (integrated development environment) such as <a href="https://positron.posit.co/">Positron</a>, <a href="https://www.jetbrains.com/pycharm/">PyCharm</a> or <a href="https://code.visualstudio.com/">VSCode</a> for running Python and to saving your work. Moreover, you may use a <a href="https://jupyter.org/">Jupyter</a> notebook to weave you code together with text.</p>
-<p>During this course we are going to use <a href="https://colab.google/">Google Colab</a> which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, <a href="https://colab.google/">Colab</a> runs in your browser and you do not have to install anything on your computer.</p>
-<p>It is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module @ref(mod-python-setup) in <a href="99_1_appdx.html" class="quarto-xref"><span>Appendix A — Setting up Python and an introduction</span></a>.</p>
-<p>Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.</p>
-</section>
-<section id="ack" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="ack">Acknowledgements and license</h2>
-<p>Materials are taken from various places:</p>
-<ul>
-<li>The notes are based on <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</li>
-<li>Some notes are adopted from <a href="https://github.com/enjeeneer/sutton_and_barto">Scott Jeen</a>, <a href="https://github.com/brynhayder/reinforcement_learning_an_introduction">Bryn Elesedy</a> and <a href="https://github.com/peter-can-write/david-silver-rl-notes">Peter Goldsborough</a>.</li>
-<li>Some slides are inspired by the <a href="https://www.coursera.org/specializations/reinforcement-learning">RL specialization</a> at Coursera.</li>
-<li>Some exercises are taken from <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span> and modified slightly.</li>
-</ul>
-<p>I would like to thank all for their inspiration.</p>
-<p>This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</p>
-</section>
-<section id="sec-intro-ex" class="level2">
-<h2 class="anchored" data-anchor-id="sec-intro-ex">Exercises</h2>
-<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="#help">help page</a>. Sometimes solutions can be seen by pressing the button besides a question. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<section id="sec-intro-ex-annotate" class="level3">
-<h3 class="anchored" data-anchor-id="sec-intro-ex-annotate">Exercise - How to annotate</h3>
-<p>The online course notes can be annotated using <a href="https://web.hypothes.is/">hypothes.is</a>. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes.</p>
-<!-- <img src="img/annotate.png" align="right" alt="Hypothes.is icons" title="Hypothes.is icons" style = "float: right; margin: 0 0 0 15px;"> -->
+<p>To verify the installation, open a terminal or command prompt and type:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To install an IDE for working with your code, you may install Visual Studio Code (VSCode):</p>
 <ol type="1">
-<li>Sign-up at <a href="https://web.hypothes.is/">hypothes.is</a>. If you are using Chrome you may also install the <a href="https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek">Chrome extension</a>.</li>
-<li>Go back to this page and login in the upper right corner (there should be some icons e.g.&nbsp;<code>&lt;</code>).</li>
-<li>Select some text and try to annotate it using both a private and public annotation (you may delete it again afterwards).</li>
-<li>Go to the <a href="https://bss-osca.github.io/rl/slides/00_intro-slides.html#6">slides for this module</a> and try to annotate the page with a private comment.</li>
+<li><p>Go to the VSCode website: <a href="https://code.visualstudio.com">https://code.visualstudio.com</a></p></li>
+<li><p>Download and install the version for your operating system.</p></li>
+<li><p>Open VSCode after installation.</p></li>
+<li><p>Install the <strong>Python extension</strong> in VSCode:</p>
+<ul>
+<li>Go to the Extensions tab (or press <code>Ctrl+Shift+X</code>)</li>
+<li>Search for <strong>“Python”</strong> and install the one published by <strong>Microsoft</strong></li>
+</ul></li>
+</ol>
+<p>You’re now ready to start coding in Python!</p>
+</section>
+<section id="learning-python" class="level2" data-number="A.2">
+<h2 data-number="A.2" class="anchored" data-anchor-id="learning-python"><span class="header-section-number">A.2</span> Learning Python</h2>
+<p>If you are new to Python you may have a look at some [DataCamp] Courses. First you HAVE TO SIGNUP using [this link][datacamp-signup]. Afterwards have a look at these courses:</p>
+<ol type="1">
+<li><p><a href="https://app.datacamp.com/learn/courses/intro-to-python-for-data-science">Introduction to Python</a> - Learn the basics of Python programming, including variables, data types, and control flow.</p></li>
+<li><p><a href="https://app.datacamp.com/learn/courses/intermediate-python">Intermediate Python</a> - Build on your basic knowledge with functions, loops, and working with Python libraries.</p></li>
+<li><p><a href="https://app.datacamp.com/learn/courses/data-manipulation-with-pandas">Data Manipulation with pandas</a> - pandas is the world’s most popular Python library, used for everything from data manipulation to data analysis.</p></li>
 </ol>
 </section>
-<section id="sec-intro-ex-colab" class="level3">
-<h3 class="anchored" data-anchor-id="sec-intro-ex-colab">Exercise - Colab</h3>
-<p>During this course we are going to use <a href="https://colab.google/">Google Colab</a> which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, <a href="https://colab.google/">Colab</a> runs in your browser and you do not have to install anything on your computer.</p>
-<p>To be familiar with Colab do the following:</p>
-<ol type="1">
-<li>If you do not have a Google account <a href="https://accounts.google.com/">create one</a>. Note if you have a gMail then you already have a Google account.</li>
-<li>Open and do this <a href="https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing">tutorial</a>.</li>
-</ol>
+<section id="r-and-python-packages" class="level2" data-number="A.3">
+<h2 data-number="A.3" class="anchored" data-anchor-id="r-and-python-packages"><span class="header-section-number">A.3</span> R and Python packages</h2>
+<p>If you are used to do data transformation in R then this table may be useful.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 21%">
+<col style="width: 18%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>R Package</strong></th>
+<th><strong>Purpose</strong></th>
+<th><strong>Python Equivalent(s)</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dplyr</code></td>
+<td>Data manipulation (filter, mutate, etc.)</td>
+<td><code>pandas</code>, <code>dfply</code>, <code>siuba</code></td>
+<td><code>pandas</code> is standard; <code>dfply</code> and <code>siuba</code> mimic <code>dplyr</code> syntax with pipes and tidy verbs</td>
+</tr>
+<tr class="even">
+<td><code>ggplot2</code></td>
+<td>Data visualization (Grammar of Graphics)</td>
+<td><code>plotnine</code></td>
+<td>Closest match in syntax and philosophy; uses <code>+</code> for layers like <code>ggplot2</code></td>
+</tr>
+<tr class="odd">
+<td><code>tidyr</code></td>
+<td>Data tidying (pivoting, reshaping)</td>
+<td><code>pandas</code>, <code>pyjanitor</code></td>
+<td><code>pandas</code> handles <code>pivot</code>, <code>melt</code>; <code>pyjanitor</code> adds more tidy-like helpers</td>
+</tr>
+<tr class="even">
+<td><code>readr</code></td>
+<td>Read/write CSV</td>
+<td><code>pandas</code></td>
+<td>Use <code>read_csv()</code>, <code>to_csv()</code></td>
+</tr>
+<tr class="odd">
+<td><code>jsonlite</code></td>
+<td>Read/write JSON</td>
+<td><code>json</code> (standard), <code>pandas</code></td>
+<td><code>json</code> for raw files; <code>pandas.read_json()</code> for tabular JSON</td>
+</tr>
+<tr class="even">
+<td><code>readxl</code> / <code>writexl</code></td>
+<td>Read/write Excel</td>
+<td><code>pandas</code>, <code>openpyxl</code>, <code>xlsxwriter</code></td>
+<td><code>pandas</code> integrates with Excel libraries for reading/writing <code>.xlsx</code></td>
+</tr>
+<tr class="odd">
+<td><code>googlesheets4</code></td>
+<td>Google Sheets I/O</td>
+<td><code>gspread</code>, <code>gspread-pandas</code></td>
+<td>Python requires Google API setup; <code>gspread-pandas</code> integrates with DataFrames</td>
+</tr>
+</tbody>
+</table>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-Sutton18" class="csl-entry" role="listitem">
-Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
-</div>
-</div>
-</section>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -799,11 +741,11 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">References</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01_rl-intro.html" class="pagination-link" aria-label="An introduction to RL">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
@@ -811,5 +753,5 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/99_1_appdx.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/99_1_appdx.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
