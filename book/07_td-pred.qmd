@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Temporal difference methods for prediction {#mod-td-pred}
+# Temporal difference methods for prediction {#sec-td-pred}
 
 One of the most fundamental concepts in reinforcement learning is temporal difference (TD) learning. TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas: Like MC, TD can predict using a model-free environment and learn from experience. Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrap). That is, TD can learn on-line and do not need to wait until the whole sample-path is found. TD is in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered. 
 
@@ -34,7 +34,7 @@ By the end of this module, you are expected to:
 * Explain the TD(0) prediction algorithm.
 * Understand the benefits of learning online with TD compared to MC methods.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 6, 9, and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 3, 4, 6, 9, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

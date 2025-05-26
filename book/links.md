@@ -5,9 +5,11 @@
 [cran]: https://cloud.r-project.org
 [cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
 [course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+[Colab]: https://colab.google/
+[colab-ex-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
 
 [DataCamp]: https://www.datacamp.com/
-[datacamp-signup]: https://www.datacamp.com/groups/shared_links/cbaee6c73e7d78549a9e32a900793b2d5491ace1824efc1760a6729735948215
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
 [datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
 [datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
 [datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
@@ -47,6 +49,8 @@
 [hg-credential-helper]: https://happygitwithr.com/credential-caching.html
 [hypothes.is]: https://web.hypothes.is/
 
+[Jupyter]: https://jupyter.org/
+
 [osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
 
 [Peergrade]: https://peergrade.io
@@ -56,6 +60,10 @@
 [pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
 [pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
 [pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+[Python]: https://www.python.org/
+[Positron]: https://positron.posit.co/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[VSCode]: https://code.visualstudio.com/
 
 [R]: https://www.r-project.org
 [RStudio]: https://rstudio.com

@@ -32,6 +32,9 @@ jobs:
         with:
           cache-version: 1
 
+      - name: Copy book misc
+        run: Rscript book/misc_book.R
+        
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
@@ -40,3 +43,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
+

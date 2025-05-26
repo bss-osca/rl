@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Temporal difference methods for control {#mod-td-control}
+# Temporal difference methods for control {#sec-td-control}
 
 In Module \@ref(mod-td-pred) temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:
 
@@ -42,7 +42,7 @@ By the end of this module, you are expected to:
 * List the differences between Q-learning, SARSA and expected SARSA.
 * Apply the algorithms to an MDP to find the optimal policy.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 6, 9, and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 3, 4, 6, 9, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Dynamic programming {#mod-dp}
+# Dynamic programming {#sec-dp}
 
 The term *Dynamic Programming* (*DP*) refers to a collection of algorithms that can be used to compute optimal policies of a model with full information about the dynamics, e.g. a Markov Decision Process (MDP). A DP model must satisfy the *principle of optimality*. That is, an optimal policy must consist for optimal sub-polices or alternatively the optimal value function in a state can be calculated using optimal value functions in future states. This is indeed what is described with the Bellman optimality equations. 
 
@@ -41,7 +41,7 @@ By the end of this module, you are expected to:
 * Describe the ideas behind generalized policy iteration.
 * Interpret the distinction between synchronous and asynchronous dynamic programming methods.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 2, 4, 6, 7, 8, 10 and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

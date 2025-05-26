@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Multi-armed bandits {#mod-bandit}
+# Multi-armed bandits {#sec-bandit}
 
 This module consider the k-armed bandit problem which is a sequential decision problem with one state and $k$ actions. The problem is used to illustrate different learning methods used in RL. 
 
@@ -34,7 +34,7 @@ By the end of this module, you are expected to:
 * Understand the effect of optimistic initial values.
 * Formulate an upper confidence bound action selection algorithm.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 1, 3, 6, 9, 10 and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 1, 3, 6, 9, 10 and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

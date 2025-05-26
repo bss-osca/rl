@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Policies and value functions for MDPs {#mod-mdp-2}
+# Policies and value functions for MDPs {#sec-mdp-2}
 
 This module go deeper in the theory of finite Markov decision processes (MDPs). The concept of a policy and value functions is considered. Once the problem is formulated as an MDP, finding the optimal policy can be found using value functions. 
 
@@ -37,7 +37,7 @@ By the end of this module, you are expected to:
 * Define an optimal policy.
 * Derive the Bellman optimality equation for a value function.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 7, 10, and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 2, 7, 10, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

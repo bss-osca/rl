@@ -42,8 +42,8 @@ book:
     # - 07_td-pred.qmd
     # - 08_td-control.qmd
     - references.qmd
-  # appendices:
-  #   - 99_1_appdx.qmd
+  appendices:
+    - 99_1_appdx.qmd
   #   - 99_2_appdx.qmd
 
 bibliography: rl.bib
@@ -51,9 +51,10 @@ bibliography: rl.bib
 biblio-style: apalike
 link-citations: true
 
-# crossref:
+crossref:
 #   appendix-title: "App."
 #   appendix-delim: ":"
+  sec-prefix: "Module"
 
 comments:
   hypothesis: true
@@ -62,7 +63,7 @@ format:
   html:
     # theme: 
     #   light: minty #cosmo
-    # number-sections: true
+    number-sections: true
     number-depth: 3
     callout-appearance: simple
     smooth-scroll: true

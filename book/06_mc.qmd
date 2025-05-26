@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Monte Carlo methods for prediction and control {#mod-mc}
+# Monte Carlo methods for prediction and control {#sec-mc}
 
 The term "Monte Carlo" (MC) is often used for an estimation method which involves a random component. MC methods of RL learn state and action values by sampling and averaging returns. MC do not use dynamics where we estimate the value in the current state using the value in the next state (like in dynamic programming). Instead the MC methods estimate the values by considering different *sample-paths* (state, action and reward realizations). Compared to a Markov decision process, MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment) instead MC methods learn the value function directly from experience. Often though, the sample-path is generated using simulation, i.e. some knowledge about the environment is given, but it is only used to generate sample transitions. For instance, consider an MDP model for the game Blackjack. Here calculating all the transition probabilities may be tedious and error-prone in terms of coding and numerical precision. Instead we can simulate a game (a sample-path) and use the simulations to evaluate/predict the value function of a policy and then use control to find a good policy. That is, we still use a generalised policy iteration framework, but instead of computing the value function using the MDP model a priori, we learn it from experience. 
 
@@ -40,7 +40,7 @@ By the end of this module, you are expected to:
 * Use importance sampling in off-policy learning to predict the value-function of a target policy.
 * Explain how to modify the MC prediction and improvement algorithm for off-policy learning.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 4, 9 and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 3, 4, 9 and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

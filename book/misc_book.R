@@ -4,7 +4,6 @@ sink("render_book.log", append=F, split=T)
 sessionInfo()
 
 ## render book
-bookdown::render_book("book", quiet = TRUE)
 
 ## copy slides 
 dir.create("book/_book/slides", showWarnings = FALSE)

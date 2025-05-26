@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Markov decision processes (MDPs) {#mod-mdp-1}
+# Markov decision processes (MDPs) {#sec-mdp-1}
 
 This module gives an introduction to Markov decision processes (MDPs) with a finite number of states and actions. This gives us a full model of a sequential decision problem. MDPs are a classical formalization of sequential decision making, where actions influence not just immediate rewards, but also what will be the next state, and hence future rewards. Thus MDPs involve delayed reward and the need to consider the trade-off between immediate and delayed reward. MDPs are a mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found. Often in a RL problem some parts of this description is unknown and we hereby have to estimate the best policy by learning. For example, in the bandit problem the rewards was unknown.  
 
@@ -38,7 +38,7 @@ By the end of this module, you are expected to:
 <!-- * Define an optimal policy. -->
 <!-- * Derive the Bellman optimality equation for a value function. -->
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 2, 7, 10, and 12 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 2, 7, 10, and 12 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->

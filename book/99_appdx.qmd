@@ -1,7 +1,7 @@
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-# Setting up Python {#mod-python-setup} 
+# Setting up Python {#sec-python-setup} 
 
 [To do]
 
@@ -193,31 +193,6 @@ __Note help using mail correspondence is not supported!__
 
 
 
-# Learning goals {#mod-lg-course}
-
-The purpose of this course is to give you an introduction and knowledge about reinforcement learning (RL). After having participated in the course, you must, in addition to achieving general academic skills, demonstrate: 
-
-Knowledge of
-
-   1.	RL for Bandit problems 
-   2.	Markov decision processes and ways to optimize them
-   3.	the exploration vs exploitation challenge in RL and approaches for addressing this challenge 
-   4.	the role of policy evaluation with stochastic approximation in the context of RL
-
-Skills to
-
-   5.	define the key features of RL that distinguishes it from other machine learning techniques
-   6.	discuss fundamental concepts in RL
-   7.	describe the mathematical framework of Markov decision processes
-   8.	formulate and solve Markov and semi-Markov decision processes for realistic problems with finite state space under different objectives
-   9.	apply fundamental techniques, results and concepts of RL on selected RL problems.
-   10. given an application problem, decide if it should be formulated as a RL problem and define it formally (in terms of the state space, action space, dynamics and reward model)
-
-Competences to
-
-   11. identify areas where RL are valuable
-   12. select and apply the appropriate RL model for a given business problem
-   13. interpret and communicate the results from RL
 
 
 

@@ -1,7 +1,64 @@
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-# Setting up Python {#mod-python-setup} 
+# Setting up Python and an introduction {#sec-python-setup} 
 
-[To do]
+[Python] is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you're analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.
+
+## Laptop setup
+
+If you prefer to have [Python] installed on your laptop, then do the following:
+
+1. Go to the official Python website: [https://www.python.org/downloads](https://www.python.org/downloads)
+2. Click the download button for your operating system (Windows, macOS, or Linux).
+3. Run the installer.
+4. **Important**: Make sure to check the box that says **"Add Python to PATH"** during installation.
+5. Follow the prompts to complete the installation.
+
+To verify the installation, open a terminal or command prompt and type:
+
+```bash
+python --version
+```
+
+To install an IDE for working with your code, you may install Visual Studio Code (VSCode):
+
+1. Go to the VSCode website: [https://code.visualstudio.com](https://code.visualstudio.com)
+2. Download and install the version for your operating system.
+3. Open VSCode after installation.
+4. Install the **Python extension** in VSCode:
+
+   * Go to the Extensions tab (or press `Ctrl+Shift+X`)
+   * Search for **"Python"** and install the one published by **Microsoft**
+
+You're now ready to start coding in Python!
+
+## Learning Python
+
+If you are new to Python you may have a look at some [DataCamp] Courses. First you HAVE TO SIGNUP using [this link][datacamp-signup]. Afterwards have a look at these courses:
+
+1. [Introduction to Python](https://app.datacamp.com/learn/courses/intro-to-python-for-data-science) -
+   Learn the basics of Python programming, including variables, data types, and control flow.
+
+2. [Intermediate Python](https://app.datacamp.com/learn/courses/intermediate-python) -
+   Build on your basic knowledge with functions, loops, and working with Python libraries.
+
+3. [Data Manipulation with pandas](https://app.datacamp.com/learn/courses/data-manipulation-with-pandas) -
+   pandas is the world's most popular Python library, used for everything from data manipulation to data analysis. 
+
+## R and Python packages
+
+If you are used to do data transformation in R then this table may be useful.
+
+
+| **R Package**        | **Purpose**                              | **Python Equivalent(s)**           | **Notes**                                                                                |
+| -------------------- | ---------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------- |
+| `dplyr`              | Data manipulation (filter, mutate, etc.) | `pandas`, `dfply`, `siuba`         | `pandas` is standard; `dfply` and `siuba` mimic `dplyr` syntax with pipes and tidy verbs |
+| `ggplot2`            | Data visualization (Grammar of Graphics) | `plotnine`                         | Closest match in syntax and philosophy; uses `+` for layers like `ggplot2`               |
+| `tidyr`              | Data tidying (pivoting, reshaping)       | `pandas`, `pyjanitor`              | `pandas` handles `pivot`, `melt`; `pyjanitor` adds more tidy-like helpers                |
+| `readr`              | Read/write CSV                           | `pandas`                           | Use `read_csv()`, `to_csv()`                                                             |
+| `jsonlite`           | Read/write JSON                          | `json` (standard), `pandas`        | `json` for raw files; `pandas.read_json()` for tabular JSON                              |
+| `readxl` / `writexl` | Read/write Excel                         | `pandas`, `openpyxl`, `xlsxwriter` | `pandas` integrates with Excel libraries for reading/writing `.xlsx`                     |
+| `googlesheets4`      | Google Sheets I/O                        | `gspread`, `gspread-pandas`        | Python requires Google API setup; `gspread-pandas` integrates with DataFrames            |
+
 

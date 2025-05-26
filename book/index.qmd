@@ -3,7 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# About the course notes {- #mod-intro .unnumbered}
+# About the course notes {- #sec-intro .unnumbered}
 
 ```{r}
 #| include: false
@@ -35,10 +35,10 @@ By the end of this module, you are expected to:
 * Understand the prerequisites and the goals for the course.
 * Have downloaded the textbook.
 * Know how the course is organized.
-* Installed R and RStudio.
+<!-- * Installed R and RStudio. -->
 * Annotated the online notes.
 
-The learning outcomes relate to the [overall learning goals](#mod-lg-course) number 3, 5 and 6 of the course.
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 3, 5 and 6 of the course.
 
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
@@ -66,7 +66,7 @@ A classic RL example is the bandit problem: You are in a casino and want to choo
 The course starts by giving a general overview over RL and introducing bandit problems. Next, the mathematical framework of Markov decision processes (MDPs) is given as a classical formalization of sequential decision making. In this case, actions influence not just immediate rewards, but also subsequent situations, or states, and therefore also future rewards. An MDP assumes that the dynamics of the underlying process and the reward structure are known explicitly by the decision maker. In the last part of the course, we go beyond the case of decision making in known environments and study RL methods for stochastic control. 
 
 
-## Learning goals of the course {-}
+## Learning goals of the course {#sec-lg-course}
 
 After having participated in the course, you must, in addition to achieving general academic skills, demonstrate: 
 
@@ -91,6 +91,7 @@ Competences to
    11. identify areas where RL are valuable
    12. select and apply the appropriate RL model for a given business problem
    13. interpret and communicate the results from RL
+   
 
 ## Reinforcement learning textbook {-}
 
@@ -101,21 +102,22 @@ Sutton and Barto's book is the most cited publication in RL research, and is res
 
 ## Course organization {-}
 
-Each week considers a learning module. A learning module is related to a chapter in the textbook. The learning path in a typical week are 
+Each week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path in a typical week are 
 
-- Before lectures: Read the chapter in the textbook and consider the extra module material.
+- Before lectures: Read the chapter in the textbook or tutorial.
 - Lectures (at campus).
 - After lectures: Module Exercises (in groups).
 
-Lectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials are given and we focus on a specific RL problem.
+Lectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials or cases are given and we focus on a specific RL problem.
 
 This module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:
 
-   * [Part I](#mod-rl-intro) gives you a general introduction to RL and the bandit problem. 
+   * [Part I](#sec-rl-intro) gives you a general introduction to RL and the bandit problem. 
 
-   * [Part II](#mod-bandit) consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module \@ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module \@ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module  \@ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module \@ref(mod-mc) and ...
+   * [Part II](#sec-bandit) consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module \@ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module \@ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module  \@ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module \@ref(mod-mc) and ...
    
-
+   * [Part III](??) 
+   
 <!-- The next three chapters describe three fundamental classes of methods for solving finite -->
 <!-- Markov decision problems: dynamic programming, Monte Carlo methods, and temporaldi↵ -->
 <!-- erence learning. Each class of methods has its strengths and weaknesses. Dynamic -->
@@ -134,15 +136,15 @@ This module gives a short introduction to the course. Next, the site consists of
 <!-- and unified solution to the tabular reinforcement learning problem. -->
    
 
-   <!-- * [Part III](#mod-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
-   <!-- * [Part IV](#mod-vba-project) presents the mandatory VBA project. -->
-   <!-- * [Part V](#mod-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). -->
-   <!-- * [Part VI](#mod-r-loops-cond) gives you an overview over programming in R including loops and conditionals (Module \@ref(mod-r-loops-cond)) and functions (Module \@ref(mod-r-functions)). -->
+   <!-- * [Part III](#sec-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
+   <!-- * [Part IV](#sec-vba-project) presents the mandatory VBA project. -->
+   <!-- * [Part V](#sec-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). -->
+   <!-- * [Part VI](#sec-r-loops-cond) gives you an overview over programming in R including loops and conditionals (Module \@ref(mod-r-loops-cond)) and functions (Module \@ref(mod-r-functions)). -->
 
-   <!-- * [Part VII](#mod-r-tidyverse-intro) the focus is on import/export, tidy and transformation of data. Module \@ref(mod-r-tidyverse-intro) first gives you an introduction to the [tidyverse][tidyverse-main-page] packages and introduces you to literal programming using R Markdown. Next, Module \@ref(mod-r-io) shows you how to export and import data. Finally, Module \@ref(mod-r-transform) focuses on transformation of data. -->
-   <!-- * [Part VIII](#mod-r-plot) considers visualization of data in R (Module \@ref(mod-r-plot)). -->
-   <!-- * [Part IX](#mod-project) presents the mandatory R project. -->
-   <!-- * [Part X](#mod-r-maps) contains extra modules useful when coding in R.  -->
+   <!-- * [Part VII](#sec-r-tidyverse-intro) the focus is on import/export, tidy and transformation of data. Module \@ref(mod-r-tidyverse-intro) first gives you an introduction to the [tidyverse][tidyverse-main-page] packages and introduces you to literal programming using R Markdown. Next, Module \@ref(mod-r-io) shows you how to export and import data. Finally, Module \@ref(mod-r-transform) focuses on transformation of data. -->
+   <!-- * [Part VIII](#sec-r-plot) considers visualization of data in R (Module \@ref(mod-r-plot)). -->
+   <!-- * [Part IX](#sec-project) presents the mandatory R project. -->
+   <!-- * [Part X](#sec-r-maps) contains extra modules useful when coding in R.  -->
 
 The appendix contains different modules that may be helpful for you including hints on [how to work in groups](#groups), [how to get help](#help) if you are stuck and [how to annotate](#annotate) the course notes.
    
@@ -151,17 +153,19 @@ The appendix contains different modules that may be helpful for you including hi
 
 ## Programming software {-}
 
-We use [R] as programming software and it is assumed that you are familiar with using R. [R] is a programming language and free software environment. R can be run from a terminal but in general you use an IDE (integrated development environment) [RStudio] for running R and to saving your work. R and RStudio can either be run from your laptop or using [RStudio Cloud][rstudio-cloud] which run R in the cloud using your browser. 
+We use [Python] as programming software and it is assumed that you are familiar with using Python. [Python] is a programming language and free software environment. Python can be run from a terminal but in general you use an IDE (integrated development environment) such as [Positron], [PyCharm] or [VSCode] for running Python and to saving your work. Moreover, you may use a [Jupyter] notebook to weave you code together with text. 
 
-It is assumed as a prerequisite that you know how to use R. If you need a brush-up on your R programming skills then have a look at Module \@ref(mod-r-setup)  in the appendix. 
+During this course we are going to use [Google Colab][Colab] which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, [Colab] runs in your browser and you do not have to install anything on your computer.
 
+It is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module \@ref(mod-python-setup) in @sec-python-setup. 
+
+Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
 
 ## Acknowledgements and license {- #ack} 
 
 Materials are taken from various places:
 
 * The notes are based on @Sutton18.
-* The bookdown skeleton and some notes are based on the [Tools for Analytics][tfa-course] course.
 * Some notes are adopted from [Scott Jeen](https://github.com/enjeeneer/sutton_and_barto), 
 [Bryn Elesedy](https://github.com/brynhayder/reinforcement_learning_an_introduction) and [Peter Goldsborough](https://github.com/peter-can-write/david-silver-rl-notes).
 * Some slides are inspired by the [RL specialization](https://www.coursera.org/specializations/reinforcement-learning) at Coursera.
@@ -169,17 +173,15 @@ Materials are taken from various places:
 
 I would like to thank all for their inspiration. 
 
-<!-- Also thanks to Solveig for proofreading the draft. -->
-
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 
 
-   ## Exercises {#sec-intro-ex -}
+## Exercises {#sec-intro-ex}
 
 `r strExercises`
 
-### Exercise - How to annotate {#sec-intro-ex-annotate -}
+### Exercise - How to annotate {#sec-intro-ex-annotate}
 
 The online course notes can be annotated using [hypothes.is]. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes. 
 
@@ -191,14 +193,16 @@ The online course notes can be annotated using [hypothes.is]. You can create bot
    4) Go to the [slides for this module](https://bss-osca.github.io/rl/slides/00_intro-slides.html#6) and try to annotate the page with a private comment. 
 
 
-### Exercise - Templates {#sec-intro-ex-templates -}
+### Exercise - Colab {#sec-intro-ex-colab}
 
-A template in RMarkdown of the course notes and exercises are available at [GitHub](gh-rl-student). You can download the repository and keep your own notes during the course by having an R project with it.
+During this course we are going to use [Google Colab][Colab] which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, [Colab] runs in your browser and you do not have to install anything on your computer.
 
-   1) Open R studio and do: **File > New Project ... > Version Control > Git**. Add `https://github.com/bss-osca/rl-student` as repository url and create the project.
-   2) Run `renv::restore()` from the R command line to install needed packages (this may take some time). If you experience errors then try to install the packages one at a time using `install.packages("pkg name")`.
-   3) Open e.g. the file `01_rl-intro.Rmd` and try to knit it using the Knit button in the upper left corner. A html file with the output will be made. You should be able to add your own notes and solve the exercises using the Rmd file for each module. 
+To be familiar with Colab do the following:
 
+   1) If you do not have a Google account [create one](https://accounts.google.com/). Note if you have a gMail then you already have a Google account.
+   2) Open and do this [tutorial][colab-ex-colab].
+   
+   
 
 ```{r links, child="links.md"}
 ```
