@@ -3,14 +3,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-# About the course notes {- #sec-intro .unnumbered}
+
+# About the course notes {#sec-intro}
 
 ```{r}
 #| include: false
 #| eval: false
-# render the book automatically (if preview = T then compile only chapter)
-bookdown::serve_book(dir = "book", output_dir = "_book", preview = FALSE, in_session = TRUE, quiet = TRUE)  
-bookdown::serve_book(dir = "book", output_dir = "_book", preview = TRUE, in_session = TRUE, quiet = TRUE)  
+quarto::quarto_preview("book")
+quarto::quarto_preview_stop()
 ```
 
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
@@ -28,7 +28,7 @@ library(rmarkdown)
 This site contains course notes for the course "Reinforcement Learning for Business" held at [Aarhus BSS][BSS]. It consists of a set of learning modules. The course is an elective course mainly for the [Operations and Supply Chain Analytics][osca-programme] and [Business Intelligence][bi-programme] programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.
 
 
-## Learning outcomes {-}
+## Learning outcomes
 
 By the end of this module, you are expected to:
 
@@ -36,7 +36,7 @@ By the end of this module, you are expected to:
 * Have downloaded the textbook.
 * Know how the course is organized.
 <!-- * Installed R and RStudio. -->
-* Annotated the online notes.
+* Have annotated the online notes.
 
 The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 3, 5 and 6 of the course.
 
@@ -46,7 +46,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 <!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 
 
-## Purpose of the course {-}
+## Purpose of the course
 
 The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).
 
@@ -93,14 +93,14 @@ Competences to
    13. interpret and communicate the results from RL
    
 
-## Reinforcement learning textbook {-}
+## Reinforcement learning textbook
 
 The course uses the free textbook *Reinforcement Learning: An Introduction* by @Sutton18. The book is essential reading for anyone wishing to learn the theory and practice of modern Reinforcement learning. Read the weekly readings before the lecture to understand the material better, and perform better in the course.
 
 Sutton and Barto's book is the most cited publication in RL research, and is responsible for making RL accessible to people around the world. The new edition, released in 2018, offers improved notation and explanations, additional algorithms, advanced topics, and many new examples; and it's totally free. Just follow the citation link to download it. 
 
 
-## Course organization {-}
+## Course organization
 
 Each week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path in a typical week are 
 
@@ -151,7 +151,7 @@ The appendix contains different modules that may be helpful for you including hi
 
 
 
-## Programming software {-}
+## Programming software
 
 We use [Python] as programming software and it is assumed that you are familiar with using Python. [Python] is a programming language and free software environment. Python can be run from a terminal but in general you use an IDE (integrated development environment) such as [Positron], [PyCharm] or [VSCode] for running Python and to saving your work. Moreover, you may use a [Jupyter] notebook to weave you code together with text. 
 

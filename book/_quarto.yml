@@ -33,8 +33,10 @@ book:
     - index.qmd
     - part: "Introduction to RL"
     - 01_rl-intro.qmd
-    # - part: "Tabular methods"
-    # - 02_bandit.qmd
+    - 02_rl-in-action.qmd
+    - part: "Tabular methods"
+    - 03_bandit.qmd
+    
     # - 03_mdp-1.qmd
     # - 04_mdp-2.qmd
     # - 05_dp.qmd
@@ -61,8 +63,8 @@ comments:
   
 format:
   html:
-    # theme: 
-    #   light: minty #cosmo
+    theme:
+      light: cosmo #cosmo, minty 
     number-sections: true
     number-depth: 3
     callout-appearance: simple

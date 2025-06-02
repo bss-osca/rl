@@ -1,0 +1,205 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+# Multi-armed bandits {#sec-bandit}
+
+This module consider the k-armed bandit problem which is a sequential decision problem with one state and $k$ actions. The problem is used to illustrate different learning methods used in RL. 
+
+The module is also the first module in the *Tabular methods* part of the notes. This part describe almost all the core ideas of reinforcement learning algorithms in their simplest forms where the state and action spaces are small enough for the approximate value functions to be represented as arrays or tables. 
+
+
+## Learning outcomes 
+
+By the end of this module, you are expected to:
+
+* Define a k-armed bandit and understand the nature of the problem. 
+* Define the reward of a action (action-reward).
+* Describe different methods for estimating the action-reward.
+* Explain the differences between exploration and exploitation.
+* Formulate an $\epsilon$-greedy algorithm for selecting the next action.
+* Interpret the sample-average (variable step-size) versus exponential recency-weighted average (constant step-size) action-reward estimation.
+* Argue why we might use a constant stepsize in the case of non-stationarity. 
+* Understand the effect of optimistic initial values.
+* Formulate an upper confidence bound action selection algorithm.
+
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 1, 3, 6, 9, 10 and 12 of the course.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings
+
+For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
+
+```{r, echo=FALSE}
+link_slide_file_text("02", "bandit")
+```
+
+## The k-armed bandit problem
+
+Multi-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work. 
+
+```{r, echo=FALSE, out.width="100%", fig.align = "center", fig.cap="A 4-armed bandit.", label=fig-bandit}
+knitr::include_graphics("img/bandit.png")
+```
+
+Imagine you are facing a wall with $k$ slot machines (see @fig-bandit), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state $s$ at time $t$ and have to choose among $k$ actions given the environment representing the $k$ bandits. Only the rewards from the $k$ bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy $\pi^*(s) = \pi^* = a^*$ that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.
+
+<!-- For finding the optimal action a learning strategy that balance the exploration vs. exploitation trade-off. -->
+
+<!-- To summarize: -->
+
+<!-- * The agent are faced repeatedly with a choice of $k$ actions. -->
+<!-- * After each choice, you receive a reward from a stationary probability distribution. -->
+<!-- * Objective is to maximise total reward over some time period, say 100 time steps. -->
+
+<!-- * Each action has an expected or mean reward based on its probability distribution. We shall call thjs the \textit{value} of the action. We do not know these values with certainty. -->
+<!-- * Because of this uncertainty, there is always an exploration vs exploitation problem. We always have one action that we deem to be most valuable at any instant, but it is highly likely, at least initially, that there are actions we are yet to explore that are more valuable. -->
+
+Multi-armed bandits can  be used in e.g. [digital advertising](https://research.facebook.com/blog/2021/4/auto-placement-of-ad-campaigns-using-multi-armed-bandits/). Suppose you are an advertiser seeking to optimize which ads ($k$ to choose among) to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. 
+
+```{r, label=fig-bandit-choose, echo=FALSE, out.width="100%", fig.align = "center", fig.cap="Which ad to choose?"}
+knitr::include_graphics("img/bandit-choose.png")
+```
+
+It is reasonable to assume that each of these ads will have different effects, and some will be more engaging than others. That is, each ad has some theoretical — but unknown — click-through-rate (CTR) that is assumed to not change over time. How do we go about solving which ad we should choose (see @fig-bandit-choose)?
+
+
+## Estimating the value of an action
+
+How can the value of an action be estimated, i.e. the expected reward of an action $q_*(a) = \mathbb{E}[R_t | A_t = a]$. Assume that at time $t$ action $a$ has been chosen $N_t(a)$ times. Then the estimated action value is
+\begin{equation} 
+	Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
+\end{equation}
+Storing $Q_t(a)$ this way is cumbersome since memory and computation requirements grow over time. Instead an *incremental* approach is better. If we assume that $N_t(a) = n-1$ and set $Q_t(a) = Q_n$ then $Q_{n+1}$ becomes:
+\begin{align}\label{eq:avg}
+  Q_{n+1} &= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
+		    &= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
+		    &= \frac{1}{n}\left( R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i \right) \nonumber \\
+		    &= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
+	       &= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
+\end{align}
+That is, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$).  
+
+A greedy approach for selecting the next action is
+\begin{equation}
+A_t =\arg \max_a Q_t(a).
+\end{equation}
+Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure greedy approach do not explore other actions. Instead an $\varepsilon$-greedy approach is used in which with probability $\varepsilon$ we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.
+
+<!-- \begin{itemize} -->
+<!-- 	\item Simplest action selection rule is to select the action with the highest estimated value. -->
+<!-- 	\item \(\epsilon\)-greedy methods are where the agent selects the greedy option most of the time, and selects a random action with probability \(\epsilon\). -->
+<!-- 	\item Three algorithms are tried: one with \(e\)=0 (pure greedy), one with \(e\)=0.01 and another with \(e\)=0.1 -->
+<!-- 	\item Greedy method gets stuck performing sub-optimal actions. -->
+<!-- 	\item \(e\)=0.1 explores more and usually finds the optimal action earlier, but never selects it more that 91\% of the time. -->
+<!-- 	\item \(e\)=0.01 method improves more slowly, but eventually performs better than the e=0.1 method on both performance measures. -->
+<!-- 	\item It is possible to reduce \(e\) over time to try to get the best of both high and low values. -->
+<!-- \end{itemize} -->
+
+<!-- Note this is the general formula  -->
+
+<!-- \begin{equation} -->
+<!-- NewEstimate \leftarrow OldEstimate + StepSize \left[Target - OldEstimate \right] -->
+<!-- \end{equation} -->
+
+::: {.callout-note title="Colab - Before the lecture"}
+During the lecture for this module we will work with the [tutorial][colab-03-bandit] where we will try to estimate the $Q$ values. We implement the algorithm using an agent and environment class. 
+Open the [tutorial][colab-03-bandit]:
+
+   - Have a look at the notebook and run all code cells.
+   - Try to understand the content. 
+:::
+
+## The role of the step-size {#sec-bandit-step-size}
+
+In general we update the reward estimate of an action using 
+
+\begin{equation}
+	Q_{n+1} = Q_n +\alpha_n(a) \left[R_n - Q_n\right]
+\end{equation}
+
+Until now we have used the sample average $\alpha_n(a)= 1/n$; however, other choices of $\alpha_n(a)$ is possible. In general we will converge to the true reward if
+
+\begin{equation}
+    \sum_n \alpha_n(a) = \infty \quad\quad \mathsf{and} \quad\quad  \sum_n \alpha_n(a)^2 < \infty.
+\end{equation}
+
+Meaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant $\alpha_n(a)= \alpha \in (0, 1]$ instead. This results in \(Q_{n+1}\) being a weighted average of the past rewards and the initial estimate \(Q_1\):
+
+\begin{align}
+Q_{n+1} &= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
+&= \alpha R_n + (1 - \alpha)Q_n \nonumber \\
+&= \alpha R_n + (1 - \alpha)[\alpha R_{n-1} + (1 - \alpha)Q_{n-1}] \nonumber \\
+&= \alpha R_n + (1 - \alpha)\alpha R_{n-1} + (1 - \alpha)^2 Q_{n-1}  \nonumber \\
+&= \vdots \nonumber \\
+&= (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} R_i \\
+\end{align}
+
+Because the weight given to each reward depends on how long  ago it was observed, we can see that more recent rewards are given more weight. Note the weights \(\alpha\) sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since  the weight given to each reward decays exponentially into the past. This sometimes called an *exponential recency-weighted average*.
+
+
+## Optimistic initial values
+
+The methods discussed so far are dependent to some extent on the initial action-value estimate i.e. they are biased by their initial estimates. For methods with constant $(\alpha)$ this bias is permanent. We may set initial value estimates artificially high to encourage exploration in the short run. For instance, by setting initial values of $Q$ to 5 rather than 0 we encourage exploration, even in the greedy case. Here the agent will almost always be disappointed with it's samples because they are less than the initial estimate and so will explore elsewhere until the values converge.
+
+
+## Upper-Confidence Bound Action Selection
+
+An $\epsilon$-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the *upper-confidence bound*:
+\begin{equation}
+	A_t = \arg\max_a \left(Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right),
+\end{equation}
+
+Note the square root term is a measure of the uncertainty in our estimate (see @fig-srt). 
+
+* It is proportional to $t$ i.e. how many time-steps have passed and inversely proportional to \(N_t(a)\) i.e. how many times that action has been visited. 
+* The more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound. 
+* As the timesteps increases, the denominator dominates the numerator as the ln term flattens. 
+* Each time we select an action our uncertainty decreases because $N$ is the denominator of this equation. 
+* If $N_t(a) = 0$ then we consider $a$ as a maximal action, i.e. we select first among actions with $N_t(a) = 0$.
+* The parameter $c>0$ controls the degree of exploration. Higher $c$ results in more weight on the uncertainty. 
+
+Since upper-confidence bound action selection select actions according to their potential, it is expected to perform better than $\epsilon$-greedy methods.
+
+```{r, echo=FALSE, fig.cap="Square root term for an action using different $c$-values.", label="fig-srt"}
+n <- NULL
+ctr = 1
+for (i in 1:1000) {
+   ctr <- ctr + rbinom(1,1,runif(1,0.01,0.05))
+   n <- c(n, ctr)
+}
+dat <- tibble(t = 1:1000, c1 = sqrt(log(t)/n), c5 = 5*sqrt(log(t)/n), c20 = 20*sqrt(log(t)/n)) %>% 
+   pivot_longer(!t, names_to = "c", values_to = "sr", names_prefix = "c")
+p1 <- dat %>% ggplot(aes(x = t, y = sr, col = c)) +
+   geom_line() + ylab("square root term")
+dat <- tibble(t = 1:1000, visits = n)
+p2 <- dat %>% ggplot(aes(x = t, y = visits)) +
+   geom_line()
+library(patchwork)
+p1 / p2 + plot_layout(heights = c(2, 1))
+```
+
+
+## Summary 
+
+Read Chapter 2.10 in @Sutton18.
+
+
+```{r links, child="links.md", include=FALSE}
+```

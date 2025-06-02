@@ -1,0 +1,217 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+# RL in action {#sec-rl-in-action}
+
+This module learn an agent/player to play tic-tac-toe using Reinforcement learning.
+
+## Learning outcomes {#sec-rl-intro-lo}
+
+By the end of this module, you are expected to:
+
+* Code your first RL algorithm
+* Formulate the blocks of the RL model (environment, agent, data, states, actions, rewards and policies).
+* Run your first RL algorithm and evaluate on its solution.
+
+The learning outcomes relate to the [overall learning goals](#sec-lg-course) number 3, 6 and 9-12 of the course.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings 
+
+For this lecture, you will need to read Chapter 1.5 in @Sutton18. Read it before continuing this module. 
+
+
+## Tic-Tac-Toe
+
+Tic-Tac-Toe is a simple two-player game where players alternately place their marks on a 3x3 grid. That is, the current state of the board is the players' marks on the grid. The first player to align three of their marks horizontally, vertically, or diagonally wins the game. Reward for a player is 1 for 'win', 0.5 for 'draw', and 0 for 'loss'. These values can be seen as the probability of winning.
+
+```{css, echo=FALSE}
+.table-bordered th, .table-bordered td {
+    border: 1px solid black !important; 
+}
+```
+
+```{r, message=FALSE, echo=FALSE}
+plot_board_state <- function(state) {
+   s <- str_split(state, "")[[1]]
+   tbl <- matrix(s, nrow = 3, byrow = T)
+   tbl <- as_tibble(tbl, .name_repair = "minimal")
+   tbl <- tbl %>% 
+      kbl(align = "c", col.names = NULL, table.attr = "border: 1px solid black !important;") %>% 
+      kable_styling(full_width = F, bootstrap_options = c("bordered")) 
+   return(tbl)
+}
+```
+
+Examples of winning, loosing and a draw from player Xs point of view:
+```{r, message=FALSE, echo=FALSE}
+tblW <- plot_board_state("..X.X.XOO")
+tblL <- plot_board_state("X.X.X.OOO")
+tblD <- plot_board_state("XXOOOXXXO")
+```
+
+<table style="width: 100%; border: 0px !important">
+ <tbody>
+  <tr style="border: 0px !important;">
+    <td style="border: 0px !important;">`r tblW`</td>
+    <td style="border: 0px !important;">`r tblL`</td>
+    <td style="border: 0px !important;">`r tblD`</td>
+  </tr>
+ </tbody>
+</table>
+
+We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a *draw* game may look as in @fig-hgf. We start with an empty board state $S_0$, and the opponent makes a move, next we choose a move $A_0$ (among the empty fields) and we end up in state $S_1$. This continues until the game is over. 
+
+```{r, echo=FALSE, out.width="100%", fig.cap="A draw."}
+#| label: fig-hgf
+set.seed(567)
+stateN <- 9   # states/stage
+stages <- 10   # stages
+gridDim <- c(stateN, stages)
+states <- tibble(sId = 1:(stages * stateN), gId = 1:(stages * stateN), label = "", draw = rep(T, stages * stateN))
+path <- c(6, 15, 23, 31, 38, 49, 59, 66, 75, 86)  # using starte ids
+states <- states %>% mutate(draw = if_else(sId %in% setdiff(1:9, path[1]), F, T))
+states$label[path[seq_along(path) %% 2 == 1]] <- str_c("S[", seq_along(path[seq_along(path) %% 2 == 1])-1, "]")
+actions <- list()
+addHArc <- function(actions, harc) {
+   actions[[length(actions)+1]] <- harc
+   return(actions)
+}
+for (i in 1:(length(path)-1)) {
+   turn <- ((i-1) %% 2) == 1
+   if (turn) {
+      harc <- list(
+         state = path[i],
+         trans =  path[i + 1]
+         # label = str_c("A[", i/2 - 1, "]")
+      )
+      actions <- addHArc(actions, harc)
+      nxt <-
+         sample(setdiff((i * stateN + 1):((i + 1) * stateN), path[i + 1]), 9-i)
+      for (s in nxt) {
+         harc <- list(state = path[i],
+                      trans =  s,
+                      lty = 2)
+         actions <- addHArc(actions, harc)
+      }
+   }
+   else {
+      harc <- list(state = path[i],
+                   trans =  path[i + 1],
+                   col = "grey")
+      actions <- addHArc(actions, harc)
+   }
+}
+par(mar = c(0, 0, 0, 0)) 
+plotHypergraph(gridDim, states, actions, showGrid = F, cex = 0.5, radx = 0.02, rady=0.025, marX=0.02, marY=0.07)
+```
+
+## Colab
+
+During the lecture for this module we will work with the [tutorial][colab-02-tic-tac-toe] where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? *Exploitation* takes the action assumed to be optimal with respect to the data observed so far. *Exploration* does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.
+
+::: {.callout-note title="Colab - Before the lecture"}
+Open the [tutorial][colab-02-tic-tac-toe]:
+
+   - Have a look at the notebook and run all code cells.
+   - Try to understand the content. 
+:::
+
+
+## Summary
+
+Read Chapter 1.6 in @Sutton18.
+
+
+## Exercises {#sec-rl-in-action-ex}
+
+`r strExercises`
+
+### Exercise - Self-Play {#ex-r-intro-self}
+
+Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
+played against itself. What do you think would happen in this case? Would it learn a different way of playing?
+
+::: {.callout-warning collapse="true" title="Solution"}
+If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it.
+:::
+
+
+### Exercise - Symmetries {#ex-r-intro-sym}
+
+Many tic-tac-toe positions appear different but are really the same because of symmetries. 
+
+   1. How might we amend the reinforcement learning algorithm described above to take advantage of this?
+   
+      ::: {.callout-warning collapse="true" title="Solution"}
+      It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.
+      :::
+   
+   2. In what ways would this improve the algorithm? 
+   
+      ::: {.callout-warning collapse="true" title="Solution"}
+      A smaller state space would increase the speed of learning and reduce the memory required.
+      :::
+   
+   3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
+   
+      ::: {.callout-warning collapse="true" title="Solution"}
+      If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.
+      :::
+
+
+### Exercise - Greedy Play {#ex-r-intro-greedy}
+
+Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
+
+::: {.callout-warning collapse="true" title="Solution"}
+As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required.
+:::
+
+
+### Exercise - Learning from Exploration {#ex-r-intro-exploit} 
+
+Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
+
+   1. What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves? 
+   
+      ::: {.callout-warning collapse="true" title="Solution"}
+      The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy.
+      :::
+      
+   2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
+
+      ::: {.callout-warning collapse="true" title="Solution"}
+      The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.
+      :::
+      
+      
+### Exercise - Other Improvements {#ex-r-intro-other}
+
+Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?
+   
+::: {.callout-warning collapse="true" title="Solution"}
+Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.
+:::
+ 
+
+
+
+
+```{r links, child="links.md", include=FALSE}
+```
