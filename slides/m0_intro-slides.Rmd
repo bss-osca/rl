@@ -81,7 +81,10 @@ knitr::include_graphics("./img/responses.png")
   - Before: Read the suggested material (you may also start with the exercises).
   - Lecture or tutorial. Not all material will be covered here.
   - Continue with exercises (group work).
-- It is strongly recommended that you solve the exercises for each week during the course. This is the best way to prepare for the exam. 
+- It is strongly recommended that you 
+  - Read the material BEFORE class.
+  - Solve the exercises for each week DURING the course. 
+  - This is the best way to prepare for the exam. 
 
 ---
 
@@ -101,15 +104,15 @@ knitr::include_graphics("./img/online-site.png")
 - It is up to you how to meet in these groups (on-line or physical). 
 - Use the groups when you 
   * solve the exercises. 
-  * hand in the project report.
+  * hand-in project report(s).
 
 ---
 
 ## Project report
 
-- A project report must be written during the course focussing on solving a RL problem.
+- Each group hand-in a project report during the course focusing on solving a RL problem.
 - The report may be used as a starting point for discussion at the individual exam.
-- You must hand in the reports in groups and do individual peer grading using the on-line platform [Peergrade].
+- You must hand in the reports in groups and do individual peer grading.
 
 ---
 
@@ -118,6 +121,7 @@ knitr::include_graphics("./img/online-site.png")
 - A 20 min oral individual exam without any preparation. 
 - Curriculum include all material such as book chapters, course notes, videos, interactive tutorials, exercises and project reports.
 - The report may be used as a starting point for discussion at the individual exam.
+- In no report we do theoretical stuff instead.
 
 ---
 
