@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; An introduction to RL – Reinforcement Learning for Business (RL)</title>
+<title>4&nbsp; Multi-armed bandits – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./02_rl-in-action.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./references.html" rel="next">
+<link href="./02_rl-in-action.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -129,7 +129,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="2&nbsp; An introduction to RL – Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="4&nbsp; Multi-armed bandits – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_rl-intro.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03_bandit.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -187,7 +187,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_rl-intro.html" class="sidebar-item-text sidebar-link active">
+  <a href="./01_rl-intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span></a>
   </div>
 </li>
@@ -203,7 +203,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_bandit.html" class="sidebar-item-text sidebar-link">
+  <a href="./03_bandit.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></span></a>
   </div>
 </li>
@@ -240,25 +240,23 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-rl-intro-lo" id="toc-sec-rl-intro-lo" class="nav-link active" data-scroll-target="#sec-rl-intro-lo"><span class="header-section-number">2.1</span> Learning outcomes</a></li>
-  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">2.2</span> Textbook readings</a></li>
-  <li><a href="#what-is-reinforcement-learning" id="toc-what-is-reinforcement-learning" class="nav-link" data-scroll-target="#what-is-reinforcement-learning"><span class="header-section-number">2.3</span> What is reinforcement learning</a></li>
-  <li><a href="#rl-and-business-analytics" id="toc-rl-and-business-analytics" class="nav-link" data-scroll-target="#rl-and-business-analytics"><span class="header-section-number">2.4</span> RL and Business Analytics</a></li>
-  <li><a href="#rl-in-different-research-deciplines" id="toc-rl-in-different-research-deciplines" class="nav-link" data-scroll-target="#rl-in-different-research-deciplines"><span class="header-section-number">2.5</span> RL in different research deciplines</a></li>
-  <li><a href="#rl-and-machine-learning" id="toc-rl-and-machine-learning" class="nav-link" data-scroll-target="#rl-and-machine-learning"><span class="header-section-number">2.6</span> RL and machine learning</a></li>
-  <li><a href="#the-rl-data-stream" id="toc-the-rl-data-stream" class="nav-link" data-scroll-target="#the-rl-data-stream"><span class="header-section-number">2.7</span> The RL data-stream</a></li>
-  <li><a href="#states-actions-rewards-and-policies" id="toc-states-actions-rewards-and-policies" class="nav-link" data-scroll-target="#states-actions-rewards-and-policies"><span class="header-section-number">2.8</span> States, actions, rewards and policies</a></li>
-  <li><a href="#exploitation-vs-exploration" id="toc-exploitation-vs-exploration" class="nav-link" data-scroll-target="#exploitation-vs-exploration"><span class="header-section-number">2.9</span> Exploitation vs Exploration</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">2.10</span> Summary</a></li>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">4.1</span> Learning outcomes</a></li>
+  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">4.2</span> Textbook readings</a></li>
+  <li><a href="#the-k-armed-bandit-problem" id="toc-the-k-armed-bandit-problem" class="nav-link" data-scroll-target="#the-k-armed-bandit-problem"><span class="header-section-number">4.3</span> The k-armed bandit problem</a></li>
+  <li><a href="#estimating-the-value-of-an-action" id="toc-estimating-the-value-of-an-action" class="nav-link" data-scroll-target="#estimating-the-value-of-an-action"><span class="header-section-number">4.4</span> Estimating the value of an action</a></li>
+  <li><a href="#sec-bandit-step-size" id="toc-sec-bandit-step-size" class="nav-link" data-scroll-target="#sec-bandit-step-size"><span class="header-section-number">4.5</span> The role of the step-size</a></li>
+  <li><a href="#optimistic-initial-values" id="toc-optimistic-initial-values" class="nav-link" data-scroll-target="#optimistic-initial-values"><span class="header-section-number">4.6</span> Optimistic initial values</a></li>
+  <li><a href="#upper-confidence-bound-action-selection" id="toc-upper-confidence-bound-action-selection" class="nav-link" data-scroll-target="#upper-confidence-bound-action-selection"><span class="header-section-number">4.7</span> Upper-Confidence Bound Action Selection</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.8</span> Summary</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_bandit.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_bandit.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-rl-intro" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span></h1>
+<h1 class="title"><span id="sec-bandit" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></span></h1>
 </div>
 
 
@@ -275,204 +273,189 @@ window.Quarto = {
 </header>
 
 
-<p>This module gives a short introduction to Reinforcement learning.</p>
-<section id="sec-rl-intro-lo" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="sec-rl-intro-lo"><span class="header-section-number">2.1</span> Learning outcomes</h2>
+<p>This module consider the k-armed bandit problem which is a sequential decision problem with one state and <span class="math inline">\(k\)</span> actions. The problem is used to illustrate different learning methods used in RL.</p>
+<p>The module is also the first module in the <em>Tabular methods</em> part of the notes. This part describe almost all the core ideas of reinforcement learning algorithms in their simplest forms where the state and action spaces are small enough for the approximate value functions to be represented as arrays or tables.</p>
+<section id="learning-outcomes" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">4.1</span> Learning outcomes</h2>
 <p>By the end of this module, you are expected to:</p>
 <ul>
-<li>Describe what RL is.</li>
-<li>Be able to identify different sequential decision problems.</li>
-<li>Know what Business Analytics are and identify RL in that framework.</li>
-<li>Memorise different names for RL and how it fits in a Machine Learning framework.</li>
-<li>Formulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).</li>
+<li>Define a k-armed bandit and understand the nature of the problem.</li>
+<li>Define the reward of a action (action-reward).</li>
+<li>Describe different methods for estimating the action-reward.</li>
+<li>Explain the differences between exploration and exploitation.</li>
+<li>Formulate an <span class="math inline">\(\epsilon\)</span>-greedy algorithm for selecting the next action.</li>
+<li>Interpret the sample-average (variable step-size) versus exponential recency-weighted average (constant step-size) action-reward estimation.</li>
+<li>Argue why we might use a constant stepsize in the case of non-stationarity.</li>
+<li>Understand the effect of optimistic initial values.</li>
+<li>Formulate an upper confidence bound action selection algorithm.</li>
 </ul>
-<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 3, 5, 6, 9 and 11 of the course.</p>
+<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 1, 3, 6, 9, 10 and 12 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
 <!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 </section>
-<section id="textbook-readings" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">2.2</span> Textbook readings</h2>
-<p>For this lecture, you will need to read Chapter 1-1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<section id="textbook-readings" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">4.2</span> Textbook readings</h2>
+<p>For this week, you will need to read Chapter 2 - 2.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 Slides for this module can be seen
-<a href="https://bss-osca.github.io/rl/slides/01_rl-intro-slides.html" target="_blank">here.</a>
+<a href="https://bss-osca.github.io/rl/slides/02_bandit-slides.html" target="_blank">here.</a>
 You do not have to look at them before the lecture!
 </div>
 </div>
 </div>
 </section>
-<section id="what-is-reinforcement-learning" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="what-is-reinforcement-learning"><span class="header-section-number">2.3</span> What is reinforcement learning</h2>
-<p>RL can be seen as</p>
-<ul>
-<li>An approach of modelling sequential decision making problems.</li>
-<li>An approach for learning good decision making under uncertainty from experience.</li>
-<li>Mathematical models for learning-based decision making.</li>
-<li>Trying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.</li>
-<li>Estimating and finding near optimal decisions of a stochastic process with sequential decision making.</li>
-<li>A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.</li>
-</ul>
-<p>Sequential decision problems are problems where you take decisions/actions over time. As an agent, you base your decision on the current state of the system (a state is a function of the information/data available). At the next time-step, the system have moved (stochastically) to the next stage. Here new information may be available and you receive a reward and take a new action. Examples of sequential decision problems are (with possible actions):</p>
-<ul>
-<li>Playing backgammon (how to move the checkers).</li>
-<li><a href="https://arxiv.org/pdf/1807.00412.pdf">Driving a car</a> (left, right, forward, back, break, stop, …).</li>
-<li>How to <a href="https://medium.com/ibm-data-ai/reinforcement-learning-the-business-use-case-part-2-c175740999">invest/maintain a portfolio of stocks</a> (buy, sell, amount).<br>
-</li>
-<li><a href="https://www.youtube.com/watch?v=pxWkg2N0l9c">Control an inventory</a> (wait, buy, amount).</li>
-<li>Vehicle routing (routes).</li>
-<li>Maintain a spare-part (wait, maintain).</li>
-<li><a href="https://arxiv.org/pdf/2103.14295.pdf">Robot operations</a> (sort, move, …)</li>
-<li><a href="http://dx.doi.org/10.1016/j.ejor.2019.01.050">Dairy cow treatment/replacement</a> (treat, replace, …)</li>
-<li>Recommender systems e.g.&nbsp;<a href="https://scale.com/blog/Netflix-Recommendation-Personalization-TransformX-Scale-AI-Insights">Netflix recommendations</a> (videos)</li>
-</ul>
-<p>Since RL involves a scalar reward signal, the goal is to choose actions such that the total reward is maximized. Note actions have an impact on the future and may have long term consequences. As such, you cannot simply choose the action that maximize the current reward. It may, in fact, be better to sacrifice immediate reward to gain more long term reward.</p>
-<p>RL can be seen as a way of modelling intuition. An RL model has specific states, actions and reward structure and our goal as an agent is to find good decisions/actions that maximize the total reward. The agent learn using, for instance:</p>
-<ul>
-<li>totally random trials (in the start),</li>
-<li>sophisticated tactics and superhuman skills (in the end).</li>
-</ul>
-<p>That is, as the agent learn, the reward estimate of a given action becomes better.</p>
-<p>As humans, we often learn by trial and error too:</p>
-<ul>
-<li>Learning to walk (by falling/pain).</li>
-<li>Learning to play (strategy is based on the game rules and what we have experienced works based on previous plays).</li>
-</ul>
-<p>This can also be seen as learning the reward of our actions.</p>
-</section>
-<section id="rl-and-business-analytics" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="rl-and-business-analytics"><span class="header-section-number">2.4</span> RL and Business Analytics</h2>
-<p><a href="https://en.wikipedia.org/wiki/Business_analytics">Business Analytics</a> (BA) (or just <a href="http://connect.informs.org/analytics/home">Analytics</a>) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using “big” data sources.</p>
-<p><strong>Descriptive Analytics</strong>: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.</p>
-<p><strong>Predictive Analytics</strong>: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).</p>
-<p><strong>Prescriptive Analytics</strong>: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since RL focus optimizing decisions it is Prescriptive Analytics also known as sequential decision analytics.</p>
+<section id="the-k-armed-bandit-problem" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="the-k-armed-bandit-problem"><span class="header-section-number">4.3</span> The k-armed bandit problem</h2>
+<p>Multi-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/analytics_plot9.png" class="img-fluid figure-img"></p>
-<figcaption>Business Analytics and competive advantage.</figcaption>
+<div id="fig-bandit" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bandit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/bandit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bandit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: A 4-armed bandit.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Companies who use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. This enterprise approach generates a companywide respect for applying descriptive, predictive and prescriptive analytics in areas such as supply chain, marketing and human resources. Focusing on BA gives a company a competive advantage (see Figure @ref(fig:analytics)).</p>
-<p><strong>BA and related areas</strong>: In the past <em>Business Intelligence</em> traditionally focuses on querying, reporting, online analytical processing, i.e.&nbsp;descriptive analytics. However, a more modern definition of Business Intelligence is the union of descriptive and predictive analytics. <em>Operations Research</em> or <em>Management Science</em> deals with the application of advanced analytical methods to help make better decisions and can hence be seen as prescriptive analytics. However, traditionally it has been taking a more theoretical approach and focusing on problem-driven research while BA takes a more data-driven approach. <em>Logistics</em> is a cross-functional area focusing on the effective and efficient flows of goods and services, and the related flows of information and cash. <em>Supply Chain Management</em> adds a process-oriented and cross-company perspective. Both can be seen as prescriptive analytics with a more problem-driven research focus. Advanced Analytics is often used as a classification of both predictive and prescriptive analytics. <em>Data science</em> is an interdisciplinary field about scientific methods, processes, and systems to extract knowledge or insights from data in various forms, either structured or unstructured and can be seen as Business analytics applied to a wider range of data.</p>
-</section>
-<section id="rl-in-different-research-deciplines" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="rl-in-different-research-deciplines"><span class="header-section-number">2.5</span> RL in different research deciplines</h2>
-<p>RL is used in many research fields using different names:</p>
-<ul>
-<li>RL (most used) originated from computer science and AI.</li>
-<li><em>Approximate dynamic programming (ADP)</em> is mostly used within operations research.</li>
-<li><em>Neuro-dynamic programming</em> (when states are represented using a neural network).</li>
-<li>RL is closely related to <em>Markov decision processes</em> (a mathematical model for a sequential decision problem).</li>
-</ul>
+<p>Imagine you are facing a wall with <span class="math inline">\(k\)</span> slot machines (see <a href="#fig-bandit" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state <span class="math inline">\(s\)</span> at time <span class="math inline">\(t\)</span> and have to choose among <span class="math inline">\(k\)</span> actions given the environment representing the <span class="math inline">\(k\)</span> bandits. Only the rewards from the <span class="math inline">\(k\)</span> bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy <span class="math inline">\(\pi^*(s) = \pi^* = a^*\)</span> that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.</p>
+<!-- For finding the optimal action a learning strategy that balance the exploration vs. exploitation trade-off. -->
+<!-- To summarize: -->
+<!-- * The agent are faced repeatedly with a choice of $k$ actions. -->
+<!-- * After each choice, you receive a reward from a stationary probability distribution. -->
+<!-- * Objective is to maximise total reward over some time period, say 100 time steps. -->
+<!-- * Each action has an expected or mean reward based on its probability distribution. We shall call thjs the \textit{value} of the action. We do not know these values with certainty. -->
+<!-- * Because of this uncertainty, there is always an exploration vs exploitation problem. We always have one action that we deem to be most valuable at any instant, but it is highly likely, at least initially, that there are actions we are yet to explore that are more valuable. -->
+<p>Multi-armed bandits can be used in e.g.&nbsp;<a href="https://research.facebook.com/blog/2021/4/auto-placement-of-ad-campaigns-using-multi-armed-bandits/">digital advertising</a>. Suppose you are an advertiser seeking to optimize which ads (<span class="math inline">\(k\)</span> to choose among) to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/rl-names.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption>Adopted from <span class="citation" data-cites="Silver15">Silver (<a href="references.html#ref-Silver15" role="doc-biblioref">2015</a>)</span>.</figcaption>
+<div id="fig-bandit-choose" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bandit-choose-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/bandit-choose.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bandit-choose-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: Which ad to choose?
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>It is reasonable to assume that each of these ads will have different effects, and some will be more engaging than others. That is, each ad has some theoretical — but unknown — click-through-rate (CTR) that is assumed to not change over time. How do we go about solving which ad we should choose (see <a href="#fig-bandit-choose" class="quarto-xref">Figure&nbsp;<span>4.2</span></a>)?</p>
+</section>
+<section id="estimating-the-value-of-an-action" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="estimating-the-value-of-an-action"><span class="header-section-number">4.4</span> Estimating the value of an action</h2>
+<p>How can the value of an action be estimated, i.e.&nbsp;the expected reward of an action <span class="math inline">\(q_*(a) = \mathbb{E}[R_t | A_t = a]\)</span>. Assume that at time <span class="math inline">\(t\)</span> action <span class="math inline">\(a\)</span> has been chosen <span class="math inline">\(N_t(a)\)</span> times. Then the estimated action value is <span class="math display">\[\begin{equation}
+    Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
+\end{equation}\]</span> Storing <span class="math inline">\(Q_t(a)\)</span> this way is cumbersome since memory and computation requirements grow over time. Instead an <em>incremental</em> approach is better. If we assume that <span class="math inline">\(N_t(a) = n-1\)</span> and set <span class="math inline">\(Q_t(a) = Q_n\)</span> then <span class="math inline">\(Q_{n+1}\)</span> becomes: <span class="math display">\[\begin{align}\label{eq:avg}
+  Q_{n+1} &amp;= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
+            &amp;= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
+            &amp;= \frac{1}{n}\left( R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i \right) \nonumber \\
+            &amp;= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
+           &amp;= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
+\end{align}\]</span> That is, we can update the estimate of the value of <span class="math inline">\(a\)</span> using the previous estimate, the observed reward and how many times the action has occurred (<span class="math inline">\(n\)</span>).</p>
+<p>A greedy approach for selecting the next action is <span class="math display">\[\begin{equation}
+A_t =\arg \max_a Q_t(a).
+\end{equation}\]</span> Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span class="math inline">\(a\)</span> for which <span class="math inline">\(Q_t(a)\)</span> is maximised. A pure greedy approach do not explore other actions. Instead an <span class="math inline">\(\varepsilon\)</span>-greedy approach is used in which with probability <span class="math inline">\(\varepsilon\)</span> we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.</p>
+<!-- \begin{itemize} -->
+<!--    \item Simplest action selection rule is to select the action with the highest estimated value. -->
+<!--    \item \(\epsilon\)-greedy methods are where the agent selects the greedy option most of the time, and selects a random action with probability \(\epsilon\). -->
+<!--    \item Three algorithms are tried: one with \(e\)=0 (pure greedy), one with \(e\)=0.01 and another with \(e\)=0.1 -->
+<!--    \item Greedy method gets stuck performing sub-optimal actions. -->
+<!--    \item \(e\)=0.1 explores more and usually finds the optimal action earlier, but never selects it more that 91\% of the time. -->
+<!--    \item \(e\)=0.01 method improves more slowly, but eventually performs better than the e=0.1 method on both performance measures. -->
+<!--    \item It is possible to reduce \(e\) over time to try to get the best of both high and low values. -->
+<!-- \end{itemize} -->
+<!-- Note this is the general formula  -->
+<!-- \begin{equation} -->
+<!-- NewEstimate \leftarrow OldEstimate + StepSize \left[Target - OldEstimate \right] -->
+<!-- \end{equation} -->
+<div class="callout callout-style-simple callout-note callout-titled" title="Colab - Before the lecture">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Colab - Before the lecture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>During the lecture for this module we will work with the <a href="https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing">tutorial</a> where we will try to estimate the <span class="math inline">\(Q\)</span> values. We implement the algorithm using an agent and environment class. Open the <a href="https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing">tutorial</a>:</p>
+<ul>
+<li>Have a look at the notebook and run all code cells.</li>
+<li>Try to understand the content.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="sec-bandit-step-size" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="sec-bandit-step-size"><span class="header-section-number">4.5</span> The role of the step-size</h2>
+<p>In general we update the reward estimate of an action using</p>
+<p><span class="math display">\[\begin{equation}
+    Q_{n+1} = Q_n +\alpha_n(a) \left[R_n - Q_n\right]
+\end{equation}\]</span></p>
+<p>Until now we have used the sample average <span class="math inline">\(\alpha_n(a)= 1/n\)</span>; however, other choices of <span class="math inline">\(\alpha_n(a)\)</span> is possible. In general we will converge to the true reward if</p>
+<p><span class="math display">\[\begin{equation}
+    \sum_n \alpha_n(a) = \infty \quad\quad \mathsf{and} \quad\quad  \sum_n \alpha_n(a)^2 &lt; \infty.
+\end{equation}\]</span></p>
+<p>Meaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e.&nbsp;the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant <span class="math inline">\(\alpha_n(a)= \alpha \in (0, 1]\)</span> instead. This results in (Q_{n+1}) being a weighted average of the past rewards and the initial estimate (Q_1):</p>
+<p><span class="math display">\[\begin{align}
+Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
+&amp;= \alpha R_n + (1 - \alpha)Q_n \nonumber \\
+&amp;= \alpha R_n + (1 - \alpha)[\alpha R_{n-1} + (1 - \alpha)Q_{n-1}] \nonumber \\
+&amp;= \alpha R_n + (1 - \alpha)\alpha R_{n-1} + (1 - \alpha)^2 Q_{n-1}  \nonumber \\
+&amp;= \vdots \nonumber \\
+&amp;= (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} R_i \\
+\end{align}\]</span></p>
+<p>Because the weight given to each reward depends on how long ago it was observed, we can see that more recent rewards are given more weight. Note the weights () sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since the weight given to each reward decays exponentially into the past. This sometimes called an <em>exponential recency-weighted average</em>.</p>
+</section>
+<section id="optimistic-initial-values" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="optimistic-initial-values"><span class="header-section-number">4.6</span> Optimistic initial values</h2>
+<p>The methods discussed so far are dependent to some extent on the initial action-value estimate i.e.&nbsp;they are biased by their initial estimates. For methods with constant <span class="math inline">\((\alpha)\)</span> this bias is permanent. We may set initial value estimates artificially high to encourage exploration in the short run. For instance, by setting initial values of <span class="math inline">\(Q\)</span> to 5 rather than 0 we encourage exploration, even in the greedy case. Here the agent will almost always be disappointed with it’s samples because they are less than the initial estimate and so will explore elsewhere until the values converge.</p>
+</section>
+<section id="upper-confidence-bound-action-selection" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="upper-confidence-bound-action-selection"><span class="header-section-number">4.7</span> Upper-Confidence Bound Action Selection</h2>
+<p>An <span class="math inline">\(\epsilon\)</span>-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the <em>upper-confidence bound</em>: <span class="math display">\[\begin{equation}
+    A_t = \arg\max_a \left(Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right),
+\end{equation}\]</span></p>
+<p>Note the square root term is a measure of the uncertainty in our estimate (see <a href="#fig-srt" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>).</p>
+<ul>
+<li>It is proportional to <span class="math inline">\(t\)</span> i.e.&nbsp;how many time-steps have passed and inversely proportional to (N_t(a)) i.e.&nbsp;how many times that action has been visited.</li>
+<li>The more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound.</li>
+<li>As the timesteps increases, the denominator dominates the numerator as the ln term flattens.</li>
+<li>Each time we select an action our uncertainty decreases because <span class="math inline">\(N\)</span> is the denominator of this equation.</li>
+<li>If <span class="math inline">\(N_t(a) = 0\)</span> then we consider <span class="math inline">\(a\)</span> as a maximal action, i.e.&nbsp;we select first among actions with <span class="math inline">\(N_t(a) = 0\)</span>.</li>
+<li>The parameter <span class="math inline">\(c&gt;0\)</span> controls the degree of exploration. Higher <span class="math inline">\(c\)</span> results in more weight on the uncertainty.</li>
+</ul>
+<p>Since upper-confidence bound action selection select actions according to their potential, it is expected to perform better than <span class="math inline">\(\epsilon\)</span>-greedy methods.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-srt" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-srt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_bandit_files/figure-html/fig-srt-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-srt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: Square root term for an action using different <span class="math inline">\(c\)</span>-values.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="rl-and-machine-learning" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="rl-and-machine-learning"><span class="header-section-number">2.6</span> RL and machine learning</h2>
-<p>Different ways of learning:</p>
-<ul>
-<li><strong>Supervised learning:</strong> Given data <span class="math inline">\((x_i, y_i)\)</span> learn to predict <span class="math inline">\(y\)</span> from <span class="math inline">\(x\)</span>, i.e.&nbsp;find <span class="math inline">\(y \approx f(x)\)</span> (e.g.&nbsp;regression).</li>
-<li><strong>Unsupervised learning:</strong> Given data <span class="math inline">\((x_i)\)</span> learn patterns using <span class="math inline">\(x\)</span>, i.e.&nbsp;find <span class="math inline">\(f(x)\)</span> (e.g.&nbsp;clustering). <!-- * Often assume that data are independent and identically distributed (iid).  --></li>
-<li><strong>RL:</strong> Given state <span class="math inline">\(x\)</span> you take an action and observe the reward <span class="math inline">\(r\)</span> and the new state <span class="math inline">\(x'\)</span>.
-<ul>
-<li>There is no supervisor <span class="math inline">\(y\)</span>, only a reward signal <span class="math inline">\(r\)</span>.</li>
-<li>Your goal is to find a policy that optimize the total reward function.</li>
-</ul></li>
-</ul>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/rl-ml.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption>Adopted from <span class="citation" data-cites="Silver15">Silver (<a href="references.html#ref-Silver15" role="doc-biblioref">2015</a>)</span>.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="the-rl-data-stream" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="the-rl-data-stream"><span class="header-section-number">2.7</span> The RL data-stream</h2>
-<p>RL considers an agent in an environment:</p>
-<ul>
-<li>Agent: The one who takes the action (computer, robot, decision maker).</li>
-<li>Environment: The system/world where observations and rewards are found.</li>
-</ul>
-<p>Data are revealed sequentially as you take actions <span class="math display">\[(O_0, A_0, R_1, O_1, A_1, R_2, O_2, \ldots).\]</span> At time <span class="math inline">\(t\)</span> the agent have been taken action <span class="math inline">\(A_{t-1}\)</span> and observed observation <span class="math inline">\(O_t\)</span> and reward <span class="math inline">\(R_t\)</span>:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Agent-environment representation.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>This gives us the <em>history</em> at time <span class="math inline">\(t\)</span> is the sequence of observations, actions and rewards <span class="math display">\[H_t = (O_0, A_0, R_1, O_1, \ldots, A_{t-1}, R_t, O_t).\]</span></p>
-</section>
-<section id="states-actions-rewards-and-policies" class="level2" data-number="2.8">
-<h2 data-number="2.8" class="anchored" data-anchor-id="states-actions-rewards-and-policies"><span class="header-section-number">2.8</span> States, actions, rewards and policies</h2>
-<p>The (agent) state <span class="math inline">\(S_t\)</span> is the information used to take the next action <span class="math inline">\(A_t\)</span>:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="01_rl-intro_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>State and action.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>A state depends on the history, i.e.&nbsp;a state is a function of the history <span class="math inline">\(S_t = f(H_t)\)</span>. Different strategies for defining a state may be considered. Choosing <span class="math inline">\(S_t = H_t\)</span> is bad since the size of a state representation grows very fast. A better strategy is to just store the information needed for taking the next action. Moreover, it is good to have Markov states where given the present state the future is independent of the past. That is, the current state holds just as much information as the history, i.e.&nbsp;it holds all useful information of the history. Symbolically, we call a state <span class="math inline">\(S_t\)</span> Markov iff</p>
-<p><span class="math display">\[\Pr[S_{t+1} | S_t] = \Pr[S_{t+1} | S_1,...,S_t].\]</span></p>
-<p>That is, the probability of seeing some next state <span class="math inline">\(S_{t+1}\)</span> given the current state is exactly equal to the probability of that next state given the entire history of states. Note that we can always find some Markov state. Though the smaller the state, the more “valuable” it is. In the worst case, <span class="math inline">\(H_t\)</span> is Markov, since it represents all known information about itself.</p>
-<p>The reward <span class="math inline">\(R_t\)</span> is a number representing the reward at time <span class="math inline">\(t\)</span> (negative if a cost). Examples of rewards are</p>
-<ul>
-<li>Playing backgammon (0 (when play), 1 (when win), -1 (when loose)).</li>
-<li>How to invest/maintain a portfolio of stocks (the profit).<br>
-</li>
-<li>Control an inventory (inventory cost, lost sales cost).</li>
-<li>Vehicle routing (transportation cost).</li>
-</ul>
-<p>The goal is to find a policy that maximize the total future reward. A <em>policy</em> is the agent’s behaviour and is a map from state to action, i.e.&nbsp;a function <span class="math display">\[a = \pi(s)\]</span> saying that given the agent is in state <span class="math inline">\(s\)</span> we choose action <span class="math inline">\(a\)</span>.</p>
-<p>The total future reward is currently not defined clearly. Let the <em>value function</em> denote the future reward in state <span class="math inline">\(s\)</span> and define it as the expected discounted future reward: <span class="math display">\[V_\pi(s) = \mathbb{E}_\pi(R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S = s).\]</span> Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states <span class="math display">\[\pi^* = \arg\max_{\pi\in\Pi}(V_\pi(s)).\]</span></p>
-<p>The value of the discount rate is important:</p>
-<ul>
-<li>Discount rate <span class="math inline">\(\gamma=0\)</span>: Only care about present reward.</li>
-<li>Discount rate <span class="math inline">\(\gamma=1\)</span>: Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.</li>
-<li>Discount rate <span class="math inline">\(\gamma&lt;1\)</span>: Rewards near to the present more beneficial. Note <span class="math inline">\(V(s)\)</span> will converge to a number even if the time-horizon is infinite.</li>
-</ul>
-<!-- ## Model free vs Model based -->
-</section>
-<section id="exploitation-vs-exploration" class="level2" data-number="2.9">
-<h2 data-number="2.9" class="anchored" data-anchor-id="exploitation-vs-exploration"><span class="header-section-number">2.9</span> Exploitation vs Exploration</h2>
-<p>A key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.</p>
-<p>Examples in the exploration and exploitation dilemma are for instance movie recommendations: recommending the user’s best rated movie type (exploitation) or trying another movie type (exploration) or oil drilling: drilling at the best known location (exploitation) or trying a new location (exploration).</p>
-</section>
-<section id="summary" class="level2" data-number="2.10">
-<h2 data-number="2.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">2.10</span> Summary</h2>
-<p>Read Chapter 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+<section id="summary" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.8</span> Summary</h2>
+<p>Read Chapter 2.10 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-Silver15" class="csl-entry" role="listitem">
-Silver, David. 2015. <span>“Lectures on Reinforcement Learning.”</span> <a href="https://www.davidsilver.uk/teaching/">https://www.davidsilver.uk/teaching/</a>.
-</div>
 <div id="ref-Sutton18" class="csl-entry" role="listitem">
 Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
 </div>
@@ -881,13 +864,13 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="About the course notes">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About the course notes</span></span>
+      <a href="./02_rl-in-action.html" class="pagination-link" aria-label="RL in action">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02_rl-in-action.html" class="pagination-link" aria-label="RL in action">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -896,5 +879,5 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/01_rl-intro.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_bandit.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_bandit.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
