@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Appendix A — Setting up Python and an introduction – Reinforcement Learning for Business (RL)</title>
+<title>Appendix A — Python – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,6 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./99_2_appdx.html" rel="next">
 <link href="./references.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -76,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f8cb7fe94b71c4ea6759b609738bfe9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-48fb113fea7c09ade55c8c495d57f66a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -114,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="Appendix A — Setting up Python and an introduction – Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="Appendix A — Python – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -129,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./99_1_appdx.html">Appendices</a></li><li class="breadcrumb-item"><a href="./99_1_appdx.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Setting up Python and an introduction</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./99_1_appdx.html">Appendices</a></li><li class="breadcrumb-item"><a href="./99_1_appdx.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Python</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -168,18 +169,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Introduction to RL</span></span>
+ <span class="menu-text">Introduction</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_rl-intro.html" class="sidebar-item-text sidebar-link">
+  <a href="./02_rl-intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_rl-in-action.html" class="sidebar-item-text sidebar-link">
+  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python and packages</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -188,8 +195,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_bandit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></span></a>
+  <a href="./05_bandit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -210,7 +217,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./99_1_appdx.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Setting up Python and an introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99_2_appdx.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Getting help</span></span></a>
   </div>
 </li>
       </ul>
@@ -225,18 +238,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#laptop-setup" id="toc-laptop-setup" class="nav-link active" data-scroll-target="#laptop-setup"><span class="header-section-number">A.1</span> Laptop setup</a></li>
-  <li><a href="#learning-python" id="toc-learning-python" class="nav-link" data-scroll-target="#learning-python"><span class="header-section-number">A.2</span> Learning Python</a></li>
-  <li><a href="#r-and-python-packages" id="toc-r-and-python-packages" class="nav-link" data-scroll-target="#r-and-python-packages"><span class="header-section-number">A.3</span> R and Python packages</a></li>
+  <li><a href="#colab" id="toc-colab" class="nav-link active" data-scroll-target="#colab"><span class="header-section-number">A.1</span> Colab</a></li>
+  <li><a href="#laptop-setup" id="toc-laptop-setup" class="nav-link" data-scroll-target="#laptop-setup"><span class="header-section-number">A.2</span> Laptop setup</a></li>
+  <li><a href="#learning-python" id="toc-learning-python" class="nav-link" data-scroll-target="#learning-python"><span class="header-section-number">A.3</span> Learning Python</a></li>
+  <li><a href="#sec-coding-convention" id="toc-sec-coding-convention" class="nav-link" data-scroll-target="#sec-coding-convention"><span class="header-section-number">A.4</span> Coding/naming convention</a></li>
+  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging"><span class="header-section-number">A.5</span> Debugging</a></li>
+  <li><a href="#r-and-python-packages" id="toc-r-and-python-packages" class="nav-link" data-scroll-target="#r-and-python-packages"><span class="header-section-number">A.6</span> R and Python packages</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/99_1_appdx.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/99_1_appdx.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./99_1_appdx.html">Appendices</a></li><li class="breadcrumb-item"><a href="./99_1_appdx.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Setting up Python and an introduction</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./99_1_appdx.html">Appendices</a></li><li class="breadcrumb-item"><a href="./99_1_appdx.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Python</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-python-setup" class="quarto-section-identifier">Appendix A — Setting up Python and an introduction</span></h1>
+<h1 class="title"><span id="sec-python-setup" class="quarto-section-identifier">Appendix A — Python</span></h1>
 </div>
 
 
@@ -253,10 +269,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>[Python] is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you’re analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.</p>
-<section id="laptop-setup" class="level2" data-number="A.1">
-<h2 data-number="A.1" class="anchored" data-anchor-id="laptop-setup"><span class="header-section-number">A.1</span> Laptop setup</h2>
-<p>If you prefer to have [Python] installed on your laptop, then do the following:</p>
+<p><a href="https://www.python.org/">Python</a> is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you’re analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.</p>
+<section id="colab" class="level2" data-number="A.1">
+<h2 data-number="A.1" class="anchored" data-anchor-id="colab"><span class="header-section-number">A.1</span> Colab</h2>
+<p>During this course we are going to use <a href="https://colab.google/">Google Colab</a> which is a hosted <a href="https://jupyter.org/">Jupyter</a> notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, <a href="https://colab.google/">Colab</a> runs in your browser and you do not have to install anything on your computer. With a <a href="https://jupyter.org/">Jupyter</a> notebook you can weave you code together with text.</p>
+<p>To be familiar with Colab do the following:</p>
+<ol type="1">
+<li>If you do not have a Google account <a href="https://accounts.google.com/">create one</a>. Note if you have a gMail then you already have a Google account.</li>
+<li>Open and do this [tutorial][colab-ex-colab].</li>
+</ol>
+</section>
+<section id="laptop-setup" class="level2" data-number="A.2">
+<h2 data-number="A.2" class="anchored" data-anchor-id="laptop-setup"><span class="header-section-number">A.2</span> Laptop setup</h2>
+<p>If you prefer to have <a href="https://www.python.org/">Python</a> installed on your laptop, then do the following:</p>
 <ol type="1">
 <li>Go to the official Python website: <a href="https://www.python.org/downloads">https://www.python.org/downloads</a></li>
 <li>Click the download button for your operating system (Windows, macOS, or Linux).</li>
@@ -279,17 +304,143 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>You’re now ready to start coding in Python!</p>
 </section>
-<section id="learning-python" class="level2" data-number="A.2">
-<h2 data-number="A.2" class="anchored" data-anchor-id="learning-python"><span class="header-section-number">A.2</span> Learning Python</h2>
-<p>If you are new to Python you may have a look at some [DataCamp] Courses. First you HAVE TO SIGNUP using [this link][datacamp-signup]. Afterwards have a look at these courses:</p>
+<section id="learning-python" class="level2" data-number="A.3">
+<h2 data-number="A.3" class="anchored" data-anchor-id="learning-python"><span class="header-section-number">A.3</span> Learning Python</h2>
+<p>If you are new to Python you may have a look at some <a href="https://www.datacamp.com/">DataCamp</a> Courses. First you HAVE TO SIGNUP using <a href="https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732">this link</a>. Afterwards have a look at these courses:</p>
 <ol type="1">
 <li><p><a href="https://app.datacamp.com/learn/courses/intro-to-python-for-data-science">Introduction to Python</a> - Learn the basics of Python programming, including variables, data types, and control flow.</p></li>
 <li><p><a href="https://app.datacamp.com/learn/courses/intermediate-python">Intermediate Python</a> - Build on your basic knowledge with functions, loops, and working with Python libraries.</p></li>
 <li><p><a href="https://app.datacamp.com/learn/courses/data-manipulation-with-pandas">Data Manipulation with pandas</a> - pandas is the world’s most popular Python library, used for everything from data manipulation to data analysis.</p></li>
 </ol>
 </section>
-<section id="r-and-python-packages" class="level2" data-number="A.3">
-<h2 data-number="A.3" class="anchored" data-anchor-id="r-and-python-packages"><span class="header-section-number">A.3</span> R and Python packages</h2>
+<section id="sec-coding-convention" class="level2" data-number="A.4">
+<h2 data-number="A.4" class="anchored" data-anchor-id="sec-coding-convention"><span class="header-section-number">A.4</span> Coding/naming convention</h2>
+<p>The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible.</p>
+<p>Different ways of naming you variables exists. You are advised to adopt a naming convention. PEP 8 is the official style guide for Python code. It provides conventions for writing readable, consistent, and maintainable Python programs. Adhering to PEP 8 helps teams collaborate more effectively and improves code quality across projects. An overview is given below.</p>
+<p><strong>Naming Conventions</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 50%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Type</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Variable</td>
+<td><code>lower_case_with_underscores</code></td>
+<td><code>total_count</code></td>
+</tr>
+<tr class="even">
+<td>Function</td>
+<td><code>lower_case_with_underscores</code></td>
+<td><code>process_data()</code></td>
+</tr>
+<tr class="odd">
+<td>Class</td>
+<td><code>CapitalizedWords</code></td>
+<td><code>DataProcessor</code></td>
+</tr>
+<tr class="even">
+<td>Constant</td>
+<td><code>ALL_CAPS_WITH_UNDERSCORES</code></td>
+<td><code>MAX_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>Method (in class)</td>
+<td><code>lower_case_with_underscores</code></td>
+<td><code>compute_value()</code></td>
+</tr>
+<tr class="even">
+<td>Module/Package</td>
+<td><code>lowercase</code> or <code>lower_case_with_underscores</code></td>
+<td><code>utils</code>, <code>data_loader</code></td>
+</tr>
+<tr class="odd">
+<td>Private/Internal</td>
+<td><code>_single_leading_underscore</code></td>
+<td><code>_helper_function()</code></td>
+</tr>
+<tr class="even">
+<td>Strong “private”</td>
+<td><code>__double_leading_underscore</code></td>
+<td><code>__internal_method()</code></td>
+</tr>
+<tr class="odd">
+<td>Magic method (dunder)</td>
+<td><code>__double_leading_and_trailing__</code></td>
+<td><code>__init__</code>, <code>__str__</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Indentation</strong></p>
+<ul>
+<li>Use <strong>4 spaces per indentation level</strong>.</li>
+<li>Do <strong>not</strong> use tabs.</li>
+<li>Use hanging indents for long statements, and align with the opening delimiter.</li>
+</ul>
+<p><strong>Line Length</strong></p>
+<ul>
+<li>Limit lines to <strong>79 characters</strong>.</li>
+<li>For docstrings and comments, limit to <strong>72 characters</strong>.</li>
+</ul>
+<p><strong>Whitespace</strong></p>
+<ul>
+<li>Avoid extra spaces:
+<ul>
+<li>No space inside parentheses/brackets/braces: <code>func(a, b)</code></li>
+<li>No space before commas, colons, or semicolons.</li>
+<li>One space after commas and around binary operators: <code>x = a + b</code></li>
+</ul></li>
+<li>Use blank lines to separate functions and classes.</li>
+</ul>
+<p><strong>Comments</strong></p>
+<ul>
+<li>Use comments to explain <strong>why</strong>, not just <strong>what</strong>.</li>
+<li>Block comments:
+<ul>
+<li>Use full sentences.</li>
+<li>Start with a capital letter and end with a period.</li>
+</ul></li>
+<li>Inline comments:
+<ul>
+<li>Use sparingly.</li>
+<li>Leave two spaces before the <code>#</code>, and one space after.</li>
+</ul></li>
+</ul>
+<p><strong>Docstrings</strong></p>
+<ul>
+<li><p>Use triple double quotes: <code>"""This is a docstring."""</code></p></li>
+<li><p>All public modules, functions, classes, and methods should have docstrings.</p></li>
+<li><p>First line should be a short summary.</p></li>
+<li><p>Leave a blank line after the summary if more detail follows.</p></li>
+<li><p>Example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add(a, b):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Return the sum of two numbers.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    a (int or float): The first number.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    b (int or float): The second number.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">    int or float: The sum of a and b.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="debugging" class="level2" data-number="A.5">
+<h2 data-number="A.5" class="anchored" data-anchor-id="debugging"><span class="header-section-number">A.5</span> Debugging</h2>
+<p>Code development and data analysis always require a bit of trial and error. This <a href="https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing">Colab notebook</a> briefly cover some options.</p>
+</section>
+<section id="r-and-python-packages" class="level2" data-number="A.6">
+<h2 data-number="A.6" class="anchored" data-anchor-id="r-and-python-packages"><span class="header-section-number">A.6</span> R and Python packages</h2>
 <p>If you are used to do data transformation in R then this table may be useful.</p>
 <table class="caption-top table">
 <colgroup>
@@ -762,6 +913,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./99_2_appdx.html" class="pagination-link" aria-label="Getting help">
+        <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Getting help</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

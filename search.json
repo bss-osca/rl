@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "",
-    "text": "1 About the course notes\nThis site contains course notes for the course “Reinforcement Learning for Business” held at Aarhus BSS. It consists of a set of learning modules. The course is an elective course mainly for the Operations and Supply Chain Analytics and Business Intelligence programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.",
+    "text": "1 About the course notes\nThis site contains course notes for the course “Reinforcement Learning for Business” held at Aarhus BSS. It consists of a set of learning modules. The course is an elective course mainly for the Operations and Supply Chain Analytics and Business Intelligence programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>About the course notes</span>"
     ]
@@ -54,7 +54,7 @@
     "href": "index.html#course-organization",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "1.5 Course organization",
-    "text": "1.5 Course organization\nEach week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path in a typical week are\n\nBefore lectures: Read the chapter in the textbook or tutorial.\nLectures (at campus).\nAfter lectures: Module Exercises (in groups).\n\nLectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials or cases are given and we focus on a specific RL problem.\nThis module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:\n\nPart I gives you a general introduction to RL and the bandit problem.\nPart II consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module @ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module @ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module @ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module @ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module @ref(mod-mc) and …\nPart III\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n   \n   \nThe appendix contains different modules that may be helpful for you including hints on how to work in groups, how to get help if you are stuck and how to annotate the course notes.",
+    "text": "1.5 Course organization\nEach week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path would typical be\n\nBefore lectures: Read the chapter in the textbook or tutorial.\nLectures (at campus).\nAfter lectures: Module Exercises (in groups).\n\nLectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials or cases are given and we focus on a specific RL problem.\nLecture notes also contains an appendix with different modules that may be helpful for you.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>About the course notes</span>"
     ]
@@ -64,7 +64,7 @@
     "href": "index.html#programming-software",
     "title": "Reinforcement Learning for Business (RL)",
     "section": "1.6 Programming software",
-    "text": "1.6 Programming software\nWe use Python as programming software and it is assumed that you are familiar with using Python. Python is a programming language and free software environment. Python can be run from a terminal but in general you use an IDE (integrated development environment) such as Positron, PyCharm or VSCode for running Python and to saving your work. Moreover, you may use a Jupyter notebook to weave you code together with text.\nDuring this course we are going to use Google Colab which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer.\nIt is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module @ref(mod-python-setup) in Appendix A.\nEven though Python will be used in the course, algorithms can also be coded in R if you prefer to it.",
+    "text": "1.6 Programming software\nWe use Python as programming software and it is assumed that you are familiar with using Python. Python is a programming language and free software environment.\nDuring this course we are going to use Google Colab which is a hosted Jupyter notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer. With a Jupyter notebook you can weave you code together with text.\nThat said, you may need to run Python on your laptop for larger tasks. You can run Python from a terminal but in general you use an IDE (integrated development environment) such as Positron, PyCharm or VSCode for running Python and to saving your work.\nIt is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module Appendix A.\nEven though Python will be used in the course, algorithms can also be coded in R if you prefer to it.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>About the course notes</span>"
     ]
@@ -83,15 +83,15 @@
     "objectID": "index.html#sec-intro-ex",
     "href": "index.html#sec-intro-ex",
     "title": "Reinforcement Learning for Business (RL)",
-    "section": "1.7 Exercises",
-    "text": "1.7 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n1.7.1 Exercise - How to annotate\nThe online course notes can be annotated using hypothes.is. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes.\n\n\nSign-up at hypothes.is. If you are using Chrome you may also install the Chrome extension.\nGo back to this page and login in the upper right corner (there should be some icons e.g. &lt;).\nSelect some text and try to annotate it using both a private and public annotation (you may delete it again afterwards).\nGo to the slides for this module and try to annotate the page with a private comment.\n\n\n\n1.7.2 Exercise - Colab\nDuring this course we are going to use Google Colab which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer.\nTo be familiar with Colab do the following:\n\nIf you do not have a Google account create one. Note if you have a gMail then you already have a Google account.\nOpen and do this [tutorial][colab-ex-colab].\n\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "section": "1.7 Exercises (do before class)",
+    "text": "1.7 Exercises (do before class)\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n1.7.1 Exercise - How to annotate\nThe online course notes can be annotated using hypothes.is. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help indicate spell errors, unclear content etc. in the notes.\n\n\nSign-up at hypothes.is. If you are using Chrome you may also install the Chrome extension.\nGo back to this page and login in the upper right corner (there should be some icons e.g. &lt;).\nSelect some text and try to annotate it using both a private and public annotation (you may delete it again afterwards).\nGo to the slides for this module and try to annotate the page with a private comment.\n\n\n\n1.7.2 Exercise - Colab\nDuring this course we are going to use Google Colab which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer.\nTo be familiar with Colab do the following:\n\nIf you do not have a Google account create one. Note if you have a gMail then you already have a Google account.\nOpen and do this [tutorial][colab-ex-colab].\n\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>About the course notes</span>"
     ]
   },
   {
-    "objectID": "01_rl-intro.html",
-    "href": "01_rl-intro.html",
+    "objectID": "02_rl-intro.html",
+    "href": "02_rl-intro.html",
     "title": "2  An introduction to RL",
     "section": "",
     "text": "2.1 Learning outcomes\nThis module gives a short introduction to Reinforcement learning.\nBy the end of this module, you are expected to:\nThe learning outcomes relate to the overall learning goals number 3, 5, 6, 9 and 11 of the course.",
@@ -100,8 +100,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#sec-rl-intro-lo",
-    "href": "01_rl-intro.html#sec-rl-intro-lo",
+    "objectID": "02_rl-intro.html#sec-rl-intro-lo",
+    "href": "02_rl-intro.html#sec-rl-intro-lo",
     "title": "2  An introduction to RL",
     "section": "",
     "text": "Describe what RL is.\nBe able to identify different sequential decision problems.\nKnow what Business Analytics are and identify RL in that framework.\nMemorise different names for RL and how it fits in a Machine Learning framework.\nFormulate the blocks of a RL model (environment, agent, data, states, actions, rewards and policies).",
@@ -110,8 +110,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#textbook-readings",
-    "href": "01_rl-intro.html#textbook-readings",
+    "objectID": "02_rl-intro.html#textbook-readings",
+    "href": "02_rl-intro.html#textbook-readings",
     "title": "2  An introduction to RL",
     "section": "2.2 Textbook readings",
     "text": "2.2 Textbook readings\nFor this lecture, you will need to read Chapter 1-1.5 in Sutton and Barto (2018). Read it before continuing this module.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
@@ -120,8 +120,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#what-is-reinforcement-learning",
-    "href": "01_rl-intro.html#what-is-reinforcement-learning",
+    "objectID": "02_rl-intro.html#what-is-reinforcement-learning",
+    "href": "02_rl-intro.html#what-is-reinforcement-learning",
     "title": "2  An introduction to RL",
     "section": "2.3 What is reinforcement learning",
     "text": "2.3 What is reinforcement learning\nRL can be seen as\n\nAn approach of modelling sequential decision making problems.\nAn approach for learning good decision making under uncertainty from experience.\nMathematical models for learning-based decision making.\nTrying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.\nEstimating and finding near optimal decisions of a stochastic process with sequential decision making.\nA model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.\n\nSequential decision problems are problems where you take decisions/actions over time. As an agent, you base your decision on the current state of the system (a state is a function of the information/data available). At the next time-step, the system have moved (stochastically) to the next stage. Here new information may be available and you receive a reward and take a new action. Examples of sequential decision problems are (with possible actions):\n\nPlaying backgammon (how to move the checkers).\nDriving a car (left, right, forward, back, break, stop, …).\nHow to invest/maintain a portfolio of stocks (buy, sell, amount).\n\nControl an inventory (wait, buy, amount).\nVehicle routing (routes).\nMaintain a spare-part (wait, maintain).\nRobot operations (sort, move, …)\nDairy cow treatment/replacement (treat, replace, …)\nRecommender systems e.g. Netflix recommendations (videos)\n\nSince RL involves a scalar reward signal, the goal is to choose actions such that the total reward is maximized. Note actions have an impact on the future and may have long term consequences. As such, you cannot simply choose the action that maximize the current reward. It may, in fact, be better to sacrifice immediate reward to gain more long term reward.\nRL can be seen as a way of modelling intuition. An RL model has specific states, actions and reward structure and our goal as an agent is to find good decisions/actions that maximize the total reward. The agent learn using, for instance:\n\ntotally random trials (in the start),\nsophisticated tactics and superhuman skills (in the end).\n\nThat is, as the agent learn, the reward estimate of a given action becomes better.\nAs humans, we often learn by trial and error too:\n\nLearning to walk (by falling/pain).\nLearning to play (strategy is based on the game rules and what we have experienced works based on previous plays).\n\nThis can also be seen as learning the reward of our actions.",
@@ -130,8 +130,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#rl-and-business-analytics",
-    "href": "01_rl-intro.html#rl-and-business-analytics",
+    "objectID": "02_rl-intro.html#rl-and-business-analytics",
+    "href": "02_rl-intro.html#rl-and-business-analytics",
     "title": "2  An introduction to RL",
     "section": "2.4 RL and Business Analytics",
     "text": "2.4 RL and Business Analytics\nBusiness Analytics (BA) (or just Analytics) refers to the scientific process of transforming data into insight for making better decisions in business. BA can both be seen as the complete decision making process for solving a business problem or as a set of methodologies that enable the creation of business value. As a process it can be characterized by descriptive, predictive, and prescriptive model building using “big” data sources.\nDescriptive Analytics: A set of technologies and processes that use data to understand and analyze business performance. Descriptive analytics are the most commonly used and most well understood type of analytics. Descriptive analytics categorizes, characterizes, consolidates, and classifies data. Examples are standard reporting and dashboards (KPIs, what happened or is happening now?) and ad-hoc reporting (how many/often?). Descriptive analytics often serves as a first step in the successful application of predictive or prescriptive analytics.\nPredictive Analytics: The use of data and statistical techniques to make predictions about future outputs/outcomes, identify patterns or opportunities for business performance. Examples of techniques are data mining (what data is correlated with other data?), pattern recognition and alerts (when should I take action to correct/adjust a spare part?), Monte-Carlo simulation (what could happen?), neural networks (which customer group are best?) and forecasting (what if these trends continue?).\nPrescriptive Analytics: The use of optimization and other decision modelling techniques using the results of descriptive and predictive analytics to suggest decision options with the goal of improving business performance. Prescriptive analytics attempt to quantify the effect of future decisions in order to advise on possible outcomes before the decisions are actually made. Prescriptive analytics predicts not only what will happen, but also why it will happen and provides recommendations regarding actions that will take advantage of the predictions. Prescriptive analytics are relatively complex to administer, and most companies are not yet using it in their daily course of business. However, when implemented correctly, it can have a huge impact on business performance and how businesses make decisions. Examples on prescriptive analytics are optimization in production planning and scheduling, inventory management, the supply chain and transportation planning. Since RL focus optimizing decisions it is Prescriptive Analytics also known as sequential decision analytics.\n\n\n\n\n\nBusiness Analytics and competive advantage.\n\n\n\n\nCompanies who use BA focus on fact-based management to drive decision making and treats data and information as a strategic asset that is shared within the company. This enterprise approach generates a companywide respect for applying descriptive, predictive and prescriptive analytics in areas such as supply chain, marketing and human resources. Focusing on BA gives a company a competive advantage (see Figure @ref(fig:analytics)).\nBA and related areas: In the past Business Intelligence traditionally focuses on querying, reporting, online analytical processing, i.e. descriptive analytics. However, a more modern definition of Business Intelligence is the union of descriptive and predictive analytics. Operations Research or Management Science deals with the application of advanced analytical methods to help make better decisions and can hence be seen as prescriptive analytics. However, traditionally it has been taking a more theoretical approach and focusing on problem-driven research while BA takes a more data-driven approach. Logistics is a cross-functional area focusing on the effective and efficient flows of goods and services, and the related flows of information and cash. Supply Chain Management adds a process-oriented and cross-company perspective. Both can be seen as prescriptive analytics with a more problem-driven research focus. Advanced Analytics is often used as a classification of both predictive and prescriptive analytics. Data science is an interdisciplinary field about scientific methods, processes, and systems to extract knowledge or insights from data in various forms, either structured or unstructured and can be seen as Business analytics applied to a wider range of data.",
@@ -140,8 +140,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#rl-in-different-research-deciplines",
-    "href": "01_rl-intro.html#rl-in-different-research-deciplines",
+    "objectID": "02_rl-intro.html#rl-in-different-research-deciplines",
+    "href": "02_rl-intro.html#rl-in-different-research-deciplines",
     "title": "2  An introduction to RL",
     "section": "2.5 RL in different research deciplines",
     "text": "2.5 RL in different research deciplines\nRL is used in many research fields using different names:\n\nRL (most used) originated from computer science and AI.\nApproximate dynamic programming (ADP) is mostly used within operations research.\nNeuro-dynamic programming (when states are represented using a neural network).\nRL is closely related to Markov decision processes (a mathematical model for a sequential decision problem).\n\n\n\n\n\n\nAdopted from Silver (2015).",
@@ -150,8 +150,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#rl-and-machine-learning",
-    "href": "01_rl-intro.html#rl-and-machine-learning",
+    "objectID": "02_rl-intro.html#rl-and-machine-learning",
+    "href": "02_rl-intro.html#rl-and-machine-learning",
     "title": "2  An introduction to RL",
     "section": "2.6 RL and machine learning",
     "text": "2.6 RL and machine learning\nDifferent ways of learning:\n\nSupervised learning: Given data \\((x_i, y_i)\\) learn to predict \\(y\\) from \\(x\\), i.e. find \\(y \\approx f(x)\\) (e.g. regression).\nUnsupervised learning: Given data \\((x_i)\\) learn patterns using \\(x\\), i.e. find \\(f(x)\\) (e.g. clustering). \nRL: Given state \\(x\\) you take an action and observe the reward \\(r\\) and the new state \\(x'\\).\n\nThere is no supervisor \\(y\\), only a reward signal \\(r\\).\nYour goal is to find a policy that optimize the total reward function.\n\n\n\n\n\n\n\nAdopted from Silver (2015).",
@@ -160,8 +160,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#the-rl-data-stream",
-    "href": "01_rl-intro.html#the-rl-data-stream",
+    "objectID": "02_rl-intro.html#the-rl-data-stream",
+    "href": "02_rl-intro.html#the-rl-data-stream",
     "title": "2  An introduction to RL",
     "section": "2.7 The RL data-stream",
     "text": "2.7 The RL data-stream\nRL considers an agent in an environment:\n\nAgent: The one who takes the action (computer, robot, decision maker).\nEnvironment: The system/world where observations and rewards are found.\n\nData are revealed sequentially as you take actions \\[(O_0, A_0, R_1, O_1, A_1, R_2, O_2, \\ldots).\\] At time \\(t\\) the agent have been taken action \\(A_{t-1}\\) and observed observation \\(O_t\\) and reward \\(R_t\\):\n\n\n\n\n\nAgent-environment representation.\n\n\n\n\nThis gives us the history at time \\(t\\) is the sequence of observations, actions and rewards \\[H_t = (O_0, A_0, R_1, O_1, \\ldots, A_{t-1}, R_t, O_t).\\]",
@@ -170,8 +170,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#states-actions-rewards-and-policies",
-    "href": "01_rl-intro.html#states-actions-rewards-and-policies",
+    "objectID": "02_rl-intro.html#states-actions-rewards-and-policies",
+    "href": "02_rl-intro.html#states-actions-rewards-and-policies",
     "title": "2  An introduction to RL",
     "section": "2.8 States, actions, rewards and policies",
     "text": "2.8 States, actions, rewards and policies\nThe (agent) state \\(S_t\\) is the information used to take the next action \\(A_t\\):\n\n\n\n\n\nState and action.\n\n\n\n\nA state depends on the history, i.e. a state is a function of the history \\(S_t = f(H_t)\\). Different strategies for defining a state may be considered. Choosing \\(S_t = H_t\\) is bad since the size of a state representation grows very fast. A better strategy is to just store the information needed for taking the next action. Moreover, it is good to have Markov states where given the present state the future is independent of the past. That is, the current state holds just as much information as the history, i.e. it holds all useful information of the history. Symbolically, we call a state \\(S_t\\) Markov iff\n\\[\\Pr[S_{t+1} | S_t] = \\Pr[S_{t+1} | S_1,...,S_t].\\]\nThat is, the probability of seeing some next state \\(S_{t+1}\\) given the current state is exactly equal to the probability of that next state given the entire history of states. Note that we can always find some Markov state. Though the smaller the state, the more “valuable” it is. In the worst case, \\(H_t\\) is Markov, since it represents all known information about itself.\nThe reward \\(R_t\\) is a number representing the reward at time \\(t\\) (negative if a cost). Examples of rewards are\n\nPlaying backgammon (0 (when play), 1 (when win), -1 (when loose)).\nHow to invest/maintain a portfolio of stocks (the profit).\n\nControl an inventory (inventory cost, lost sales cost).\nVehicle routing (transportation cost).\n\nThe goal is to find a policy that maximize the total future reward. A policy is the agent’s behaviour and is a map from state to action, i.e. a function \\[a = \\pi(s)\\] saying that given the agent is in state \\(s\\) we choose action \\(a\\).\nThe total future reward is currently not defined clearly. Let the value function denote the future reward in state \\(s\\) and define it as the expected discounted future reward: \\[V_\\pi(s) = \\mathbb{E}_\\pi(R_{t+1} + \\gamma R_{t+2} + \\gamma^2 R_{t+3} + \\ldots | S = s).\\] Note the value function is defined using a specific policy and the goal is to find a policy that maximize the total future reward in all possible states \\[\\pi^* = \\arg\\max_{\\pi\\in\\Pi}(V_\\pi(s)).\\]\nThe value of the discount rate is important:\n\nDiscount rate \\(\\gamma=0\\): Only care about present reward.\nDiscount rate \\(\\gamma=1\\): Future reward is as beneficial as immediate reward. Can be used if the time-horizon is finite.\nDiscount rate \\(\\gamma&lt;1\\): Rewards near to the present more beneficial. Note \\(V(s)\\) will converge to a number even if the time-horizon is infinite.",
@@ -180,8 +180,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#exploitation-vs-exploration",
-    "href": "01_rl-intro.html#exploitation-vs-exploration",
+    "objectID": "02_rl-intro.html#exploitation-vs-exploration",
+    "href": "02_rl-intro.html#exploitation-vs-exploration",
     "title": "2  An introduction to RL",
     "section": "2.9 Exploitation vs Exploration",
     "text": "2.9 Exploitation vs Exploration\nA key problem of reinforcement learning (in general) is the difference between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? Exploitation takes the action assumed to be optimal with respect to the data observed so far. This, gives better predictions of the value function (given the current policy) but prevents the agent from discovering potential better decisions (a better policy). Exploration does not take the action that seems to be optimal. That is, the agent explore to find new states and update the value function for this state.\nExamples in the exploration and exploitation dilemma are for instance movie recommendations: recommending the user’s best rated movie type (exploitation) or trying another movie type (exploration) or oil drilling: drilling at the best known location (exploitation) or trying a new location (exploration).",
@@ -190,8 +190,8 @@
     ]
   },
   {
-    "objectID": "01_rl-intro.html#summary",
-    "href": "01_rl-intro.html#summary",
+    "objectID": "02_rl-intro.html#summary",
+    "href": "02_rl-intro.html#summary",
     "title": "2  An introduction to RL",
     "section": "2.10 Summary",
     "text": "2.10 Summary\nRead Chapter 1.6 in Sutton and Barto (2018).\n\n\n\n\nSilver, David. 2015. “Lectures on Reinforcement Learning.” https://www.davidsilver.uk/teaching/.\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
@@ -200,8 +200,8 @@
     ]
   },
   {
-    "objectID": "02_rl-in-action.html",
-    "href": "02_rl-in-action.html",
+    "objectID": "03_rl-in-action.html",
+    "href": "03_rl-in-action.html",
     "title": "3  RL in action",
     "section": "",
     "text": "3.1 Learning outcomes\nThis module learn an agent/player to play tic-tac-toe using Reinforcement learning.\nBy the end of this module, you are expected to:\nThe learning outcomes relate to the overall learning goals number 3, 6 and 9-12 of the course.",
@@ -210,8 +210,8 @@
     ]
   },
   {
-    "objectID": "02_rl-in-action.html#sec-rl-intro-lo",
-    "href": "02_rl-in-action.html#sec-rl-intro-lo",
+    "objectID": "03_rl-in-action.html#sec-rl-intro-lo",
+    "href": "03_rl-in-action.html#sec-rl-intro-lo",
     "title": "3  RL in action",
     "section": "",
     "text": "Code your first RL algorithm\nFormulate the blocks of the RL model (environment, agent, data, states, actions, rewards and policies).\nRun your first RL algorithm and evaluate on its solution.",
@@ -220,18 +220,18 @@
     ]
   },
   {
-    "objectID": "02_rl-in-action.html#textbook-readings",
-    "href": "02_rl-in-action.html#textbook-readings",
+    "objectID": "03_rl-in-action.html#textbook-readings",
+    "href": "03_rl-in-action.html#textbook-readings",
     "title": "3  RL in action",
     "section": "3.2 Textbook readings",
-    "text": "3.2 Textbook readings\nFor this lecture, you will need to read Chapter 1.5 in Sutton and Barto (2018). Read it before continuing this module.",
+    "text": "3.2 Textbook readings\nFor this lecture, you will need to read Chapter 1.5 in Sutton and Barto (2018). Read it before continuing this module.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
     "crumbs": [
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>RL in action</span>"
     ]
   },
   {
-    "objectID": "02_rl-in-action.html#tic-tac-toe",
-    "href": "02_rl-in-action.html#tic-tac-toe",
+    "objectID": "03_rl-in-action.html#tic-tac-toe",
+    "href": "03_rl-in-action.html#tic-tac-toe",
     "title": "3  RL in action",
     "section": "3.3 Tic-Tac-Toe",
     "text": "3.3 Tic-Tac-Toe\nTic-Tac-Toe is a simple two-player game where players alternately place their marks on a 3x3 grid. That is, the current state of the board is the players’ marks on the grid. The first player to align three of their marks horizontally, vertically, or diagonally wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probability of winning.\n\n\n\nExamples of winning, loosing and a draw from player Xs point of view:\n\n\n\n\n\n\n\n\n.\n\n\n.\n\n\nX\n\n\n\n\n.\n\n\nX\n\n\n.\n\n\n\n\nX\n\n\nO\n\n\nO\n\n\n\n\n\n\n\n\n\n\nX\n\n\n.\n\n\nX\n\n\n\n\n.\n\n\nX\n\n\n.\n\n\n\n\nO\n\n\nO\n\n\nO\n\n\n\n\n\n\n\n\n\n\nX\n\n\nX\n\n\nO\n\n\n\n\nO\n\n\nO\n\n\nX\n\n\n\n\nX\n\n\nX\n\n\nO\n\n\n\n\n\n\n\n\nWe start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a draw game may look as in Figure 3.1. We start with an empty board state \\(S_0\\), and the opponent makes a move, next we choose a move \\(A_0\\) (among the empty fields) and we end up in state \\(S_1\\). This continues until the game is over.\n\n\n\n\n\n\n\n\nFigure 3.1: A draw.",
@@ -240,8 +240,8 @@
     ]
   },
   {
-    "objectID": "02_rl-in-action.html#colab",
-    "href": "02_rl-in-action.html#colab",
+    "objectID": "03_rl-in-action.html#colab",
+    "href": "03_rl-in-action.html#colab",
     "title": "3  RL in action",
     "section": "3.4 Colab",
     "text": "3.4 Colab\nDuring the lecture for this module we will work with the [tutorial][colab-02-tic-tac-toe] where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? Exploitation takes the action assumed to be optimal with respect to the data observed so far. Exploration does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.\n\n\n\n\n\n\nColab - Before the lecture\n\n\n\nOpen the [tutorial][colab-02-tic-tac-toe]:\n\nHave a look at the notebook and run all code cells.\nTry to understand the content.",
@@ -250,8 +250,8 @@
     ]
   },
   {
-    "objectID": "02_rl-in-action.html#summary",
-    "href": "02_rl-in-action.html#summary",
+    "objectID": "03_rl-in-action.html#summary",
+    "href": "03_rl-in-action.html#summary",
     "title": "3  RL in action",
     "section": "3.5 Summary",
     "text": "3.5 Summary\nRead Chapter 1.6 in Sutton and Barto (2018).",
@@ -260,8 +260,8 @@
     ]
   },
   {
-    "objectID": "02_rl-in-action.html#sec-rl-in-action-ex",
-    "href": "02_rl-in-action.html#sec-rl-in-action-ex",
+    "objectID": "03_rl-in-action.html#sec-rl-in-action-ex",
+    "href": "03_rl-in-action.html#sec-rl-in-action-ex",
     "title": "3  RL in action",
     "section": "3.6 Exercises",
     "text": "3.6 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n3.6.1 Exercise - Self-Play\nConsider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above played against itself. What do you think would happen in this case? Would it learn a different way of playing?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nIf the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it.\n\n\n\n\n\n3.6.2 Exercise - Symmetries\nMany tic-tac-toe positions appear different but are really the same because of symmetries.\n\nHow might we amend the reinforcement learning algorithm described above to take advantage of this?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nIt is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.\n\n\n\nIn what ways would this improve the algorithm?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nA smaller state space would increase the speed of learning and reduce the memory required.\n\n\n\nSuppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nIf the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.\n\n\n\n\n\n\n3.6.3 Exercise - Greedy Play\nConsider Tic-Tac-Toe and suppose the RL player is only greedy (\\(\\epsilon = 0\\)), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nAs seen in Section @ref(rl-intro-tic-learn) using \\(\\epsilon = 0\\) may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required.\n\n\n\n\n\n3.6.4 Exercise - Learning from Exploration\nConsider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.\n\nWhat are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nThe probability set \\(V(s)\\) found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set \\(V(s)\\) found by applying learning from exploration is the probability of winning including the active exploration policy.\n\n\n\nAssuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nThe probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.\n\n\n\n\n\n\n3.6.5 Exercise - Other Improvements\nConsider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?\n\n\n\n\n\n\nSolution\n\n\n\n\n\nAltering the exploration rate/learning based on the variance in the opponent’s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.\n\n\n\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
@@ -270,93 +270,133 @@
     ]
   },
   {
-    "objectID": "03_bandit.html",
-    "href": "03_bandit.html",
-    "title": "4  Multi-armed bandits",
+    "objectID": "04_python.html",
+    "href": "04_python.html",
+    "title": "4  An introduction to Python and packages",
     "section": "",
-    "text": "4.1 Learning outcomes\nThis module consider the k-armed bandit problem which is a sequential decision problem with one state and \\(k\\) actions. The problem is used to illustrate different learning methods used in RL.\nThe module is also the first module in the Tabular methods part of the notes. This part describe almost all the core ideas of reinforcement learning algorithms in their simplest forms where the state and action spaces are small enough for the approximate value functions to be represented as arrays or tables.\nBy the end of this module, you are expected to:\nThe learning outcomes relate to the overall learning goals number 1, 3, 6, 9, 10 and 12 of the course.",
+    "text": "4.1 Learning outcomes\nThis module gives an introduction to Python and some of the packages we use during the course.\nBy the end of this module, you are expected to:",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>An introduction to Python and packages</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#learning-outcomes",
-    "href": "03_bandit.html#learning-outcomes",
-    "title": "4  Multi-armed bandits",
+    "objectID": "04_python.html#sec-rl-intro-lo",
+    "href": "04_python.html#sec-rl-intro-lo",
+    "title": "4  An introduction to Python and packages",
+    "section": "",
+    "text": "Identify useful Python workflows.\nDo different programming workflows.\nCode a Python class.\nTransform data.\nPlot data.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>An introduction to Python and packages</span>"
+    ]
+  },
+  {
+    "objectID": "04_python.html#textbook-readings",
+    "href": "04_python.html#textbook-readings",
+    "title": "4  An introduction to Python and packages",
+    "section": "4.2 Textbook readings",
+    "text": "4.2 Textbook readings\nNo readings and slides.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>An introduction to Python and packages</span>"
+    ]
+  },
+  {
+    "objectID": "04_python.html#python-and-packages",
+    "href": "04_python.html#python-and-packages",
+    "title": "4  An introduction to Python and packages",
+    "section": "4.3 Python and packages",
+    "text": "4.3 Python and packages\nAn tutorial is given in this Colab notebook. Open it and get an overview before class.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>An introduction to Python and packages</span>"
+    ]
+  },
+  {
+    "objectID": "05_bandit.html",
+    "href": "05_bandit.html",
+    "title": "5  Multi-armed bandits",
+    "section": "",
+    "text": "5.1 Learning outcomes\nThis module consider the k-armed bandit problem which is a sequential decision problem with one state and \\(k\\) actions. The problem is used to illustrate different learning methods used in RL.\nThe module is also the first module in the Tabular methods part of the notes. This part describe almost all the core ideas of reinforcement learning algorithms in their simplest forms where the state and action spaces are small enough for the approximate value functions to be represented as arrays or tables.\nBy the end of this module, you are expected to:\nThe learning outcomes relate to the overall learning goals number 1, 3, 6, 9, 10 and 12 of the course.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+    ]
+  },
+  {
+    "objectID": "05_bandit.html#learning-outcomes",
+    "href": "05_bandit.html#learning-outcomes",
+    "title": "5  Multi-armed bandits",
     "section": "",
     "text": "Define a k-armed bandit and understand the nature of the problem.\nDefine the reward of a action (action-reward).\nDescribe different methods for estimating the action-reward.\nExplain the differences between exploration and exploitation.\nFormulate an \\(\\epsilon\\)-greedy algorithm for selecting the next action.\nInterpret the sample-average (variable step-size) versus exponential recency-weighted average (constant step-size) action-reward estimation.\nArgue why we might use a constant stepsize in the case of non-stationarity.\nUnderstand the effect of optimistic initial values.\nFormulate an upper confidence bound action selection algorithm.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#textbook-readings",
-    "href": "03_bandit.html#textbook-readings",
-    "title": "4  Multi-armed bandits",
-    "section": "4.2 Textbook readings",
-    "text": "4.2 Textbook readings\nFor this week, you will need to read Chapter 2 - 2.7 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen here.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
+    "objectID": "05_bandit.html#textbook-readings",
+    "href": "05_bandit.html#textbook-readings",
+    "title": "5  Multi-armed bandits",
+    "section": "5.2 Textbook readings",
+    "text": "5.2 Textbook readings\nFor this week, you will need to read Chapter 2 - 2.7 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen here.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#the-k-armed-bandit-problem",
-    "href": "03_bandit.html#the-k-armed-bandit-problem",
-    "title": "4  Multi-armed bandits",
-    "section": "4.3 The k-armed bandit problem",
-    "text": "4.3 The k-armed bandit problem\nMulti-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work.\n\n\n\n\n\n\n\n\nFigure 4.1: A 4-armed bandit.\n\n\n\n\n\nImagine you are facing a wall with \\(k\\) slot machines (see Figure 4.1), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state \\(s\\) at time \\(t\\) and have to choose among \\(k\\) actions given the environment representing the \\(k\\) bandits. Only the rewards from the \\(k\\) bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy \\(\\pi^*(s) = \\pi^* = a^*\\) that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.\n\n\n\n\n\n\n\nMulti-armed bandits can be used in e.g. digital advertising. Suppose you are an advertiser seeking to optimize which ads (\\(k\\) to choose among) to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time.\n\n\n\n\n\n\n\n\nFigure 4.2: Which ad to choose?\n\n\n\n\n\nIt is reasonable to assume that each of these ads will have different effects, and some will be more engaging than others. That is, each ad has some theoretical — but unknown — click-through-rate (CTR) that is assumed to not change over time. How do we go about solving which ad we should choose (see Figure 4.2)?",
+    "objectID": "05_bandit.html#the-k-armed-bandit-problem",
+    "href": "05_bandit.html#the-k-armed-bandit-problem",
+    "title": "5  Multi-armed bandits",
+    "section": "5.3 The k-armed bandit problem",
+    "text": "5.3 The k-armed bandit problem\nMulti-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work.\n\n\n\n\n\n\n\n\nFigure 5.1: A 4-armed bandit.\n\n\n\n\n\nImagine you are facing a wall with \\(k\\) slot machines (see Figure 5.1), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state \\(s\\) at time \\(t\\) and have to choose among \\(k\\) actions given the environment representing the \\(k\\) bandits. Only the rewards from the \\(k\\) bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy \\(\\pi^*(s) = \\pi^* = a^*\\) that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.\n\n\n\n\n\n\n\nMulti-armed bandits can be used in e.g. digital advertising. Suppose you are an advertiser seeking to optimize which ads (\\(k\\) to choose among) to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time.\n\n\n\n\n\n\n\n\nFigure 5.2: Which ad to choose?\n\n\n\n\n\nIt is reasonable to assume that each of these ads will have different effects, and some will be more engaging than others. That is, each ad has some theoretical — but unknown — click-through-rate (CTR) that is assumed to not change over time. How do we go about solving which ad we should choose (see Figure 5.2)?",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#estimating-the-value-of-an-action",
-    "href": "03_bandit.html#estimating-the-value-of-an-action",
-    "title": "4  Multi-armed bandits",
-    "section": "4.4 Estimating the value of an action",
-    "text": "4.4 Estimating the value of an action\nHow can the value of an action be estimated, i.e. the expected reward of an action \\(q_*(a) = \\mathbb{E}[R_t | A_t = a]\\). Assume that at time \\(t\\) action \\(a\\) has been chosen \\(N_t(a)\\) times. Then the estimated action value is \\[\\begin{equation}\n    Q_t(a) = \\frac{R_1+R_2+\\cdots+R_{N_t(a)}}{N_t(a)},\n\\end{equation}\\] Storing \\(Q_t(a)\\) this way is cumbersome since memory and computation requirements grow over time. Instead an incremental approach is better. If we assume that \\(N_t(a) = n-1\\) and set \\(Q_t(a) = Q_n\\) then \\(Q_{n+1}\\) becomes: \\[\\begin{align}\\label{eq:avg}\n  Q_{n+1} &= \\frac{1}{n}\\sum_{i=1}^{n}R_i \\nonumber \\\\\n            &= \\frac{1}{n}\\left( R_{n} + \\sum_{i=1}^{n-1} R_i \\right) \\nonumber \\\\\n            &= \\frac{1}{n}\\left( R_{n} + (n-1)\\frac{1}{n-1}\\sum_{i=1}^{n-1} R_i \\right) \\nonumber \\\\\n            &= \\frac{1}{n}\\left( R_{n} + (n-1)Q_n \\right) \\nonumber \\\\\n           &= Q_n + \\frac{1}{n} \\left[R_n - Q_n\\right].\n\\end{align}\\] That is, we can update the estimate of the value of \\(a\\) using the previous estimate, the observed reward and how many times the action has occurred (\\(n\\)).\nA greedy approach for selecting the next action is \\[\\begin{equation}\nA_t =\\arg \\max_a Q_t(a).\n\\end{equation}\\] Here \\(\\arg\\max_a\\) means the value of \\(a\\) for which \\(Q_t(a)\\) is maximised. A pure greedy approach do not explore other actions. Instead an \\(\\varepsilon\\)-greedy approach is used in which with probability \\(\\varepsilon\\) we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nColab - Before the lecture\n\n\n\nDuring the lecture for this module we will work with the tutorial where we will try to estimate the \\(Q\\) values. We implement the algorithm using an agent and environment class. Open the tutorial:\n\nHave a look at the notebook and run all code cells.\nTry to understand the content.",
+    "objectID": "05_bandit.html#estimating-the-value-of-an-action",
+    "href": "05_bandit.html#estimating-the-value-of-an-action",
+    "title": "5  Multi-armed bandits",
+    "section": "5.4 Estimating the value of an action",
+    "text": "5.4 Estimating the value of an action\nHow can the value of an action be estimated, i.e. the expected reward of an action \\(q_*(a) = \\mathbb{E}[R_t | A_t = a]\\). Assume that at time \\(t\\) action \\(a\\) has been chosen \\(N_t(a)\\) times. Then the estimated action value is \\[\\begin{equation}\n    Q_t(a) = \\frac{R_1+R_2+\\cdots+R_{N_t(a)}}{N_t(a)},\n\\end{equation}\\] Storing \\(Q_t(a)\\) this way is cumbersome since memory and computation requirements grow over time. Instead an incremental approach is better. If we assume that \\(N_t(a) = n-1\\) and set \\(Q_t(a) = Q_n\\) then \\(Q_{n+1}\\) becomes: \\[\\begin{align}\\label{eq:avg}\n  Q_{n+1} &= \\frac{1}{n}\\sum_{i=1}^{n}R_i \\nonumber \\\\\n            &= \\frac{1}{n}\\left( R_{n} + \\sum_{i=1}^{n-1} R_i \\right) \\nonumber \\\\\n            &= \\frac{1}{n}\\left( R_{n} + (n-1)\\frac{1}{n-1}\\sum_{i=1}^{n-1} R_i \\right) \\nonumber \\\\\n            &= \\frac{1}{n}\\left( R_{n} + (n-1)Q_n \\right) \\nonumber \\\\\n           &= Q_n + \\frac{1}{n} \\left[R_n - Q_n\\right].\n\\end{align}\\] That is, we can update the estimate of the value of \\(a\\) using the previous estimate, the observed reward and how many times the action has occurred (\\(n\\)).\nA greedy approach for selecting the next action is \\[\\begin{equation}\nA_t =\\arg \\max_a Q_t(a).\n\\end{equation}\\] Here \\(\\arg\\max_a\\) means the value of \\(a\\) for which \\(Q_t(a)\\) is maximised. A pure greedy approach do not explore other actions. Instead an \\(\\varepsilon\\)-greedy approach is used in which with probability \\(\\varepsilon\\) we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nColab - Before the lecture\n\n\n\nDuring the lecture for this module we will work with the tutorial where we will try to estimate the \\(Q\\) values. We implement the algorithm using an agent and environment class. Open the tutorial:\n\nHave a look at the notebook and run all code cells.\nTry to understand the content.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#sec-bandit-step-size",
-    "href": "03_bandit.html#sec-bandit-step-size",
-    "title": "4  Multi-armed bandits",
-    "section": "4.5 The role of the step-size",
-    "text": "4.5 The role of the step-size\nIn general we update the reward estimate of an action using\n\\[\\begin{equation}\n    Q_{n+1} = Q_n +\\alpha_n(a) \\left[R_n - Q_n\\right]\n\\end{equation}\\]\nUntil now we have used the sample average \\(\\alpha_n(a)= 1/n\\); however, other choices of \\(\\alpha_n(a)\\) is possible. In general we will converge to the true reward if\n\\[\\begin{equation}\n    \\sum_n \\alpha_n(a) = \\infty \\quad\\quad \\mathsf{and} \\quad\\quad  \\sum_n \\alpha_n(a)^2 &lt; \\infty.\n\\end{equation}\\]\nMeaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant \\(\\alpha_n(a)= \\alpha \\in (0, 1]\\) instead. This results in (Q_{n+1}) being a weighted average of the past rewards and the initial estimate (Q_1):\n\\[\\begin{align}\nQ_{n+1} &= Q_n +\\alpha \\left[R_n - Q_n\\right] \\nonumber \\\\\n&= \\alpha R_n + (1 - \\alpha)Q_n \\nonumber \\\\\n&= \\alpha R_n + (1 - \\alpha)[\\alpha R_{n-1} + (1 - \\alpha)Q_{n-1}] \\nonumber \\\\\n&= \\alpha R_n + (1 - \\alpha)\\alpha R_{n-1} + (1 - \\alpha)^2 Q_{n-1}  \\nonumber \\\\\n&= \\vdots \\nonumber \\\\\n&= (1-\\alpha)^n Q_1 + \\sum_{i=1}^{n} \\alpha (1 - \\alpha)^{n-i} R_i \\\\\n\\end{align}\\]\nBecause the weight given to each reward depends on how long ago it was observed, we can see that more recent rewards are given more weight. Note the weights () sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since the weight given to each reward decays exponentially into the past. This sometimes called an exponential recency-weighted average.",
+    "objectID": "05_bandit.html#sec-bandit-step-size",
+    "href": "05_bandit.html#sec-bandit-step-size",
+    "title": "5  Multi-armed bandits",
+    "section": "5.5 The role of the step-size",
+    "text": "5.5 The role of the step-size\nIn general we update the reward estimate of an action using\n\\[\\begin{equation}\n    Q_{n+1} = Q_n +\\alpha_n(a) \\left[R_n - Q_n\\right]\n\\end{equation}\\]\nUntil now we have used the sample average \\(\\alpha_n(a)= 1/n\\); however, other choices of \\(\\alpha_n(a)\\) is possible. In general we will converge to the true reward if\n\\[\\begin{equation}\n    \\sum_n \\alpha_n(a) = \\infty \\quad\\quad \\mathsf{and} \\quad\\quad  \\sum_n \\alpha_n(a)^2 &lt; \\infty.\n\\end{equation}\\]\nMeaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant \\(\\alpha_n(a)= \\alpha \\in (0, 1]\\) instead. This results in (Q_{n+1}) being a weighted average of the past rewards and the initial estimate (Q_1):\n\\[\\begin{align}\nQ_{n+1} &= Q_n +\\alpha \\left[R_n - Q_n\\right] \\nonumber \\\\\n&= \\alpha R_n + (1 - \\alpha)Q_n \\nonumber \\\\\n&= \\alpha R_n + (1 - \\alpha)[\\alpha R_{n-1} + (1 - \\alpha)Q_{n-1}] \\nonumber \\\\\n&= \\alpha R_n + (1 - \\alpha)\\alpha R_{n-1} + (1 - \\alpha)^2 Q_{n-1}  \\nonumber \\\\\n&= \\vdots \\nonumber \\\\\n&= (1-\\alpha)^n Q_1 + \\sum_{i=1}^{n} \\alpha (1 - \\alpha)^{n-i} R_i \\\\\n\\end{align}\\]\nBecause the weight given to each reward depends on how long ago it was observed, we can see that more recent rewards are given more weight. Note the weights () sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since the weight given to each reward decays exponentially into the past. This sometimes called an exponential recency-weighted average.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#optimistic-initial-values",
-    "href": "03_bandit.html#optimistic-initial-values",
-    "title": "4  Multi-armed bandits",
-    "section": "4.6 Optimistic initial values",
-    "text": "4.6 Optimistic initial values\nThe methods discussed so far are dependent to some extent on the initial action-value estimate i.e. they are biased by their initial estimates. For methods with constant \\((\\alpha)\\) this bias is permanent. We may set initial value estimates artificially high to encourage exploration in the short run. For instance, by setting initial values of \\(Q\\) to 5 rather than 0 we encourage exploration, even in the greedy case. Here the agent will almost always be disappointed with it’s samples because they are less than the initial estimate and so will explore elsewhere until the values converge.",
+    "objectID": "05_bandit.html#optimistic-initial-values",
+    "href": "05_bandit.html#optimistic-initial-values",
+    "title": "5  Multi-armed bandits",
+    "section": "5.6 Optimistic initial values",
+    "text": "5.6 Optimistic initial values\nThe methods discussed so far are dependent to some extent on the initial action-value estimate i.e. they are biased by their initial estimates. For methods with constant \\((\\alpha)\\) this bias is permanent. We may set initial value estimates artificially high to encourage exploration in the short run. For instance, by setting initial values of \\(Q\\) to 5 rather than 0 we encourage exploration, even in the greedy case. Here the agent will almost always be disappointed with it’s samples because they are less than the initial estimate and so will explore elsewhere until the values converge.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#upper-confidence-bound-action-selection",
-    "href": "03_bandit.html#upper-confidence-bound-action-selection",
-    "title": "4  Multi-armed bandits",
-    "section": "4.7 Upper-Confidence Bound Action Selection",
-    "text": "4.7 Upper-Confidence Bound Action Selection\nAn \\(\\epsilon\\)-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the upper-confidence bound: \\[\\begin{equation}\n    A_t = \\arg\\max_a \\left(Q_t(a) + c\\sqrt{\\frac{\\ln t}{N_t(a)}}\\right),\n\\end{equation}\\]\nNote the square root term is a measure of the uncertainty in our estimate (see Figure 4.3).\n\nIt is proportional to \\(t\\) i.e. how many time-steps have passed and inversely proportional to (N_t(a)) i.e. how many times that action has been visited.\nThe more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound.\nAs the timesteps increases, the denominator dominates the numerator as the ln term flattens.\nEach time we select an action our uncertainty decreases because \\(N\\) is the denominator of this equation.\nIf \\(N_t(a) = 0\\) then we consider \\(a\\) as a maximal action, i.e. we select first among actions with \\(N_t(a) = 0\\).\nThe parameter \\(c&gt;0\\) controls the degree of exploration. Higher \\(c\\) results in more weight on the uncertainty.\n\nSince upper-confidence bound action selection select actions according to their potential, it is expected to perform better than \\(\\epsilon\\)-greedy methods.\n\n\n\n\n\n\n\n\nFigure 4.3: Square root term for an action using different \\(c\\)-values.",
+    "objectID": "05_bandit.html#upper-confidence-bound-action-selection",
+    "href": "05_bandit.html#upper-confidence-bound-action-selection",
+    "title": "5  Multi-armed bandits",
+    "section": "5.7 Upper-Confidence Bound Action Selection",
+    "text": "5.7 Upper-Confidence Bound Action Selection\nAn \\(\\epsilon\\)-greed algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the upper-confidence bound: \\[\\begin{equation}\n    A_t = \\arg\\max_a \\left(Q_t(a) + c\\sqrt{\\frac{\\ln t}{N_t(a)}}\\right),\n\\end{equation}\\]\nNote the square root term is a measure of the uncertainty in our estimate (see Figure 5.3).\n\nIt is proportional to \\(t\\) i.e. how many time-steps have passed and inversely proportional to (N_t(a)) i.e. how many times that action has been visited.\nThe more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound.\nAs the timesteps increases, the denominator dominates the numerator as the ln term flattens.\nEach time we select an action our uncertainty decreases because \\(N\\) is the denominator of this equation.\nIf \\(N_t(a) = 0\\) then we consider \\(a\\) as a maximal action, i.e. we select first among actions with \\(N_t(a) = 0\\).\nThe parameter \\(c&gt;0\\) controls the degree of exploration. Higher \\(c\\) results in more weight on the uncertainty.\n\nSince upper-confidence bound action selection select actions according to their potential, it is expected to perform better than \\(\\epsilon\\)-greedy methods.\n\n\n\n\n\n\n\n\nFigure 5.3: Square root term for an action using different \\(c\\)-values.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
-    "objectID": "03_bandit.html#summary",
-    "href": "03_bandit.html#summary",
-    "title": "4  Multi-armed bandits",
-    "section": "4.8 Summary",
-    "text": "4.8 Summary\nRead Chapter 2.10 in Sutton and Barto (2018).\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "objectID": "05_bandit.html#summary",
+    "href": "05_bandit.html#summary",
+    "title": "5  Multi-armed bandits",
+    "section": "5.8 Summary",
+    "text": "5.8 Summary\nRead Chapter 2.10 in Sutton and Barto (2018).\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Multi-armed bandits</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Multi-armed bandits</span>"
     ]
   },
   {
@@ -372,45 +412,89 @@
   {
     "objectID": "99_1_appdx.html",
     "href": "99_1_appdx.html",
-    "title": "Appendix A — Setting up Python and an introduction",
+    "title": "Appendix A — Python",
     "section": "",
-    "text": "A.1 Laptop setup\n[Python] is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you’re analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.\nIf you prefer to have [Python] installed on your laptop, then do the following:\nTo verify the installation, open a terminal or command prompt and type:\nTo install an IDE for working with your code, you may install Visual Studio Code (VSCode):\nYou’re now ready to start coding in Python!",
+    "text": "A.1 Colab\nPython is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you’re analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.\nDuring this course we are going to use Google Colab which is a hosted Jupyter notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, Colab runs in your browser and you do not have to install anything on your computer. With a Jupyter notebook you can weave you code together with text.\nTo be familiar with Colab do the following:",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html#colab",
+    "href": "99_1_appdx.html#colab",
+    "title": "Appendix A — Python",
+    "section": "",
+    "text": "If you do not have a Google account create one. Note if you have a gMail then you already have a Google account.\nOpen and do this [tutorial][colab-ex-colab].",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
     ]
   },
   {
     "objectID": "99_1_appdx.html#laptop-setup",
     "href": "99_1_appdx.html#laptop-setup",
-    "title": "Appendix A — Setting up Python and an introduction",
-    "section": "",
-    "text": "Go to the official Python website: https://www.python.org/downloads\nClick the download button for your operating system (Windows, macOS, or Linux).\nRun the installer.\nImportant: Make sure to check the box that says “Add Python to PATH” during installation.\nFollow the prompts to complete the installation.\n\n\npython --version\n\n\nGo to the VSCode website: https://code.visualstudio.com\nDownload and install the version for your operating system.\nOpen VSCode after installation.\nInstall the Python extension in VSCode:\n\nGo to the Extensions tab (or press Ctrl+Shift+X)\nSearch for “Python” and install the one published by Microsoft",
+    "title": "Appendix A — Python",
+    "section": "A.2 Laptop setup",
+    "text": "A.2 Laptop setup\nIf you prefer to have Python installed on your laptop, then do the following:\n\nGo to the official Python website: https://www.python.org/downloads\nClick the download button for your operating system (Windows, macOS, or Linux).\nRun the installer.\nImportant: Make sure to check the box that says “Add Python to PATH” during installation.\nFollow the prompts to complete the installation.\n\nTo verify the installation, open a terminal or command prompt and type:\npython --version\nTo install an IDE for working with your code, you may install Visual Studio Code (VSCode):\n\nGo to the VSCode website: https://code.visualstudio.com\nDownload and install the version for your operating system.\nOpen VSCode after installation.\nInstall the Python extension in VSCode:\n\nGo to the Extensions tab (or press Ctrl+Shift+X)\nSearch for “Python” and install the one published by Microsoft\n\n\nYou’re now ready to start coding in Python!",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
     ]
   },
   {
     "objectID": "99_1_appdx.html#learning-python",
     "href": "99_1_appdx.html#learning-python",
-    "title": "Appendix A — Setting up Python and an introduction",
-    "section": "A.2 Learning Python",
-    "text": "A.2 Learning Python\nIf you are new to Python you may have a look at some [DataCamp] Courses. First you HAVE TO SIGNUP using [this link][datacamp-signup]. Afterwards have a look at these courses:\n\nIntroduction to Python - Learn the basics of Python programming, including variables, data types, and control flow.\nIntermediate Python - Build on your basic knowledge with functions, loops, and working with Python libraries.\nData Manipulation with pandas - pandas is the world’s most popular Python library, used for everything from data manipulation to data analysis.",
+    "title": "Appendix A — Python",
+    "section": "A.3 Learning Python",
+    "text": "A.3 Learning Python\nIf you are new to Python you may have a look at some DataCamp Courses. First you HAVE TO SIGNUP using this link. Afterwards have a look at these courses:\n\nIntroduction to Python - Learn the basics of Python programming, including variables, data types, and control flow.\nIntermediate Python - Build on your basic knowledge with functions, loops, and working with Python libraries.\nData Manipulation with pandas - pandas is the world’s most popular Python library, used for everything from data manipulation to data analysis.",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html#sec-coding-convention",
+    "href": "99_1_appdx.html#sec-coding-convention",
+    "title": "Appendix A — Python",
+    "section": "A.4 Coding/naming convention",
+    "text": "A.4 Coding/naming convention\nThe main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible.\nDifferent ways of naming you variables exists. You are advised to adopt a naming convention. PEP 8 is the official style guide for Python code. It provides conventions for writing readable, consistent, and maintainable Python programs. Adhering to PEP 8 helps teams collaborate more effectively and improves code quality across projects. An overview is given below.\nNaming Conventions\n\n\n\n\n\n\n\n\nType\nConvention\nExample\n\n\n\n\nVariable\nlower_case_with_underscores\ntotal_count\n\n\nFunction\nlower_case_with_underscores\nprocess_data()\n\n\nClass\nCapitalizedWords\nDataProcessor\n\n\nConstant\nALL_CAPS_WITH_UNDERSCORES\nMAX_SIZE\n\n\nMethod (in class)\nlower_case_with_underscores\ncompute_value()\n\n\nModule/Package\nlowercase or lower_case_with_underscores\nutils, data_loader\n\n\nPrivate/Internal\n_single_leading_underscore\n_helper_function()\n\n\nStrong “private”\n__double_leading_underscore\n__internal_method()\n\n\nMagic method (dunder)\n__double_leading_and_trailing__\n__init__, __str__\n\n\n\nIndentation\n\nUse 4 spaces per indentation level.\nDo not use tabs.\nUse hanging indents for long statements, and align with the opening delimiter.\n\nLine Length\n\nLimit lines to 79 characters.\nFor docstrings and comments, limit to 72 characters.\n\nWhitespace\n\nAvoid extra spaces:\n\nNo space inside parentheses/brackets/braces: func(a, b)\nNo space before commas, colons, or semicolons.\nOne space after commas and around binary operators: x = a + b\n\nUse blank lines to separate functions and classes.\n\nComments\n\nUse comments to explain why, not just what.\nBlock comments:\n\nUse full sentences.\nStart with a capital letter and end with a period.\n\nInline comments:\n\nUse sparingly.\nLeave two spaces before the #, and one space after.\n\n\nDocstrings\n\nUse triple double quotes: \"\"\"This is a docstring.\"\"\"\nAll public modules, functions, classes, and methods should have docstrings.\nFirst line should be a short summary.\nLeave a blank line after the summary if more detail follows.\nExample:\ndef add(a, b):\n    \"\"\"\n    Return the sum of two numbers.\n\n    Parameters:\n    a (int or float): The first number.\n    b (int or float): The second number.\n\n    Returns:\n    int or float: The sum of a and b.\n    \"\"\"\n    return a + b",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
+    ]
+  },
+  {
+    "objectID": "99_1_appdx.html#debugging",
+    "href": "99_1_appdx.html#debugging",
+    "title": "Appendix A — Python",
+    "section": "A.5 Debugging",
+    "text": "A.5 Debugging\nCode development and data analysis always require a bit of trial and error. This Colab notebook briefly cover some options.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
     ]
   },
   {
     "objectID": "99_1_appdx.html#r-and-python-packages",
     "href": "99_1_appdx.html#r-and-python-packages",
-    "title": "Appendix A — Setting up Python and an introduction",
-    "section": "A.3 R and Python packages",
-    "text": "A.3 R and Python packages\nIf you are used to do data transformation in R then this table may be useful.\n\n\n\n\n\n\n\n\n\nR Package\nPurpose\nPython Equivalent(s)\nNotes\n\n\n\n\ndplyr\nData manipulation (filter, mutate, etc.)\npandas, dfply, siuba\npandas is standard; dfply and siuba mimic dplyr syntax with pipes and tidy verbs\n\n\nggplot2\nData visualization (Grammar of Graphics)\nplotnine\nClosest match in syntax and philosophy; uses + for layers like ggplot2\n\n\ntidyr\nData tidying (pivoting, reshaping)\npandas, pyjanitor\npandas handles pivot, melt; pyjanitor adds more tidy-like helpers\n\n\nreadr\nRead/write CSV\npandas\nUse read_csv(), to_csv()\n\n\njsonlite\nRead/write JSON\njson (standard), pandas\njson for raw files; pandas.read_json() for tabular JSON\n\n\nreadxl / writexl\nRead/write Excel\npandas, openpyxl, xlsxwriter\npandas integrates with Excel libraries for reading/writing .xlsx\n\n\ngooglesheets4\nGoogle Sheets I/O\ngspread, gspread-pandas\nPython requires Google API setup; gspread-pandas integrates with DataFrames",
+    "title": "Appendix A — Python",
+    "section": "A.6 R and Python packages",
+    "text": "A.6 R and Python packages\nIf you are used to do data transformation in R then this table may be useful.\n\n\n\n\n\n\n\n\n\nR Package\nPurpose\nPython Equivalent(s)\nNotes\n\n\n\n\ndplyr\nData manipulation (filter, mutate, etc.)\npandas, dfply, siuba\npandas is standard; dfply and siuba mimic dplyr syntax with pipes and tidy verbs\n\n\nggplot2\nData visualization (Grammar of Graphics)\nplotnine\nClosest match in syntax and philosophy; uses + for layers like ggplot2\n\n\ntidyr\nData tidying (pivoting, reshaping)\npandas, pyjanitor\npandas handles pivot, melt; pyjanitor adds more tidy-like helpers\n\n\nreadr\nRead/write CSV\npandas\nUse read_csv(), to_csv()\n\n\njsonlite\nRead/write JSON\njson (standard), pandas\njson for raw files; pandas.read_json() for tabular JSON\n\n\nreadxl / writexl\nRead/write Excel\npandas, openpyxl, xlsxwriter\npandas integrates with Excel libraries for reading/writing .xlsx\n\n\ngooglesheets4\nGoogle Sheets I/O\ngspread, gspread-pandas\nPython requires Google API setup; gspread-pandas integrates with DataFrames",
     "crumbs": [
       "Appendices",
-      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Setting up Python and an introduction</span>"
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Python</span>"
+    ]
+  },
+  {
+    "objectID": "99_2_appdx.html",
+    "href": "99_2_appdx.html",
+    "title": "Appendix B — Getting help",
+    "section": "",
+    "text": "We all get stuck sometimes and need some help. Below are some advises on how to help yourself and ask for help:\nIf you have a question:\n\nAsk it during the lecture or in the breaks\nUse generative AI (Gemini, ChatGPT, Copilot, …) as your mentor. It is in general good at giving hints for programming tasks. Note use it as a mentor and not as a giving you the solution. For instance, ask “Given me an example on a Hello world procedure in Python. Explain careful the code\nGoogle is your friend. This is always the next step. Try searches like “python dfply mask”, “python pandas”, etc.\nAbout programming errors. First try to understand the error message and solve the problem. Then you may\n\nTry to debug your code by inserting print statements in your code or run single lines using cmd+shift+enter.\nUse a debugger. Further details about debugging can be seen here.\n\n\nIf you can’t find an answer then it is time to ask on-line. I recommend asking a question at stackoverflow. To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread How to make a great R reproducible example? give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also Stack Exchange’s ‘How to ask’ and How to make a reprex at tidyverse.\n\nNote help using mail correspondence is not supported!",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Getting help</span>"
     ]
   }
 ]
