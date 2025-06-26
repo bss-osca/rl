@@ -11,6 +11,8 @@
 [colab-m1-tic-tac-toe]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
 [colab-03-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
 [colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
+[colab-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&line=1
+[colab-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
 
 [DataCamp]: https://www.datacamp.com/
 [datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732

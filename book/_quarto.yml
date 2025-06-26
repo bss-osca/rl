@@ -30,15 +30,14 @@ book:
     description: Course notes for the 'Reinforcement Learning for Business' course.
     
   chapters:
-    - index.qmd
     - part: "Introduction"
+    - index.qmd
     - 02_rl-intro.qmd
     - 03_rl-in-action.qmd
     - 04_python.qmd
     - part: "Tabular methods"
     - 05_bandit.qmd
-    
-    # - 06_mdp-1.qmd
+    - 06_mdp-1.qmd
     # - 07_mdp-2.qmd
     # - 08_dp.qmd
     # - 09_mc.qmd
@@ -65,7 +64,7 @@ comments:
 format:
   html:
     theme:
-      light: cosmo #cosmo, minty 
+      light: cosmo  # good themes: default, cosmo, flatly, lumen, minty, pulse, sandstone, solar, united, favourites: minty, cosmo
     number-sections: true
     number-depth: 3
     callout-appearance: simple
@@ -80,5 +79,4 @@ language:
   ui:
     chapter_name: 'Module '
 
-# good themes: default, cosmo, flatly, lumen, minty, pulse, sandstone, solar, united
-# favourites: minty, cosmo
+

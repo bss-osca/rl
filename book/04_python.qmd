@@ -11,7 +11,7 @@ editor_options:
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
 ```
 
-# An introduction to Python and packages {#sec-python}
+# An introduction to Python {#sec-python}
 
 This module gives an introduction to Python and some of the packages we use during the course.
 
