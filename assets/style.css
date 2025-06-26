@@ -1,8 +1,12 @@
 .sidebar-item-section {
   text-transform: uppercase;
+  font-weight: bold;
 }
 
-#quarto-sidebar-section-3 {
+#quarto-sidebar > div.sidebar-menu-container > ul > li > div > a.sidebar-item-text.sidebar-link.text-start > span {
+  font-weight: bold;
+}
+
+#quarto-sidebar-section-3 > li > div > a {
   text-transform: none;
 }
-

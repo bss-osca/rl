@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./06_mdp-1.html" rel="next">
 <link href="./04_python.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -62,7 +62,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-48fb113fea7c09ade55c8c495d57f66a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f8cb7fe94b71c4ea6759b609738bfe9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -175,16 +175,16 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Introduction</span></span>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">About the course notes</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Introduction</span></span>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02_rl-intro.html" class="sidebar-item-text sidebar-link">
@@ -200,7 +200,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python and packages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -211,6 +211,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./05_bandit.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_mdp-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Markov decision processes (MDPs)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -260,6 +266,7 @@ window.Quarto = {
   <li><a href="#optimistic-initial-values" id="toc-optimistic-initial-values" class="nav-link" data-scroll-target="#optimistic-initial-values"><span class="header-section-number">5.6</span> Optimistic initial values</a></li>
   <li><a href="#upper-confidence-bound-action-selection" id="toc-upper-confidence-bound-action-selection" class="nav-link" data-scroll-target="#upper-confidence-bound-action-selection"><span class="header-section-number">5.7</span> Upper-Confidence Bound Action Selection</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.8</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">5.9</span> Exercises</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/05_bandit.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/05_bandit.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -465,6 +472,25 @@ Figure&nbsp;5.3: Square root term for an action using different <span class="mat
 <section id="summary" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.8</span> Summary</h2>
 <p>Read Chapter 2.10 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+</section>
+<section id="exercises" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5.9</span> Exercises</h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="#help">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<section id="ex-bandit-adv" class="level3" data-number="5.9.1">
+<h3 data-number="5.9.1" class="anchored" data-anchor-id="ex-bandit-adv"><span class="header-section-number">5.9.1</span> Exercise - Advertising</h3>
+<p>Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:</p>
+<ul>
+<li>You have <span class="math inline">\(k=5\)</span> adds to choose among.</li>
+<li>If add <span class="math inline">\(A\)</span> is chosen then the user clicks the add with probability <span class="math inline">\(p_A\)</span> which can be seen as the unknown click trough rate CTR (or an average reward).</li>
+<li>The CTRs are unknown and samples can be picked using the RLAdEnv class and the reward function which returns 1 if click on ad and 0 otherwise.</li>
+<li>In the class the true CTRs can be observed but in practice this is hidden from the agent (you).</li>
+</ul>
+<p>Consider <a href="https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1">this section</a> in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
+</section>
+<section id="ex-bandit-coin" class="level3" data-number="5.9.2">
+<h3 data-number="5.9.2" class="anchored" data-anchor-id="ex-bandit-coin"><span class="header-section-number">5.9.2</span> Exercise - A coin game</h3>
+<p>Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.</p>
+<p>See <a href="https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM">this section</a> in the Colab notebook for questions. Use your own copy if you already have one.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -472,6 +498,7 @@ Figure&nbsp;5.3: Square root term for an action using different <span class="mat
 Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -876,13 +903,13 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./04_python.html" class="pagination-link" aria-label="An introduction to Python and packages">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python and packages</span></span>
+      <a href="./04_python.html" class="pagination-link" aria-label="An introduction to Python">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./06_mdp-1.html" class="pagination-link" aria-label="Markov decision processes (MDPs)">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Markov decision processes (MDPs)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
