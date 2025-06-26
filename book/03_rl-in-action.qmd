@@ -127,10 +127,10 @@ plotHypergraph(gridDim, states, actions, showGrid = F, cex = 0.5, radx = 0.02, r
 
 ## Colab
 
-During the lecture for this module we will work with the [tutorial][colab-02-tic-tac-toe] where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? *Exploitation* takes the action assumed to be optimal with respect to the data observed so far. *Exploration* does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.
+During the lecture for this module we will work with the [tutorial][colab-03-rl-in-action] where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? *Exploitation* takes the action assumed to be optimal with respect to the data observed so far. *Exploration* does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.
 
 ::: {.callout-note title="Colab - Before the lecture"}
-Open the [tutorial][colab-02-tic-tac-toe]:
+Open the [tutorial][colab-03-rl-in-action]:
 
    - Have a look at the notebook and run all code cells.
    - Try to understand the content. 
@@ -145,6 +145,9 @@ Read Chapter 1.6 in @Sutton18.
 ## Exercises {#sec-rl-in-action-ex}
 
 `r strExercises`
+
+You can find all these exercises as a section in this [Colab notebook][colab-03-rl-in-action]. If you already have your own copy use this.
+
 
 ### Exercise - Self-Play {#ex-r-intro-self}
 

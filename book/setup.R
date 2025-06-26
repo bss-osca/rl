@@ -36,6 +36,7 @@ conflict_prefer("filter", "dplyr", quiet = TRUE)
 conflict_prefer("select", "dplyr", quiet = TRUE)
 conflict_prefer("lag", "dplyr", quiet = TRUE)
 conflict_prefer("groups", "dplyr", quiet = TRUE)
+library(reticulate)
 
 options(
   width = 100,

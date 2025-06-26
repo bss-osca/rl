@@ -41,7 +41,12 @@ No readings and slides.
 
 An tutorial is given in this [Colab][colab-04-python] notebook. Open it and get an overview before class. 
       
+
+# Debugging 
+
+An tutorial is given in this [Colab][colab-04-debug-python] notebook. Open it and get an overview before class. 
       
+
 
 
 
