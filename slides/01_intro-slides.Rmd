@@ -25,7 +25,7 @@ layout: true
 
 ```{r, echo=FALSE}
 module_name <- "intro"
-module_number <- "00"
+module_number <- "01"
 library(htmltools)
 withTags({
    div(class="my-footer",
@@ -95,6 +95,20 @@ The course notes are given [online](https://bss-osca.github.io/rl/). You may ann
 ```{r, echo = FALSE, out.width="100%"} 
 knitr::include_graphics("./img/online-site.png") 
 ```
+
+---
+
+### Programming software
+
+We use [Python] as programming software and it is assumed that you are familiar with using Python. In general we use a [Jupyter] notebook to weave code together with text. 
+
+- During this course we are going to use [Google Colab][Colab] which is a hosted Jupyter Notebook service.
+  - [Colab] runs in your browser and you do not have to install anything on your computer. 
+  - [Colab] provides free access to computing resources, including GPUs and TPUs (with some limits).
+  - You have to have a Google account.
+- See the [Colab introduction][colab-intro-colab] notebook.
+
+Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
 
 ---
 

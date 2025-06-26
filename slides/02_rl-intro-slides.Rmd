@@ -27,7 +27,7 @@ layout: true
   
 ```{r, echo=FALSE}
 module_name <- "rl-intro"
-module_number <- "M1"
+module_number <- "02"
 here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
 library(htmltools)
 footerHtml <- withTags({
@@ -749,13 +749,6 @@ plotHypergraph(gridDim, states, actions, showGrid = F, cex = 1, radx = 0.02, rad
 - Define $V(S)$ to be 1 if we win, 0 if we loose and 0.5 otherwise (reward/pr of winning).
 - Most of the time we *exploit* our knowledge with $pr = 1-\epsilon$, i.e. choose the action which gives us the highest estimated reward and update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$ where $\alpha$ is the *step-size* parameter. 
 - Some times we *explore* with $pr = \epsilon$ and choose another action/move than what seems optimal. 
-
----
-
-## Let us have a look at the code
-
-- Open the [Colab intro][colab-intro-colab] notebook.
-- Open the [Tic-tac-toe][colab-m1-tic-tac-toe] notebook.
 
 ---
 

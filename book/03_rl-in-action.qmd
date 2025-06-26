@@ -35,6 +35,10 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 
 For this lecture, you will need to read Chapter 1.5 in @Sutton18. Read it before continuing this module. 
 
+```{r, echo=FALSE}
+link_slide_file_text("03", "rl-in-action")
+```
+
 
 ## Tic-Tac-Toe
 

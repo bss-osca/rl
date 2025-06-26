@@ -1,10 +1,6 @@
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-# Setting up Python {#sec-python-setup} 
-
-[To do]
-
 
 # Working in groups {#groups}
 
@@ -24,174 +20,14 @@ The benefit of a cloud storage service is that it is well known to you and easy 
 
 
 
-# Coding/naming convention {#coding-convention}
-
-The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible. 
-
-Different ways of naming you variables exists. You are advised to adopt a naming convention; 
-
-The most common and widely accepted coding convention in Python is defined by **PEP 8** — the *Python Enhancement Proposal 8*, titled **"Style Guide for Python Code."**
-
----
-
-### 🧭 Key PEP 8 Conventions
-
-Here’s a summary of the most important and widely used conventions:
-
-#### ✅ **Naming Conventions**
-
-* **Variables / functions**: `lowercase_with_underscores`
-* **Classes**: `CamelCase`
-* **Constants**: `ALL_CAPS_WITH_UNDERSCORES`
-* **Private/internal names**: `_single_leading_underscore`
-* **"Magic" methods**: `__double_underscores__` (e.g. `__init__`)
-
-#### ✅ **Indentation**
-
-* **Use 4 spaces per indentation level**
-* Do **not** use tabs (or mix tabs and spaces)
-
-#### ✅ **Line Length**
-
-* **Limit lines to 79 characters**
-* For docstrings or comments: 72 characters is the recommendation
-
-#### ✅ **Imports**
-
-* One import per line:
-
-  ```python
-  import os
-  import sys
-  ```
-* Standard library imports come first, then third-party, then local imports:
-
-  ```python
-  import os
-  import sys
-
-  import numpy as np
-
-  import mymodule
-  ```
-
-#### ✅ **Whitespace**
-
-* No extra spaces in function calls or definitions:
-
-  ```python
-  def func(a, b):   # ✅
-      return a + b
-
-  def func( a, b ): # ❌
-  ```
-* Avoid whitespace around `=` in keyword arguments or default values:
-
-  ```python
-  def connect(host="localhost"):  # ✅
-      pass
-  ```
-
-#### ✅ **Comments and Docstrings**
-
-* Use full sentences, capitalize, and use punctuation.
-* **Inline comments**: brief and after `#`
-* **Block comments**: above the code they're describing
-* **Docstrings**: triple-quoted (`"""Docstring here."""`) — recommended for all public modules, functions, classes, and methods.
-
-#### ✅ **Boolean checks**
-
-Use `if x:` instead of `if x != []` or `if len(x) > 0` when testing emptiness.
-
----
-
-### 🔧 Tools to Enforce PEP 8
-
-Use these tools in your development environment:
-
-* `flake8` – for style checking
-* `black` – auto-formatter
-* `pylint` – linter for code quality
-* `isort` – for organizing imports
-
----
-
-### 🎯 Summary
-
-**PEP 8** is the most universally adopted convention in Python. Following it:
-
-* Makes your code more readable and consistent
-* Eases collaboration with other Python developers
-* Helps in professional and open-source projects
-
-If you're working on a team, always check if they follow PEP 8 strictly or use a customized version (some teams might use tools like `black` that take slight liberties with PEP 8 for consistency).
 
 
 
-
-
-
-
-
-some use [snake case][wiki-snake-case] others use [camel case][wiki-camel-case]. The R community mostly use snake case but camel case is also okay. Choose the naming convention you like best in your study group. But stick only to one of them. A few examples:
-
-```
-this_is_snake_case   # note you do not use capital letters here
-thisIsCamelCase      # you start each word with a capital letter (except the first)
-```
-When defining variables and functions, it is in general good practice to use nouns for variables and verbs for functions.
-
-
-## Commenting your code
-
-It is always good practice to comment your code. Such that others can get a fast overview and understand your code easier. We will use [roxygen documentation](https://roxygen2.r-lib.org/) comments which are widely known. 
-
-
-```{r, eval=FALSE, echo=TRUE}
-#' Subtract two vectors
-#'
-#' @param x First vector.
-#' @param y Vector to be subtracted.
-#'
-#' @return The difference.
-#' @export
-#'
-#' @examples
-#' subtract(x = c(5,5), y = c(2,3))
-subtract <- function(x, y) {
-  return(x-y)
-}
-```
-
-You can add a roxygen skeleton automatically using **Code > Insert Roxygen Skeleton** in RStudio. 
 
 
 # Annotate the course notes {#annotate}
 
 I recommend using [hypothes.is] to annotate the online course notes. You can create both private and public annotations. Collaborative annotation helps people connect to each other and what they’re reading, even when they’re keeping their distance. You may also use public notes to help me indicate spell errors, unclear content etc. in the notes. 
-
-
-# Getting help {#help}
-
-We all get stuck sometimes and need some help. Below are some advises on how to help yourself and ask for help:
-
-If you have a question related to the theory of RL:
-
-  * Ask it during the lecture or in the breaks
-  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap. 
-
-If you have a question related to R:
-
-  * First try to understand the error message and solve the problem. You may try to debug your code by inserting `browser()` in your R code. Further details about debugging can be seen [here][debug-in-r].  
-  * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "r dplyr filter", "r tidyverse", "r subset vector", etc.
-  * Do you need help for a specific function in R then try `?[function-name]` such as `?geom_line`, `?mutate`, etc. Mostly, focus on the last section with examples. Moreover, some packages may have written vignettes try `browseVignettes(package = "package_name")` to check.
-  * Have a look at **Help > Cheatsheets** in RStudio.
-  * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.
-  * Ask it at our [course forum][course-help] and we (the teacher and other students) will try to answer your question asap.   
-
-__Note help using mail correspondence is not supported!__
-
-
 
 
 

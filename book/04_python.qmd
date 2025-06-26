@@ -1,0 +1,49 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+# An introduction to Python and packages {#sec-python}
+
+This module gives an introduction to Python and some of the packages we use during the course.
+
+
+## Learning outcomes {#sec-rl-intro-lo}
+
+By the end of this module, you are expected to:
+
+* Identify useful Python workflows.
+* Do different programming workflows.
+* Code a Python class.
+* Transform data.
+* Plot data.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+## Textbook readings 
+
+No readings and slides.
+
+
+## Python and packages
+
+An tutorial is given in this [Colab][colab-04-python] notebook. Open it and get an overview before class. 
+      
+      
+
+
+
+```{r links, child="links.md", include=FALSE}
+```

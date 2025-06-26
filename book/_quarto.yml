@@ -31,22 +31,23 @@ book:
     
   chapters:
     - index.qmd
-    - part: "Introduction to RL"
-    - 01_rl-intro.qmd
-    - 02_rl-in-action.qmd
+    - part: "Introduction"
+    - 02_rl-intro.qmd
+    - 03_rl-in-action.qmd
+    - 04_python.qmd
     - part: "Tabular methods"
-    - 03_bandit.qmd
+    - 05_bandit.qmd
     
-    # - 03_mdp-1.qmd
-    # - 04_mdp-2.qmd
-    # - 05_dp.qmd
-    # - 06_mc.qmd
-    # - 07_td-pred.qmd
-    # - 08_td-control.qmd
+    # - 06_mdp-1.qmd
+    # - 07_mdp-2.qmd
+    # - 08_dp.qmd
+    # - 09_mc.qmd
+    # - 10_td-pred.qmd
+    # - 11_td-control.qmd
     - references.qmd
   appendices:
     - 99_1_appdx.qmd
-  #   - 99_2_appdx.qmd
+    - 99_2_appdx.qmd
 
 bibliography: rl.bib
   # - packages.bib

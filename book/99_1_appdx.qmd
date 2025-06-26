@@ -1,9 +1,18 @@
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-# Setting up Python and an introduction {#sec-python-setup} 
+# Python {#sec-python-setup} 
 
 [Python] is a popular and beginner-friendly programming language known for its simplicity and readability. It’s widely used in web development, data science, automation, artificial intelligence, and more. Whether you're analyzing data, building a website, or creating software, Python is a powerful and versatile tool to learn.
+
+## Colab
+
+During this course we are going to use [Google Colab][Colab] which is a hosted [Jupyter] notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, [Colab] runs in your browser and you do not have to install anything on your computer. With a [Jupyter] notebook you can weave you code together with text.
+
+To be familiar with Colab do the following:
+
+   1) If you do not have a Google account [create one](https://accounts.google.com/). Note if you have a gMail then you already have a Google account.
+   2) Open and do this [tutorial][colab-ex-colab].
 
 ## Laptop setup
 
@@ -46,6 +55,84 @@ If you are new to Python you may have a look at some [DataCamp] Courses. First y
 3. [Data Manipulation with pandas](https://app.datacamp.com/learn/courses/data-manipulation-with-pandas) -
    pandas is the world's most popular Python library, used for everything from data manipulation to data analysis. 
 
+
+## Coding/naming convention {#sec-coding-convention}
+
+The main reason for using a consistent set of coding conventions is to standardize the structure and coding style of an application so that you and others can easily read and understand the code. Good coding conventions result in precise, readable, and unambiguous source code that is consistent with other language conventions and as intuitive as possible. 
+
+Different ways of naming you variables exists. You are advised to adopt a naming convention. PEP 8 is the official style guide for Python code. It provides conventions for writing readable, consistent, and maintainable Python programs. Adhering to PEP 8 helps teams collaborate more effectively and improves code quality across projects. An overview is given below.
+
+**Naming Conventions**
+
+| **Type**              | **Convention**                               | **Example**            |
+| --------------------- | -------------------------------------------- | ---------------------- |
+| Variable              | `lower_case_with_underscores`                | `total_count`          |
+| Function              | `lower_case_with_underscores`                | `process_data()`       |
+| Class                 | `CapitalizedWords`                           | `DataProcessor`        |
+| Constant              | `ALL_CAPS_WITH_UNDERSCORES`                  | `MAX_SIZE`             |
+| Method (in class)     | `lower_case_with_underscores`                | `compute_value()`      |
+| Module/Package        | `lowercase` or `lower_case_with_underscores` | `utils`, `data_loader` |
+| Private/Internal      | `_single_leading_underscore`                 | `_helper_function()`   |
+| Strong “private”      | `__double_leading_underscore`                | `__internal_method()`  |
+| Magic method (dunder) | `__double_leading_and_trailing__`            | `__init__`, `__str__`  |
+
+**Indentation**
+
+* Use **4 spaces per indentation level**.
+* Do **not** use tabs.
+* Use hanging indents for long statements, and align with the opening delimiter.
+
+**Line Length**
+
+* Limit lines to **79 characters**.
+* For docstrings and comments, limit to **72 characters**.
+
+**Whitespace**
+
+* Avoid extra spaces:
+  * No space inside parentheses/brackets/braces: `func(a, b)`
+  * No space before commas, colons, or semicolons.
+  * One space after commas and around binary operators: `x = a + b`
+* Use blank lines to separate functions and classes.
+
+**Comments**
+
+* Use comments to explain **why**, not just **what**.
+* Block comments:
+  * Use full sentences.
+  * Start with a capital letter and end with a period.
+* Inline comments:
+  * Use sparingly.
+  * Leave two spaces before the `#`, and one space after.
+
+**Docstrings**
+
+* Use triple double quotes: `"""This is a docstring."""`
+* All public modules, functions, classes, and methods should have docstrings.
+* First line should be a short summary.
+* Leave a blank line after the summary if more detail follows.
+* Example:
+
+   ```python
+   def add(a, b):
+       """
+       Return the sum of two numbers.
+   
+       Parameters:
+       a (int or float): The first number.
+       b (int or float): The second number.
+   
+       Returns:
+       int or float: The sum of a and b.
+       """
+       return a + b
+   ```
+
+## Debugging
+
+Code development and data analysis always require a bit of trial and error. This [Colab notebook][colab-debug-python] briefly cover some options.
+
+
 ## R and Python packages
 
 If you are used to do data transformation in R then this table may be useful.
@@ -62,3 +149,5 @@ If you are used to do data transformation in R then this table may be useful.
 | `googlesheets4`      | Google Sheets I/O                        | `gspread`, `gspread-pandas`        | Python requires Google API setup; `gspread-pandas` integrates with DataFrames            |
 
 
+```{r links, child="links.md", include=FALSE}
+```

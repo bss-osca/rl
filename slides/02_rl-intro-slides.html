@@ -40,9 +40,9 @@ layout: true
 <span>
 <a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/M1_rl-intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/M1_rl-intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -159,9 +159,9 @@ layout: true
 <span>
 <a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/M1_rl-intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/M1_rl-intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -216,9 +216,9 @@ layout: true
 <span>
 <a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/M1_rl-intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/M1_rl-intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -332,9 +332,9 @@ layout:false
 <span>
 <a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/M1_rl-intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/M1_rl-intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -363,9 +363,9 @@ layout:true
 <span>
 <a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/M1_rl-intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/M1_rl-intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -414,9 +414,9 @@ layout:true
 <span>
 <a href="https://bss-osca.github.io/rl/mod-rl-intro.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/M1_rl-intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/02_rl-intro-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/M1_rl-intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/02_rl-intro-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -556,13 +556,6 @@ Let `\(S_t\)` denote the board state before the opponent makes a move.
 - Define `\(V(S)\)` to be 1 if we win, 0 if we loose and 0.5 otherwise (reward/pr of winning).
 - Most of the time we *exploit* our knowledge with `\(pr = 1-\epsilon\)`, i.e. choose the action which gives us the highest estimated reward and update the value of a state using `$$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$` where `\(\alpha\)` is the *step-size* parameter. 
 - Some times we *explore* with `\(pr = \epsilon\)` and choose another action/move than what seems optimal. 
-
----
-
-## Let us have a look at the code
-
-- Open the [Colab intro][colab-intro-colab] notebook.
-- Open the [Tic-tac-toe][colab-m1-tic-tac-toe] notebook.
 
 ---
 

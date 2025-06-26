@@ -27,6 +27,10 @@ library(rmarkdown)
 
 This site contains course notes for the course "Reinforcement Learning for Business" held at [Aarhus BSS][BSS]. It consists of a set of learning modules. The course is an elective course mainly for the [Operations and Supply Chain Analytics][osca-programme] and [Business Intelligence][bi-programme] programme and intended to give you an introduction to Reinforcement Learning (RL). You can expect the site to be updated while the course runs. The date listed above is the last time the site was updated.
 
+```{r, echo=FALSE}
+link_slide_file_text("01", "intro")
+```
+
 
 ## Learning outcomes
 
@@ -102,7 +106,7 @@ Sutton and Barto's book is the most cited publication in RL research, and is res
 
 ## Course organization
 
-Each week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path in a typical week are 
+Each week considers a learning module. A learning module is related to either a chapter in the textbook, tutorials, cases or exercises. The learning path would typical be 
 
 - Before lectures: Read the chapter in the textbook or tutorial.
 - Lectures (at campus).
@@ -110,54 +114,20 @@ Each week considers a learning module. A learning module is related to either a 
 
 Lectures will not cover all the curriculum but focus on the main parts. In some weeks tutorials or cases are given and we focus on a specific RL problem.
 
-This module gives a short introduction to the course. Next, the site consists of different parts each containing teaching modules about specific topics:
-
-   * [Part I](#sec-rl-intro) gives you a general introduction to RL and the bandit problem. 
-
-   * [Part II](#sec-bandit) consider RL sequential decision problems where the state and action spaces are small enough so values can be represented as arrays, or tables. We start by considering bandit problems (Module \@ref(mod-bandit)) a RL problem in which there is only a single state. Next, Markov decision processes (the full model known) are considered as a general modelling framework (Module \@ref(mod-mdp-1)) and the concept of policies and value functions are discussed (Module \@ref(mod-mdp-2)). Model-based algorithms for finding the optimal policy (dynamic programming) are given in Module  \@ref(mod-dp). The next modules consider model-free methods for finding the optimal policy, i.e. methods that do not require full knowledge of the transition probabilities and rewards of the process. Monte Carlo sampling methods are presented in Module \@ref(mod-mc) and ...
-   
-   * [Part III](??) 
-   
-<!-- The next three chapters describe three fundamental classes of methods for solving finite -->
-<!-- Markov decision problems: dynamic programming, Monte Carlo methods, and temporaldi↵ -->
-<!-- erence learning. Each class of methods has its strengths and weaknesses. Dynamic -->
-<!-- programming methods are well developed mathematically, but require a complete and -->
-<!-- accurate model of the environment. Monte Carlo methods don’t require a model and are -->
-<!-- conceptually simple, but are not well suited for step-by-step incremental computation. -->
-<!-- Finally, temporal-di↵erence methods require no model and are fully incremental, but are -->
-<!-- more complex to analyze. The methods also di↵er in several ways with respect to their -->
-<!-- efficiency and speed of convergence. -->
-<!-- The remaining two chapters describe how these three classes of methods can be -->
-<!-- combined to obtain the best features of each of them. In one chapter we describe how -->
-<!-- the strengths of Monte Carlo methods can be combined with the strengths of temporaldi↵ -->
-<!-- erence methods via multi-step bootstrapping methods. In the final chapter of this part -->
-<!-- of the book we show how temporal-di↵erence learning methods can be combined with -->
-<!-- model learning and planning methods (such as dynamic programming) for a complete -->
-<!-- and unified solution to the tabular reinforcement learning problem. -->
-   
-
-   <!-- * [Part III](#sec-vba-random-numbers) contains extra modules useful when coding in VBA.  -->
-   <!-- * [Part IV](#sec-vba-project) presents the mandatory VBA project. -->
-   <!-- * [Part V](#sec-r-install) focuses on helping you install the needed programs on your computer (Module \@ref(mod-r-install)) and gives you a short introduction to R (Module \@ref(mod-r-workflow)). -->
-   <!-- * [Part VI](#sec-r-loops-cond) gives you an overview over programming in R including loops and conditionals (Module \@ref(mod-r-loops-cond)) and functions (Module \@ref(mod-r-functions)). -->
-
-   <!-- * [Part VII](#sec-r-tidyverse-intro) the focus is on import/export, tidy and transformation of data. Module \@ref(mod-r-tidyverse-intro) first gives you an introduction to the [tidyverse][tidyverse-main-page] packages and introduces you to literal programming using R Markdown. Next, Module \@ref(mod-r-io) shows you how to export and import data. Finally, Module \@ref(mod-r-transform) focuses on transformation of data. -->
-   <!-- * [Part VIII](#sec-r-plot) considers visualization of data in R (Module \@ref(mod-r-plot)). -->
-   <!-- * [Part IX](#sec-project) presents the mandatory R project. -->
-   <!-- * [Part X](#sec-r-maps) contains extra modules useful when coding in R.  -->
-
-The appendix contains different modules that may be helpful for you including hints on [how to work in groups](#groups), [how to get help](#help) if you are stuck and [how to annotate](#annotate) the course notes.
+Lecture notes also contains an appendix with different modules that may be helpful for you.
    
 
 
 
 ## Programming software
 
-We use [Python] as programming software and it is assumed that you are familiar with using Python. [Python] is a programming language and free software environment. Python can be run from a terminal but in general you use an IDE (integrated development environment) such as [Positron], [PyCharm] or [VSCode] for running Python and to saving your work. Moreover, you may use a [Jupyter] notebook to weave you code together with text. 
+We use [Python] as programming software and it is assumed that you are familiar with using Python. [Python] is a programming language and free software environment. 
 
-During this course we are going to use [Google Colab][Colab] which is a hosted Jupyter Notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, [Colab] runs in your browser and you do not have to install anything on your computer.
+During this course we are going to use [Google Colab][Colab] which is a hosted [Jupyter] notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, [Colab] runs in your browser and you do not have to install anything on your computer. With a [Jupyter] notebook you can weave you code together with text.
 
-It is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module \@ref(mod-python-setup) in @sec-python-setup. 
+That said, you may need to run Python on your laptop for larger tasks. You can run Python from a terminal but in general you use an IDE (integrated development environment) such as [Positron], [PyCharm] or [VSCode] for running Python and to saving your work.  
+
+It is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module @sec-python-setup. 
 
 Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
 
@@ -177,7 +147,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 
 
 
-## Exercises {#sec-intro-ex}
+## Exercises (do before class) {#sec-intro-ex}
 
 `r strExercises`
 
