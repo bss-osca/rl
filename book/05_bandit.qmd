@@ -54,7 +54,7 @@ link_slide_file_text("02", "bandit")
 
 Multi-armed bandits attempt to find the best option among a collection of alternatives by learning through trial and error. The name derives from “one-armed bandit,” a slang term for a slot machine — which is a perfect analogy for how these algorithms work. 
 
-```{r, echo=FALSE, out.width="100%", fig.align = "center", fig.cap="A 4-armed bandit.", label=fig-bandit}
+```{r, echo=FALSE, out.width="100%", fig.align = "center", fig.cap="A 4-armed bandit.", label="fig-bandit"}
 knitr::include_graphics("img/bandit.png")
 ```
 
@@ -73,7 +73,7 @@ Imagine you are facing a wall with $k$ slot machines (see @fig-bandit), and each
 
 Multi-armed bandits can  be used in e.g. [digital advertising](https://research.facebook.com/blog/2021/4/auto-placement-of-ad-campaigns-using-multi-armed-bandits/). Suppose you are an advertiser seeking to optimize which ads ($k$ to choose among) to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. 
 
-```{r, label=fig-bandit-choose, echo=FALSE, out.width="100%", fig.align = "center", fig.cap="Which ad to choose?"}
+```{r, label="fig-bandit-choose", echo=FALSE, out.width="100%", fig.align = "center", fig.cap="Which ad to choose?"}
 knitr::include_graphics("img/bandit-choose.png")
 ```
 
