@@ -1,0 +1,10 @@
+*.ipynb
+notebooks/
+book-backup-2023/
+student/
+student-tmp/
+temp/
+**temp
+**tmp
+**_cache/
+**_files/
