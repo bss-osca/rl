@@ -97,7 +97,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f8cb7fe94b71c4ea6759b609738bfe9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-48fb113fea7c09ade55c8c495d57f66a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -426,7 +426,7 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 \end{equation}\]</span></p>
 <p>Note gamma close to one put weight on future rewards while a gamma close to zero put weight on present rewards. Moreover, an infinite time-horizon is assumed.</p>
 <p>An MDP modelling a problem over a finite time-horizon can be transformed into an infinite time-horizon using an <em>absorbing state</em> with transitions only to itself and a reward of zero. This breaks the agent-environment interaction into <em>episodes</em> (e.g playing a board game). Each episode ends in the absorbing state, possibly with a different reward. Each starts independently of the last, with some distribution of starting states. Sequences of interaction without an absorbing state are called <em>continuing tasks</em>.</p>
-<p>The <em>objective function</em> is to choose actions such that the expected return is maximized. We will formalize this mathematically in the <a href="https://bss-osca.github.io/rl/mod-mdp-2.html">next module</a>.</p>
+<p>The <em>objective function</em> is to choose actions such that the expected return is maximized. We will formalize this mathematically in the <a href="https://bss-osca.github.io/rl/06_mdp-2.html">next module</a>.</p>
 </section>
 <section id="summary" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.5</span> Summary</h2>
@@ -447,484 +447,287 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="#help">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
 <section id="ex-mdp-1-seq" class="level3" data-number="6.6.1">
 <h3 data-number="6.6.1" class="anchored" data-anchor-id="ex-mdp-1-seq"><span class="header-section-number">6.6.1</span> Exercise - Sequential decision problems</h3>
-<!-- Q1 -->
-<p>::: {.cell layout-align=“center” solution=‘true’ text=’Examples could be:</p>
 <ol type="1">
-<li><p>Ludo - State: position on the board. Actions: Possible movements. Rewards: In a win state e.g.&nbsp;1, in a loose state -1 and 0 otherwise.</p></li>
-<li><p>Inventory management - State: inventory level. Actions: Order <span class="math inline">\(x\)</span> units, wait. Rewards: a negative number representing inventory holding cost plus ordering cost.</p></li>
-<li><p>Investment - State: current portfolio, KPI's from considered companies. Actions: Buy/sell <span class="math inline">\(x\)</span> stocks of company <span class="math inline">\(y.\)</span> Rewards: returns - costs.’ str_id=‘riZXLCwwFs26kLRgHFCu’}</p></li>
-</ol>
-<div id="riZXLCwwFs26kLRgHFCu" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="riZXLCwwFs26kLRgHFCu-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="riZXLCwwFs26kLRgHFCu-title">
+<li><p>Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<p>
-Examples could be:
-</p>
-<ol>
-<li>
-<p>
-Ludo - State: position on the board. Actions: Possible movements. Rewards: In a win state e.g.&nbsp;1, in a loose state -1 and 0 otherwise.
-</p>
-</li>
-<li>
-<p>
-Inventory management - State: inventory level. Actions: Order (x) units, wait. Rewards: a negative number representing inventory holding cost plus ordering cost.
-</p>
-</li>
-<li>
-<p>
-Investment - State: current portfolio, KPI’s from considered companies. Actions: Buy/sell (x) stocks of company (y.) Rewards: returns - costs.
-</p>
-</li>
-</ol>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
-</div>
-</div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#riZXLCwwFs26kLRgHFCu">
-Solution
-</button>
-<p>:::</p>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Examples could be:</p>
 <ol type="1">
-<li>Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words.</li>
+<li>Ludo - State: position on the board. Actions: Possible movements. Rewards: In a win state e.g.&nbsp;1, in a loose state -1 and 0 otherwise.</li>
+<li>Inventory management - State: inventory level. Actions: Order <span class="math inline">\(x\)</span> units, wait. Rewards: a negative number representing inventory holding cost plus ordering cost.</li>
+<li>Investment - State: current portfolio, KPI’s from considered companies. Actions: Buy/sell <span class="math inline">\(x\)</span> stocks of company <span class="math inline">\(y.\)</span> Rewards: returns - costs.</li>
 </ol>
-<!-- Q2 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="For the k-bandit problem we only have a single state representing before we chose an action. We have $k$ actions and the rewards are the probability distribution from each slot machine. Note the k-bandit problem is trivial if we know the MDP, since then we know the expected reward of each action and hence the action with best expected reward will be optimal." data-str_id="dU5GC3xyqww8TGFigorb">
-<div id="dU5GC3xyqww8TGFigorb" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="dU5GC3xyqww8TGFigorb-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="dU5GC3xyqww8TGFigorb-title">
-Solution
-</h4>
 </div>
-<div class="modal-body">
+</div>
+</div></li>
+<li><p>How do the states, actions and rewards look like for the bandit problem? Try drawing the state-expanded hypergraph.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For the k-bandit problem we only have a single state representing before we chose an action. We have <span class="math inline">\(k\)</span> actions and the rewards are the probability distribution from each slot machine. Note the k-bandit problem is trivial if we know the MDP, since then we know the expected reward of each action and hence the action with best expected reward will be optimal.</p>
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="06_mdp-1_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="06_mdp-1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<p>
-For the k-bandit problem we only have a single state representing before we chose an action. We have (k) actions and the rewards are the probability distribution from each slot machine. Note the k-bandit problem is trivial if we know the MDP, since then we know the expected reward of each action and hence the action with best expected reward will be optimal.
-</p>
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
 </div>
 </div>
 </div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#dU5GC3xyqww8TGFigorb">
-Solution
-</button>
-</div>
-<ol start="2" type="1">
-<li>How do the states, actions and rewards look like for the bandit problem? Try drawing the state-expanded hypergraph.</li>
+</div></li>
 </ol>
 </section>
 <section id="ex-mdp-1-exp-return" class="level3" data-number="6.6.2">
 <h3 data-number="6.6.2" class="anchored" data-anchor-id="ex-mdp-1-exp-return"><span class="header-section-number">6.6.2</span> Exercise - Expected return</h3>
-<!-- Q1 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-str_id="TwFQqZBOCSpMEs73yZU0">
-<div id="TwFQqZBOCSpMEs73yZU0" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="TwFQqZBOCSpMEs73yZU0-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="TwFQqZBOCSpMEs73yZU0-title">
-Solution
-</h4>
-</div>
-<div class="modal-body">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>gam <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span><span class="dv">0</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">1</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">0</span>) {</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>   g <span class="ot">&lt;-</span> r[i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">+</span>  gam<span class="sc">*</span>g</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>g</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.27</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
-</div>
-</div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#TwFQqZBOCSpMEs73yZU0">
-Solution
-</button>
-</div>
 <ol type="1">
-<li>Suppose <span class="math inline">\(\gamma=0.8\)</span> and we observe the following sequence of rewards: <span class="math inline">\(R_1 = -3\)</span>, <span class="math inline">\(R_2 = 5\)</span>, <span class="math inline">\(R_3=2\)</span>, <span class="math inline">\(R_4 = 7\)</span>, and <span class="math inline">\(R_5 = 1\)</span> with a finite time-horizon of <span class="math inline">\(T=5\)</span>. What is <span class="math inline">\(G_0\)</span>? Hint: work backwards and recall that <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</li>
-</ol>
-<!-- Q2 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-str_id="HHHPsg3HtOt89GHo6tow">
-<div id="HHHPsg3HtOt89GHo6tow" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="HHHPsg3HtOt89GHo6tow-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="HHHPsg3HtOt89GHo6tow-title">
+<li><p>Suppose <span class="math inline">\(\gamma=0.8\)</span> and we observe the following sequence of rewards: <span class="math inline">\(R_1 = -3\)</span>, <span class="math inline">\(R_2 = 5\)</span>, <span class="math inline">\(R_3=2\)</span>, <span class="math inline">\(R_4 = 7\)</span>, and <span class="math inline">\(R_5 = 1\)</span> with a finite time-horizon of <span class="math inline">\(T=5\)</span>. What is <span class="math inline">\(G_0\)</span>? Hint: work backwards and recall that <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r fold-show code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recall sum_k  g^k = 1/(1-g)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="dv">7</span> <span class="sc">*</span> <span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="fl">-0.9</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>g1</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 70</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.9</span> <span class="sc">*</span> <span class="dv">70</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>g0</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 65</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>gam <span class="op">=</span> <span class="fl">0.8</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> [<span class="op">-</span><span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">1</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f't = 5 G_5 = </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 5 G_5 = 0</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> r[i] <span class="op">+</span> gam <span class="op">*</span> g</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f't = </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> G_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 4 G_4 = 1.0</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 3 G_3 = 7.8</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 2 G_2 = 8.24</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 1 G_1 = 11.592</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 0 G_0 = 6.2736</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
+</div></li>
+<li><p>Suppose <span class="math inline">\(\gamma=0.9\)</span> and we observe rewards: <span class="math inline">\(R_1 = 2\)</span>, <span class="math inline">\(R_t = 7\)</span>, <span class="math inline">\(t&gt;1\)</span> given a infinite time-horizon. What is <span class="math inline">\(G_0\)</span> and <span class="math inline">\(G_1\)</span>? Hint: recall that <span class="math inline">\(\sum_{k=0}^\infty x^k = 1/(1-x)\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#HHHPsg3HtOt89GHo6tow">
+<div class="callout-title-container flex-fill">
 Solution
-</button>
 </div>
-<ol start="2" type="1">
-<li>Suppose <span class="math inline">\(\gamma=0.9\)</span> and we observe rewards: <span class="math inline">\(R_1 = 2\)</span>, <span class="math inline">\(R_t = 7\)</span>, <span class="math inline">\(t&gt;1\)</span> given a infinite time-horizon. What is <span class="math inline">\(G_0\)</span> and <span class="math inline">\(G_1\)</span>?</li>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Note <span class="math display">\[\begin{align}G_1 &amp;= R_{t+1} + \gamma G_{t+1} \\
+                        &amp;= 7 + \gamma G_{t+1} \\
+                        &amp;= 7 + \gamma (7 + \gamma G_{t+2}) \\
+                        &amp;= 7(1 + \gamma + \gamma^2 + \ldots) \\
+                        &amp;= 7\sum_{k=0}^\infty 0.9^k \\
+                        &amp;= \frac{7}{1-0.9}\end{align}\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>G_1 <span class="op">=</span> <span class="dv">7</span> <span class="op">*</span> <span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">-</span><span class="fl">0.9</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G_1)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 70.00000000000001</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>G_0 <span class="op">=</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.9</span> <span class="op">*</span> G_1</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G_0)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 65.00000000000001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div></li>
 </ol>
 </section>
 <section id="ex-mdp-1-gambler" class="level3" data-number="6.6.3">
 <h3 data-number="6.6.3" class="anchored" data-anchor-id="ex-mdp-1-gambler"><span class="header-section-number">6.6.3</span> Exercise - Gambler’s problem</h3>
 <p>A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. The coin may be an unequal coin where there is not equal probability <span class="math inline">\(p_H\)</span> for a head (H) and a tail (T). If the coin comes up heads, the gambler wins as many dollars as he has staked on that flip; if it is tails, he loses his stake. The game ends when the gambler reaches his goal of a capital equal 100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP, where we assume that the gambler starts with a capital <span class="math inline">\(0 &lt; s_0 &lt; 100\)</span>.</p>
-<!-- Q1 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="Capital of the gambler: $$\mathcal{S} = {0, \ldots, 100 }.$$ Terminal states are 0 and 100 (loose or win)." data-str_id="Eq64NInOlQKZKsp4TRZN">
-<div id="Eq64NInOlQKZKsp4TRZN" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="Eq64NInOlQKZKsp4TRZN-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="Eq64NInOlQKZKsp4TRZN-title">
-Solution
-</h4>
-</div>
-<div class="modal-body">
-<p>
-Capital of the gambler: <span class="math display">\[\mathcal{S} = \{0, \ldots, 100 \}.\]</span> Terminal states are 0 and 100 (loose or win).
-</p>
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
-</div>
-</div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#Eq64NInOlQKZKsp4TRZN">
-Solution
-</button>
-</div>
 <ol type="1">
-<li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>. Which states are terminal states?</li>
-</ol>
-<!-- Q2 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="Given his capital choose to gamble $a$: $$\mathcal{A}(s) = { a\in \mathcal{S} | 0 \leq a \leq \min(s, 100-s) }.$$" data-str_id="lzgtSv9fV8NQofDC8Q8Z">
-<div id="lzgtSv9fV8NQofDC8Q8Z" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="lzgtSv9fV8NQofDC8Q8Z-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="lzgtSv9fV8NQofDC8Q8Z-title">
+<li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>. Which states are terminal states?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<p>
-Given his capital choose to gamble (a): <span class="math display">\[\mathcal{A}(s) = \{ a\in \mathcal{S} | 0 \leq a \leq \min(s, 100-s) \}.\]</span>
-</p>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Capital of the gambler: <span class="math display">\[\mathcal{S} = \{0, \ldots, 100 \}.\]</span> Terminal states are 0 and 100 (loose or win).</p>
 </div>
 </div>
+</div></li>
+<li><p>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#lzgtSv9fV8NQofDC8Q8Z">
+<div class="callout-title-container flex-fill">
 Solution
-</button>
 </div>
-<ol start="2" type="1">
-<li>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</li>
-</ol>
-<!-- Q3 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="The expected reward is: $$r(s,a) = \mathbb{E}[R_a] = p_H a$$ where $p_H$ denote the probability of head. The state-value denote the expected reward." data-str_id="uchuhtie0GoJFd5Ty9HE">
-<div id="uchuhtie0GoJFd5Ty9HE" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="uchuhtie0GoJFd5Ty9HE-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="uchuhtie0GoJFd5Ty9HE-title">
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given his capital choose to gamble <span class="math inline">\(a\)</span>: <span class="math display">\[\mathcal{A}(s) = \{ a\in \mathcal{S} | 0 \leq a \leq \min(s, 100-s) \}.\]</span></p>
+</div>
+</div>
+</div></li>
+<li><p>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span>. Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<p>
-The expected reward is: <span class="math display">\[r(s,a) = \mathbb{E}[R_a] = p_H a\]</span> where (p_H) denote the probability of head. The state-value denote the expected reward.
-</p>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The expected reward is: <span class="math display">\[r(s,a) = \mathbb{E}[R_a] = p_H a\]</span> where <span class="math inline">\(p_H\)</span> denote the probability of head. The state-value denote the expected reward.</p>
 </div>
 </div>
+</div></li>
+<li><p>Let <span class="math inline">\(R_a\)</span> be zero for all bets <span class="math inline">\(a\)</span> and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#uchuhtie0GoJFd5Ty9HE">
+<div class="callout-title-container flex-fill">
 Solution
-</button>
 </div>
-<ol start="3" type="1">
-<li>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span>. Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?</li>
-</ol>
-<!-- Q4 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="Since $r(s,a) = 0$ for all states and actions, the state-value is the probability of winning." data-str_id="NC33wdyrrvWlZccBp0n3">
-<div id="NC33wdyrrvWlZccBp0n3" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="NC33wdyrrvWlZccBp0n3-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="NC33wdyrrvWlZccBp0n3-title">
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Since <span class="math inline">\(r(s,a) = 0\)</span> for all states and actions, the state-value is the probability of winning.</p>
+</div>
+</div>
+</div></li>
+<li><p>Calculate the transition probabilities.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<p>
-Since (r(s,a) = 0) for all states and actions, the state-value is the probability of winning.
-</p>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If <span class="math inline">\(C\)</span> denote a Bernoulli variable equal 1 if head. Then <span class="math display">\[p(s' | s, a) = \Pr(s' = s + Ca - (1-C)a).\]</span> Hence there are two transitions: if <span class="math inline">\(s' = s - a\)</span> then <span class="math inline">\(p(s' | s, a) = 1-p_H\)</span> and if <span class="math inline">\(s' = s + a\)</span> then <span class="math inline">\(p(s' | s, a) = p_H\)</span>.</p>
 </div>
 </div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#NC33wdyrrvWlZccBp0n3">
-Solution
-</button>
-</div>
-<ol start="4" type="1">
-<li>Let <span class="math inline">\(R_a\)</span> be zero for all bets <span class="math inline">\(a\)</span> and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?</li>
-</ol>
-<!-- Q5 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="If $C$ denote a Bernoulli variable equal 1 if head. Then $$p(s' | s, a)=\Pr(s' = s + Ca - (1-C)a).$$ Hence there are two transitions: if $s' = s - a$ then $p(s' | s, a) = 1-p_H$ and if $s' = s + a$ then $p(s' | s, a) = p_H$." data-str_id="AtYLbHQadzyEJl0nAIJB">
-<div id="AtYLbHQadzyEJl0nAIJB" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="AtYLbHQadzyEJl0nAIJB-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="AtYLbHQadzyEJl0nAIJB-title">
-Solution
-</h4>
-</div>
-<div class="modal-body">
-<p>
-If (C) denote a Bernoulli variable equal 1 if head. Then <span class="math display">\[p(s' | s, a) = \Pr(s' = s + Ca - (1-C)a).\]</span> Hence there are two transitions: if (s’ = s - a) then (p(s’ | s, a) = 1-p_H) and if (s’ = s + a) then (p(s’ | s, a) = p_H).
-</p>
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
-</div>
-</div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#AtYLbHQadzyEJl0nAIJB">
-Solution
-</button>
-</div>
-<ol start="5" type="1">
-<li>Calculate the transition probabilities.</li>
+</div></li>
 </ol>
 </section>
 <section id="ex-mdp-1-storage" class="level3" data-number="6.6.4">
 <h3 data-number="6.6.4" class="anchored" data-anchor-id="ex-mdp-1-storage"><span class="header-section-number">6.6.4</span> Exercise - Factory storage</h3>
 <p>A factory has a storage tank with a capacity of 4 <span class="math inline">\(\mathrm{m}^{3}\)</span> for temporarily storing waste produced by the factory. Each week the factory produces <span class="math inline">\(0,1\)</span>, 2 or 3 <span class="math inline">\(\mathrm{m}^{3}\)</span> waste with respective probabilities <span class="math display">\[p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.\]</span> If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.</p>
 <p>The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week <span class="math inline">\(n\)</span> just before the regular removal opportunity.</p>
-<!-- Q1 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="$$\mathcal{S} = { 0,1,2,3,4 }$$" data-str_id="jPigEhtwJlQHL1sztSoe">
-<div id="jPigEhtwJlQHL1sztSoe" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="jPigEhtwJlQHL1sztSoe-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="jPigEhtwJlQHL1sztSoe-title">
-Solution
-</h4>
-</div>
-<div class="modal-body">
-<p>
-<span class="math display">\[\mathcal{S} = \{ 0,1,2,3,4 \}\]</span>
-</p>
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
-</div>
-</div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#jPigEhtwJlQHL1sztSoe">
-Solution
-</button>
-</div>
 <ol type="1">
-<li>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</li>
-</ol>
-<!-- Q2 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="Let $e$ and $k$ denote empty and keep the waste from the tank. Then the action space is $$\mathcal{A}(s) = { e, k }.$$" data-str_id="b8oFFpYDS3R59mM0qWvw">
-<div id="b8oFFpYDS3R59mM0qWvw" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="b8oFFpYDS3R59mM0qWvw-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="b8oFFpYDS3R59mM0qWvw-title">
+<li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<p>
-Let (e) and (k) denote empty and keep the waste from the tank. Then the action space is <span class="math display">\[\mathcal{A}(s) = \{ e, k \}.\]</span>
-</p>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\mathcal{S} = \{ 0,1,2,3,4 \}\]</span></p>
 </div>
 </div>
+</div></li>
+<li><p>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#b8oFFpYDS3R59mM0qWvw">
+<div class="callout-title-container flex-fill">
 Solution
-</button>
 </div>
-<ol start="2" type="1">
-<li>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</li>
-</ol>
-<!-- Q3 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence $$r(s, e) = -(25 + 5s)$$and$$r(s,k) = -30\sum_{i>4-s} (s+i-4)p_i$$" data-str_id="i3xcfgYp9Hyi989edANn">
-<div id="i3xcfgYp9Hyi989edANn" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="i3xcfgYp9Hyi989edANn-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="i3xcfgYp9Hyi989edANn-title">
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\(e\)</span> and <span class="math inline">\(k\)</span> denote empty and keep the waste from the tank. Then the action space is <span class="math display">\[\mathcal{A}(s) = \{ e, k \}.\]</span></p>
+</div>
+</div>
+</div></li>
+<li><p>Calculate the expected rewards <span class="math inline">\(r(s,a)\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 Solution
-</h4>
 </div>
-<div class="modal-body">
-<p>
-The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence <span class="math display">\[r(s, e) = -(25 + 5s)\]</span>and<span class="math display">\[r(s,k) = -30\sum_{i&amp;gt;4-s} (s+i-4)p_i\]</span>
-</p>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence <span class="math display">\[r(s, e) = -(25 + 5s)\]</span>and<span class="math display">\[r(s,k) = -30\sum_{i&gt;4-s} (s+i-4)p_i\]</span></p>
 </div>
 </div>
+</div></li>
+<li><p>Calculate the transition probabilities <span class="math inline">\(p(s'|s,a)\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#i3xcfgYp9Hyi989edANn">
+<div class="callout-title-container flex-fill">
 Solution
-</button>
 </div>
-<ol start="3" type="1">
-<li>Calculate the expected rewards <span class="math inline">\(r(s,a)\)</span>.</li>
-</ol>
-<!-- Q4 -->
-<div class="cell" data-layout-align="center" data-solution="true" data-text="The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\text{ if } s\leq s' \leq 3$$ $$p(4|s,k) = \sum_{i\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\text{ if }  0\leq s' \leq 4$$ $$p(s'|s,a) =  0 \text{ otherwise.}$$" data-str_id="UQMIzW15ItiDjPsBdHrd">
-<div id="UQMIzW15ItiDjPsBdHrd" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="UQMIzW15ItiDjPsBdHrd-title">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-<h4 class="modal-title anchored" id="UQMIzW15ItiDjPsBdHrd-title">
-Solution
-</h4>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div class="modal-body">
-<p>
-The transition probabilities are: <span class="math display">\[p(s'|s,k) = p_{s'-s}\text{ if } s\leq s' \leq 3\]</span> <span class="math display">\[p(4|s,k) = \sum_{i\geq 4-s} p_i\]</span> <span class="math display">\[p(s'|s,e) = p_{s'}\text{ if }  0\leq s' \leq 4\]</span> <span class="math display">\[p(s'|s,a) =  0 \text{ otherwise.}\]</span>
-</p>
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" data-dismiss="modal">
-Close
-</button>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The transition probabilities are: <span class="math display">\[p(s'|s,k) = p_{s'-s}\text{ if } s\leq s' \leq 3\]</span> <span class="math display">\[p(4|s,k) = \sum_{i\geq 4-s} p_i\]</span> <span class="math display">\[p(s'|s,e) = p_{s'}\text{ if }  0\leq s' \leq 4\]</span> <span class="math display">\[p(s'|s,a) =  0 \text{ otherwise.}\]</span></p>
 </div>
 </div>
-</div>
-</div>
-<button class="btn btn-default btn-xs" style="float:right" data-toggle="modal" data-target="#UQMIzW15ItiDjPsBdHrd">
-Solution
-</button>
-</div>
-<ol start="4" type="1">
-<li>Calculate the transition probabilities <span class="math inline">\(p(s'|s,a)\)</span>.</li>
+</div></li>
 </ol>
 
 
