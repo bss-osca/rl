@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; RL in action – Reinforcement Learning for Business (RL)</title>
+<title>7&nbsp; Policies and value functions for MDPs – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04_python.html" rel="next">
-<link href="./02_rl-intro.html" rel="prev">
+<link href="./08_dp.html" rel="next">
+<link href="./06_mdp-1.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -97,8 +97,6 @@ div.csl-indent {
     document.body.classList.add('hypothesis-enabled');
   });
 </script>
-<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -131,7 +129,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="3&nbsp; RL in action – Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="7&nbsp; Policies and value functions for MDPs – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -146,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03_rl-in-action.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07_mdp-2.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Policies and value functions for MDPs</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -195,7 +193,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link active">
+  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></a>
   </div>
 </li>
@@ -223,7 +221,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_mdp-2.html" class="sidebar-item-text sidebar-link">
+  <a href="./07_mdp-2.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Policies and value functions for MDPs</span></span></a>
   </div>
 </li>
@@ -272,21 +270,23 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-rl-intro-lo" id="toc-sec-rl-intro-lo" class="nav-link active" data-scroll-target="#sec-rl-intro-lo"><span class="header-section-number">3.1</span> Learning outcomes</a></li>
-  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</a></li>
-  <li><a href="#tic-tac-toe" id="toc-tic-tac-toe" class="nav-link" data-scroll-target="#tic-tac-toe"><span class="header-section-number">3.3</span> Tic-Tac-Toe</a></li>
-  <li><a href="#colab" id="toc-colab" class="nav-link" data-scroll-target="#colab"><span class="header-section-number">3.4</span> Colab</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
-  <li><a href="#sec-rl-in-action-ex" id="toc-sec-rl-in-action-ex" class="nav-link" data-scroll-target="#sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</a></li>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">7.1</span> Learning outcomes</a></li>
+  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">7.2</span> Textbook readings</a></li>
+  <li><a href="#policies-and-value-functions" id="toc-policies-and-value-functions" class="nav-link" data-scroll-target="#policies-and-value-functions"><span class="header-section-number">7.3</span> Policies and value functions</a></li>
+  <li><a href="#sec-mdp-opt" id="toc-sec-mdp-opt" class="nav-link" data-scroll-target="#sec-mdp-opt"><span class="header-section-number">7.4</span> Optimal policies and value functions</a></li>
+  <li><a href="#optimality-vs-approximation" id="toc-optimality-vs-approximation" class="nav-link" data-scroll-target="#optimality-vs-approximation"><span class="header-section-number">7.5</span> Optimality vs approximation</a></li>
+  <li><a href="#semi-mdps-non-fixed-time-length" id="toc-semi-mdps-non-fixed-time-length" class="nav-link" data-scroll-target="#semi-mdps-non-fixed-time-length"><span class="header-section-number">7.6</span> Semi-MDPs (non-fixed time length)</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">7.7</span> Summary</a></li>
+  <li><a href="#sec-mdp-2-ex" id="toc-sec-mdp-2-ex" class="nav-link" data-scroll-target="#sec-mdp-2-ex"><span class="header-section-number">7.8</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/07_mdp-2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/07_mdp-2.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-rl-in-action" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></h1>
+<h1 class="title"><span id="sec-mdp-2" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Policies and value functions for MDPs</span></span></h1>
 </div>
 
 
@@ -303,216 +303,208 @@ window.Quarto = {
 </header>
 
 
-<p>This module learn an agent/player to play tic-tac-toe using Reinforcement learning.</p>
-<section id="sec-rl-intro-lo" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="sec-rl-intro-lo"><span class="header-section-number">3.1</span> Learning outcomes</h2>
+<p>This module go deeper in the theory of finite Markov decision processes (MDPs). The concept of a policy and value functions is considered. Once the problem is formulated as an MDP, finding the optimal policy can be found using value functions.</p>
+<section id="learning-outcomes" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">7.1</span> Learning outcomes</h2>
 <p>By the end of this module, you are expected to:</p>
+<!-- * Identify the different elements of a Markov Decision Processes (MDP). -->
+<!-- * Describe how the dynamics of an MDP are defined. -->
+<!-- * Understand how the agent-environment RL description relates to an MDP. -->
+<!-- * Interpret the graphical representation of a Markov Decision Process. -->
+<!-- * Describe how rewards are used to define the objective function (expected return). -->
+<!-- * Interpret the discount rate and its effect on the objective function. -->
+<!-- * Identify episodes and how to formulate an MDP by adding an absorbing state.  -->
 <ul>
-<li>Code your first RL algorithm</li>
-<li>Formulate the blocks of the RL model (environment, agent, data, states, actions, rewards and policies).</li>
-<li>Run your first RL algorithm and evaluate on its solution.</li>
+<li>Identify a policy as a distribution over actions for each possible state.</li>
+<li>Define value functions for a state and action.</li>
+<li>Derive the Bellman equation for a value function.</li>
+<li>Understand how Bellman equations relate current and future values.</li>
+<li>Define an optimal policy.</li>
+<li>Derive the Bellman optimality equation for a value function.</li>
 </ul>
-<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 3, 6 and 9-12 of the course.</p>
+<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 2, 7, 10, and 12 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
 <!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 </section>
-<section id="textbook-readings" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</h2>
-<p>For this lecture, you will need to read Chapter 1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<section id="textbook-readings" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">7.2</span> Textbook readings</h2>
+<p>Read Chapter 3.5-3.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 Slides for this module can be seen
-<a href="https://bss-osca.github.io/rl/slides/03_rl-in-action-slides.html" target="_blank">here.</a>
+<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">here.</a>
 You do not have to look at them before the lecture!
 </div>
 </div>
 </div>
 </section>
-<section id="tic-tac-toe" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="tic-tac-toe"><span class="header-section-number">3.3</span> Tic-Tac-Toe</h2>
-<p>Tic-Tac-Toe is a simple two-player game where players alternately place their marks on a 3x3 grid. That is, the current state of the board is the players’ marks on the grid. The first player to align three of their marks horizontally, vertically, or diagonally wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probability of winning.</p>
-<div class="cell" data-layout-align="center">
-<style type="text/css">
-.table-bordered th, .table-bordered td {
-    border: 1px solid black !important; 
-}
-</style>
-</div>
-<p>Examples of winning, loosing and a draw from player Xs point of view:</p>
-<table style="width: 100%; border: 0px !important">
-<tbody>
-<tr style="border: 0px !important;">
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a <em>draw</em> game may look as in <a href="#fig-hgf" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>. We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
+<section id="policies-and-value-functions" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="policies-and-value-functions"><span class="header-section-number">7.3</span> Policies and value functions</h2>
+<p>A <em>policy</em> <span class="math inline">\(\pi\)</span> is a distribution over actions, given some state:</p>
+<p><span class="math display">\[\pi(a | s) = \Pr(A_t = a | S_t = s).\]</span> Since the MDP is stationary the policy is time-independent, i.e.&nbsp;given a state, we choose the same action no matter the time-step. If <span class="math inline">\(\pi(a | s) = 1\)</span> for a single state, i.e.&nbsp;an action is chosen with probability one always then the policy is called <em>deterministic</em>. Otherwise a policy is called <em>stochastic</em>.</p>
+<p>Given a policy we can define some value functions. The <em>state-value function</em> <span class="math inline">\(v_\pi(s)\)</span> denote the expected return starting from state <span class="math inline">\(s\)</span> when following the policy <span class="math inline">\(\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
+\end{align}
+\]</span> Note the last equal sign comes from <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</p>
+<p>The <em>action-value function</em> <span class="math inline">\(q_\pi(s, a)\)</span>, denote the expected return starting from state <span class="math inline">\(s\)</span>, taking action <span class="math inline">\(a\)</span> and from thereon following policy <span class="math inline">\(\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
+\end{align}
+\]</span></p>
+<p>This action-value, also known as “q-value”, is very important, as it tells us directly what action to pick in a particular state. Given the definition of q-values, the state-value function is an average over the q-values of all actions we could take in that state:</p>
+<p><span id="eq-vq"><span class="math display">\[
+v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a)
+\tag{7.1}\]</span></span></p>
+<p>A q-value (action-value) is equal to the expected reward <span class="math inline">\(r(s,a)\)</span> that we get from choosing action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span>, plus a discounted amount of the average state-value of all the future states:</p>
+<p><span class="math display">\[q_\pi(s, a) = r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\]</span></p>
+<p>Joining the equations, the state-value of a particular state <span class="math inline">\(s\)</span> now becomes the sum of weighted state-values of all possible subsequent states <span class="math inline">\(s'\)</span>, where the weights are the policy probabilities:</p>
+<p><span id="eq-bell-state"><span class="math display">\[
+\begin{align}
+  v_\pi(s) &amp;= \sum_{a \in \mathcal{A}}\pi(a | s)q_\pi(s, a) \\
+  &amp;= \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),
+\end{align}
+\tag{7.2}\]</span></span> which is known as the <em>Bellman equation</em>. <!-- in exactly the same way we can define a q-value as a weighted sum of the --> <!-- q-values of all states we could reach given we pick the action of the q-value: --></p>
+<!-- $$ -->
+<!-- \begin{align} -->
+<!-- q_\pi(s, a) &= \mathcal{R}_s^a + \gamma\sum_{s' \in \mathcal{S}} P_{ss'}^a v_\pi(s') \\ -->
+<!-- &= \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a \sum_{a' \in \mathcal{A}} \pi(a'|s')q_\pi(s',a') -->
+<!-- \end{align} -->
+<!-- $$ -->
+</section>
+<section id="sec-mdp-opt" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="sec-mdp-opt"><span class="header-section-number">7.4</span> Optimal policies and value functions</h2>
+<p>The objective function of an MDP can now be stated mathematically which is to find an optimal policy <span class="math inline">\(\pi_*\)</span> with state-value function:</p>
+<p><span class="math display">\[v_*(s) = \max_\pi v_\pi(s).\]</span> That is, a policy <span class="math inline">\(\pi'\)</span> is defined as better than policy <span class="math inline">\(\pi\)</span> if its expected return is higher for all states. Note the objective function is not a scalar here but if the agent start in state <span class="math inline">\(s_0\)</span> then we may reformulate the objective function maximize the expected return to <span class="math display">\[v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)\]</span></p>
+<p>If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy <span class="math inline">\(\pi_*\)</span> which is better than or just as good as all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the <em>optimal state-value function</em> <span class="math inline">\((v_*)\)</span>.</p>
+<p>We may rewrite <span class="math inline">\(v_*(s)\)</span> using <a href="#eq-vq" class="quarto-xref">Equation&nbsp;<span>7.1</span></a>: <span class="math display">\[
+\begin{align}
+  v_*(s) &amp;= \max_\pi v_\pi(s) \\
+         &amp;= \max_\pi \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a) \\
+         &amp;= \max_\pi \max_a q_\pi(s, a)\qquad \text{(set $\pi(a|s) = 1$ where $q_\pi$ is maximal)} \\
+         &amp;= \max_a \max_\pi q_\pi(s, a) \\
+         &amp;= \max_a q_*(s, a), \\
+\end{align}
+\]</span> where the <em>optimal q-value/action-value function</em> <span class="math inline">\((q_*)\)</span> is:</p>
+<p><span class="math display">\[
+\begin{align}
+q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+          &amp;= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s') \\
+          &amp;= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) \max_{a'} q_*(s', a').
+\end{align}
+\]</span> This is the the <em>Bellman optimality equation</em> for <span class="math inline">\(q_*\)</span> and the optimal policy is:</p>
+<p><span class="math display">\[
+\pi_*(a | s) =
+\begin{cases}
+1 \text{ if } a = \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
+0 \text { otherwise.}
+\end{cases}
+\]</span> Or we may define a deterministic policy as <span id="eq-bell-opt-state-policy"><span class="math display">\[
+\begin{align}
+\pi_*(s) &amp;= \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
+         &amp;= \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).
+\end{align}
+\tag{7.3}\]</span></span></p>
+<p>Similar we can write the <em>Bellman optimality equation</em> for <span class="math inline">\(v_*\)</span>:</p>
+<p><span id="eq-bell-opt-state"><span class="math display">\[
+\begin{align}
+  v_*(s) &amp;= \max_a q_*(s, a) \\
+         &amp;= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
+\end{align}
+\tag{7.4}\]</span></span></p>
+<p>Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal value functions. Using (v_*), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store <span class="math inline">\(v_*\)</span>, we can find <span class="math inline">\(v_*\)</span> by a one-step-ahead search using <span class="math inline">\(q_*\)</span>, acting greedy.</p>
+</section>
+<section id="optimality-vs-approximation" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="optimality-vs-approximation"><span class="header-section-number">7.5</span> Optimality vs approximation</h2>
+<p>In Section <a href="#sec-mdp-opt" class="quarto-xref"><span>Section 7.4</span></a> optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g.&nbsp;if the number of states is huge. Consider a state <span class="math inline">\(s = (x_1,\ldots,x_n)\)</span> with state variables <span class="math inline">\(x_i\)</span> each taking two possible values, then the number of states is <span class="math inline">\(|\mathcal{S}| = 2^n\)</span>. That is, the state space grows exponentially with the number of state variables also known as the <em>curse of dimensionality</em>.</p>
+<p>Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability.</p>
+<!-- \subsection{Key Takeaways} -->
+<!-- \begin{itemize} -->
+<!-- \item We summarise our goal for the agent as a \textit{reward}; its objective is to maximise the cumulative sum of future rewards -->
+<!-- \item For episodic tasks, returns terminate (and are backpropogated) when the episode ends. For the continuous control case, returns are discounted so they do not run to infinity.  -->
+<!-- \item A state signal that succeeds in retaining all relevant information about the past is \textit{Markov}.  -->
+<!-- \item Markov Decision Processes (MDPs) are the mathematically idealised version of the RL problem. They have system dynamics: $p(s', r | s, a) = Pr \{R_{r+1} = r, S_{t+1} = s' | S_t, A_t\}$ -->
+<!-- \item Policies are a (probabilistic) mapping from states to actions. -->
+<!-- \item Value functions estimate how good it is for an agent to be in a state ($v_\pi$) or to take an action from a state ($q_\pi$). They are always defined w.r.t policies as the value of a state depends on the policy one takes in that state. Value functions are the \textit{expected cumulative sum of future rewards} from a state or state-action pair. -->
+<!-- \item Knowing our policy and system dynamics, we can define the state value function is defined by the Bellman equation: $v_\pi(s) = \sum_{a} \pi(a|s) \sum_{s',r} p(s', r | s, a) \left[r + \gamma v_\pi(s')\right]$ -->
+<!-- \item An optimal policy ($\pi_*$) is the policy that maximises expected cumulative reward from all states. From the optimal policy we can derive the optimal value functions $q_*$ and $v_*$. -->
+<!-- \end{itemize} -->
+</section>
+<section id="semi-mdps-non-fixed-time-length" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="semi-mdps-non-fixed-time-length"><span class="header-section-number">7.6</span> Semi-MDPs (non-fixed time length)</h2>
+<p>So far we have considered MDPs with a fixed length between each time-step. The model can be extended to MDPs with non-fixed time-lengths known as semi-MDPs. Let <span class="math inline">\(l(s'|s,a)\)</span> denote the length of a time-step given that the system is in state <span class="math inline">\(s\)</span>, action <span class="math inline">\(a\)</span> is chosen and makes a transition to state <span class="math inline">\(s'\)</span>. Then the discount rate over a time-step with length <span class="math inline">\(l(s'|s,a)\)</span> is then</p>
+<p><span class="math display">\[\gamma(s'|s,a) = \gamma^{l(s'|s,a)},\]</span></p>
+<p>and the Bellman optimality equations becomes:</p>
+<p><span class="math display">\[
+v_*(s) = \max_a r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s'),
+\]</span></p>
+<p>and <span class="math display">\[
+q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a').
+\]</span></p>
+<p>That is, the discount rate now is a part of the sum since it depends on the length which depends on the transition.</p>
+</section>
+<section id="summary" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">7.7</span> Summary</h2>
+<p>Read Chapter 3.8 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+</section>
+<section id="sec-mdp-2-ex" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="sec-mdp-2-ex"><span class="header-section-number">7.8</span> Exercises</h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<section id="exr-mdp-2-policy" class="level3" data-number="7.8.1">
+<h3 data-number="7.8.1" class="anchored" data-anchor-id="exr-mdp-2-policy"><span class="header-section-number">7.8.1</span> Exercise - Optimal policy</h3>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-hgf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-simple" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hgf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03_rl-in-action_files/figure-html/fig-hgf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<div aria-describedby="fig-simple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/simple-mdp.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="400">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hgf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.1: A draw.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-simple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.1: A simple MDP.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="colab" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="colab"><span class="header-section-number">3.4</span> Colab</h2>
-<p>During the lecture for this module we will work with the <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">tutorial</a> where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.</p>
-<div class="callout callout-style-simple callout-note callout-titled" title="Colab - Before the lecture">
-<div class="callout-header d-flex align-content-center">
+<p>Consider the transition diagram for an MDP shown in <a href="#fig-simple" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Colab - Before the lecture
+Solution
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Open the <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">tutorial</a>:</p>
+<p>Let <span class="math inline">\(\pi_L\)</span> and <span class="math inline">\(\pi_R\)</span> denote the left and right policy, respectively. Recall the Bellman equation: <span class="math display">\[v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).\]</span> For the left policy this reduces to <span class="math display">\[v_{\pi_L}(s) = 1 + \gamma(v_\pi(s')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).\]</span> Isolating <span class="math inline">\(v_{\pi_L}(s)\)</span> gives us <span class="math display">\[v_{\pi_L}(s) = 1/(1-\gamma^2).\]</span> Similar for the right policy we get <span class="math display">\[v_{\pi_R}(s) = 0 + \gamma(v_\pi(s')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).\]</span> Isolating <span class="math inline">\(v_{\pi_R}(s)\)</span> gives us <span class="math display">\[v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).\]</span> Now</p>
 <ul>
-<li>Have a look at the notebook and run all code cells.</li>
-<li>Try to understand the content.</li>
+<li>for <span class="math inline">\(\gamma=0\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 1\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 0\)</span>, i.e.&nbsp;left policy optimal.</li>
+<li>for <span class="math inline">\(\gamma=0.9\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 5.26\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 9.47\)</span>, i.e.&nbsp;right policy optimal.</li>
+<li>for <span class="math inline">\(\gamma=0.5\)</span> we get <span class="math inline">\(v_{\pi_L}(s) = 1.33\)</span> and <span class="math inline">\(v_{\pi_R}(s) = 1.33\)</span>, i.e.&nbsp;both policies optimal.</li>
 </ul>
 </div>
 </div>
+</div>
 </section>
-<section id="summary" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
-<p>Read Chapter 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
-</section>
-<section id="sec-rl-in-action-ex" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</h2>
-<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<p>You can find all these exercises as a section in this <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">Colab notebook</a>. If you already have your own copy use this.</p>
-<section id="exr-r-intro-self" class="level3" data-number="3.6.1">
-<h3 data-number="3.6.1" class="anchored" data-anchor-id="exr-r-intro-self"><span class="header-section-number">3.6.1</span> Exercise - Self-Play</h3>
-<p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
+<section id="exr-mdp-2-car" class="level3" data-number="7.8.2">
+<h3 data-number="7.8.2" class="anchored" data-anchor-id="exr-mdp-2-car"><span class="header-section-number">7.8.2</span> Exercise - Car rental</h3>
+<p>Consider a rental company with two locations, each with a capacity of 20 cars. Each day, customers arrive at each location to rent cars. If a car is available, it is rented out with a reward of $10. Otherwise the opportunity is lost. Cars become available for renting the day after they are returned.</p>
+<p>The number of cars rental requests <span class="math inline">\(D_i\)</span> at Location <span class="math inline">\(i=1,2\)</span> are Poisson distributed with mean 3 and 4. Similar, the number of cars returned <span class="math inline">\(H_i\)</span> at Location <span class="math inline">\(i=1,2\)</span> are Poisson distributed with mean 3 and 2. Cars returned resulting in more cars than the capacity are lost (and thus disappear from the problem).</p>
+<p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>
+<p>Formulate the problem as an finite MDP where the time-steps are days.</p>
+<ol type="1">
+<li>Define the state space (with states <span class="math inline">\((x,y)\)</span>) equal the number of cars at each location at the end of the day.</li>
+</ol>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -525,16 +517,13 @@ Solution
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it.</p>
+<p><span class="math display">\[\mathcal{S} = \{ (x,y) | 0 \leq x \leq 20, 0 \leq y \leq 20 \}\]</span></p>
 </div>
 </div>
 </div>
-</section>
-<section id="exr-r-intro-sym" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="exr-r-intro-sym"><span class="header-section-number">3.6.2</span> Exercise - Symmetries</h3>
-<p>Many tic-tac-toe positions appear different but are really the same because of symmetries.</p>
-<ol type="1">
-<li><p>How might we amend the reinforcement learning algorithm described above to take advantage of this?</p>
+<ol start="2" type="1">
+<li>Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e.&nbsp;negative if move from Location 2 to 1.</li>
+</ol>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -547,11 +536,13 @@ Solution
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.</p>
+<p><span class="math display">\[\mathcal{A}(s) = \{ a | -\min(5,y,20-x) \leq a \leq min(5,x,20-y) \}\]</span></p>
 </div>
 </div>
-</div></li>
-<li><p>In what ways would this improve the algorithm?</p>
+</div>
+<ol start="3" type="1">
+<li>Calculate the expected reward <span class="math inline">\(r(s,a)\)</span>.</li>
+</ol>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -564,11 +555,14 @@ Solution
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>A smaller state space would increase the speed of learning and reduce the memory required.</p>
+<p>The reward equals the reward of rentals minus the cost of movements. Note we have <span class="math inline">\(\bar{x} = x - a\)</span> and <span class="math inline">\(\bar{y} = x + a\)</span> after movement. Hence <span class="math display">\[r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]\]</span> where <span class="math display">\[\mathbb{E}[\min(D, z)] = \sum_{i=0}^z ip(D = i) + (1-p(D\leq z))z.\]</span></p>
 </div>
 </div>
-</div></li>
-<li><p>Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?</p>
+</div>
+<p>Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action <span class="math inline">\(a\)</span>. Let us consider Location 1 and assume that we are in state <span class="math inline">\(x\)</span> and chose action <span class="math inline">\(a\)</span>. Then the number of cars after movement is <span class="math inline">\(x - a\)</span> and after rental requests <span class="math inline">\(x - a - \min(D_1, x-a)\)</span>. Next, the number of returned cars are added: <span class="math inline">\(x - a - \min(D_1, x-a) +  H_1\)</span>. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e.&nbsp;the inventory dynamics (number of cars at the end of the day) is <span class="math display">\[X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).\]</span></p>
+<ol start="4" type="1">
+<li>Give the inventory dynamics for Location 2.</li>
+</ol>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -581,88 +575,7 @@ Solution
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.</p>
-</div>
-</div>
-</div></li>
-</ol>
-</section>
-<section id="exr-r-intro-greedy" class="level3" data-number="3.6.3">
-<h3 data-number="3.6.3" class="anchored" data-anchor-id="exr-r-intro-greedy"><span class="header-section-number">3.6.3</span> Exercise - Greedy Play</h3>
-<p>Consider Tic-Tac-Toe and suppose the RL player is only greedy (<span class="math inline">\(\epsilon = 0\)</span>), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>As seen in Section @ref(rl-intro-tic-learn) using <span class="math inline">\(\epsilon = 0\)</span> may be okay for this game if the opponent use a simple strategy (e.g.&nbsp;random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="exr-r-intro-exploit" class="level3" data-number="3.6.4">
-<h3 data-number="3.6.4" class="anchored" data-anchor-id="exr-r-intro-exploit"><span class="header-section-number">3.6.4</span> Exercise - Learning from Exploration</h3>
-<p>Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.</p>
-<ol type="1">
-<li><p>What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The probability set <span class="math inline">\(V(s)\)</span> found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set <span class="math inline">\(V(s)\)</span> found by applying learning from exploration is the probability of winning including the active exploration policy.</p>
-</div>
-</div>
-</div></li>
-<li><p>Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.</p>
-</div>
-</div>
-</div></li>
-</ol>
-</section>
-<section id="exr-r-intro-other" class="level3" data-number="3.6.5">
-<h3 data-number="3.6.5" class="anchored" data-anchor-id="exr-r-intro-other"><span class="header-section-number">3.6.5</span> Exercise - Other Improvements</h3>
-<p>Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Altering the exploration rate/learning based on the variance in the opponent’s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.</p>
+<p>Only difference is that cars moved to Location 2 is <span class="math inline">\(a\)</span> (and not <span class="math inline">\(-a\)</span>): <span class="math display">\[Y = \min(20, y + a - \min(D_2, y+a) + H_2)).\]</span></p>
 </div>
 </div>
 </div>
@@ -1078,13 +991,13 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02_rl-intro.html" class="pagination-link" aria-label="An introduction to RL">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span>
+      <a href="./06_mdp-1.html" class="pagination-link" aria-label="Markov decision processes (MDPs)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Markov decision processes (MDPs)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04_python.html" class="pagination-link" aria-label="An introduction to Python">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08_dp.html" class="pagination-link" aria-label="Dynamic programming">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dynamic programming</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1093,5 +1006,5 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/07_mdp-2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/07_mdp-2.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
