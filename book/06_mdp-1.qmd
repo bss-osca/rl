@@ -48,7 +48,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 3-3.4 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
+Read Chapter 3-3.4 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
 link_slide_file_text("03", "mdp-1")
@@ -292,7 +292,7 @@ The *objective function* is to choose actions such that the expected return is m
 
 `r strExercises`
 
-### Exercise - Sequential decision problems {#ex-mdp-1-seq}
+### Exercise - Sequential decision problems {#exr-mdp-1-seq}
 
 1) Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words. 
   
@@ -326,7 +326,7 @@ The *objective function* is to choose actions such that the expected return is m
    :::
    
 
-### Exercise - Expected return {#ex-mdp-1-exp-return}
+### Exercise - Expected return {#exr-mdp-1-exp-return}
 
 1) Suppose $\gamma=0.8$ and we observe the following sequence of rewards: $R_1 = -3$, $R_2 = 5$, $R_3=2$, $R_4 = 7$, and $R_5 = 1$ with a finite time-horizon of $T=5$. What is $G_0$? Hint: work backwards and recall that $G_t = R_{t+1} + \gamma G_{t+1}$.
    
@@ -362,7 +362,7 @@ The *objective function* is to choose actions such that the expected return is m
    :::
 
 
-### Exercise - Gambler's problem {#ex-mdp-1-gambler} 
+### Exercise - Gambler's problem {#exr-mdp-1-gambler} 
 
 A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. The coin may be an unequal coin where there is not equal probability $p_H$ for a head (H) and a tail (T). If the coin comes up heads, the gambler wins as many dollars as he has staked on that flip; if it is tails, he loses his stake. The game ends when the gambler reaches his goal of a capital equal 100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP, where we assume that the gambler starts with a capital $0 < s_0 < 100$. 
 
@@ -401,7 +401,7 @@ A gambler has the opportunity to make bets on the outcomes of a sequence of coin
    :::
 
 
-### Exercise - Factory storage {#ex-mdp-1-storage}
+### Exercise - Factory storage {#exr-mdp-1-storage}
 
 A factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
 $$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 

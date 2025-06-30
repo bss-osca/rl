@@ -47,7 +47,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 3.5-3.7 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
+Read Chapter 3.5-3.7 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
 link_slide_file_text("04", "mdp-2")
@@ -81,10 +81,9 @@ $$
 
 This action-value, also known as "q-value", is very important, as it tells us directly what action to pick in a particular state. Given the definition of q-values, the state-value function is an average over the q-values of all actions we could take in that state:
 
-\begin{equation}
+$$
 v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a|s)q_\pi(s, a)
-(\#eq:vq)
-\end{equation}
+$$ {#eq-vq}
 
 A q-value (action-value) is equal to the expected reward $r(s,a)$ that we get from choosing action $a$ in state $s$, plus a discounted amount of the average state-value of all the future states:
 
@@ -98,8 +97,7 @@ $$
   v_\pi(s) &= \sum_{a \in \mathcal{A}}\pi(a | s)q_\pi(s, a) \\
   &= \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),
 \end{align}
-(\#eq:bell-state)
-$$
+$$ {#eq-bell-state}
 which is known as the *Bellman equation*.
 <!-- in exactly the same way we can define a q-value as a weighted sum of the -->
 <!-- q-values of all states we could reach given we pick the action of the q-value: -->
@@ -119,9 +117,9 @@ The objective function of an MDP can now be stated mathematically which is to fi
 $$v_*(s) = \max_\pi v_\pi(s).$$
 That is, a policy $\pi'$ is defined as better than policy $\pi$ if its expected return is higher for all states. Note the objective function is not a scalar here but if the agent start in state $s_0$ then we may reformulate the objective function maximize the expected return to $$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$
 
-If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy $\pi_*$ which is better than or just as good as all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the *optimal state-value function* \(v_*\). 
+If the MDP has the right properties (details are not given here), there exists an optimal deterministic policy $\pi_*$ which is better than or just as good as all other policies. For all such optimal policies (there may be more than one), we only need to find one optimal policy that have the *optimal state-value function* $(v_*)$. 
 
-We may rewrite $v_*(s)$ using Eq. \@ref(eq:vq):
+We may rewrite $v_*(s)$ using @eq-vq:
 $$
 \begin{align}
   v_*(s) &= \max_\pi v_\pi(s) \\
@@ -131,7 +129,7 @@ $$
          &= \max_a q_*(s, a), \\
 \end{align}
 $$
-where the *optimal q-value/action-value function* \(q_*\) is:
+where the *optimal q-value/action-value function* $(q_*)$ is:
 
 $$
 \begin{align}
@@ -155,8 +153,7 @@ $$
 \pi_*(s) &= \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
          &= \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).
 \end{align}
-(\#eq:bell-opt-state-policy)
-$$
+$$ {#eq-bell-opt-state-policy}
 
 
 Similar we can write the *Bellman optimality equation* for $v_*$:
@@ -166,8 +163,7 @@ $$
   v_*(s) &= \max_a q_*(s, a) \\
          &= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
 \end{align}
-(\#eq:bell-opt-state)
-$$
+$$ {#eq-bell-opt-state}
 
 Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal
 value functions. Using \(v_*\), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store $v_*$, we can find $v_*$ by a one-step-ahead search using $q_*$, acting greedy.
@@ -175,7 +171,7 @@ value functions. Using \(v_*\), the optimal expected long term return is turned 
 
 ## Optimality vs approximation 
 
-In Section \@ref(sec-mdp-opt) optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g. if the number of states is huge. Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables also known as the *curse of dimensionality*. 
+In Section @sec-mdp-opt optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g. if the number of states is huge. Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables also known as the *curse of dimensionality*. 
 
 Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
 
@@ -223,25 +219,26 @@ Read Chapter 3.8 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Optimal policy {#ex-mdp-2-policy}
+### Exercise - Optimal policy {#exr-mdp-2-policy}
 
-```{r simple, echo=FALSE,fig.cap="A simple MDP.", out.width="400px"}
+```{r fig-simple, echo=FALSE,fig.cap="A simple MDP.", out.width="400px"}
 knitr::include_graphics("img/simple-mdp.png")
 ```
 
-```{r, solution=TRUE, text="Let $\\pi_L$ and $\\pi_R$ denote the left and right policy, respectively. Recall the Bellman equation: $$v_\\pi(s) = \\sum_{a \\in \\mathcal{A}}\\pi(a | s)\\left( r(s,a) + \\gamma\\sum_{s' \\in \\mathcal{S}} p(s' | s, a) v_\\pi(s')\\right).$$ For the left policy this reduces to $$v_{\\pi_L}(s) = 1 + \\gamma(v_\\pi(s')) = 1 + \\gamma(0 + \\gamma v_{\\pi_L}(s)).$$ Isolating $v_{\\pi_L}(s)$ gives us $$v_{\\pi_L}(s) = 1/(1-\\gamma^2).$$ Similar for the right policy we get $$v_{\\pi_R}(s) = 0 + \\gamma(v_\\pi(s')) = 0 + \\gamma(2 + \\gamma v_{\\pi_R}(s)).$$ Isolating $v_{\\pi_R}(s)$ gives us $$v_{\\pi_R}(s) = 2\\gamma/(1-\\gamma^2).$$ Now\n\n* for $\\gamma=0$ we get $v_{\\pi_L}(s) = 1$ and $v_{\\pi_R}(s) = 0$, i.e. left policy optimal.\n* for $\\gamma=0.9$ we get $v_{\\pi_L}(s) = 5.26$ and $v_{\\pi_R}(s) = 9.47$, i.e. right policy optimal.\n* for $\\gamma=0.5$ we get $v_{\\pi_L}(s) = 1.33$ and $v_{\\pi_R}(s) = 1.33$, i.e. both policies optimal."}
-```
+Consider the transition diagram for an MDP shown in @fig-simple with 3 states (white circles). The only decision to be made is that in the top state $s$, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies *left* and *right*. Which policy is optimal if $\gamma = 0, 0.9$ and $0.5$?
 
-Consider the transition diagram for an MDP shown in Figure \@ref(fig:simple) with 3 states (white circles). The only decision to be made is that in the top state $s$, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies *left* and *right*. Which policy is optimal if $\gamma = 0, 0.9$ and $0.5$?
+::: {.callout-warning collapse="true" title="Solution"}
+Let $\pi_L$ and $\pi_R$ denote the left and right policy, respectively. Recall the Bellman equation: $$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).$$ For the left policy this reduces to $$v_{\pi_L}(s) = 1 + \gamma(v_\pi(s')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).$$ Isolating $v_{\pi_L}(s)$ gives us $$v_{\pi_L}(s) = 1/(1-\gamma^2).$$ Similar for the right policy we get $$v_{\pi_R}(s) = 0 + \gamma(v_\pi(s')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).$$ Isolating $v_{\pi_R}(s)$ gives us $$v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).$$ Now
 
-<!-- Let $\pi_L$ and $\pi_R$ denote the left and right policy, respectively. Recall the Bellman equation: $$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).$$ For the left policy this reduces to $$v_{\pi_L}(s) = 1 + \gamma(v_\pi(s')) = 1 + \gamma(0 + \gamma v_{\pi_L}(s)).$$ Isolating $v_{\pi_L}(s)$ gives us $$v_{\pi_L}(s) = 1/(1-\gamma^2).$$ Similar for the right policy we get $$v_{\pi_R}(s) = 0 + \gamma(v_\pi(s')) = 0 + \gamma(2 + \gamma v_{\pi_R}(s)).$$ Isolating $v_{\pi_R}(s)$ gives us $$v_{\pi_R}(s) = 2\gamma/(1-\gamma^2).$$ Now  -->
+* for $\gamma=0$ we get $v_{\pi_L}(s) = 1$ and $v_{\pi_R}(s) = 0$, i.e. left policy optimal.
+* for $\gamma=0.9$ we get $v_{\pi_L}(s) = 5.26$ and $v_{\pi_R}(s) = 9.47$, i.e. right policy optimal.
+* for $\gamma=0.5$ we get $v_{\pi_L}(s) = 1.33$ and $v_{\pi_R}(s) = 1.33$, i.e. both policies optimal.
+:::
 
-<!-- * for $\gamma=0$ we get $v_{\pi_L}(s) = 1$ and $v_{\pi_R}(s) = 0$, i.e. left policy optimal. -->
-<!-- * for $\gamma=0.9$ we get $v_{\pi_L}(s) = 5.26$ and $v_{\pi_R}(s) = 9.47$, i.e. right policy optimal. -->
-<!-- * for $\gamma=0.5$ we get $v_{\pi_L}(s) = 1.33$ and $v_{\pi_R}(s) = 1.33$, i.e. both policies optimal. -->
 
 
-### Exercise - Car rental {#ex-mdp-2-car}
+
+### Exercise - Car rental {#exr-mdp-2-car}
 
 Consider a rental company with two locations, each with a capacity of 20 cars. Each day, customers arrive at each location to rent cars. If a car is available, it is rented out with a reward of $10. Otherwise the opportunity is lost. Cars become available for renting the day after they are returned. 
 
@@ -251,31 +248,34 @@ To ensure that cars are available where they are needed, they can be moved betwe
 
 Formulate the problem as an finite MDP where the time-steps are days.
 
-<!-- Q1 -->
-```{r, solution=TRUE, text="$$\\mathcal{S} = \\{ (x,y) | 0 \\leq x \\leq 20, 0 \\leq y \\leq 20 \\}$$"}
-```
+1) Define the state space (with states $(x,y)$) equal the number of cars at each location at the end of the day.
 
-   1) Define the state space (with states $(x,y)$) equal the number of cars at each location at the end of the day.
+::: {.callout-warning collapse="true" title="Solution"}
+$$\mathcal{S} = \{ (x,y) | 0 \leq x \leq 20, 0 \leq y \leq 20 \}$$
+:::
+
+
+2) Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1. 
    
-<!-- Q2 -->
-```{r, solution=TRUE, text="$$\\mathcal{A}(s) = \\{ a | -\\min(5,y,20-x) \\leq a \\leq min(5,x,20-y) \\}$$"}
-```
-
-   2) Define the action space equal the net numbers of cars moved from Location 1 to Location 2 overnight, i.e. negative if move from Location 2 to 1. 
+::: {.callout-warning collapse="true" title="Solution"}
+$$\mathcal{A}(s) = \{ a | -\min(5,y,20-x) \leq a \leq min(5,x,20-y) \}$$
+:::   
    
-<!-- Q3 -->
-```{r, solution=TRUE, text="The reward equals the reward of rentals minus the cost of movements. Note we have $\\bar{x} = x - a$ and $\\bar{y} = x + a$ after movement. Hence $$r(s,a) = \\mathbb{E}[10(\\min(D_1, \\bar{x}) + \\min(D_2, \\bar{y}) )-2\\mid a \\mid]$$ where $$\\mathbb{E}[\\min(D, z)] = \\sum_{i=0}^z ip(D = i) + (1-p(D\\leq z))z.$$"}
-```
 
-   3) Calculate the expected reward $r(s,a)$.
+3) Calculate the expected reward $r(s,a)$.
+
+::: {.callout-warning collapse="true" title="Solution"}
+The reward equals the reward of rentals minus the cost of movements. Note we have $\bar{x} = x - a$ and $\bar{y} = x + a$ after movement. Hence $$r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]$$ where $$\mathbb{E}[\min(D, z)] = \sum_{i=0}^z ip(D = i) + (1-p(D\leq z))z.$$
+:::
    
 Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action $a$. Let us consider Location 1 and assume that we are in state $x$ and chose action $a$. Then the number of cars after movement is $x - a$ and after rental requests $x - a - \min(D_1, x-a)$. Next, the number of returned cars are added: $x - a - \min(D_1, x-a) +  H_1$. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is $$X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).$$
 
-<!-- Q4 -->
-```{r, solution=TRUE, text="Only difference is that cars moved to Location 2 is $a$ (and not $-a$): $$Y = \\min(20, y + a - \\min(D_2, y+a) + H_2)).$$"}
-```
 
-   4) Give the inventory dynamics for Location 2.
+4) Give the inventory dynamics for Location 2.
+
+::: {.callout-warning collapse="true" title="Solution"}
+Only difference is that cars moved to Location 2 is $a$ (and not $-a$): $$Y = \min(20, y + a - \min(D_2, y+a) + H_2)).$$
+:::
 
 
 

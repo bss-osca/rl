@@ -7,7 +7,7 @@ editor_options:
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-```{r, child = "_algorithms.Rmd", echo=FALSE}
+```{r, child = "_algorithms.qmd", echo=FALSE}
 ```
 
 ```{r}
@@ -59,11 +59,10 @@ link_slide_file_text("05", "dp")
 
 ## Policy evaluation {#sec-dp-pe}
 
-The state-value function can be represented using the Bellman equation \@ref(eq:bell-state):
+The state-value function can be represented using the Bellman equation @eq-bell-state:
 $$
 v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).            
-(\#eq:bm-pol-eval)
-$$
+$$ {#eq-bm-pol-eval}
 
 If the dynamics are known perfectly, this becomes a system of $|\mathcal{S}|$ simultaneous linear equations in $|\mathcal{S}|$ unknowns $v_\pi(s), s \in \mathcal{S}$. This linear system can be solved using e.g. some software. However, inverting the matrix can be computationally expensive for a large state space. Instead we consider an iterative method and a sequence of value function approximations $v_0, v_1, v_2, \ldots$, with initial approximation $v_0$ chosen arbitrarily e.g. $v_0(s) = 0 \:  \forall s$ (ensuring terminal state = 0). We can use *a sweep* with the Bellman equation to update the values:
 
@@ -71,37 +70,35 @@ If the dynamics are known perfectly, this becomes a system of $|\mathcal{S}|$ si
 v_{k+1}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_k(s')\right) 
 \end{equation}
 
-We call this update an *expected update* because it is based on the expectation over all possible next states, rather than a sample of reward from the next state. This update will converge to $v_\pi$ after a number of sweeps of the state-space. Since we do not want an infinite number of sweeps we introduce a threshold $\theta$ (see Figure \@ref(fig:policy-eval-alg)). Note the algorithm uses two arrays to maintain the state-value ($v$ and $V$). Alternatively, a single array could be used that update values in place, i.e. $V$ is used in place of $v$. Hence, state-values are updated faster. 
+We call this update an *expected update* because it is based on the expectation over all possible next states, rather than a sample of reward from the next state. This update will converge to $v_\pi$ after a number of sweeps of the state-space. Since we do not want an infinite number of sweeps we introduce a threshold $\theta$ (see Figure @fig-policy-eval-alg). Note the algorithm uses two arrays to maintain the state-value ($v$ and $V$). Alternatively, a single array could be used that update values in place, i.e. $V$ is used in place of $v$. Hence, state-values are updated faster. 
 
-```{r policy-eval-alg, echo=FALSE, fig.cap="Iterative policy evaluation [@Sutton18]."}
+```{r fig-policy-eval-alg, echo=FALSE, fig.cap="Iterative policy evaluation [@Sutton18]."}
 knitr::include_graphics("img/policy-evalution.png")
 ```
 
 
 ## Policy Improvement
 
-From the Bellman optimality equation \@ref(eq:bell-opt-state) we have 
+From the Bellman optimality equation @eq-bell-opt-state we have 
 
 $$
 \begin{align}
 \pi_*(s) &= \arg\max_{a \in \mathcal{A}} q_*(s, a) \\
          &= \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).
 \end{align}
-(\#eq:pi-det)
-$$
+$$ {#eq-pi-det}
 That is, a deterministic optimal policy can be found by choosing *greedy* the best action given the optimal value function. If we apply this greed action selection to the value function for a policy $\pi$ and pick the action with most $q$:
 $$
 \begin{align}
 \pi'(s) &= \arg\max_{a \in \mathcal{A}} q_\pi(s, a) \\
          &= \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),
 \end{align}
-(\#eq:pi-mark-det)
-$$
+$$ {#eq-pi-mark-det}
 then 
 $$
 q_\pi(s, \pi'(s)) \geq q_\pi(s, \pi(s)) = v_\pi(s) \quad \forall s \in \mathcal{S}.
 $$
-Note if $\pi'(s) = \pi(s), \forall s\in\mathcal{S}$ then the Bellman optimality equation \@ref(eq:bell-opt-state) holds and $\pi$ must be optimal; Otherwise, 
+Note if $\pi'(s) = \pi(s), \forall s\in\mathcal{S}$ then the Bellman optimality equation @eq-bell-opt-state holds and $\pi$ must be optimal; Otherwise, 
 $$
 \begin{align}
   v_\pi(s) &\leq q_\pi(s, \pi'(s)) = \mathbb{E}_{\pi'}[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s] \\
@@ -129,13 +126,13 @@ Given the policy improvement theorem we can now improve policies iteratively unt
 
 1. Pick an arbitrary initial policy $\pi$.
 2. Given a policy $\pi$, estimate $v_\pi(s)$ via the policy evaluation algorithm.
-3. Generate a new, improved policy $\pi' \geq \pi$ by *greedily* picking $\pi' = \text{greedy}(v_\pi)$ using Eq. \@ref(eq:pi-mark-det). If $\pi'=\pi$ then stop ($\pi_*$ has been found); otherwise go to Step 2.
+3. Generate a new, improved policy $\pi' \geq \pi$ by *greedily* picking $\pi' = \text{greedy}(v_\pi)$ using Eq. @eq-pi-mark-det. If $\pi'=\pi$ then stop ($\pi_*$ has been found); otherwise go to Step 2.
 
-The algorithm is given in Figure \@ref(fig:policy-ite-alg). The sequence of calculations will be: 
+The algorithm is given in Figure @fig-policy-ite-alg. The sequence of calculations will be: 
 $$\pi_0 \xrightarrow[]{E} v_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} v_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} v_{\pi_2}  \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} v_{*}$$
 The number of steps of policy iteration needed to find the optimal policy are often low.
 
-```{r policy-ite-alg, echo=FALSE, fig.cap="Policy iteration [@Sutton18].", out.width="70%"}
+```{r fig-policy-ite-alg, echo=FALSE, fig.cap="Policy iteration [@Sutton18].", out.width="70%"}
 knitr::include_graphics("img/policy-iteration.png")
 ``` 
 
@@ -151,9 +148,9 @@ Value iteration effectively combines, in each of its sweeps, one sweep of policy
 $$
 \pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right),
 $$
-The algorithm is given in Figure \@ref(fig:value-ite-alg). Since we do not want an infinite number of iterations we introduce a threshold $\theta$. The sequence of calculations will be (where G denotes greedy action selection): 
+The algorithm is given in Figure @fig-value-ite-alg. Since we do not want an infinite number of iterations we introduce a threshold $\theta$. The sequence of calculations will be (where G denotes greedy action selection): 
 $$v_{0} \xrightarrow[]{EI} v_{1} \xrightarrow[]{EI} v_{2}  \ldots \xrightarrow[]{EI} v_{*} \xrightarrow[]{G} \pi_{*}$$
-```{r value-ite-alg, echo=FALSE, fig.cap="Value iteration [@Sutton18].", out.width="70%"}
+```{r fig-value-ite-alg, echo=FALSE, fig.cap="Value iteration [@Sutton18].", out.width="70%"}
 knitr::include_graphics("img/value-iteration.png") 
 ``` 
 
@@ -164,7 +161,7 @@ knitr::include_graphics("img/value-iteration.png")
 Generalised Policy Iteration (GPI) is the process of letting policy evaluation and policy improvement interact, independent of granularity. For instance, improvement/evaluation can be performed by doing complete sweeps of the state space (policy iteration), or improve the state-value using a single sweep of the state space (value iteration). GPI can also do *asynchronous* updates of the state-value where states are updated individually, in any order. This can
 significantly improve computation. Examples on asynchronous DP are
 
-* *In-place DP* mentioned in Section \@ref(sec-dp-pe) where instead of keeping a copy of the old and new value function in each value-iteration update, you can just update the value functions in-place. Hence asynchronous updates in other parts of the state-space will directly be affected resulting in faster updates. 
+* *In-place DP* mentioned in Section @sec-dp-pe where instead of keeping a copy of the old and new value function in each value-iteration update, you can just update the value functions in-place. Hence asynchronous updates in other parts of the state-space will directly be affected resulting in faster updates. 
 
 * *Prioritized sweeping* where we keep track of how "effective" or "significant" updates to our state-values are. States where the updates are more significant are likely further away from converging to the optimal value. As such, we would like to update them first. For this, we would compute the *Bellman error*:
 $$|v_{k+1}(s) - v_k(s)|,$$
@@ -178,7 +175,7 @@ GPI works and will convergence to the optimal policy and optimal value function 
 
 ## Example - Factory Storage {#exe-dp-storage}
 
-Let us consider Exercise \@ref(ex-mdp-1-storage) where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
+Let us consider Exercise @exr-mdp-1-storage where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
 $$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
 If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
 
@@ -331,9 +328,9 @@ Read Chapter 4.8 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Gambler's problem {#ex-dp-gambler}
+### Exercise - Gambler's problem {#exr-dp-gambler}
 
-Consider the gambler's problem in Exercise \@ref(ex-mdp-1-gambler).
+Consider the gambler's problem in @exr-mdp-1-gambler.
 
 <!-- Q1 -->
 ```{r gambler-build, solution = TRUE, include=FALSE, eval=FALSE}
@@ -591,7 +588,7 @@ library(patchwork)
 
 
 
-### Exercise - Maintenance problem {#ex-dp-maintain}
+### Exercise - Maintenance problem {#exr-dp-maintain}
 
 At the beginning of each day a piece of equipment is inspected to reveal its actual working condition. The equipment will be found in one of the working conditions $s = 1,\ldots, N$ where the working condition $s$ is better than the working condition
 $s+1$. 
@@ -743,9 +740,9 @@ df1
 
 
 
-### Exercise - Car rental {#ex-dp-rental}
+### Exercise - Car rental {#exr-dp-rental}
 
-Consider the car rental problem in Exercise \@ref(ex-mdp-2-car). Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action $a$. Let us consider Location 1 and assume that we are in state $x$ and chose action $a$.
+Consider the car rental problem in Exercise @exr-mdp-2-car. Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action $a$. Let us consider Location 1 and assume that we are in state $x$ and chose action $a$.
 
 The reward equals the reward of rentals minus the cost of movements. Note we have $\bar{x} = x - a$ and $\bar{y} = x + a$ after movement. Hence $$r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]$$ 
 where $$\mathbb{E}[\min(D, z)] = \sum_{i=0}^{z-1} i\Pr(D = i) + \Pr(D \geq z)z.$$

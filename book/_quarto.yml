@@ -38,8 +38,8 @@ book:
     - part: "Tabular methods"
     - 05_bandit.qmd
     - 06_mdp-1.qmd
-    # - 07_mdp-2.qmd
-    # - 08_dp.qmd
+    - 07_mdp-2.qmd
+    - 08_dp.qmd
     # - 09_mc.qmd
     # - 10_td-pred.qmd
     # - 11_td-control.qmd

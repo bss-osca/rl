@@ -153,7 +153,7 @@ Read Chapter 6.9 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Factory Storage {#ex-td-control-storage}
+### Exercise - Factory Storage {#exr-td-control-storage}
 
 Consider Example \@ref(exe-dp-storage) where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
 $$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
@@ -384,7 +384,7 @@ res1
 
 
 
-### Exercise - Car Rental {#ex-td-control-car}
+### Exercise - Car Rental {#exr-td-control-car}
 
 Consider the car rental problem in Exercise \@ref(ex-mdp-2-car) and \@ref(ex-dp-rental). An MDP model was formulated in Exercise \@ref(ex-dp-rental) and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD. 
 

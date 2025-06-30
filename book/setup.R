@@ -69,6 +69,7 @@ opts_hooks$set(solution = function(options) {
   options$class.source = 'fold-show'
   if (isTRUE(options$solution)) {
     options$str_id <- stringi::stri_rand_strings(1, 20)
+    options$eval = FALSE
   }
   options
 })
@@ -200,7 +201,7 @@ addIcon <- function(name, attrib = NULL, lib = "font-awesome")
 
 strLPath <- "We are all different and you may like different learning styles compared to others. You may prefer a different learning path than suggested. Here is a list of possible different learning paths that may be useful for you. Note these suggestions are not a part of syllabus!"
 
-strExercises <- "Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#help). Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!"
+strExercises <- "Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the [help page](#sec-help). Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!"
 
 ctrSol <- 0
 addSolution <- function(code = "", text = "", title = "Solution", evalCode = TRUE) {
