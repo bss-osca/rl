@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Welcome to Reinforcement Learning for Business</title>
+    <title>Temporal Difference (TD) methods for prediction</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Welcome to Reinforcement Learning for Business
+# Temporal Difference (TD) methods for prediction
 ]
 .author[
 ### Lars Relund Nielsen
@@ -33,115 +33,153 @@ class: center, middle, inverse, title-slide
 
 
 layout: true
-
+  
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/index.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/mod-td-pred.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/01_intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/10_td-pred-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/01_intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/10_td-pred-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
----
 
-## About Me 
 
-- Lars Relund Nielsen (larsrn@econ.au.dk)
-- Professor at Dept. of Economics and Business Economics, Aarhus Universitet. 
-- I do research in algorithms for optimization, multiobjective optimization, stochastic dynamic programming including reinforcement learning.
-- Have been programming in many languages such as C, C++, VBA, R, SQL, Javascript …
-- For more information see my [research page]( http://www.research.relund.dk/).
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
 
 ---
 
-## Who are you?
+## Learning outcomes
 
-Let us have a look at [what you answered](https://docs.google.com/forms/d/1Cmc5bXlNiJnU8FbCF3TIi_SL8X-Wm0wqlkYGV3SBxpM/edit#responses). 
-
-&lt;img src="./img/responses.png" width="80%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Course overview 
-
-- The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).
-- RL refers to:
-  * An approach of modelling sequential decision making problems.
-  * An approach for learning decision making from experience.
-  * Mathematical models for learning-based decision making.
-- Lectures/tutorials each week.
-- Exercises are given to support your learning.
+* Describe what Temporal Difference (TD) learning is.
+* Formulate the incremental update formula for TD learning.
+* Define the temporal-difference error.
+* Interpret the role of a fixed step-size.
+* Identify key advantages of TD methods over DP and MC methods.
+* Explain the TD(0) prediction algorithm.
+* Understand the benefits of learning online with TD compared to MC methods.
 
 ---
 
-## Teaching form and style 
+## What is TD learning?
 
-- A combination of lectures and tutorials. 
-  - Before: Read the suggested material (you may also start with the exercises).
-  - Lecture or tutorial. Not all material will be covered here.
-  - Continue with exercises (group work).
-- It is strongly recommended that you 
-  - Read the material BEFORE class.
-  - Solve the exercises for each week DURING the course. 
-  - This is the best way to prepare for the exam. 
-
----
-
-## Course notes 
-
-The course notes are given [online](https://bss-osca.github.io/rl/). You may annotate the notes and slides using [hypothes.is](https://bss-osca.github.io/rl/annotate.html). 
-
-&lt;img src="./img/online-site.png" width="100%" style="display: block; margin: auto;" /&gt;
+* TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas
+* Like MC, TD can predict using a model-free environment and learn from experience. 
+* Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrapping). 
+* TD can learn on-line and do not need to wait until the whole sample-path is found. 
+* Given a policy `\(\pi\)`, we want to estimate the state-value function:
+`$$v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].$$`
+where the return is 
+`$$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$`
+&lt;!-- TD in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered.  --&gt;
 
 ---
 
-### Programming software
+## Estimating the state-value
 
-We use [Python] as programming software and it is assumed that you are familiar with using Python. In general we use a [Jupyter] notebook to weave code together with text. 
+How do we find estimates `\(V\)` of `\(v_\pi\)` and the return `\(G_t\)`?
 
-- During this course we are going to use [Google Colab][Colab] which is a hosted Jupyter Notebook service.
-  - [Colab] runs in your browser and you do not have to install anything on your computer. 
-  - [Colab] provides free access to computing resources, including GPUs and TPUs (with some limits).
-  - You have to have a Google account.
-- See the [Colab introduction][colab-intro-colab] notebook.
+   * For MC we generated sample-paths and calculated returns `\(G_t\)` and updated the estimate by taking the average over all the realized returns.
+   * For TD we use 
 
-Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
+`\begin{align}
+v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+         &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s] \\
+         &amp;= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma \mathbb{E}_\pi[G_{t+1} | S_t = s] \\
+         &amp;= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma \mathbb{E}_\pi[v_\pi(S_{t+1})].
+\end{align}`
 
----
-
-## Groups 
-
-- I recommend that you form groups of 3-6 persons that you use throughout the whole course. 
-- It is up to you how to meet in these groups (on-line or physical). 
-- Use the groups when you 
-  * solve the exercises. 
-  * hand-in project report(s).
+   * TD: Given a realized reward `\(R_{t+1}\)` and next state `\(S_{t+1}\)`, an estimate for the return `\(G_t\)` is `\(R_{t+1} + \gamma V(S_{t+1})\)` 
+   * TD update the estimate based on the estimate of the next state (bootstrapping). 
 
 ---
 
-## Project report
 
-- Each group hand-in a project report during the course focusing on solving a RL problem.
-- The report may be used as a starting point for discussion at the individual exam.
-- You must hand in the reports in groups and do individual peer grading.
+## Incremental update
+
+.pull-left[
+**Monte Carlo**
+
+* Generate sample-path and calculate `\(G_t\)` along the path.
+* Unbiased estimate.
+* Update the estimate using
+$$
+  V(S_t) \leftarrow V(S_t) + \alpha_n\left[G_t - V(S_t)\right].
+$$
+* Can update after the full sample-path known.
+] 
+
+--
+
+.pull-right[
+**Temporal Difference**
+
+* Replace `\(G_t\)` with the TD estimate `\(R_{t+1} + \gamma V(S_{t+1}).\)`
+* Update now becomes 
+.midi[
+`$$V(S_t) \leftarrow V(S_t) + \alpha_n\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right].$$`
+] 
+* Can update when the next state `\(S_{t+1}\)` is observed.
+* As the estimate of `\(S_{t+1}\)` improve the estimate of `\(S_t\)` also improve. 
+* The incremental update is called *TD(0)* or one-step TD because it use a one-step lookahead.
+]
 
 ---
 
-## Exam
+## A note about fixed step-size
 
-- A 20 min oral individual exam without any preparation. 
-- Curriculum include all material such as book chapters, course notes, videos, interactive tutorials, exercises and project reports.
-- The report may be used as a starting point for discussion at the individual exam.
-- In no report we do theoretical stuff instead.
+If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size `\(\alpha\in(0,1]\)` may be appropriate. A fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of `\(S_t\)`:
+$$
+`\begin{align}
+V_{n+1} &amp;= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
+&amp;= \alpha G_n + (1 - \alpha)V_n \nonumber \\
+&amp;= \alpha G_n + (1 - \alpha)[\alpha G_{n-1} + (1 - \alpha)V_{n-1}] \nonumber \\
+&amp;= \alpha G_n + (1 - \alpha)\alpha G_{n-1} + (1 - \alpha)^2 V_{n-1}  \nonumber \\
+&amp; \vdots \nonumber \\
+&amp;= (1-\alpha)^n V_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} G_i \\
+\end{align}`
+$$
+
+That is, a larger weight is used for recent observations compared to old observations. Moreover, if `\(\alpha=1\)` then `\(V_{n+1} = G_t\)` and we use the realized return as the estimate.
 
 ---
 
-layout: false
-class: inverse, middle, center
+## The TD error
 
-# Looking forward to working with you!
+* The term `$$\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t),$$` is denoted the *temporal difference error* (*TD error*).
+* Equals the difference between the current estimate `\(V(S_t)\)` and the updated estimate `\(R_{t+1} + \gamma V(S_{t+1})\)`.
+
+---
+
+## TD(0) prediction algorithm 
+
+&lt;img src="img/td0-pred.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+* Also works for continuing processes (infinite number of time-steps of inner loop).
+* No stopping criterion is given but could stop when small for state-value differences. 
+
+---
+
+## TD prediction for action-values
+
+* Since model-free we need to estimate action-values instead so we can improve the policy.
+* Goal is to find `\(q_*\)` for which the optimal action is the greedy action.  
+* To find `\(q_*\)`, we first need to predict action-values `\(q_\pi\)` for a policy `\(\pi\)`.
+* The incremental update equation must be modified to use `\(Q\)` values: `$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)\right].$$`
+* Given policy `\(\pi\)` you need to know `\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)` or short SARSA. 
+* This acronym is used to name the SARSA algorithm for control (next week). 
+* To ensure exploration of all action-values we need e.g. an `\(\epsilon\)`-soft behavioural policy.  
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
 
 
 
@@ -298,7 +336,8 @@ class: inverse, middle, center
   "ratio": "16:9",
   "highlightLines": true,
   "highlightStyle": "solarized-light",
-  "countIncrementalSlides": false
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

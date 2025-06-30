@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Reinforcement Learning for Business</title>
+    <title>Dynamic Programming</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -11,6 +11,16 @@
   </head>
   <body>
     <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Dynamic Programming
+]
+.author[
+### Lars Relund Nielsen
+]
+
+---
 
 
 
@@ -23,54 +33,247 @@
 
 
 layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-dp.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/08_dp-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/08_dp-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
 
 ---
 
-## Reinforcement Learning for Business
+## Learning outcomes
 
-- The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL). 
-- RL is an approach of modelling sequential decision making problems such as 
-  - controlling an inventory (decision: wait, buy, amount) 
-  - maintain a spare-part (decision: wait, maintain)
-  - playing backgammon (decision: how to move the checkers)
-- 10 ECTS.
-- Lectures/tutorials each week.
-- Exercises and a project are given to support your learning.
-&lt;!-- - R is used as programming tool.  --&gt;
-- 20 minutes oral exam based on a project.
-
-&lt;!-- For more information see the [course description](https://kursuskatalog.au.dk/en?search=Reinforcement%20Learning%20for%20Business). --&gt;
-
+* Describe the distinction between policy evaluation and control.
+* Identify when DP can be applied, as well as its limitations.
+* Explain and apply iterative policy evaluation for estimating state-values given a policy.
+* Interpret the policy improvement theorem.
+* Explain and apply policy iteration for finding an optimal policy.
+* Explain and apply value iteration for finding an optimal policy.
+* Describe the ideas behind generalized policy iteration.
+* Interpret the distinction between synchronous and asynchronous dynamic programming methods.
 
 ---
 
-## Reinforcement learning can be seen as 
+## Dynamic Programming
 
-* An approach for learning good decision making under uncertainty from experience.
-* Finding a good sequence of decisions over time.
-* A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.
-* A way of modelling intuition. Our goal as an agent is to find good decisions/actions that maximize the total reward. That is, learn the reward estimate of a given action.
-* A mathematical models for learning-based decision making.
-  - Given state `\(x\)` you take an action and observe the reward `\(r\)` and the new state `\(x'\)`.
-  - Your goal is to find a policy that optimize the total reward function.
+* Algorithms for computing optimal policies given full information about the dynamics. 
+* Must satisfy the *principle of optimality*: 
+   - An optimal policy must consist for optimal sub-polices 
+   - The optimal value function in a state can be calculated using optimal value functions in future states. 
+* Two main problems arise with DP: 
+   - Not full information, e.g. the rewards or transition probabilities are unknown. 
+   - Need to calculate the value function in all states using the rewards, actions, and transition probabilities. 
+* Note the term programming in DP have nothing to do with a computer program but comes from that the mathematical model is called a "program". 
 
-Note current decisions have an impact on the future. 
+---
 
+## Policy evaluation vs control
 
+.pull-left[
+* Policy evaluation: Given a policy `\(\pi\)`, find the value function `\(v_\pi\)`
+`$$\pi \xrightarrow[]{E} v_\pi$$`
+Recall that
+`$$v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s]$$`
+where the return (discounted reward) is
+`$$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots$$`
+]  
 
+--
+
+.pull-right[
+* Control: Find the best policy or optimize the value function (using the Bellman optimality equations).
+
+&lt;img src="img/control.png" width="100%" style="display: block; margin: auto;" /&gt;
+] 
+
+---
+
+## Policy evaluation
+
+We can find the state-value function by solving the system of Bellman equations:
+`\begin{equation}
+v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right).
+\end{equation}`
+However, can be computationally expensive. Instead we use an iterative method:
+
+* Use an initial approximation `\(v_0\)` chosen arbitrarily e.g. `\(v_0(s) = 0 \:  \forall s\)` (terminal state = 0).
+* Update the value function using sweeps:
+`\begin{equation}
+v_{k+1}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_k(s')\right) 
+\end{equation}`
+Until the value function converge to `\(v_\pi\)` after a number of sweeps (the change in the value function is below a certain threshold).
+
+---
+
+## Policy evaluation - visualization
+
+.pull-left[.midi[
+
+Sweep 1:
+`$$v_{1}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_0(s')\right)$$`
+Sweep 2:
+`$$v_{2}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_1(s')\right)$$`
+`$$\vdots$$`
+Sweep k:
+`$$v_{k}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_{k-1}(s')\right)$$`
+]] 
+
+.pull-right[.vertical-center[ 
+&lt;img src="img/policy-eval-ite.png" width="90%" style="display: block; margin: auto;" /&gt;
+]]
+
+---
+
+## Policy Improvement (control)
+
+* Given the optimal value function we find the optimal deterministic policy by choosing *greedy* the best action: 
+
+`$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right).$$`
+* What if we apply greedy action selection to the value function for a policy `\(\pi\)`:
+
+`$$\pi'(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right),$$`
+then 
+
+`$$q_\pi(s, \pi'(s)) \geq q_\pi(s, \pi(s)) = v_\pi(s) \quad \forall s \in \mathcal{S}.$$`
+
+---
+
+## Policy improvement theorem (control)
+
+.question[
+Let `\(\pi\)`, `\(\pi'\)` be any pair of deterministic policies, such that
+
+`\begin{equation}
+    q_\pi(s, \pi'(s)) \geq v_\pi(s) \quad \forall s \in \mathcal{S}.
+\end{equation}`
+
+That is, `\(\pi'\)` is as least as good as `\(\pi\)`.
+]
+
+Implications:
+
+* If we find policy `\(\pi'\)` by applying greedy action selection on policy `\(\pi\)` then `\(\pi'\)` is as least as good as `\(\pi\)`. 
+* If `\(\pi'(s) = \pi(s), \forall s\in\mathcal{S}\)` then `\(\pi\)` must be optimal.
+* If `\(\pi'(s) \neq \pi(s)\)`, then policy `\(\pi'\)` is strictly better than policy `\(\pi\)` since there is at least one state `\(s\)` for which `\(v_{\pi'}(s) &gt; v_\pi(s)\)`.
+
+---
+
+## Policy iteration (control)
+
+.left-column-wide[
+Given the policy improvement theorem we can now improve policies iteratively: 
+
+1. Pick an arbitrary initial policy `\(\pi\)`.
+2. Given a policy `\(\pi\)`, estimate `\(v_\pi(s)\)` via the policy evaluation algorithm.
+3. Generate a new, improved policy `\(\pi' \geq \pi\)` using *greedy* action selection. If `\(\pi'=\pi\)` then stop (found optimal policy); otherwise go to Step 2.
+
+The sequence of calculations will be: 
+`$$\pi_0 \xrightarrow[]{E} v_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} v_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} v_{\pi_2}  \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} v_{\pi_*}$$`
+The number of steps needed are often low.
+]  
+
+.right-column-small[
+&lt;img src="img/policy-ite-pen.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="img/policy-ite-path.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Value iteration (control)
+
+.left-column-wide[.midi[
+Value iteration do one sweep of policy evaluation and one sweep of policy improvement by updating the Bellman optimality equation:
+
+`$$v_{k+1}(s) = \arg\max_a \left(r(s,a) + \gamma\sum_{s',r} p(s'|s, a)v_k(s')\right)$$`
+VI does not require a stored policy. Instead after the last step of value-iteration the optimal policy `\(\pi_*\)` is found:
+
+`$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right)$$`
+The sequence of calculations will be: 
+`$$v_{0} \xrightarrow[]{EI} v_{1} \xrightarrow[]{EI} v_{2}  \ldots \xrightarrow[]{EI} v_{*} \xrightarrow[]{G} \pi_{*}$$`
+]]
+
+.right-column-small[
+&lt;img src="img/value-ite-path.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Generalized policy iteration
+
+.left-column-wide[.midi[
+Generalised Policy Iteration (GPI) consider different policy evaluation and improvement strategies. For instance partly policy evaluation
+
+* Value iteration: improve the state-value using a single sweep of the state space. 
+
+Asynchronous state-value updates:
+
+* In-place DP: Just one array of state-values.
+* Prioritized sweeping: Update "significant" state-values using a priority queue. 
+
+GPI works if explore the whole state space.
+]]
+
+.right-column-small[
+&lt;img src="img/policy-ite-general.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Policy evaluation in R (evaluation)
+
+&lt;img src="img/policy-eval.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Policy iteration in R (control)
+
+&lt;img src="img/policy-iteration.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Value iteration in R (control)
+
+&lt;img src="img/value-iteration.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
 
 
 
 [BSS]: https://bss.au.dk/en/
-[bi-programme]: https://kandidat.au.dk/en/businessintelligence/
+[bi-programme]: https://masters.au.dk/businessintelligence
 
 [course-help]: https://github.com/bss-osca/rl/issues
 [cran]: https://cloud.r-project.org
 [cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
 [course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+[Colab]: https://colab.google/
+[colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
+[colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
+[colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
+[colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
+[colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
+[colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
 
 [DataCamp]: https://www.datacamp.com/
-[datacamp-signup]: https://www.datacamp.com/groups/shared_links/cbaee6c73e7d78549a9e32a900793b2d5491ace1824efc1760a6729735948215
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
 [datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
 [datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
 [datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
@@ -89,7 +292,6 @@ Note current decisions have an impact on the future.
 [datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
 [datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
 [dplyr-cran]: https://CRAN.R-project.org/package=dplyr
-[debug-in-r]: https://rstats.wtf/debugging-r-code.html
 
 [google-form]: https://forms.gle/s39GeDGV9AzAXUo18
 [google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
@@ -110,7 +312,9 @@ Note current decisions have an impact on the future.
 [hg-credential-helper]: https://happygitwithr.com/credential-caching.html
 [hypothes.is]: https://web.hypothes.is/
 
-[osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
+[Jupyter]: https://jupyter.org/
+
+[osca-programme]: https://masters.au.dk/operationsandsupplychainanalytics
 
 [Peergrade]: https://peergrade.io
 [peergrade-signup]: https://app.peergrade.io/join
@@ -119,6 +323,10 @@ Note current decisions have an impact on the future.
 [pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
 [pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
 [pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+[Python]: https://www.python.org/
+[Positron]: https://positron.posit.co/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[VSCode]: https://code.visualstudio.com/
 
 [R]: https://www.r-project.org
 [RStudio]: https://rstudio.com
@@ -171,18 +379,6 @@ Note current decisions have an impact on the future.
 [tutorial-markdown]: https://commonmark.org/help/tutorial/
 [tfa-course]: https://bss-osca.github.io/tfa/
 
-[Udemy]: https://www.udemy.com/
-
-[vba-yt-course1]: https://www.youtube.com/playlist?list=PLpOAvcoMay5S_hb2D7iKznLqJ8QG_pde0
-[vba-course1-hello]: https://youtu.be/f42OniDWaIo
-
-[vba-yt-course2]: https://www.youtube.com/playlist?list=PL3A6U40JUYCi4njVx59-vaUxYkG0yRO4m
-[vba-course2-devel-tab]: https://youtu.be/awEOUaw9q58
-[vba-course2-devel-editor]: https://youtu.be/awEOUaw9q58
-[vba-course2-devel-project]: https://youtu.be/fp6PTbU7bXo
-[vba-course2-devel-properties]: https://youtu.be/ks2QYKAd9Xw
-[vba-course2-devel-hello]: https://youtu.be/EQ6tDWBc8G4
-
 [video-install]: https://vimeo.com/415501284
 [video-rstudio-intro]: https://vimeo.com/416391353
 [video-packages]: https://vimeo.com/416743698
@@ -210,10 +406,11 @@ Note current decisions have an impact on the future.
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"highlightStyle": "solarized-light",
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "highlightStyle": "solarized-light",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
