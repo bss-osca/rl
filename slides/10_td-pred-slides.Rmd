@@ -27,7 +27,7 @@ layout: true
   
 ```{r, echo=FALSE}
 module_name <- "td-pred"
-module_number <- "07"
+module_number <- "10"
 here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
 library(htmltools)
 footerHtml <- withTags({

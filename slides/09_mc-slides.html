@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Welcome to Reinforcement Learning for Business</title>
+    <title>Monte Carlo methods for prediction and control</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Welcome to Reinforcement Learning for Business
+# Monte Carlo methods for prediction and control
 ]
 .author[
 ### Lars Relund Nielsen
@@ -33,115 +33,297 @@ class: center, middle, inverse, title-slide
 
 
 layout: true
-
+  
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/index.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/mod-mc.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/01_intro-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/09_mc-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/01_intro-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/09_mc-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
----
 
-## About Me 
 
-- Lars Relund Nielsen (larsrn@econ.au.dk)
-- Professor at Dept. of Economics and Business Economics, Aarhus Universitet. 
-- I do research in algorithms for optimization, multiobjective optimization, stochastic dynamic programming including reinforcement learning.
-- Have been programming in many languages such as C, C++, VBA, R, SQL, Javascript …
-- For more information see my [research page]( http://www.research.relund.dk/).
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
 
 ---
 
-## Who are you?
+## Learning outcomes
 
-Let us have a look at [what you answered](https://docs.google.com/forms/d/1Cmc5bXlNiJnU8FbCF3TIi_SL8X-Wm0wqlkYGV3SBxpM/edit#responses). 
-
-&lt;img src="./img/responses.png" width="80%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Course overview 
-
-- The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL).
-- RL refers to:
-  * An approach of modelling sequential decision making problems.
-  * An approach for learning decision making from experience.
-  * Mathematical models for learning-based decision making.
-- Lectures/tutorials each week.
-- Exercises are given to support your learning.
+* Identify the difference between model-based and model-free RL.
+* Describe how MC methods can be used to estimate value functions from sample data.
+* Do MC prediction to estimate the value function for a given policy.
+* Explain why it is important to maintain exploration in MC algorithms.
+* Do policy improvement (control) using MC in a GPI algorithm.
+* Compare different ways of exploring the state-action space.
+* Argue why off-policy learning can help deal with the exploration problem.
+* Use importance sampling to estimate the expected value of a target distribution using samples from a different distribution.
+* Use importance sampling in off-policy learning to predict the value-function.
+* Explain how to modify the MC GPI algorithm for off-policy learning.
 
 ---
 
-## Teaching form and style 
+## Monte Carlo methods for RL
 
-- A combination of lectures and tutorials. 
-  - Before: Read the suggested material (you may also start with the exercises).
-  - Lecture or tutorial. Not all material will be covered here.
-  - Continue with exercises (group work).
-- It is strongly recommended that you 
-  - Read the material BEFORE class.
-  - Solve the exercises for each week DURING the course. 
-  - This is the best way to prepare for the exam. 
+* Monte Carlo (MC) is an estimation method which involves a random component. 
+* Use MC methods to learn state and action values by sampling and averaging returns. 
+* MC do not use dynamics (current state-value estimated using next state-value). 
+* Estimate values by considering different sample-paths (state, action and reward realizations). 
+* MC methods are model-free since they not require full knowledge of the transition probabilities and rewards (a model of the environment).
+* MC methods learn the value function directly from experience. 
+* The sample-path can be generated using simulation (some environment knowledge).
+* Consider MC methods for processes with episodes, i.e. where there is a terminal state.
+* Example: Blackjack (calculating transition probabilities may be tedious and error-prone). Instead we can simulate a game (a sample-path).
+* Use generalised policy iteration, but learn the value function from experience. 
 
----
-
-## Course notes 
-
-The course notes are given [online](https://bss-osca.github.io/rl/). You may annotate the notes and slides using [hypothes.is](https://bss-osca.github.io/rl/annotate.html). 
-
-&lt;img src="./img/online-site.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-### Programming software
+## MC prediction (evaluation)
 
-We use [Python] as programming software and it is assumed that you are familiar with using Python. In general we use a [Jupyter] notebook to weave code together with text. 
+Given policy `\(\pi\)`, we want to estimate the state-value function:
+`$$v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].$$`
+where the return is 
+`$$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$`
 
-- During this course we are going to use [Google Colab][Colab] which is a hosted Jupyter Notebook service.
-  - [Colab] runs in your browser and you do not have to install anything on your computer. 
-  - [Colab] provides free access to computing resources, including GPUs and TPUs (with some limits).
-  - You have to have a Google account.
-- See the [Colab introduction][colab-intro-colab] notebook.
+Procedure:
 
-Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
+1. Generate sample-paths `\(S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-l}, R_T\)`.
+2. Calculate `\(G_t\)` for each state in the sample-path.
+3. Use the average of the realized returns for each state as an estimate. 
 
----
-
-## Groups 
-
-- I recommend that you form groups of 3-6 persons that you use throughout the whole course. 
-- It is up to you how to meet in these groups (on-line or physical). 
-- Use the groups when you 
-  * solve the exercises. 
-  * hand-in project report(s).
+With enough observations, the average converges to the true state-value under the policy `\(\pi\)`.
 
 ---
 
-## Project report
+## First and every visit MC
 
-- Each group hand-in a project report during the course focusing on solving a RL problem.
-- The report may be used as a starting point for discussion at the individual exam.
-- You must hand in the reports in groups and do individual peer grading.
+Given a policy `\(\pi\)` and a set of sample-paths, there are two ways to estimate the state values `\(v_\pi(s)\)`:
 
----
+* First visit MC: average returns from first visit to state `\(s\)`.
+  - Generates iid (independent and identically distributed) estimates of `\(v_\pi(s)\)` with finite variance.
+  - Converges to the expected value by the law of large numbers.
+* Every visit MC: average returns following every visit to state `\(s\)`.
+  - Does not generate independent estimates, but still converges.
+  - Easier to use since we don't have to check if visited already.
 
-## Exam
-
-- A 20 min oral individual exam without any preparation. 
-- Curriculum include all material such as book chapters, course notes, videos, interactive tutorials, exercises and project reports.
-- The report may be used as a starting point for discussion at the individual exam.
-- In no report we do theoretical stuff instead.
+Mostly focus on first visit in the book but the R code use every visit.
 
 ---
 
-layout: false
-class: inverse, middle, center
+## MC prediction algorithm
 
-# Looking forward to working with you!
+&lt;img src="img/mc-prediction.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## MC prediction of action-values
+
+* With a model of the environment we only need to estimate the state-value function (use Bellman optimality equations).
+* Without a model it is useful to estimate action-values since the optimal policy can be found using: 
+`$$\pi_*(s) = \arg\max_{a \in \mathcal{A}} q_*(s, a).$$`
+* To find `\(q_*\)`, we first need to predict action-values for a policy `\(\pi\)`. 
+* Problem: If `\(\pi\)` is deterministic, we only estimate one action-value. 
+* Some exploration are needed:
+  - Make `\(\pi\)` stochastic with non-zero probability of each state-action pair (e.g. `\(\epsilon\)`-soft). 
+  - Exploring starts: Use a non-zero probability for each state-action pair of being selected as the starting state of an sample-path.
+
+---
+
+## Generalized policy iteration
+
+.left-column-wide[.midi[
+Generalised Policy Iteration (GPI) consider different policy evaluation and improvement strategies. The idea is to generate a sequence of policies and action-value functions
+`$$\pi_0 \xrightarrow[]{E} q_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} q_{\pi_1} \xrightarrow[]{I} \pi_2  \xrightarrow[]{E} \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} q_{*}.$$`
+The algorithm repeatedly considers steps:
+
+* Evaluation (E): Here we use MC evaluation. Note we don't have to evaluate the action-values precisely.
+* Improvement (I): Select the next policy greedy `$$\pi(s) = \arg\max_a q(s, a).$$` By using greedy action selection, the policy improvement theorem applies, i.e. `\(\pi_{k+1}\)` is not worse than `\(\pi_{k}\)`.
+]]
+
+.right-column-small[
+&lt;img src="img/policy-ite-general.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## GPI convergence 
+
+* Model-based GPI (transition probability matrix and reward distribution are known): GPI converge if all states are visited during the algorithm. 
+* Model-free GPI: We cannot simply use a 100% greedy strategy all the time, since all our action-values are estimates. An element of exploration must be used to estimate the action-values. 
+
+For convergence to the optimal policy a model-free GPI algorithm must satisfy:
+
+1. Infinite exploration: all state-action `\((s,a)\)` pairs should be explored infinitely many times as the number of iterations go to infinity, i.e. `\(\lim_{k\rightarrow\infty} n_k(s, a) = \infty\)`.
+2. Greedy in the limit: while we maintain infinite exploration, we do eventually need to converge to the optimal policy:
+  `$$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$`
+
+---
+
+## GPI with exploring starts
+
+&lt;img src="img/mc-gpi-es.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## GPI using `\(\epsilon\)`-soft policies
+
+.left-column-wide[
+* Use an `\(\epsilon\)`-soft policy to ensure infinite exploration.
+* An `\(\epsilon\)`-soft policy satisfy: `$$\pi(a|s) \geq \epsilon/|\mathcal{A}(s)|$$` 
+* Put probability `\(1 - \epsilon + \frac{\epsilon}{|\mathcal{A}(s)|}\)` on the maximal action and `\(\frac{\epsilon}{|\mathcal{A}(s)|}\)` on each of the others. 
+* Note `\(\epsilon\)`-soft policies are always stochastic and hence ensure infinite exploration of the `\((s,a)\)` pairs.
+* The best `\(\epsilon\)`-soft policy is found.
+* To ensure the 'greedy in the limit' convergence (find the optimal policy) one may decrease `\(\epsilon\)` as the number of iterations increase (e.g. `\(\epsilon = 1/k\)`). 
+
+]
+
+.right-column-small[
+&lt;img src="img/mc-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## An `\(\epsilon\)`-soft GPI algorithm 
+
+&lt;img src="img/mc-gpi-on-policy.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## On-policy vs off-policy
+
+* Until now *on-policy* algorithms: both evaluate or improve the policy that is used to make decisions. 
+* To ensure infinite exploration used exploring starts and `\(\epsilon\)`-soft policies. 
+* Another approach *Off-policy* algorithms that consider two policies: 
+  - A policy `\(b\)` used to generate the sample-path (behaviour policy) 
+  - A policy `\(\pi\)` that is learned for control (target policy). 
+* We update the target policy using the sample-paths from the behaviour policy. 
+* To ensure infinite exploration the behaviour policy can be e.g. `\(\epsilon\)`-soft.
+* The target policy `\(\pi\)` may be deterministic by using greedy selection with respect to action-value estimates (greedy in the limit satisfied).
+* Off-policy learning methods are powerful and can be used to learn from data generated by a conventional non-learning controller or from a human expert.
+
+---
+
+## Importance sampling
+
+How do we estimate the expected return using the target policy when we only have sample-paths from the behaviour policy? Importance sampling: estimate expected values under one distribution given samples from another. 
+.pull-left[
+Two distributions `\(a\)` and `\(b\)` with samples from `\(b\)`: 
+$$
+`\begin{align}
+  \mathbb{E}_{a}[X] &amp;= \sum_{x\in X} a(x)x \\
+  &amp;= \sum_{x\in X} b(x)\frac{a(x)}{b(x)}x \\
+  &amp;= \sum_{x\in X} b(x)\rho(x)x \\
+  &amp;= \mathbb{E}_{b}\left[\rho(X)X\right]
+\end{align}`
+$$
+] 
+
+.pull-right[ 
+* `\(\rho(x) = a(x)/b(x)\)` denote the *importance sampling ratio*. 
+* Now given samples `\((x_1,\ldots,x_n)\)` from `\(b\)` we then can calculate the sample average using
+
+$$
+`\begin{align}
+  \mathbb{E}_{a}[X] &amp;= \mathbb{E}_{b}\left[\rho(X)X\right] \\
+  &amp;\approx \frac{1}{n}\sum_{i = 1}^n \rho(x_i)x_i \\
+\end{align}`
+$$
+] 
+
+---
+
+## Off-policy importance sampling
+
+* Given a target policy `\(\pi\)` and behaviour policy `\(b\)` want to estimate action-values: `$$q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] = \mathbb{E}_{b}[\rho(G_t)G_t|S_t = s, A_t = a] \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i$$`
+where given the sample-paths, have `\(n\)` observations of the return `\((G_1, \ldots, G_n)\)` in `\((s,a)\)`.
+* Need to find `\(\rho_i\)` for a given sample-path `\(S_t, A_t, R_{t+1}, \ldots, R_T, S_T\)` with return `\(G_t\)`:
+
+$$
+`\begin{align}
+    \rho(G_t) &amp;= \frac{\Pr{}(S_t, A_t, \dots S_T| S_t = s, A_t = a, \pi)}{\Pr{}(S_t, A_t, \dots, S_T| S_t = s, A_t = a, b)} \\
+                 &amp;= \frac{\prod_{k=t}^{T-1}\pi(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}{\prod_{k=t}^{T-1}b(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}\\
+                 &amp;=\prod_{k=t}^{T-1}\frac{\pi(A_k|S_k)}{b(A_k|S_k)}.
+\end{align}`
+$$
+&lt;!-- * Note the transition probabilities cancel out (ratio independent of MDP dynamics).  --&gt;
+
+---
+
+## MC prediction algorithm
+
+We can now modify the MC prediction algorithm to use off-policy learning:
+
+&lt;img src="img/mc-prediction.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+##  Off-policy MC prediction (changes)
+
+* Generate an sample-path using policy `\(b\)` instead of `\(\pi\)`.
+* Add a variable W representing the importance sampling ratio which must be set to 1 on line containing `\(G \leftarrow 0\)`.
+* Modify line `\(G \leftarrow \gamma G + R_{t+1}\)` to `\(G \leftarrow \gamma WG + R_{t+1}\)` since we now need to multiply with the importance sampling ratio.
+* Add a line after the last with `\(W \leftarrow W \pi(A_t|S_t)/b(A_t|S_t)\)`, i.e. we update the importance sampling ratio.
+* If `\(\pi(A_t|S_t) = 0\)` then we may stop the inner loop earlier ( `\(W=0\)` for the remaining `\(t\)`). 
+* An incremental update of `\(V\)` can be done (only if don't modify `\(G\)`)
+$$
+  V(s) \leftarrow V(s) + \frac{1}{n} \left[WG - V(s)\right].
+$$
+where `\(n\)` denote the number of realized returns and `\(G\)` the current realized return. 
+
+---
+
+## Weighted importance sampling 
+
+Different importance sampling methods:
+
+.frame[
+.pull-left[
+Ordinary importance sampling: 
+`$$q_\pi(s,a) \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i$$`
+Higher variance.
+] 
+
+.pull-right[
+Weighted importance sampling:
+
+`$$q_\pi(s,a) \approx \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i.$$`
+Smaller variance (faster convergence). 
+]]
+
+Incremental update for weighted importance sampling: 
+
+$$
+`\begin{align}
+    q_\pi(s,a) &amp;\approx V_{n+1} = \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i \\
+    &amp;= \frac{1}{C_n} \sum_{i = 1}^n W_iG_i = V_n + \frac{W_n}{C_n} (G_n  - V_n),
+\end{align}`
+$$
+
+---
+
+## Off-policy prediction algorithm
+
+&lt;img src="img/mc-off-policy-prediction.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Off-policy GPI
+
+&lt;img src="img/mc-off-policy-gpi.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
 
 
 
@@ -298,7 +480,8 @@ class: inverse, middle, center
   "ratio": "16:9",
   "highlightLines": true,
   "highlightStyle": "solarized-light",
-  "countIncrementalSlides": false
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

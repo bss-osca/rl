@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Reinforcement Learning for Business</title>
+    <title>Markov Decision Processes (MDPs)</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -11,6 +11,16 @@
   </head>
   <body>
     <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Markov Decision Processes (MDPs)
+]
+.author[
+### Lars Relund Nielsen
+]
+
+---
 
 
 
@@ -23,54 +33,218 @@
 
 
 layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/06_mdp-1-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/06_mdp-1-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
 
 ---
 
-## Reinforcement Learning for Business
+## Learning outcomes
 
-- The purpose of this course is to give an introduction and knowledge about reinforcement learning (RL). 
-- RL is an approach of modelling sequential decision making problems such as 
-  - controlling an inventory (decision: wait, buy, amount) 
-  - maintain a spare-part (decision: wait, maintain)
-  - playing backgammon (decision: how to move the checkers)
-- 10 ECTS.
-- Lectures/tutorials each week.
-- Exercises and a project are given to support your learning.
-&lt;!-- - R is used as programming tool.  --&gt;
-- 20 minutes oral exam based on a project.
+* Identify the different elements of a Markov Decision Processes (MDP).
+* Describe how the dynamics of an MDP are defined.
+* Understand how the agent-environment RL description relates to an MDP.
+* Interpret the graphical representation of a Markov Decision Process.
+* Describe how rewards are used to define the objective function (expected return).
+* Interpret the discount factor and its effect on the objective function.
+* Identify episodes and how to formulate an MDP by adding an absorbing state. 
 
-&lt;!-- For more information see the [course description](https://kursuskatalog.au.dk/en?search=Reinforcement%20Learning%20for%20Business). --&gt;
+---
+
+## Markov Decision Processes
+
+* A mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found.
+* Often in a RL problem some parts of this description is unknown (in the bandit problem e.g. the rewards). This is not the case for an MDP.
+* In a finite MDP, the sets of states, actions, and rewards all have a finite number of elements.
+* The random variables have well defined discrete probability distributions dependent only on the preceding state and action.
+
+---
+
+
+
+## An MDP as a model for the agent-environment
+
+.left-column-wide[
+- Agent: The one who takes the action, i.e. the decision making component of a system. A general rule is that anything that the agent does not have absolute control over forms part of the environment. 
+- Environment: The system/world where observations and rewards are found. 
+- We assume that we can observe the full state of the system.
+- *Markov property* satisfied. Given the present state the future is independent of the past: `$$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$`
+]
+
+.right-column-small[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/mdp-1-unnamed-chunk-5-1.png" alt="Agent-environment representation." width="100%" /&gt;
+&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+layout: true
+
+## MDP visualization (state-expanded hypergraph)
+
 
 
 ---
 
-## Reinforcement learning can be seen as 
+&lt;img src="img/mdp-1-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
-* An approach for learning good decision making under uncertainty from experience.
-* Finding a good sequence of decisions over time.
-* A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.
-* A way of modelling intuition. Our goal as an agent is to find good decisions/actions that maximize the total reward. That is, learn the reward estimate of a given action.
-* A mathematical models for learning-based decision making.
-  - Given state `\(x\)` you take an action and observe the reward `\(r\)` and the new state `\(x'\)`.
-  - Your goal is to find a policy that optimize the total reward function.
+---
 
-Note current decisions have an impact on the future. 
+&lt;img src="img/mdp-1-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
+---
 
+&lt;img src="img/mdp-1-unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="img/mdp-1-unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: true
+
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/06_mdp-1-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/06_mdp-1-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+---
+
+## Mathematical description of the MDP 
+
+   * At time-step `\(t\)`: states `\(S_t \in \mathcal{S}\)`, actions `\(A_t \in \mathcal{A}(s)\)` and rewards `\(R_t \in \mathcal{R} \subset \mathbb{R}.\)`
+   * Since a *finite* MDP, the sets of states, actions all have a finite number of elements.
+   
+--
+
+* The random variables have well defined discrete probability distributions which defines the dynamics of the system:
+`\begin{equation}
+    p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
+\end{equation}`
+   which can be used to find the *transition probabilities*:
+`\begin{equation}
+    p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
+\end{equation}`
+   and the *expected reward*:
+`\begin{equation}
+    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
+\end{equation}`
+
+---
+
+## Parameters need for defining an MDP
+
+That is, to define an MDP the following are needed:
+
+* All states and actions are assumed known. 
+* A finite number of states and actions. That is, we can store values using tabular methods. 
+* The transition probabilities and expected rewards are given (or `\(p(s', r | s, a)\)`).
+
+Assume a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.
+
+---
+
+## Reward hypothesis
+
+A central assumption in reinforcement learning:
+
+&gt; All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
+
+- The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
+- This assumption can be questioned (e.g. risk-adverse behaviour) but in this course we assume it holds.
+
+---
+
+## Rewards and the objective function (goal)
+
+The return `\(G_t\)` (discounted sum of future rewards):
+
+`\begin{equation}
+	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
+\end{equation}`
+
+Note we use a *discount factor* `\(0 \leq \gamma \leq 1\)` so an infinite time-horizon do not give problems. 
+
+- If `\(\gamma &lt; 1\)` and the reward is bounded, then the return is always finite (see backboard).
+- Discounting allows us to work with finite returns.
+- A `\(\gamma\)` close to 1 put weight on future rewards.
+- A `\(\gamma\)` close to 0 put weight on present rewards. 
+
+*Objective function*: choose actions so the expected return is maximized. 
+
+---
+
+## MDPs with a finite time-horizon
+
+- Finite time-horizon MDP: there is an upper bound on the number of time-steps need before finishes (e.g playing a board game).
+- Playing one game or going trough the MDP once is an *episode*. Afterwards a new game is started (a new episode).
+- Here we do not need a discount factor (can set `\(\gamma = 1\)`). 
+
+But how can we transform it into an MDP with infinite time-horizon?
+
+   1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
+   2. When a game stops a transition to the absorbing state happen.
+
+Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (*continuing tasks*). 
 
 
 
 [BSS]: https://bss.au.dk/en/
-[bi-programme]: https://kandidat.au.dk/en/businessintelligence/
+[bi-programme]: https://masters.au.dk/businessintelligence
 
 [course-help]: https://github.com/bss-osca/rl/issues
 [cran]: https://cloud.r-project.org
 [cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
 [course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+[Colab]: https://colab.google/
+[colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
+[colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
+[colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
+[colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
+[colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
+[colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
 
 [DataCamp]: https://www.datacamp.com/
-[datacamp-signup]: https://www.datacamp.com/groups/shared_links/cbaee6c73e7d78549a9e32a900793b2d5491ace1824efc1760a6729735948215
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
 [datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
 [datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
 [datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
@@ -89,7 +263,6 @@ Note current decisions have an impact on the future.
 [datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
 [datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
 [dplyr-cran]: https://CRAN.R-project.org/package=dplyr
-[debug-in-r]: https://rstats.wtf/debugging-r-code.html
 
 [google-form]: https://forms.gle/s39GeDGV9AzAXUo18
 [google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
@@ -110,7 +283,9 @@ Note current decisions have an impact on the future.
 [hg-credential-helper]: https://happygitwithr.com/credential-caching.html
 [hypothes.is]: https://web.hypothes.is/
 
-[osca-programme]: https://kandidat.au.dk/en/operationsandsupplychainanalytics/
+[Jupyter]: https://jupyter.org/
+
+[osca-programme]: https://masters.au.dk/operationsandsupplychainanalytics
 
 [Peergrade]: https://peergrade.io
 [peergrade-signup]: https://app.peergrade.io/join
@@ -119,6 +294,10 @@ Note current decisions have an impact on the future.
 [pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
 [pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
 [pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+[Python]: https://www.python.org/
+[Positron]: https://positron.posit.co/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[VSCode]: https://code.visualstudio.com/
 
 [R]: https://www.r-project.org
 [RStudio]: https://rstudio.com
@@ -171,18 +350,6 @@ Note current decisions have an impact on the future.
 [tutorial-markdown]: https://commonmark.org/help/tutorial/
 [tfa-course]: https://bss-osca.github.io/tfa/
 
-[Udemy]: https://www.udemy.com/
-
-[vba-yt-course1]: https://www.youtube.com/playlist?list=PLpOAvcoMay5S_hb2D7iKznLqJ8QG_pde0
-[vba-course1-hello]: https://youtu.be/f42OniDWaIo
-
-[vba-yt-course2]: https://www.youtube.com/playlist?list=PL3A6U40JUYCi4njVx59-vaUxYkG0yRO4m
-[vba-course2-devel-tab]: https://youtu.be/awEOUaw9q58
-[vba-course2-devel-editor]: https://youtu.be/awEOUaw9q58
-[vba-course2-devel-project]: https://youtu.be/fp6PTbU7bXo
-[vba-course2-devel-properties]: https://youtu.be/ks2QYKAd9Xw
-[vba-course2-devel-hello]: https://youtu.be/EQ6tDWBc8G4
-
 [video-install]: https://vimeo.com/415501284
 [video-rstudio-intro]: https://vimeo.com/416391353
 [video-packages]: https://vimeo.com/416743698
@@ -210,10 +377,11 @@ Note current decisions have an impact on the future.
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightLines": true,
-"highlightStyle": "solarized-light",
-"countIncrementalSlides": false
+  "ratio": "16:9",
+  "highlightLines": true,
+  "highlightStyle": "solarized-light",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

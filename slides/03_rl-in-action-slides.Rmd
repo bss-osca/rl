@@ -26,8 +26,8 @@ xaringan::inf_mr(cast_from = ".")
 layout: true
   
 ```{r, echo=FALSE}
-module_name <- "rl-intro"
-module_number <- "02"
+module_name <- "rl-in-action"
+module_number <- "03"
 here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
 library(htmltools)
 footerHtml <- withTags({
