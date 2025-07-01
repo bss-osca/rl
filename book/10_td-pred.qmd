@@ -161,7 +161,7 @@ An example illustrating that TD methods converge faster than MC methods is given
 
 `r strExercises`
 
-### Exercise - A randow walk {#exr-td-pred-random}
+### Exercise - A randow walk {#sec-td-pred-random}
 
 Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in Figure \@ref(fig:rw-trans). All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
 

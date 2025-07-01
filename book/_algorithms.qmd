@@ -5,7 +5,7 @@ editor_options:
 ---
 <!-- Various algorithms for the RL course -->
 
-```{r, MDP-class, include=FALSE, eval=FALSE}
+```{r, MDP-class, include=FALSE}
 library(R6)
 library(hash)
 library(tidyverse)
@@ -276,7 +276,7 @@ MDPClass <- R6Class("MDPClass",
 ```
 
 
-```{r RLAgent, include=FALSE, eval=FALSE}
+```{r RLAgent, include=FALSE}
 library(R6)
 library(hash)
 library(tidyverse)

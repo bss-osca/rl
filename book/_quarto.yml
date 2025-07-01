@@ -66,7 +66,7 @@ format:
     theme:
       light: cosmo  # good themes: default, cosmo, flatly, lumen, minty, pulse, sandstone, solar, united, favourites: minty, cosmo
     number-sections: true
-    number-depth: 3
+    number-depth: 4
     callout-appearance: simple
     smooth-scroll: true
     code-fold: false

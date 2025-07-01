@@ -149,7 +149,7 @@ Read Chapter 1.6 in @Sutton18.
 You can find all these exercises as a section in this [Colab notebook][colab-03-rl-in-action]. If you already have your own copy use this.
 
 
-### Exercise - Self-Play {#exr-r-intro-self}
+### Exercise - Self-Play {#sec-r-intro-self}
 
 Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
 played against itself. What do you think would happen in this case? Would it learn a different way of playing?
@@ -159,7 +159,7 @@ If the exploration parameter is non-zero, the algorithm will continue to adapt u
 :::
 
 
-### Exercise - Symmetries {#exr-r-intro-sym}
+### Exercise - Symmetries {#sec-r-intro-sym}
 
 Many tic-tac-toe positions appear different but are really the same because of symmetries. 
 
@@ -182,7 +182,7 @@ Many tic-tac-toe positions appear different but are really the same because of s
       :::
 
 
-### Exercise - Greedy Play {#exr-r-intro-greedy}
+### Exercise - Greedy Play {#sec-r-intro-greedy}
 
 Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
 
@@ -191,7 +191,7 @@ As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay fo
 :::
 
 
-### Exercise - Learning from Exploration {#exr-r-intro-exploit} 
+### Exercise - Learning from Exploration {#sec-r-intro-exploit} 
 
 Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities. 
 
@@ -208,7 +208,7 @@ Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent wi
       :::
       
       
-### Exercise - Other Improvements {#exr-r-intro-other}
+### Exercise - Other Improvements {#sec-r-intro-other}
 
 Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?
    

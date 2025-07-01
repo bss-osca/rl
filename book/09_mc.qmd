@@ -648,7 +648,7 @@ Read Chapter 5.10 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Seasonal inventory and sales planning {#exr-mc-seasonal}
+### Exercise - Seasonal inventory and sales planning {#sec-mc-seasonal}
 
 Consider the seasonal product in Example \@ref(mc-seasonal). 
 

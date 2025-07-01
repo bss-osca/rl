@@ -204,23 +204,23 @@ Read Chapter 2.10 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Advertising {#exr-bandit-adv}
+### Exercise - Advertising {#sec-bandit-adv}
 
 Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:
 
 * You have $k=5$ adds to choose among.
 * If add $A$ is chosen then the user clicks the add with probability $p_A$ which can be seen as the unknown click trough rate CTR (or an average reward).
-* The CTRs are unknown and samples can be picked using the RLAdEnv class and the reward function which returns 1 if click on ad and 0 otherwise.
+* The CTRs are unknown and samples can be picked using the `RLAdEnv` class and the reward function which returns 1 if click on ad and 0 otherwise.
 * In the class the true CTRs can be observed but in practice this is hidden from the agent (you).
 
-Consider [this section][colab-ex-bandit-adv] in the Colab notebook to see the questions. Use your own copy if you already have one.
+Consider [this section][colab-05-ex-bandit-adv] in the Colab notebook to see the questions. Use your own copy if you already have one.
 
 
-### Exercise - A coin game {#exr-bandit-coin}
+### Exercise - A coin game {#sec-bandit-coin}
 
 Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.
 
-See [this section][colab-ex-bandit-coin] in the Colab notebook for questions. Use your own copy if you already have one.
+See [this section][colab-05-ex-bandit-coin] in the Colab notebook for questions. Use your own copy if you already have one.
 
 
 ```{r links, child="links.md", include=FALSE}
