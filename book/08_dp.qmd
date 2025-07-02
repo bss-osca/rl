@@ -136,53 +136,6 @@ The number of steps of policy iteration needed to find the optimal policy are of
 knitr::include_graphics("img/policy-iteration.png")
 ``` 
 
-We may implement this in Python by having a set of matrices for the transition probabilities and rewards:
-
-*  The list `p_mat` contains a matrix for each action, e.g. if two actions then `p_mat[0]` is a the transition probabilities for doing action 0, i.e. `p_mat[0][s, s'] is the transition probability $p(s'|a,s)$.
-* The matrix `r_mat` is a matrix such that `r_mat[s, a]` equals $r(s,a)$.
-
-```{python}
-def policy_iteration(p_mat, r_mat, gamma=0.5):
-    """
-    Performs policy iteration for a given MDP.
-
-    Args:
-        p_mat (list): Transition probability matrices for each action.
-        r_mat (ndarray): Reward matrix of shape (states, actions).
-        gamma (float): Discount factor.
-
-    Returns:
-        V (ndarray): Optimal value function.
-        policy (ndarray): Optimal policy.
-        iteration (int): Number of iterations until convergence.
-    """
-    policy = np.zeros(NUM_STATES, dtype=int)
-    is_policy_stable = False
-    iteration = 0
-
-    while not is_policy_stable:
-        # Policy evaluation
-        A = np.eye(NUM_STATES)
-        b = np.zeros(NUM_STATES)
-        for s in range(NUM_STATES):
-            a = policy[s]
-            A[s] -= gamma * p_mat[a][s]
-            b[s] = r_mat[s, a]
-        V = np.linalg.solve(A, b)
-
-        # Policy improvement
-        is_policy_stable = True
-        for s in range(NUM_STATES):
-            old_action = policy[s]
-            action_values = [r_mat[s, a] + gamma * np.dot(p_mat[a][s], V) for a in range(NUM_ACTIONS)]
-            policy[s] = int(np.argmax(action_values))
-            if old_action != policy[s]:
-                is_policy_stable = False
-        iteration += 1
-    return V, policy, iteration
-```
-
-
 ## Value Iteration
 
 Policy iteration requires full policy evaluation at each iteration step. This could be an computationally expensive process which requires may sweeps of the state space. In *value iteration*, the policy evaluation is stopped after one sweep of the state space. Value iteration is achieved by turning the Bellman optimality equation into an update rule:
@@ -199,46 +152,6 @@ $$v_{0} \xrightarrow[]{EI} v_{1} \xrightarrow[]{EI} v_{2}  \ldots \xrightarrow[]
 ```{r fig-value-ite-alg, echo=FALSE, fig.cap="Value iteration [@Sutton18].", out.width="70%"}
 knitr::include_graphics("img/value-iteration.png") 
 ``` 
-
-We may implement this in Python by having a set of matrices for the transition probabilities and rewards as when implemented policy iteration.
-
-```{python}
-def value_iteration(p_mat, r_mat,  threshold=1e-5, gamma=0.5):
-    """
-    Performs value iteration for a given MDP.
-
-    Args:
-        p_mat (list): Transition probability matrices for each action.
-        r_mat (ndarray): Reward matrix of shape (states, actions).
-        gamma (float): Discount factor.
-        threshold (float): Convergence threshold.
-
-    Returns:
-        V (ndarray): Optimal value function.
-        policy (ndarray): Optimal policy.
-        iteration (int): Number of iterations until convergence.
-    """
-    V = np.zeros(NUM_STATES)
-    policy = np.zeros(NUM_STATES, dtype=int)
-    iteration = 0
-
-    while True:
-        delta = 0
-        for s in range(NUM_STATES):
-            action_values = []
-            for a in range(NUM_ACTIONS):
-                expected_value = r_mat[s, a] + gamma * np.dot(p_mat[a][s], V)
-                action_values.append(expected_value)
-            best_value = max(action_values)
-            delta = max(delta, abs(best_value - V[s]))
-            V[s] = best_value
-            policy[s] = int(np.argmax(action_values))
-        iteration += 1
-        if delta < threshold:
-            break
-    return V, policy, iteration
-```
-
 
 ## Generalized policy iteration
 
@@ -259,151 +172,14 @@ GPI works and will convergence to the optimal policy and optimal value function 
 
 ## Example - Factory Storage {#sec-dp-storage}
 
-Let us consider [Exercise @sec-mdp-1-storage] where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. Each week the factory produces $0,1$, 2 or 3 $\mathrm{m}^{3}$ waste with respective probabilities 
-$$p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.$$ 
-If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre. 
+Let us consider [Exercise @sec-mdp-1-storage] where a factory has a storage tank with a capacity of 4 $\mathrm{m}^{3}$ for temporarily storing waste produced by the factory. 
 
-The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week $n$ just before the regular removal opportunity $$\mathcal{S} = \{ 0,1,2,3,4 \}.$$
-The action space is $$\mathcal{A}(s) = \{ empty, keep \}.$$
-The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence the expected reward is $$r(s, e) = -(25 + 5s)$$ 
-and $$r(s,k) = -30\sum_{i>4-s} (s+i-4)p_i.$$
-Finally, the transition probabilities are: 
-$$
-\begin{align} 
-   p(s'|s,k) &= p_{s'-s}\text{ if } s\leq s' \leq 3, \\
-   p(4|s,k)  &= \sum_{i\geq 4-s} p_i, \\
-   p(s'|s,e) &= p_{s'}\text{ if }  0\leq s' \leq 4, \\
-   p(s'|s,a) &=  0 \text{ otherwise.}
-\end{align}
-$$
+::: {.callout-note title="Colab - Before the lecture"}
+During the lecture for this module we will work with the [tutorial][colab-08-dp]. We implement the DP algorithms. You may have a look at the section with the example before the lecture. Open the [section][colab-08-dp-ex-storage]:
 
-For solving the MDP we implement it in Python. First we add transition probabilities to two matrices and reward to a single matrix:
-
-```{python}
-import numpy as np
-import pandas as pd
-import mdptoolbox
-
-# Constants
-NUM_STATES = 5       # Tank levels: 0 to 4
-NUM_ACTIONS = 2      # Actions: 0 = keep, 1 = empty
-
-# Waste generation probabilities for 0–3 m³
-waste_probs = [1/8, 1/2, 1/4, 1/8]
-MAX_WASTE = 3        # Max production in one week
-
-# Initialize transition probability matrices for each action
-p_mat = [np.zeros((NUM_STATES, NUM_STATES)) for _ in range(NUM_ACTIONS)]
-
-# Initialize reward matrix: rows = states, columns = actions
-r_mat = np.zeros((NUM_STATES, NUM_ACTIONS))
-
-# Action 0: keep
-# Accumulate overflow costs based on possible next waste productions
-for s in range(NUM_STATES):
-    expected_overflow_cost = 0
-    for i in range(len(waste_probs)):  # i: waste produced (0–3 m³)
-        next_state = s + i
-        if next_state <= 4:
-            p_mat[0][s, next_state] += waste_probs[i]
-        else:
-            # Clamp overflowed states to 4, calculate overflow cost
-            p_mat[0][s, 4] += waste_probs[i]
-            overflow = next_state - 4
-            expected_overflow_cost += overflow * 30 * waste_probs[i]
-    r_mat[s, 0] = -expected_overflow_cost  # Reward is negative cost
-
-# Action 1: empty
-# Transition probabilities are based only on new waste produced
-# Tank is reset to empty before production
-for s in range(NUM_STATES):
-    for i in range(len(waste_probs)):
-        p_mat[1][s, i] = waste_probs[i]  # Transition to state i
-    r_mat[s, 1] = -(25 + 5 * s)  # Cost of emptying tank
-
-# Output results
-state_labels = [f"s{i}" for i in range(NUM_STATES)]
-action_labels = ["keep", "empty"]
-
-# Display reward matrix
-reward_df = pd.DataFrame(r_mat, index=state_labels, columns=action_labels)
-print("Reward matrix with labels:")
-print(reward_df)
-
-# Display transition matrix for 'keep' action
-transition_df = pd.DataFrame(p_mat[0], index=state_labels, columns=state_labels)
-print("\nTransition matrix for action 'keep':")
-print(transition_df)
-
-# Display transition matrix for 'keep' action
-transition_df = pd.DataFrame(p_mat[1], index=state_labels, columns=state_labels)
-print("\nTransition matrix for action 'keep':")
-print(transition_df)
-```
-
-We now can run policy and value iteration:
-
-```{python}
-# Run Value Iteration
-V_vi, policy_vi, num_iters_vi = value_iteration(p_mat, r_mat)
-
-# Run Policy Iteration
-V_pi, policy_pi, num_iters_pi = policy_iteration(p_mat, r_mat)
-```
-
-Let us compare the results (which should be the same)
-
-```{python}
-# Display optimal policies and value functions
-print("\nValue Iteration Results:")
-print("Optimal policy (0 = keep, 1 = empty):", policy_vi)
-print("Value function:", V_vi)
-print("Converged in iterations:", num_iters_vi)
-
-print("\nPolicy Iteration Results:")
-print("Optimal policy (0 = keep, 1 = empty):", policy_pi)
-print("Value function:", V_pi)
-print("Converged in iterations:", num_iters_pi)
-
-# Prepare output
-df_result = pd.DataFrame({
-    "State": state_labels,
-    "V (vi)": V_vi.round(4),
-    "Policy (vi)": [action_labels[i] for i in policy_vi],
-    "V (pi)": V_pi.round(4),
-    "Policy (pi)": [action_labels[i] for i in policy_pi],
-})
-print(df_result)
-```
-
-There is also a library that already has implemented policy and value iteration.
-
-```{python}
-import mdptoolbox as mdpbox
-
-# Solve using Value Iteration
-vi = mdpbox.mdp.ValueIteration(p_mat, r_mat, 0.5)
-vi.run()
-
-# Display optimal policy and value function
-print("\nOptimal policy (0 = keep, 1 = empty):", vi.policy)
-print("Value function:", vi.V)
-```
-
-Finally, let us try to solve the problem with a discount rate of 0.99:
-
-```{python}
-# Solve using Value Iteration
-vi = mdpbox.mdp.PolicyIteration(p_mat, r_mat, 0.99)
-vi.run()
-
-# Display optimal policy and value function
-print("\nOptimal policy (0 = keep, 1 = empty):", vi.policy)
-print("Value function:", vi.V)
-```
-
-Note we now empty also at 3 m$^3$.
-
+   - Have a look at the section and run all code cells.
+   - Try to understand the content. 
+:::
 
 ## Summary 
 
@@ -415,234 +191,9 @@ Read Chapter 4.8 in @Sutton18.
 
 ### Exercise - Gambler's problem {#sec-dp-gambler}
 
-Consider the gambler's problem in [Exercise @sec-mdp-1-gambler].
+We work with the gambler's problem in [Exercise @sec-mdp-1-gambler].
 
-
-
-
-
-1) Build the model in Python
-
-```{r}
-#' MDP model for the gamblers problem.
-#' @param prH Probability of head.
-#' @return The mdp object (R6 class).
-buildGamblerModel <- function(prH) {
-   mdp <- MDPClass$new()      # initialize mdp object
-   mdp$addStateSpace(0:101)   # add states (states are keys in a hash and are always converted to strings), 101 represent finished
-   for (s in mdp$getStateKeys()) {  # add actions for each state (only the key of the action)
-      i <- as.numeric(s)
-      if (i > 0 & i < 100) mdp$addActionSpace(s, 1:min(i, 100-i))
-      if (i == 0) mdp$addActionSpace(s, "Loose")  
-      if (i == 100) mdp$addActionSpace(s, "Win")  
-      if (i == 101) mdp$addActionSpace(s, "Dummy")
-   }
-   # Add trans pr and expected reward to the actions
-   for (s in as.character(1:99)) {
-      for (a in mdp$getActionKeys(s)) {
-         iS <- as.numeric(s)
-         iA <- as.numeric(a)
-         transPr <- c(prH, 1- prH)
-         names(transPr) <- c(iS+iA, iS-iA)
-         mdp$addAction(s, a, r = 0, pr = transPr)
-      }
-   }
-   # add special actions
-   mdp$addAction(s = "0", a = "Loose", r = 0, pr = c("101" = 1))
-   mdp$addAction(s = "100", a = "Win", r = 1, pr = c("101" = 1))
-   mdp$addAction(s = "101", a = "Dummy", r = 0, pr = c("101" = 1))
-   return(mdp)
-}
-```
-
-We make a function that return the mdp object
-
-```{python, eval=FALSE}
-import numpy as np
-import mdptoolbox
-import matplotlib.pyplot as plt
-
-# Parameters
-goal = 100  # Final target capital
-ph = 0.4    # Probability of winning
-gamma = 1.0  # Discount factor (no discounting)
-
-n_states = goal + 1  # States range from 0 (lost all) to 100 (goal)
-actions = list(range(1, goal))  # Possible stake sizes
-
-# Lists to hold transition matrices and reward vectors
-p_mat_list = []
-r_mat_list = []
-
-# Construct the MDP model for each action (stake size)
-for a in actions:
-    P = np.zeros((n_states, n_states))  # Transition matrix for action 'a'
-    r = np.zeros(n_states)  # Reward vector for action 'a'
-
-    for s in range(n_states):
-        if s == 0 or s == goal or a > s or a > (goal - s):
-            # Absorbing or illegal state/action: self-transition only
-            P[s, s] = 1.0
-        else:
-            win_state = s + a
-            lose_state = s - a
-
-            # Probability of winning and transitioning to win_state
-            P[s, win_state] += ph
-
-            # Reward if win results in reaching goal state
-            if win_state == goal:
-                r[s] += ph * 1.0
-
-            # Probability of losing and transitioning to lose_state
-            P[s, lose_state] += 1 - ph
-
-    p_mat_list.append(P)
-    r_mat_list.append(r)
-
-# Final transition and reward matrices
-p_mat = [p for p in p_mat_list]
-r_mat = [r for r in r_mat_list]
-
-# Run Value Iteration algorithm from MDPtoolbox
-vi = mdptoolbox.mdp.ValueIteration(p_mat, r_mat, gamma)
-vi.run()
-
-# Plot value function and policy
-plt.figure(figsize=(10, 4))
-
-# Value function
-plt.subplot(1, 2, 1)
-plt.plot(vi.V)
-plt.title("Value Function")
-plt.xlabel("Capital")
-plt.ylabel("Value")
-
-# Optimal policy: best stake at each capital
-plt.subplot(1, 2, 2)
-policy_plot = np.zeros(n_states)
-for s in range(1, goal):
-    policy_plot[s] = actions[vi.policy[s]]  # Convert action index to actual stake
-plt.plot(policy_plot)
-plt.title("Optimal Policy (Stake)")
-plt.xlabel("Capital")
-plt.ylabel("Stake")
-
-plt.tight_layout()
-plt.show()
-
-
-
-
-import numpy as np
-import pandas as pd
-import mdptoolbox
-
-# Constants
-STATES = 101   # assume state = state index in matrix
-ACTIONS = 51   # assume action = action index in matrix     
-
-# Initialize transition probability matrices for each action
-loose = 0
-win = 100
-ph = 0.4    # Probability of winning
-p_mat = [np.zeros((STATES, STATES)) for _ in range(ACTIONS)]
-
-# Initialize reward matrix: rows = states, columns = actions
-r_mat = np.zeros((STATES, ACTIONS))
-
-for a in range(ACTIONS-1):
-   for s in range(STATES-1):
-      if s == loose or s == win or a > s or a > (win - s) or a == 0:
-            # Absorbing or illegal state/action: self-transition only
-            p_mat[a][s, s] = 1.0
-      else:
-         win_state = s + a
-         lose_state = s - a
-
-         # Probability of winning and transitioning to win_state
-         p_mat[a][s, win_state] = ph
-
-         # Reward if win results in reaching goal state
-         if win_state == win:
-            print(s, a)
-            r_mat[s, a] = ph * 1.0
-
-         # Probability of losing and transitioning to lose_state
-         p_mat[a][s, lose_state] = 1 - ph
-      
-
-
-# Output results
-state_labels = [f"s{i}" for i in range(STATES-1)]
-action_labels = [f"bet {i}" for i in range(ACTIONS-1)]
-
-# Display reward matrix
-reward_df = pd.DataFrame(r_mat, index=state_labels, columns=action_labels)
-print("Reward matrix with labels:")
-print(reward_df)
-
-# Display transition matrix for 'keep' action
-transition_df = pd.DataFrame(p_mat[0], index=state_labels, columns=state_labels)
-print("\nTransition matrix for action 'keep':")
-print(transition_df)
-
-# Display transition matrix for 'keep' action
-transition_df = pd.DataFrame(p_mat[1], index=state_labels, columns=state_labels)
-print("\nTransition matrix for action 'keep':")
-print(transition_df)
-```
-
-
-
-
-
-
-
-
-
-2) Solve the problem using value iteration with $p_h = 0.4$. Plot the policy with states 1-99 on the x-axis and action on the y-axis. Plot the state-values given states 1-99 on the x-axis. Your policy may not look like the policy in the book, why?
-
-
-```{r}
-solveGambler <- function(prH) {
-   mdp <- buildGamblerModel(prH)
-   mdp$valueIte(gamma = 1, theta = 0.0001)
-   df <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
-      select(-pr)
-   df <- df %>% 
-      mutate(state = as.numeric(state)) %>% 
-      filter(state > 0, state < 100) %>% 
-      mutate(action = as.numeric(action)) 
-   ptPr <- ggplot(df, aes(x = state, y = v)) +
-      geom_col() + 
-      labs(title = str_c("State-values for prH=", prH))
-   ptPolicy <- ggplot(df, aes(x = state, y = action)) +
-      geom_col() +
-      labs(title = str_c("Optimal policy for prH=", prH))
-   return(list(ptPr = ptPr, ptPolicy = ptPolicy, policy = df))   
-}
-res04 <- solveGambler(prH = 0.4)
-res04$ptPr
-res04$ptPolicy
-```
-
-There is a lot of different optimal policies. In general since $p_h$ is below 0.5 we want to find a policy with as few flips as possible.
-
-
-3) Solve the problem using value iteration with $p_h = 0.22$ and $0.55$ and plot the results. What is the probability of winning in state 10 and 67?
-
-```{r}
-# Solve the problems
-res025 <- solveGambler(prH = 0.25)
-res055 <- solveGambler(prH = 0.55)
-# State-values
-res025$policy %>% filter(state %in% c(10,67))
-res055$policy %>% filter(state %in% c(10,67))
-# Plot results
-library(patchwork)
-(res025$ptPr + res055$ptPr) / (res025$ptPolicy + res055$ptPolicy)
-```
+Consider [this section][colab-08-dp-sec-dp-gambler] in the Colab notebook to see the questions. Use your own copy if you already have one.
 
 
 ### Exercise - Maintenance problem {#sec-dp-maintain}
@@ -658,17 +209,12 @@ The cost of an enforced repair upon failure is $C_{f}$ and the cost of a preempt
 
 The problem can be formulated as an MDP. Since an enforced repair takes two days and the state of the system has to be defined at the beginning of each day, we need an auxiliary state for the situation in which an enforced repair is in progress already for one day.
 
-
-<!-- Q1 -->
-```{r, solution=TRUE, text="$$\\mathcal{S}=\\{1,2,\\ \\ldots,\\ N,\\ N+1\\}.$$ State $s$ with $1\\leq s\\leq N$ corresponds to the situation in which an inspection reveals working condition $s$, while state $N+1$ corresponds to the situation in which an enforced repair is in progress already for one day."}
-```
-
 1) Define the state space $\mathcal{S}$, i.e. the the set of possible states of the system.
 
+   ::: {.callout-warning collapse="true" title="Solution"}
+   $$\mathcal{S}=\{1,2,\ \ldots,\ N,\ N+1\}.$$ State $s$ with $1\leq s\leq N$ corresponds to the situation in which an inspection reveals working condition $s$, while state $N+1$ corresponds to the situation in which an enforced repair is in progress already for one day.
+   :::
 
-<!-- Q2 -->
-```{r, solution=TRUE, text="The set of possible actions in state $s$ is chosen as $$\\mathcal{A}(1)=\\{0\\},\\ \\mathcal{A}(s)=\\{0,1\\} \\text{ for } 1<s<N, \\mathcal{A}(N)=\\mathcal{A}(N+1)=\\{2\\}.$$"}
-```
 
 2) Consider actions
 $$
@@ -680,27 +226,44 @@ a=\left\{\begin{array}{ll}
 $$
 Define the action space $\mathcal{A}(s)$ for all states $s$.
 
+   ::: {.callout-warning collapse="true" title="Solution"}
+   The set of possible actions in state $s$ is chosen as $$\mathcal{A}(1)=\{0\},\ \mathcal{A}(s)=\{0,1\} \text{ for } 1<s<N, \mathcal{A}(N)=\mathcal{A}(N+1)=\{2\}.$$
+   :::
 
-<!-- Q3 -->
-```{r, solution=TRUE, text="The expected reward is $r(N+1,2) = 0$ and for $0 < s < N$ is $r(s,0) = 0$, $r(s,1) = -C_{ps}$. Finally, $r(N,2) = -C_{f}$ and $r(N+1,2) = 0$."}
-```
 
 3) Assume that the number of possible working conditions equals $N=5$. What is the expected reward $r(s,a)$?
 
-
-<!-- Q4 -->
-```{r, solution=TRUE, text="The transition probabilities $p(s'|s,a)$: $$p(s'|s,0) = q_{ij}, \\text{ for } 1 \\leq s<N,$$ $$p(1|s,1) = 1 \\text{ for } 1<s<N,$$ $$p(N+1|N,2) = p(1|N+1,2) =1,$$ and zero otherwise."}
-```
-
+   ::: {.callout-warning collapse="true" title="Solution"}
+   The expected reward is $r(N+1,2) = 0$ and for $0 < s < N$ is $r(s,0) = 0$, $r(s,1) = -C_{ps}$. Finally, $r(N,2) = -C_{f}$ and $r(N+1,2) = 0$.
+   :::
+   
+   
 4) What is the transition probabilities?
 
+   ::: {.callout-warning collapse="true" title="Solution"}
+   The transition probabilities $p(s'|s,a)$: $$p(s'|s,0) = q_{ij}, \text{ for } 1 \leq s<N,$$ $$p(1|s,1) = 1 \text{ for } 1<s<N,$$ $$p(N+1|N,2) = p(1|N+1,2) =1,$$ and zero otherwise.
+   :::
 
-<!-- Q5 -->
+
 5) Try make a drawing of the state-expanded hypergraph for stage $t$ and $t+1$.
 
 
+6) The repair costs are given by $C_{f}=10,\ C_{p2}=7,\ C_{p3}=7$ and $C_{p4}=5$ and the deterioration probabilities $q_{ij}$ are given by matrix Q:
+
+   ```{r}
+   Q <- matrix(c(
+      0.90, 0.10, 0, 0, 0,
+      0, 0.80, 0.10, 0.05, 0.05,
+      0, 0, 0.70, 0.10, 0.20,
+      0, 0, 0, 0.50, 0.50), nrow=4, byrow=T)
+   Q
+   ```
+   
+   Build the MDP in Python. Consider [this section][colab-08-dp-sec-dp-gambler] in the Colab notebook. Use your own copy if you already have one.
+
+   
 <!-- Q6 -->
-```{r, solution=TRUE}
+```{r}
 Q <- matrix(c(
    0.90, 0.10, 0, 0, 0,
    0, 0.80, 0.10, 0.05, 0.05,
@@ -757,22 +320,13 @@ mdp$getActionInfo("5")
 mdp$getActionInfo("6")
 ```
 
-6) The repair costs are given by $C_{f}=10,\ C_{p2}=7,\ C_{p3}=7$ and $C_{p4}=5$ and the deterioration probabilities $q_{ij}$ are given by matrix Q:
 
-   ```{r}
-   Q <- matrix(c(
-      0.90, 0.10, 0, 0, 0,
-      0, 0.80, 0.10, 0.05, 0.05,
-      0, 0, 0.70, 0.10, 0.20,
-      0, 0, 0, 0.50, 0.50), nrow=4, byrow=T)
-   Q
-   ```
-   
-   Build the MDP in R.
 
+
+7) Find the optimal policy given a discount rate of $\gamma = 0.6$. What is the average discounted cost of being in state 3?
 
 <!-- Q7 -->
-```{r, solution=TRUE, text="In state 3 the discounted cost is 2.53."}
+```{r}
 mdp$valueIte(gamma = 0.6)
 # mdp$policyIte(gamma = 0.6)
 df <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
@@ -780,11 +334,13 @@ select(-pr)
 df
 ```
 
-7) Find the optimal policy given a discount rate of $\gamma = 0.6$. What is the average discounted cost of being in state 3?
+In state 3 the discounted cost is 2.53.
 
+
+8) Find the optimal policy using value iteration given a discount rate of $\gamma = 0.99$. Why do the algorithm need more iterations compared to when $\gamma = 0.6$? Why are the average discounted costs higher compared to when $\gamma = 0.6$? Is it more costly to use this optimal policy?
 
 <!-- Q8 -->
-```{r, solution=TRUE, text="A higher discont rate put more weight on future values, i.e. you have to look further ahead resulting in more iterations. This also results in a higher disconted cost, since costs in the future have higher weight. The optimal policy looks a bit different compared to the policy we found for $\\gamma = 0.6$. However, if the policy is the same for two different discount rates then you will have the same rewards/costs and hence the same cost of the policy. The discounted cost will not be the same since you use the discount rate to say how much you value the future."}
+```{r}
 mdp$valueIte(gamma = 0.99)
 # mdp$policyIte(gamma = 0.99)
 df1 <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
@@ -793,8 +349,7 @@ df
 df1
 ```
 
-8) Find the optimal policy using value iteration given a discount rate of $\gamma = 0.99$. Why do the algorithm need more iterations compared to when $\gamma = 0.6$? Why are the average discounted costs higher compared to when $\gamma = 0.6$? Is it more costly to use this optimal policy?
-
+A higher discont rate put more weight on future values, i.e. you have to look further ahead resulting in more iterations. This also results in a higher disconted cost, since costs in the future have higher weight. The optimal policy looks a bit different compared to the policy we found for $\gamma = 0.6$. However, if the policy is the same for two different discount rates then you will have the same rewards/costs and hence the same cost of the policy. The discounted cost will not be the same since you use the discount rate to say how much you value the future.
 
 
 ### Exercise - Car rental {#sec-dp-rental}
