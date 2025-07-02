@@ -457,8 +457,8 @@ q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_
 <section id="sec-mdp-2-ex" class="level2" data-number="7.8">
 <h2 data-number="7.8" class="anchored" data-anchor-id="sec-mdp-2-ex"><span class="header-section-number">7.8</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<section id="exr-mdp-2-policy" class="level3" data-number="7.8.1">
-<h3 data-number="7.8.1" class="anchored" data-anchor-id="exr-mdp-2-policy"><span class="header-section-number">7.8.1</span> Exercise - Optimal policy</h3>
+<section id="sec-mdp-2-policy" class="level3" data-number="7.8.1">
+<h3 data-number="7.8.1" class="anchored" data-anchor-id="sec-mdp-2-policy"><span class="header-section-number">7.8.1</span> Exercise - Optimal policy</h3>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-simple" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -496,8 +496,8 @@ Solution
 </div>
 </div>
 </section>
-<section id="exr-mdp-2-car" class="level3" data-number="7.8.2">
-<h3 data-number="7.8.2" class="anchored" data-anchor-id="exr-mdp-2-car"><span class="header-section-number">7.8.2</span> Exercise - Car rental</h3>
+<section id="sec-mdp-2-car" class="level3" data-number="7.8.2">
+<h3 data-number="7.8.2" class="anchored" data-anchor-id="sec-mdp-2-car"><span class="header-section-number">7.8.2</span> Exercise - Car rental</h3>
 <p>Consider a rental company with two locations, each with a capacity of 20 cars. Each day, customers arrive at each location to rent cars. If a car is available, it is rented out with a reward of $10. Otherwise the opportunity is lost. Cars become available for renting the day after they are returned.</p>
 <p>The number of cars rental requests <span class="math inline">\(D_i\)</span> at Location <span class="math inline">\(i=1,2\)</span> are Poisson distributed with mean 3 and 4. Similar, the number of cars returned <span class="math inline">\(H_i\)</span> at Location <span class="math inline">\(i=1,2\)</span> are Poisson distributed with mean 3 and 2. Cars returned resulting in more cars than the capacity are lost (and thus disappear from the problem).</p>
 <p>To ensure that cars are available where they are needed, they can be moved between the two locations overnight, at a cost of $2 per car. A maximum of five cars can be moved from one location to the other in one night.</p>

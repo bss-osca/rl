@@ -457,8 +457,9 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 <section id="sec-mdp-1-ex" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="sec-mdp-1-ex"><span class="header-section-number">6.6</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<section id="exr-mdp-1-seq" class="level3" data-number="6.6.1">
-<h3 data-number="6.6.1" class="anchored" data-anchor-id="exr-mdp-1-seq"><span class="header-section-number">6.6.1</span> Exercise - Sequential decision problems</h3>
+<p>All these exercises can be solved analytically without Python.</p>
+<section id="sec-mdp-1-seq" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="sec-mdp-1-seq"><span class="header-section-number">6.6.1</span> Exercise - Sequential decision problems</h3>
 <ol type="1">
 <li><p>Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
@@ -510,8 +511,8 @@ Solution
 </div></li>
 </ol>
 </section>
-<section id="exr-mdp-1-exp-return" class="level3" data-number="6.6.2">
-<h3 data-number="6.6.2" class="anchored" data-anchor-id="exr-mdp-1-exp-return"><span class="header-section-number">6.6.2</span> Exercise - Expected return</h3>
+<section id="sec-mdp-1-exp-return" class="level3" data-number="6.6.2">
+<h3 data-number="6.6.2" class="anchored" data-anchor-id="sec-mdp-1-exp-return"><span class="header-section-number">6.6.2</span> Exercise - Expected return</h3>
 <ol type="1">
 <li><p>Suppose <span class="math inline">\(\gamma=0.8\)</span> and we observe the following sequence of rewards: <span class="math inline">\(R_1 = -3\)</span>, <span class="math inline">\(R_2 = 5\)</span>, <span class="math inline">\(R_3=2\)</span>, <span class="math inline">\(R_4 = 7\)</span>, and <span class="math inline">\(R_5 = 1\)</span> with a finite time-horizon of <span class="math inline">\(T=5\)</span>. What is <span class="math inline">\(G_0\)</span>? Hint: work backwards and recall that <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
@@ -576,8 +577,8 @@ Solution
 </div></li>
 </ol>
 </section>
-<section id="exr-mdp-1-gambler" class="level3" data-number="6.6.3">
-<h3 data-number="6.6.3" class="anchored" data-anchor-id="exr-mdp-1-gambler"><span class="header-section-number">6.6.3</span> Exercise - Gambler’s problem</h3>
+<section id="sec-mdp-1-gambler" class="level3" data-number="6.6.3">
+<h3 data-number="6.6.3" class="anchored" data-anchor-id="sec-mdp-1-gambler"><span class="header-section-number">6.6.3</span> Exercise - Gambler’s problem</h3>
 <p>A gambler has the opportunity to make bets on the outcomes of a sequence of coin flips. The coin may be an unequal coin where there is not equal probability <span class="math inline">\(p_H\)</span> for a head (H) and a tail (T). If the coin comes up heads, the gambler wins as many dollars as he has staked on that flip; if it is tails, he loses his stake. The game ends when the gambler reaches his goal of a capital equal 100, or loses by running out of money. On each flip, the gambler must decide what portion of his capital to stake, in integer numbers of dollars. This problem can be formulated as an undiscounted, episodic, finite MDP, where we assume that the gambler starts with a capital <span class="math inline">\(0 &lt; s_0 &lt; 100\)</span>.</p>
 <ol type="1">
 <li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>. Which states are terminal states?</p>
@@ -614,7 +615,7 @@ Solution
 </div>
 </div>
 </div></li>
-<li><p>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span>. Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?</p>
+<li><p>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span> (a stochastic variable). Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -667,8 +668,8 @@ Solution
 </div></li>
 </ol>
 </section>
-<section id="exr-mdp-1-storage" class="level3" data-number="6.6.4">
-<h3 data-number="6.6.4" class="anchored" data-anchor-id="exr-mdp-1-storage"><span class="header-section-number">6.6.4</span> Exercise - Factory storage</h3>
+<section id="sec-mdp-1-storage" class="level3" data-number="6.6.4">
+<h3 data-number="6.6.4" class="anchored" data-anchor-id="sec-mdp-1-storage"><span class="header-section-number">6.6.4</span> Exercise - Factory storage</h3>
 <p>A factory has a storage tank with a capacity of 4 <span class="math inline">\(\mathrm{m}^{3}\)</span> for temporarily storing waste produced by the factory. Each week the factory produces <span class="math inline">\(0,1\)</span>, 2 or 3 <span class="math inline">\(\mathrm{m}^{3}\)</span> waste with respective probabilities <span class="math display">\[p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.\]</span> If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.</p>
 <p>The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week <span class="math inline">\(n\)</span> just before the regular removal opportunity.</p>
 <ol type="1">

@@ -488,21 +488,21 @@ Figure&nbsp;5.3: Square root term for an action using different <span class="mat
 <section id="exercises" class="level2" data-number="5.9">
 <h2 data-number="5.9" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5.9</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<section id="exr-bandit-adv" class="level3" data-number="5.9.1">
-<h3 data-number="5.9.1" class="anchored" data-anchor-id="exr-bandit-adv"><span class="header-section-number">5.9.1</span> Exercise - Advertising</h3>
+<section id="sec-bandit-adv" class="level3" data-number="5.9.1">
+<h3 data-number="5.9.1" class="anchored" data-anchor-id="sec-bandit-adv"><span class="header-section-number">5.9.1</span> Exercise - Advertising</h3>
 <p>Suppose you are an advertiser seeking to optimize which ads to show visitors on a particular website. For each visitor, you can choose one out of a collection of ads, and your goal is to maximize the number of clicks over time. Assume that:</p>
 <ul>
 <li>You have <span class="math inline">\(k=5\)</span> adds to choose among.</li>
 <li>If add <span class="math inline">\(A\)</span> is chosen then the user clicks the add with probability <span class="math inline">\(p_A\)</span> which can be seen as the unknown click trough rate CTR (or an average reward).</li>
-<li>The CTRs are unknown and samples can be picked using the RLAdEnv class and the reward function which returns 1 if click on ad and 0 otherwise.</li>
+<li>The CTRs are unknown and samples can be picked using the <code>RLAdEnv</code> class and the reward function which returns 1 if click on ad and 0 otherwise.</li>
 <li>In the class the true CTRs can be observed but in practice this is hidden from the agent (you).</li>
 </ul>
-<p>Consider [this section][colab-ex-bandit-adv] in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
+<p>Consider <a href="https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1">this section</a> in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
 </section>
-<section id="exr-bandit-coin" class="level3" data-number="5.9.2">
-<h3 data-number="5.9.2" class="anchored" data-anchor-id="exr-bandit-coin"><span class="header-section-number">5.9.2</span> Exercise - A coin game</h3>
+<section id="sec-bandit-coin" class="level3" data-number="5.9.2">
+<h3 data-number="5.9.2" class="anchored" data-anchor-id="sec-bandit-coin"><span class="header-section-number">5.9.2</span> Exercise - A coin game</h3>
 <p>Consider a game where you choose to flip one of two (possibly unfair) coins. You win 1 if your chosen coin shows heads and lose 1 if it shows tails.</p>
-<p>See [this section][colab-ex-bandit-coin] in the Colab notebook for questions. Use your own copy if you already have one.</p>
+<p>See <a href="https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM">this section</a> in the Colab notebook for questions. Use your own copy if you already have one.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
