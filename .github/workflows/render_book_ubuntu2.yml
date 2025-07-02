@@ -27,6 +27,8 @@ jobs:
         with:
           python-version: '3.13'
           cache: 'pip' # caching pip dependencies
+          
+      - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
       - name: Install R
