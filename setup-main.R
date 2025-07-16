@@ -9,7 +9,7 @@
 #     - Copy the link and add it on line 11 in links.md
 #     - Add assignments Introduction to Python, Data manipulation with pandas, Intermediate Python
 
-# Hints, solutions etc are added using callouts
+# Hints, solutions etc are added using callouts in quarto
 # ::: {.callout-warning collapse="true" title="Solution"}
 # It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.
 # :::
@@ -17,6 +17,14 @@
 # ::: {.callout-tip collapse="true" title="Hint"}
 # This is an example of a callout with a title.
 # :::
+#
+# In Colab use
+# <details>
+#    <summary>Solution</summary>
+#    This is a 2-bandit problem with actions of choosing coin 1 or 2.
+# </details>
+#
+# or #@title for code
 
 
 remotes::install_github("mitchelloharawild/icons", force = T)

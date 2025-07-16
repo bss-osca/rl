@@ -265,7 +265,7 @@ $$\mathcal{A}(s) = \{ a | -\min(5,y,20-x) \leq a \leq min(5,x,20-y) \}$$
 3) Calculate the expected reward $r(s,a)$.
 
 ::: {.callout-warning collapse="true" title="Solution"}
-The reward equals the reward of rentals minus the cost of movements. Note we have $\bar{x} = x - a$ and $\bar{y} = x + a$ after movement. Hence $$r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2\mid a \mid]$$ where $$\mathbb{E}[\min(D, z)] = \sum_{i=0}^z ip(D = i) + (1-p(D\leq z))z.$$
+The reward equals the reward of rentals minus the cost of movements. Note we have $\bar{x} = x - a$ and $\bar{y} = x + a$ after movement. Hence $$r(s,a) = \mathbb{E}[10(\min(D_1, \bar{x}) + \min(D_2, \bar{y}) )-2 \mid a \mid]$$ where $$\mathbb{E}[\min(D, z)] = \sum_{i=0}^z i\Pr(D = i) + (1-\Pr(D\leq z))z.$$
 :::
    
 Note the inventory dynamics (number of cars) at each parking lot is independent of the other given an action $a$. Let us consider Location 1 and assume that we are in state $x$ and chose action $a$. Then the number of cars after movement is $x - a$ and after rental requests $x - a - \min(D_1, x-a)$. Next, the number of returned cars are added: $x - a - \min(D_1, x-a) +  H_1$. Finally, note that if this number is above 20 (parking lot capacity), then we only have 20 cars, i.e. the inventory dynamics (number of cars at the end of the day) is $$X = \min(20,  x-a - \min(D_1, x-a) +  H_1))).$$
