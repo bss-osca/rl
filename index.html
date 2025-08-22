@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -60,10 +60,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5fd9db47a040b21ac2cac9a0b3b722ba.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e8de9bd59ba156b9e4cb33cd6f01d621.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -205,6 +205,12 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./09_mc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Monte Carlo methods for prediction and control</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -328,7 +334,7 @@ You do not have to look at them before the lecture!
 <li>Mathematical models for learning-based decision making.</li>
 <li>Trying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.</li>
 <li>Estimating and finding near optimal decisions of a stochastic process with sequential decision making.</li>
-<li>A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.</li>
+<li>A model where, given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.</li>
 </ul>
 <p>RL can also be seen as a way of modelling intuition. As humans, we often learn by trial and error. For instance, when playing a game, our strategy is based on the game rules and what we have experienced works based on previous plays. In a RL setting, the system has specific states, actions and reward structure, that is, the rules of the game, and it is up to the agent how to solve the game, i.e.&nbsp;find actions that maximize the reward. Typically, the agent starts with totally random trials and finishes with sophisticated tactics and superhuman skills. By leveraging the power of search and many trials, RL is an effective way to find good actions.</p>
 <p>A classic RL example is the bandit problem: You are in a casino and want to choose one of many slot machines (one-armed bandits) in each round. However, you do not know the distribution of the payouts of the machines. In the beginning, you will probably just try out machines (exploration) and then, after some learning, you will prefer the best ones (exploitation). Now the problem arises that if you use a slot machine frequently, you will not be able to gain information about the others and may not even find the best machine (exploration-exploitation dilemma). RL focuses on finding a balance between exploration of uncharted territory and exploitation of current knowledge.</p>
@@ -381,7 +387,7 @@ You do not have to look at them before the lecture!
 <p>We use <a href="https://www.python.org/">Python</a> as programming software and it is assumed that you are familiar with using Python. <a href="https://www.python.org/">Python</a> is a programming language and free software environment.</p>
 <p>During this course we are going to use <a href="https://colab.google/">Google Colab</a> which is a hosted <a href="https://jupyter.org/">Jupyter</a> notebook service that requires no setup to use and provides free access to computing resources, including GPUs and TPUs. That is, <a href="https://colab.google/">Colab</a> runs in your browser and you do not have to install anything on your computer. With a <a href="https://jupyter.org/">Jupyter</a> notebook you can weave you code together with text.</p>
 <p>That said, you may need to run Python on your laptop for larger tasks. You can run Python from a terminal but in general you use an IDE (integrated development environment) such as <a href="https://positron.posit.co/">Positron</a>, <a href="https://www.jetbrains.com/pycharm/">PyCharm</a> or <a href="https://code.visualstudio.com/">VSCode</a> for running Python and to saving your work.</p>
-<p>It is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module <a href="99_1_appdx.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
+<p>It is assumed as a prerequisite that you know how to use Python at a basic level. If you need a brush-up on your Python programming skills then have a look at <a href="04_python.html" class="quarto-xref"><span>Chapter 4</span></a> and <a href="99_1_appdx.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
 <p>Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.</p>
 </section>
 <section id="ack" class="level2 unnumbered">

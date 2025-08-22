@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -59,10 +59,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5fd9db47a040b21ac2cac9a0b3b722ba.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e8de9bd59ba156b9e4cb33cd6f01d621.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -235,6 +235,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./09_mc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Monte Carlo methods for prediction and control</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -320,7 +326,7 @@ window.Quarto = {
 </section>
 <section id="textbook-readings" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</h2>
-<p>For this lecture, you will need to read Chapter 1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<p>For this lecture, you will need to read Section 1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -504,168 +510,64 @@ Colab - Before the lecture
 </section>
 <section id="summary" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
-<p>Read Chapter 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+<p>Read Section 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
 </section>
 <section id="sec-rl-in-action-ex" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<p>You can find all these exercises as a section in this <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">Colab notebook</a>. If you already have your own copy use this.</p>
+<p>You can find all these exercises as a section in this <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1">Colab notebook</a>. If you already have your own copy use this.</p>
 <section id="sec-r-intro-self" class="level3" data-number="3.6.1">
 <h3 data-number="3.6.1" class="anchored" data-anchor-id="sec-r-intro-self"><span class="header-section-number">3.6.1</span> Exercise - Self-Play</h3>
 <p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it.</p>
-</div>
-</div>
-</div>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it. -->
+<!-- ::: -->
 </section>
 <section id="sec-r-intro-sym" class="level3" data-number="3.6.2">
 <h3 data-number="3.6.2" class="anchored" data-anchor-id="sec-r-intro-sym"><span class="header-section-number">3.6.2</span> Exercise - Symmetries</h3>
 <p>Many tic-tac-toe positions appear different but are really the same because of symmetries.</p>
 <ol type="1">
 <li><p>How might we amend the reinforcement learning algorithm described above to take advantage of this?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.</p>
-</div>
-</div>
-</div></li>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size. -->
+<!-- ::: --></li>
 <li><p>In what ways would this improve the algorithm?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>A smaller state space would increase the speed of learning and reduce the memory required.</p>
-</div>
-</div>
-</div></li>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- A smaller state space would increase the speed of learning and reduce the memory required. -->
+<!-- ::: --></li>
 <li><p>Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.</p>
-</div>
-</div>
-</div></li>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game. -->
+<!-- ::: --></li>
 </ol>
 </section>
 <section id="sec-r-intro-greedy" class="level3" data-number="3.6.3">
 <h3 data-number="3.6.3" class="anchored" data-anchor-id="sec-r-intro-greedy"><span class="header-section-number">3.6.3</span> Exercise - Greedy Play</h3>
 <p>Consider Tic-Tac-Toe and suppose the RL player is only greedy (<span class="math inline">\(\epsilon = 0\)</span>), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>As seen in Section @ref(rl-intro-tic-learn) using <span class="math inline">\(\epsilon = 0\)</span> may be okay for this game if the opponent use a simple strategy (e.g.&nbsp;random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required.</p>
-</div>
-</div>
-</div>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required. -->
+<!-- ::: -->
 </section>
 <section id="sec-r-intro-exploit" class="level3" data-number="3.6.4">
 <h3 data-number="3.6.4" class="anchored" data-anchor-id="sec-r-intro-exploit"><span class="header-section-number">3.6.4</span> Exercise - Learning from Exploration</h3>
 <p>Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.</p>
 <ol type="1">
 <li><p>What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The probability set <span class="math inline">\(V(s)\)</span> found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set <span class="math inline">\(V(s)\)</span> found by applying learning from exploration is the probability of winning including the active exploration policy.</p>
-</div>
-</div>
-</div></li>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy. -->
+<!-- ::: --></li>
 <li><p>Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.</p>
-</div>
-</div>
-</div></li>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states. -->
+<!-- ::: --></li>
 </ol>
 </section>
 <section id="sec-r-intro-other" class="level3" data-number="3.6.5">
 <h3 data-number="3.6.5" class="anchored" data-anchor-id="sec-r-intro-other"><span class="header-section-number">3.6.5</span> Exercise - Other Improvements</h3>
 <p>Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?</p>
-<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Altering the exploration rate/learning based on the variance in the opponent’s actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.</p>
-</div>
-</div>
-</div>
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state. -->
+<!-- ::: -->
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
