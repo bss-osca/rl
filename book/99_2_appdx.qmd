@@ -9,14 +9,14 @@ We all get stuck sometimes and need some help. Below are some advises on how to 
 If you have a question:
 
   * Ask it during the lecture or in the breaks
-  * Use generative AI (Gemini, ChatGPT, Copilot, ...) as your mentor. It is in general good at giving hints for programming tasks. Note use it as a mentor and not as a giving you the solution. For instance, ask “Given me an example on a Hello world procedure in Python. Explain careful the code 
+  * Use generative AI (Gemini, ChatGPT, Copilot, ...) as your mentor. GAI is in general good at giving hints for programming tasks. Use it as a mentor and not to give you the solution. For instance, ask "Given me an example on a Hello world procedure in Python. Explain careful the code since I am new and want to learn." 
   * [Google is your friend](http://xkcd.com/627/). This is always the next step. Try searches like "python dfply mask", "python pandas", etc.
   * About programming errors. First try to understand the error message and solve the problem. Then you may
     * Try to debug your code by inserting `print` statements in your code or run single lines using cmd+shift+enter. 
-    * Use a debugger. Further details about debugging can be seen [here][colab-debug-python].  
-  * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. This stack overflow thread [How to make a great R reproducible example?](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) give you some good hints. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask) and [How to make a reprex](https://www.tidyverse.org/help/) at tidyverse.
+    * Use a debugger. Further details about debugging can be seen [here][colab-04-debug-python].  
+  * If you can't find an answer then it is time to ask on-line. I recommend asking a question at [stackoverflow](http://stackoverflow.com). To make your question effective, the idea is to make things as easy as possible for someone to answer. The process of providing a good minimal reproducible example (reprex) often causes you to answer your own question! See also [Stack Exchange's 'How to ask'](https://codereview.stackexchange.com/help/how-to-ask).
 
-__Note help using mail correspondence is not supported!__
+__Note: help using mail correspondence is not supported!__
 
 
 

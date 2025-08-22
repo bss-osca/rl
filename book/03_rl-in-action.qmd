@@ -33,7 +33,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 
 ## Textbook readings 
 
-For this lecture, you will need to read Chapter 1.5 in @Sutton18. Read it before continuing this module. 
+For this lecture, you will need to read Section 1.5 in @Sutton18. Read it before continuing this module. 
 
 ```{r, echo=FALSE}
 link_slide_file_text("03", "rl-in-action")
@@ -139,14 +139,14 @@ Open the [tutorial][colab-03-rl-in-action]:
 
 ## Summary
 
-Read Chapter 1.6 in @Sutton18.
+Read Section 1.6 in @Sutton18.
 
 
 ## Exercises {#sec-rl-in-action-ex}
 
 `r strExercises`
 
-You can find all these exercises as a section in this [Colab notebook][colab-03-rl-in-action]. If you already have your own copy use this.
+You can find all these exercises as a section in this [Colab notebook][colab-03-rl-in-action-ex]. If you already have your own copy use this.
 
 
 ### Exercise - Self-Play {#sec-r-intro-self}
@@ -154,9 +154,9 @@ You can find all these exercises as a section in this [Colab notebook][colab-03-
 Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above
 played against itself. What do you think would happen in this case? Would it learn a different way of playing?
 
-::: {.callout-warning collapse="true" title="Solution"}
-If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it.
-:::
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it. -->
+<!-- ::: -->
 
 
 ### Exercise - Symmetries {#sec-r-intro-sym}
@@ -165,30 +165,30 @@ Many tic-tac-toe positions appear different but are really the same because of s
 
    1. How might we amend the reinforcement learning algorithm described above to take advantage of this?
    
-      ::: {.callout-warning collapse="true" title="Solution"}
-      It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size.
-      :::
+      <!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+      <!-- It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size. -->
+      <!-- ::: -->
    
    2. In what ways would this improve the algorithm? 
    
-      ::: {.callout-warning collapse="true" title="Solution"}
-      A smaller state space would increase the speed of learning and reduce the memory required.
-      :::
+      <!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+      <!-- A smaller state space would increase the speed of learning and reduce the memory required. -->
+      <!-- ::: -->
    
    3. Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?
    
-      ::: {.callout-warning collapse="true" title="Solution"}
-      If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game.
-      :::
+      <!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+      <!-- If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game. -->
+      <!-- ::: -->
 
 
 ### Exercise - Greedy Play {#sec-r-intro-greedy}
 
 Consider Tic-Tac-Toe and suppose the RL player is only greedy ($\epsilon = 0$), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?
 
-::: {.callout-warning collapse="true" title="Solution"}
-As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required.
-:::
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required. -->
+<!-- ::: -->
 
 
 ### Exercise - Learning from Exploration {#sec-r-intro-exploit} 
@@ -197,24 +197,24 @@ Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent wi
 
    1. What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves? 
    
-      ::: {.callout-warning collapse="true" title="Solution"}
-      The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy.
-      :::
+      <!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+      <!-- The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy. -->
+      <!-- ::: -->
       
    2. Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?
 
-      ::: {.callout-warning collapse="true" title="Solution"}
-      The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states.
-      :::
+      <!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+      <!-- The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states. -->
+      <!-- ::: -->
       
       
 ### Exercise - Other Improvements {#sec-r-intro-other}
 
 Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?
    
-::: {.callout-warning collapse="true" title="Solution"}
-Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state.
-:::
+<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
+<!-- Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state. -->
+<!-- ::: -->
  
 
 

@@ -61,7 +61,7 @@ RL may be seen as
 * Mathematical models for learning-based decision making.
 * Trying to optimize decisions in a sequential decision model. That is, making a good sequence of decisions.
 * Estimating and finding near optimal decisions of a stochastic process with sequential decision making. 
-* A model where given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.
+* A model where, given a state of a system, the agent wants to take actions to maximize future reward. Often the agent does not know the underlying setting and, thus, is bound to learn from experience.
 
 RL can also be seen as a way of modelling intuition. As humans, we often learn by trial and error. For instance, when playing a game, our strategy is based on the game rules and what we have experienced works based on previous plays. In a RL setting, the system has specific states, actions and reward structure, that is, the rules of the game, and it is up to the agent how to solve the game, i.e. find actions that maximize the reward. Typically, the agent starts with totally random trials and finishes with sophisticated tactics and superhuman skills. By leveraging the power of search and many trials, RL is an effective way to find good actions. 
 
@@ -127,7 +127,7 @@ During this course we are going to use [Google Colab][Colab] which is a hosted [
 
 That said, you may need to run Python on your laptop for larger tasks. You can run Python from a terminal but in general you use an IDE (integrated development environment) such as [Positron], [PyCharm] or [VSCode] for running Python and to saving your work.  
 
-It is assumed as a prerequisite that you know how to use Python. If you need a brush-up on your Python programming skills then have a look at Module @sec-python-setup. 
+It is assumed as a prerequisite that you know how to use Python at a basic level. If you need a brush-up on your Python programming skills then have a look at @sec-python and @sec-python-setup.
 
 Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
 
