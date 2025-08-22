@@ -28,6 +28,9 @@ jobs:
           python-version: '3.13'
           cache: 'pip' # caching pip dependencies
           
+      - name: Point reticulate to this Python
+        run: echo "RETICULATE_PYTHON=$(which python)" >> $GITHUB_ENV
+          
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
