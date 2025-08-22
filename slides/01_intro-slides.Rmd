@@ -106,7 +106,7 @@ We use [Python] as programming software and it is assumed that you are familiar 
   - [Colab] runs in your browser and you do not have to install anything on your computer. 
   - [Colab] provides free access to computing resources, including GPUs and TPUs (with some limits).
   - You have to have a Google account.
-- See the [Colab introduction][colab-intro-colab] notebook.
+- See the [Colab introduction][colab-01-intro-colab] notebook.
 
 Even though Python will be used in the course, algorithms can also be coded in R if you prefer to it.
 
