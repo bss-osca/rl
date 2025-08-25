@@ -50,7 +50,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 Read Chapter 3.5-3.7 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
-link_slide_file_text("04", "mdp-2")
+link_slide_file_text("07", "mdp-2")
 ```
 
 ## Policies and value functions
@@ -171,7 +171,7 @@ value functions. Using \(v_*\), the optimal expected long term return is turned 
 
 ## Optimality vs approximation 
 
-In Section @sec-mdp-opt optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g. if the number of states is huge. Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables also known as the *curse of dimensionality*. 
+In @sec-mdp-opt optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g. if the number of states is huge. Consider a state $s = (x_1,\ldots,x_n)$ with state variables $x_i$ each taking two possible values, then the number of states is $|\mathcal{S}| = 2^n$. That is, the state space grows exponentially with the number of state variables also known as the *curse of dimensionality*. 
 
 Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Markov Decision Processes (MDPs)</title>
+    <title>Policies and value functions for MDPs</title>
     <meta charset="utf-8" />
     <meta name="author" content="Lars Relund Nielsen" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Markov Decision Processes (MDPs)
+# Policies and value functions for MDPs
 ]
 .author[
 ### Lars Relund Nielsen
@@ -36,11 +36,11 @@ layout: true
   
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/06_mdp-1-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/06_mdp-1-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/07_mdp-2-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
@@ -55,82 +55,59 @@ layout: true
 
 ## Learning outcomes
 
-* Identify the different elements of a Markov Decision Processes (MDP).
-* Describe how the dynamics of an MDP are defined.
-* Understand how the agent-environment RL description relates to an MDP.
-* Interpret the graphical representation of a Markov Decision Process.
-* Describe how rewards are used to define the objective function (expected return).
-* Interpret the discount factor and its effect on the objective function.
-* Identify episodes and how to formulate an MDP by adding an absorbing state. 
+* Identify a policy as a distribution over actions for each possible state.
+* Define value functions for a state and action. 
+* Derive the Bellman equation for a value function.
+* Understand how Bellman equations relate current and future values.
+* Define an optimal policy.
+* Derive the Bellman optimality equation for a value function.
 
 ---
 
-## Markov Decision Processes
+## Policies 
 
-* A mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found.
-* Often in a RL problem some parts of this description is unknown (in the bandit problem e.g. the rewards). This is not the case for an MDP.
-* In a finite MDP, the sets of states, actions, and rewards all have a finite number of elements.
-* The random variables have well defined discrete probability distributions dependent only on the preceding state and action.
+A *policy* `\(\pi\)` is a distribution over actions, given some state:
 
----
+`$$\pi(a | s) = \Pr(A_t = a | S_t = s).$$`
 
-
-
-## An MDP as a model for the agent-environment
-
-.left-column-wide[
-- Agent: The one who takes the action, i.e. the decision making component of a system. A general rule is that anything that the agent does not have absolute control over forms part of the environment. 
-- Environment: The system/world where observations and rewards are found. 
-- We assume that we can observe the full state of the system.
-- *Markov property* satisfied. Given the present state the future is independent of the past: `$$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$`
-]
-
-.right-column-small[
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/mdp-1-unnamed-chunk-5-1.png" alt="Agent-environment representation." width="100%" /&gt;
-&lt;p class="caption"&gt;Agent-environment representation.&lt;/p&gt;
-&lt;/div&gt;
-]
+* Since the MDP is stationary the policy is time-independent, i.e. given a state, we choose the same action no matter the time-step. 
+* The policy is *deterministic* if `\(\pi(a | s) = 1\)` for a single state, i.e. an action is chosen with probability one always.
+* The policy is *stochastic* if `\(\pi(a | s) &lt; 1\)` for some state.
 
 ---
 
-layout: true
+## Value functions
 
-## MDP visualization (state-expanded hypergraph)
-
-
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+* The *state-value function* `\(v_\pi(s)\)` (expected return given state `\(s\)` and policy `\(\pi\)`):
+$$
+`\begin{align}
+  v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s].
+\end{align}`
+$$
+   Note the last equal sign comes from `\(G_t = R_{t+1} + \gamma G_{t+1}\)`.
+* The *action-value function* `\(q_\pi(s, a)\)` (expected return given `\(s\)`, action `\(a\)` and policy `\(\pi\)`):
+$$
+`\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a].
+\end{align}`
+$$
+* Combining above, the state-value function becomes an average over the q-values: 
+`$$v_\pi(s) = \sum_{a \in \mathcal{A}(s)}\pi(a|s)q_\pi(s, a)$$`
 
 ---
 
-&lt;img src="img/mdp-1-unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+## Bellman equations
 
----
+The value functions can be transformed into recursive equations (Bellman equations).
 
-&lt;img src="img/mdp-1-unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+Bellman equations (state-value): 
+`$$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\right)$$`
 
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="img/mdp-1-unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+Bellman equations (action-value): 
+`$$q_\pi(s, a) = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s' | s, a) \sum_{a' \in \mathcal{A(s')}} \pi(a'|s')q_\pi(s',a')$$`
+Let us have a closer look on the derivation blackboard.
 
 ---
 
@@ -138,92 +115,153 @@ layout: true
 
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-1.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
  | 
-<a href="https://bss-osca.github.io/rl/slides/06_mdp-1-slides.html" target="_blank">Slides</a>
+<a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
  | 
-<a href="https://github.com/bss-osca/rl/blob/master/slides/06_mdp-1-slides.Rmd" target="_blank">Source</a>
+<a href="https://github.com/bss-osca/rl/blob/master/slides/07_mdp-2-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+## Visualization of Bellman equations
+
+
+
+---
+
+`$$\phantom{v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)}\phantom{(} r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\phantom{)}$$`
+.left-column-small[
+* Policy `\(\pi\)` given.
+* Calc. `\(q_\pi(s, a)\)`.
+&lt;!-- * Multiply with `\(\pi(a | s)\)`. --&gt;
+]
+
+.right-column-wide[
+&lt;img src="img/mdp-2-unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+`$$\phantom{v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)}\phantom{(} r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s')\phantom{)}$$`
+.left-column-small[
+* Policy `\(\pi\)` given.
+* Calc. `\(q_\pi(s, a)\)` for each `\(a\)`.
+&lt;!-- * Multiply with `\(\pi(a | s)\)`. --&gt;
+]
+
+.right-column-wide[
+&lt;img src="img/mdp-2-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+`$$v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_\pi(s'))$$`
+.left-column-small[
+* Policy `\(\pi\)` given.
+* Calc. `\(q_\pi(s, a)\)` for each `\(a\)`.
+* Multiply with `\(\pi(a | s)\)`.
+]
+
+.right-column-wide[
+&lt;img src="img/mdp-2-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+
+
+
+
+---
+
+layout: false
+
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/07_mdp-2-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+## Optimal policies and value functions
+
+* The objective function of an MDP is to find an optimal policy `\(\pi_*\)` with state-value function:
+
+`$$v_*(s) = \max_\pi v_\pi(s).$$`
+* A policy `\(\pi'\)` is better than policy `\(\pi\)` if its expected return is greater than or equal for all states and is strictly greater for at least one state. 
+* But the objective is not a scalar, but if the agent start in state `\(s_0\)`: 
+`$$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$`
+That is, maximize the expected return given starting state `\(s_0\)`.
+* If the MDP has the right properties, there exists an optimal deterministic policy `\(\pi_*\)` which is better than or just as good as all other policies.
+
+---
+
+## Bellman optimality equations
+
+* The Bellman equations define the recursive equations.
+* Bellman optimality equations define how to find the optimal value functions. 
+* Bellman optimality action-value function `\(q_*\)`:
+
+`\begin{align}
+q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+          &amp;= r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) \max_{a'} q_*(s', a').
+\end{align}`
+
+* *Bellman optimality equation* for `\(v_*\)`:
+
+`\begin{align}
+  v_*(s) &amp;= \max_\pi v_\pi(s) = \max_a q_*(s, a) \\
+         &amp;= \max_a \left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s') \right)
+\end{align}`
+
+* Let us have a look at the derivations on the blackboard.
+
+
+---
+
+layout: true
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/07_mdp-2-slides.Rmd" target="_blank">Source</a>
 </span>
 </div>
 
 ---
+## Optimality vs approximation
 
-## Mathematical description of the MDP 
-
-   * At time-step `\(t\)`: states `\(S_t \in \mathcal{S}\)`, actions `\(A_t \in \mathcal{A}(s)\)` and rewards `\(R_t \in \mathcal{R} \subset \mathbb{R}.\)`
-   * Since a *finite* MDP, the sets of states, actions all have a finite number of elements.
-   
---
-
-* The random variables have well defined discrete probability distributions which defines the dynamics of the system:
-`\begin{equation}
-    p(s', r | s, a) = \Pr(S_t = s', R_t = r | S_{t-1} = s, A_{t-1} = a),
-\end{equation}`
-   which can be used to find the *transition probabilities*:
-`\begin{equation}
-    p(s' | s, a) = \Pr(S_t = s'| S_{t-1} = s, A_{t-1}=A) = \sum_{r \in \mathcal{R}} p(s', r | s, a), 
-\end{equation}`
-   and the *expected reward*:
-`\begin{equation}
-    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
-\end{equation}`
-
+* Using the Bellman optimality equations optimal policies and value functions can be found.
+* It may be expensive to solve the equations if the number of states is huge. 
+* *Curse of dimensionality:* Consider a state `\(s = (x_1,\ldots,x_n)\)` with state variables `\(x_i\)` each taking two possible values, then the number of states is `\(|\mathcal{S}| = 2^n\)`. That is, the state space grows exponentially with the number of state variables. 
+* Large state or action spaces may happen in practice; moreover, they may also be continuous. 
+* In such cases we approximate the value functions instead. 
+* In RL we approximate the value functions if state stace is high or parameters unknown (e.g. transition probabilities). 
+* In RL we often focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability. 
 ---
 
-## Parameters need for defining an MDP
+## Semi-MDPs (non-fixed time length)
 
-That is, to define an MDP the following are needed:
+* Finite MDPs consider a fixed length between each time-step. 
+* Semi-MDPs consider non-fixed time-lengths. 
+* Let `\(l(s'|s,a)\)` denote the length of a time-step given that the system is in state `\(s\)`, action `\(a\)` is chosen and makes a transition to state `\(s'\)`. 
+* The discount rate over a time-step with length `\(l(s'|s,a)\)` is 
 
-* All states and actions are assumed known. 
-* A finite number of states and actions. That is, we can store values using tabular methods. 
-* The transition probabilities and expected rewards are given (or `\(p(s', r | s, a)\)`).
+`$$\gamma(s'|s,a) = \gamma^{l(s'|s,a)},$$` 
 
-Assume a *stationary* MDP is considered, i.e. at each time-step all states, actions and probabilities are the same and hence the time index can be dropped.
+* The Bellman optimality equations becomes:
+`$$v_*(s) = \max_a \left( r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a)  v_*(s') \right)$$`
+`$$q_*(s, a) = r(s,a) + \sum_{s' \in \mathcal{S}} p(s' | s, a) \gamma(s'|s,a) \max_{a'} q_*(s', a')$$`
 
----
 
-## Reward hypothesis
+&lt;!-- # References --&gt;
 
-A central assumption in reinforcement learning:
-
-&gt; All of what we mean by goals and purposes can be well thought of as the maximisation of the expected value of the cumulative sum of a received scalar signal (called reward).
-
-- The reward signal is our way of communicating to the agent what we want to achieve not how we want to achieve it.
-- This assumption can be questioned (e.g. risk-adverse behaviour) but in this course we assume it holds.
-
----
-
-## Rewards and the objective function (goal)
-
-The return `\(G_t\)` (discounted sum of future rewards):
-
-`\begin{equation}
-	G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} 
-\end{equation}`
-
-Note we use a *discount factor* `\(0 \leq \gamma \leq 1\)` so an infinite time-horizon do not give problems. 
-
-- If `\(\gamma &lt; 1\)` and the reward is bounded, then the return is always finite (see backboard).
-- Discounting allows us to work with finite returns.
-- A `\(\gamma\)` close to 1 put weight on future rewards.
-- A `\(\gamma\)` close to 0 put weight on present rewards. 
-
-*Objective function*: choose actions so the expected return is maximized. 
-
----
-
-## MDPs with a finite time-horizon
-
-- Finite time-horizon MDP: there is an upper bound on the number of time-steps need before finishes (e.g playing a board game).
-- Playing one game or going trough the MDP once is an *episode*. Afterwards a new game is started (a new episode).
-- Here we do not need a discount factor (can set `\(\gamma = 1\)`). 
-
-But how can we transform it into an MDP with infinite time-horizon?
-
-   1. Add an *absorbing state* with transitions only to itself and a reward of zero. 
-   2. When a game stops a transition to the absorbing state happen.
-
-Hence we have a single MDP model for both problems with episodes and problems with sequences of interaction without an absorbing state (*continuing tasks*). 
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
 
 
 

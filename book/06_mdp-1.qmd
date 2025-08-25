@@ -51,7 +51,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 Read Chapter 3-3.4 in @Sutton18. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
-link_slide_file_text("03", "mdp-1")
+link_slide_file_text("06", "mdp-1")
 ```
 
 ## An MDP as a model for the agent-environment
@@ -109,9 +109,9 @@ Note we here assume that the *Markov property* is satisfied and the current stat
 $$\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).$$
 That is, the probability of seeing some next state $S_{t+1}$ given the current state is exactly equal to the probability of that next state given the entire history of states. 
 
-A Markov decision process (MDP) is a mathematical model that for each time-step $t$ have defined states $S_t \in \mathcal{S}$, possible actions $A_t \in \mathcal{A}(s)$ given a state and rewards $R_t \in \mathcal{R} \subset \mathbb{R}$. Consider the example in Figure \@ref(fig:hgf1). Each time-step have five states $\mathcal{S} = \{1,2,3,4,5\}$. Assume that the agent start in state $s_0$ with two actions to choose among $\mathcal{A}(s_0) = \{a_1, a_2\}$. After choosing $a_1$ a transition to $s_1$ happens with reward $R_1 = r_1$. Next, in state $s_1$ the agent chooses action $a_2$ and a transition to $s_2$ happens with reward $r_2$. This continues as time evolves.
+A Markov decision process (MDP) is a mathematical model that for each time-step $t$ have defined states $S_t \in \mathcal{S}$, possible actions $A_t \in \mathcal{A}(s)$ given a state and rewards $R_t \in \mathcal{R} \subset \mathbb{R}$. Consider the example in @fig-hgf1. Each time-step have five states $\mathcal{S} = \{1,2,3,4,5\}$. Assume that the agent start in state $s_0$ with two actions to choose among $\mathcal{A}(s_0) = \{a_1, a_2\}$. After choosing $a_1$ a transition to $s_1$ happens with reward $R_1 = r_1$. Next, in state $s_1$ the agent chooses action $a_2$ and a transition to $s_2$ happens with reward $r_2$. This continues as time evolves.
 
-```{r hgf1, echo=FALSE, fig.cap="State-expanded hypergraph", fig.width=6, fig.height = 5}
+```{r, label="fig-hgf1", echo=FALSE, fig.cap="State-expanded hypergraph", fig.width=6, fig.height = 5}
 set.seed(56789)
 stateN <- 5   # states/stage
 stages <- 3   # stages
@@ -272,7 +272,7 @@ Note gamma close to one put weight on future rewards while a gamma close to zero
 
 An MDP modelling a problem over a finite time-horizon can be transformed into an infinite time-horizon using an *absorbing state* with transitions only to itself and a reward of zero. This breaks the agent-environment interaction into *episodes* (e.g playing a board game). Each episode ends in the absorbing state, possibly with a different reward. Each starts independently of the last, with some distribution of starting states. Sequences of interaction without an absorbing state are called *continuing tasks*. 
 
-The *objective function* is to choose actions such that the expected return is maximized. We will formalize this mathematically in the [next module](https://bss-osca.github.io/rl/06_mdp-2.html). 
+The *objective function* is to choose actions such that the expected return is maximized. We will formalize this mathematically in the [next module](https://bss-osca.github.io/rl/07_mdp-2.html). 
 
 
 ## Summary

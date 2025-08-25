@@ -51,7 +51,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 For this week, you will need to read Chapter 4-4.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
-link_slide_file_text("05", "dp")
+link_slide_file_text("08", "dp")
 ```
 
 ## Policy evaluation {#sec-dp-pe}
