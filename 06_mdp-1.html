@@ -374,7 +374,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 Slides for this module can be seen
-<a href="https://bss-osca.github.io/rl/slides/03_mdp-1-slides.html" target="_blank">here.</a>
+<a href="https://bss-osca.github.io/rl/slides/06_mdp-1-slides.html" target="_blank">here.</a>
 You do not have to look at them before the lecture!
 </div>
 </div>
@@ -400,13 +400,17 @@ You do not have to look at them before the lecture!
 </div>
 <p>Note we here assume that the <em>Markov property</em> is satisfied and the current state holds just as much information as the history of observations. That is, given the present state the future is independent of the past:</p>
 <p><span class="math display">\[\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).\]</span> That is, the probability of seeing some next state <span class="math inline">\(S_{t+1}\)</span> given the current state is exactly equal to the probability of that next state given the entire history of states.</p>
-<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in Figure @ref(fig:hgf1). Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
+<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in <a href="#fig-hgf1" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>. Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="06_mdp-1_files/figure-html/hgf1-1.png" class="img-fluid figure-img" width="576"></p>
-<figcaption>State-expanded hypergraph</figcaption>
+<div id="fig-hgf1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hgf1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_mdp-1_files/figure-html/fig-hgf1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hgf1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: State-expanded hypergraph
+</figcaption>
 </figure>
 </div>
 </div>
@@ -444,7 +448,7 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 \end{equation}\]</span></p>
 <p>Note gamma close to one put weight on future rewards while a gamma close to zero put weight on present rewards. Moreover, an infinite time-horizon is assumed.</p>
 <p>An MDP modelling a problem over a finite time-horizon can be transformed into an infinite time-horizon using an <em>absorbing state</em> with transitions only to itself and a reward of zero. This breaks the agent-environment interaction into <em>episodes</em> (e.g playing a board game). Each episode ends in the absorbing state, possibly with a different reward. Each starts independently of the last, with some distribution of starting states. Sequences of interaction without an absorbing state are called <em>continuing tasks</em>.</p>
-<p>The <em>objective function</em> is to choose actions such that the expected return is maximized. We will formalize this mathematically in the <a href="https://bss-osca.github.io/rl/06_mdp-2.html">next module</a>.</p>
+<p>The <em>objective function</em> is to choose actions such that the expected return is maximized. We will formalize this mathematically in the <a href="https://bss-osca.github.io/rl/07_mdp-2.html">next module</a>.</p>
 </section>
 <section id="summary" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.5</span> Summary</h2>

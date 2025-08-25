@@ -341,7 +341,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 Slides for this module can be seen
-<a href="https://bss-osca.github.io/rl/slides/04_mdp-2-slides.html" target="_blank">here.</a>
+<a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">here.</a>
 You do not have to look at them before the lecture!
 </div>
 </div>
@@ -429,7 +429,7 @@ q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
 </section>
 <section id="optimality-vs-approximation" class="level2" data-number="7.5">
 <h2 data-number="7.5" class="anchored" data-anchor-id="optimality-vs-approximation"><span class="header-section-number">7.5</span> Optimality vs approximation</h2>
-<p>In Section <a href="#sec-mdp-opt" class="quarto-xref"><span>Section 7.4</span></a> optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g.&nbsp;if the number of states is huge. Consider a state <span class="math inline">\(s = (x_1,\ldots,x_n)\)</span> with state variables <span class="math inline">\(x_i\)</span> each taking two possible values, then the number of states is <span class="math inline">\(|\mathcal{S}| = 2^n\)</span>. That is, the state space grows exponentially with the number of state variables also known as the <em>curse of dimensionality</em>.</p>
+<p>In <a href="#sec-mdp-opt" class="quarto-xref"><span>Section 7.4</span></a> optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g.&nbsp;if the number of states is huge. Consider a state <span class="math inline">\(s = (x_1,\ldots,x_n)\)</span> with state variables <span class="math inline">\(x_i\)</span> each taking two possible values, then the number of states is <span class="math inline">\(|\mathcal{S}| = 2^n\)</span>. That is, the state space grows exponentially with the number of state variables also known as the <em>curse of dimensionality</em>.</p>
 <p>Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability.</p>
 <!-- \subsection{Key Takeaways} -->
 <!-- \begin{itemize} -->
