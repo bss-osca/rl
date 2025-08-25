@@ -118,24 +118,6 @@ Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised.
 
 ---
 
-## Let us try to code the algorithm
-
-   - We need two classes: the agent and the environment.
-
-   * The agent class store
-     - $Q_t(a)$ (a vector)
-     - $N_t(a)$ (a vector)
-     - A method (function) that select the next action based on an $\varepsilon$-greedy approach.
-     - A method (function) that update the $Q_t(a)$ using the incremental formula. 
-  
---
-  
-   - The environment class store
-     - The true mean rewards $\mu(a)$ (in a real life application these are unknown).
-     - A method (function) that return a sample reward from $R \sim N(\mu(a),1)$.
-
----
-
 ## The role of the step-size
 
 * In general we update the reward estimate of an action using 
@@ -206,6 +188,27 @@ library(patchwork)
 p1 / p2 + plot_layout(heights = c(2, 1))
 ```
 ]
+
+
+---
+
+## Let us try to code the algorithm
+
+   - We need two classes: the agent and the environment.
+
+   * The agent class store
+     - $Q_t(a)$ (a vector)
+     - $N_t(a)$ (a vector)
+     - A method (function) that select the next action based on an $\varepsilon$-greedy approach.
+     - A method (function) that update the $Q_t(a)$ using the incremental formula. 
+  
+--
+  
+   - The environment class store
+     - The true mean rewards $\mu(a)$ (in a real life application these are unknown).
+     - A method (function) that return a sample reward from $R \sim N(\mu(a),1)$.
+     
+Consider [this Colab notebook][colab-05-bandit].
 
 
 ```{r links, child="../book/links.md"}
