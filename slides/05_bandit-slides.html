@@ -113,24 +113,6 @@ Here `\(\arg\max_a\)` means the value of `\(a\)` for which `\(Q_t(a)\)` is maxim
 
 ---
 
-## Let us try to code the algorithm
-
-   - We need two classes: the agent and the environment.
-
-   * The agent class store
-     - `\(Q_t(a)\)` (a vector)
-     - `\(N_t(a)\)` (a vector)
-     - A method (function) that select the next action based on an `\(\varepsilon\)`-greedy approach.
-     - A method (function) that update the `\(Q_t(a)\)` using the incremental formula. 
-  
---
-  
-   - The environment class store
-     - The true mean rewards `\(\mu(a)\)` (in a real life application these are unknown).
-     - A method (function) that return a sample reward from `\(R \sim N(\mu(a),1)\)`.
-
----
-
 ## The role of the step-size
 
 * In general we update the reward estimate of an action using 
@@ -187,6 +169,27 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 ]
 
 
+---
+
+## Let us try to code the algorithm
+
+   - We need two classes: the agent and the environment.
+
+   * The agent class store
+     - `\(Q_t(a)\)` (a vector)
+     - `\(N_t(a)\)` (a vector)
+     - A method (function) that select the next action based on an `\(\varepsilon\)`-greedy approach.
+     - A method (function) that update the `\(Q_t(a)\)` using the incremental formula. 
+  
+--
+  
+   - The environment class store
+     - The true mean rewards `\(\mu(a)\)` (in a real life application these are unknown).
+     - A method (function) that return a sample reward from `\(R \sim N(\mu(a),1)\)`.
+     
+Consider [this Colab notebook][colab-05-bandit].
+
+
 
 [BSS]: https://bss.au.dk/en/
 [bi-programme]: https://masters.au.dk/businessintelligence
@@ -198,11 +201,18 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 [Colab]: https://colab.google/
 [colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
 [colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-03-rl-in-action-ex]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1
 [colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
 [colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
 [colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
 [colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
 [colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
+[colab-08-dp]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6?usp=sharing
+[colab-08-dp-ex-storage]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=nY6zWiv_3ikg&amp;line=21&amp;uniqifier=1
+[colab-08-dp-sec-dp-gambler]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=GweToDSPd5gj&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-maintain]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=HQnlVuuufR_Q&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&amp;line=1&amp;uniqifier=1
+
 
 [DataCamp]: https://www.datacamp.com/
 [datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
