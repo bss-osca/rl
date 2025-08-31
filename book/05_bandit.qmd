@@ -87,13 +87,15 @@ How can the value of an action be estimated, i.e. the expected reward of an acti
 	Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
 \end{equation}
 Storing $Q_t(a)$ this way is cumbersome since memory and computation requirements grow over time. Instead an *incremental* approach is better. If we assume that $N_t(a) = n-1$ and set $Q_t(a) = Q_n$ then $Q_{n+1}$ becomes:
-\begin{align}\label{eq:avg}
+$$
+\begin{align}
   Q_{n+1} &= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
 		    &= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
 		    &= \frac{1}{n}\left( R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i \right) \nonumber \\
 		    &= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
 	       &= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
 \end{align}
+$$ {#eq-avg}
 That is, we can update the estimate of the value of $a$ using the previous estimate, the observed reward and how many times the action has occurred ($n$).  
 
 A greedy approach for selecting the next action is

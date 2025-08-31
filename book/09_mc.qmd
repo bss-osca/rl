@@ -50,22 +50,22 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 5-5.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
+For this module, you will need to read Chapter 5-5.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
-link_slide_file_text("06", "mc")
+link_slide_file_text("09", "mc")
 ```
 
 ## MC prediction (evaluation)
 
 Given a policy $\pi$, we want to estimate the state-value function. Recall that the state value function is 
-\[
+$$
 v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].
-\]
+$$
 where the return is 
-\[
+$$
 G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
-\]
+$$
 Now given policy $\pi$ and a sample-path (episode) $S_0, A_0, R_1, S_1, A_1, \ldots, S_{T-1}, A_{T-1}, R_T$ ending in the terminal state at time $T$, we can calculate the realized return for each state in the sample-path. Each time we have a new sample-path a new realized return for the states is given and the average for the returns in a state is an estimate of the state-value. With enough observations, the sample average converges to the true state-value under the policy $\pi$.
 
 Given a policy $\pi$ and a set of sample-paths, there are two ways to estimate the state values $v_\pi(s)$:
@@ -75,13 +75,13 @@ Given a policy $\pi$ and a set of sample-paths, there are two ways to estimate t
 
 First visit MC generates iid estimates of $v_\pi(s)$ with finite variance, so the sequence of estimates converges to the expected value by the law of large numbers as the number of observations grow. Every visit MC does not generate independent estimates, but still converges.
 
-An algorithm for first visit MC is given in Figure \@ref(fig:mc-prediction-alg). The state-value estimate is stored in a vector $V$ and the returns for each state in a list. Given a sample-path we add the return to the states on the path by scanning the path backwards and updating $G$. Note since the algorithm considers first visit MC, a check of occurrence of the state earlier in the path done. If this check is dropped, we have a every visit MC algorithm instead. Moreover, the computation needed to update the state-value does not depend on the size of the process/MDP but only of the length of the sample-path.
+An algorithm for first visit MC is given in @fig-mc-prediction-alg. The state-value estimate is stored in a vector $V$ and the returns for each state in a list. Given a sample-path we add the return to the states on the path by scanning the path backwards and updating $G$. Note since the algorithm considers first visit MC, a check of occurrence of the state earlier in the path done. If this check is dropped, we have a every visit MC algorithm instead. Moreover, the computation needed to update the state-value does not depend on the size of the process/MDP but only of the length of the sample-path.
 
-```{r mc-prediction-alg, echo=FALSE, fig.cap="MC policy prediction [@Sutton18]."}
+```{r, label=fig-mc-prediction-alg, echo=FALSE, fig.cap="MC policy prediction [@Sutton18]."}
 knitr::include_graphics("img/mc-prediction.png")
 ```
 
-The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of $V$ can be done. Adapting Eq. \@ref(eq:avg), we have that the sample average can be updated using: 
+The algorithm maintains a list of all returns for each state which may require a lot of memory. Instead as incremental update of $V$ can be done. Adapting @eq-avg, we have that the sample average can be updated using: 
 
 $$
   V(s) \leftarrow V(s) + \frac{1}{n} \left[G - V(s)\right].
@@ -94,20 +94,20 @@ where $n$ denote the number of realized returns found for state $s$ and $G$ the 
 
 ### MC prediction of action-values
 
-With a model of the environment we only need to estimate the state-value function, since it is easy to determine the policy from the state-values using the Bellman optimality equations \@ref(eq:bell-opt-state-policy). However, if we do not know the expected reward and transition probabilities state values are not enough. In that case, it is useful to estimate action-values since the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). To find $q_*$, we first need to predict action-values for a policy $\pi$. This is essentially the same as for state-values, only we now talk about state-action pairs being visited, i.e. taking action $a$ in state $s$ instead. 
+With a model of the environment we only need to estimate the state-value function, since it is easy to determine the policy from the state-values using the Bellman optimality equations @eq-bell-opt-state-policy. However, if we do not know the expected reward and transition probabilities state values are not enough. In that case, it is useful to estimate action-values since the optimal policy can be found using $q_*$ (see @eq-bell-opt-state-policy). To find $q_*$, we first need to predict action-values for a policy $\pi$. This is essentially the same as for state-values, only we now talk about state-action pairs being visited, i.e. taking action $a$ in state $s$ instead. 
 
 If $\pi$ is deterministic, then we will only estimate the values of actions that $\pi$ dictates. Therefore some exploration are needed in order to have estimates for all action-values. Two possibilities are:
 
 1. Make $\pi$ stochastic, e.g. $\varepsilon$-soft that that have non-zero probability of selecting each state-action pair. 
-2. Use *exploring starts*, which specifies that ever state-action pair has non-zero probability of being selected as the starting state of an sample-path. 
+2. Use *exploring starts*, which specifies that every state-action pair has a non-zero probability of being selected as the starting state of a sample-path. 
 
 
 ## MC control (improvement)
 
 We are now ready to formulate a generalized policy iteration (GPI) algorithm using MC to predict the action-values $q(s,a)$. Policy improvement is done by selecting the next policy greedy with respect to the action-value function:
-\[
+$$
     \pi(s) = \arg\max_a q(s, a).
-\]
+$$
 That is, we generate a sequence of policies and action-value functions
 $$\pi_0 \xrightarrow[]{E} q_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} q_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} q_{\pi_2} \xrightarrow[]{I} \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} q_{*}.$$
 Hence the policy improvement theorem applies for all $s \in \mathcal{S}$:
@@ -129,31 +129,30 @@ It is important to understand the major difference between model-based GPI (reme
 
 ### GPI with exploring starts
 
-An algorithm using exploring starts and first visit MC is given in Figure \@ref(fig:mc-gpi-es-alg). It satisfies the convergence properties and and incremental implementation can be used to update $Q$. Note that to predict the action-values for a policy, we in general need a large number of sample-paths. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many sample-paths we may stop the algorithm once the $q_{\pi_k}$ stop moving within a certain error.
+An algorithm using exploring starts and first visit MC is given in @fig-mc-gpi-es-alg. It satisfies the convergence properties and and incremental implementation can be used to update $Q$. Note that to predict the action-values for a policy, we in general need a large number of sample-paths. However, much like we did with value iteration, we do not need to fully evaluate the value function for a given policy. Instead we can merely move the value toward the correct value and then switch to policy improvement thereafter. To stop the algorithm from having infinitely many sample-paths we may stop the algorithm once the $q_{\pi_k}$ stop moving within a certain error.
 
-```{r mc-gpi-es-alg, echo=FALSE, fig.cap="GPI using MC policy prediction with exploring starts [@Sutton18]."}
+```{r, label=fig-mc-gpi-es-alg, echo=FALSE, fig.cap="GPI using MC policy prediction with exploring starts [@Sutton18]."}
 knitr::include_graphics("img/mc-gpi-es.png")
 ```
 
-<!-- ### Blackjack - MC control -->
 
 ### GPI using $\epsilon$-soft policies
 
-Note by using exploring starts in Algorithm \@ref(fig:mc-gpi-es-alg), the 'infinite exploration' convergence assumption is satisfied. However exploring starts may be hard to use in practice. Another approach to ensure infinite exploration is to use a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using $\epsilon$-greedy policies is given in Figure \@ref(fig:mc-gpi-on-policy-alg). Here we put probability $1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}$ on the maximal action and $\frac{\varepsilon}{|\mathcal{A}(s)|}$ on each of the others. Note using $\epsilon$-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the $\epsilon$-soft policies. If we want to find the optimal policy we have to ensure the 'greedy in the limit' convergence assumption. This can be done by decreasing $\epsilon$ as the number of iterations increase (e.g. $\epsilon = 1/k$).
+Note by using exploring starts in @fig-mc-gpi-es-alg, the 'infinite exploration' convergence assumption is satisfied. However exploring starts may be hard to use in practice. Another approach to ensure infinite exploration is to use a soft policy, i.e. assign a non-zero probability to each possible action in a state. An on-policy algorithm using $\epsilon$-greedy policies is given in @fig-mc-gpi-on-policy-alg. Here we put probability $1 - \varepsilon + \frac{\varepsilon}{|\mathcal{A}(s)|}$ on the maximal action and $\frac{\varepsilon}{|\mathcal{A}(s)|}$ on each of the others. Note using $\epsilon$-greedy policy selection will improve the current policy; otherwise we have found best policy amongst the $\epsilon$-soft policies. If we want to find the optimal policy we have to ensure the 'greedy in the limit' convergence assumption. This can be done by decreasing $\epsilon$ as the number of iterations increase (e.g. $\epsilon = 1/k$).
 
-```{r mc-gpi-on-policy-alg, echo=FALSE, fig.cap="On-policy GPI using MC policy prediction [@Sutton18]."}
+```{r, label=fig-mc-gpi-on-policy-alg, echo=FALSE, fig.cap="On-policy GPI using MC policy prediction [@Sutton18]."}
 knitr::include_graphics("img/mc-gpi-on-policy.png")
 ```
 
 An incremental approach for updating $Q$ can be used by storing the number of times $n_a$, action $a$ has been visited in state $s$ and then update $Q(s,a)$ using $$Q_{n+1} = Q_n + \frac{1}{n_a}(G-Q_n),$$
 where $Q_n$ denote the previous value.
 
-Finally, the algorithm in Figure \@ref(fig:mc-gpi-on-policy-alg) do not mention how to find the start state of an episode. In general all states that we want to approximate must be used as start state. 
+Finally, the algorithm in @fig-mc-gpi-on-policy-alg do not mention how to find the start state of an episode. In general all states that we want to approximate must be used as start state. 
 
 
 ### GPI using upper-confience bound action selection 
 
-GPI using exploring starts or $\epsilon$-soft policies may be slow. Often speed-ups can be done by using e.g. upper-confidence bounds (UCB) for action selection. Recall from Module \@ref(mod-bandit) that UCB select actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. That is, the next action $a'$ given a state $s$ is selected using:
+GPI using exploring starts or $\epsilon$-soft policies may be slow. Often speed-ups can be done by using e.g. upper-confidence bounds (UCB) for action selection. Recall from @sec-bandit that UCB select actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. That is, the next action $a'$ given a state $s$ is selected using:
 $$
 	a' = \arg\max_a \left(Q(s,a) + c\sqrt{\frac{\ln n_s}{n_a}}\right),
 $$
@@ -164,7 +163,7 @@ where $n_s$ denote the number of times state $s$ has been visited and $n_a$ deno
 
 
 
-### Example - Seasonal inventory and sales planning {#mc-seasonal}
+### Example - Seasonal inventory and sales planning {#sec-mc-seasonal}
 
 ```{r RL-env-seasonal, include=FALSE}
 library(R6)
@@ -373,13 +372,13 @@ prices <- c(10, 15, 20, 25)
 env <- RLEnvSeasonal$new(maxInv = 100, maxT = 15, scrapPrice = 5, purchasePrice = 14, prices)
 ```
 
-In the following example we try to implement an algorithm that uses generalized policy iteration with every-visit estimation using epsilon-greedy action selection.
+In the following example, we try to implement an algorithm that uses generalised policy iteration with every-visit estimation using epsilon-greedy action selection.
 
 We consider seasonal product such as garden furnitures. Assume that the maximum inventory level is $Q$ items, i.e. we can buy at most $Q$ items at the start of the season for a price of $`r env$purchasePrice`. The product can be sold for at most $T$ weeks and at the end of the period (week $T$), the remaining inventory is sold to an outlet store for $`r env$scrapPrice` per item. 
 
-The demand depends on the sales price which based on historic observations is assumed in the interval $[10,25].$ In general a higher sales price result in a lower demand. Moreover, in the first half part of the season the demand is on average 10% higher given a fixed sales price compared to the last half part of the season. Historic observed demands can be seen in Figure \@ref(fig:demand). 
+The demand depends on the sales price which based on historic observations is assumed in the interval $[10,25].$ In general a higher sales price result in a lower demand. Moreover, in the first half part of the season the demand is on average 10% higher given a fixed sales price compared to the last half part of the season. Historic observed demands can be seen in @fig-demand. 
 
-```{r demand, echo=FALSE, fig.cap="Observed demands given price (scaled based on number of observations)."}
+```{r, label=fig-demand, echo=FALSE, fig.cap="Observed demands given price (scaled based on number of observations)."}
 df1 <- tibble(price = rep(prices, 200), t = "First half of season") %>% 
    rowwise() %>% 
    mutate(demand = env$getDemand(price, 1)) 
@@ -405,131 +404,9 @@ where $D$ denote the demand. Moreover, if $t = T$ or $q' = 0$, then a transition
 
 For $t=1$ the reward of an state $(q,t)$ is sales price times the number of sold items minus the purchase cost. For $1<t<T$ the reward is sales price times the number of sold (we assume an inventory cost of zero), while for $t=T$ the reward is the scrap price times the inventory. 
 
-Let us define a R6 class representing the environment for this problem
-
-```{r ref.label='RL-env-seasonal', include=TRUE, eval=FALSE}
-```
-
-Note that we define methods for getting the state and actions, an episode and the demand. Moreover, for this problem we many also use simulation to get the transition probabilities and the expected reward of a state-action pair (see method `getTransPrR`). That is, we may solve the problem using an MDP first and compare. Let us define the environment:
-
-```{r ref.label='RL-env-seasonal-def', include=TRUE, eval=FALSE}
-```
-
-First let us try to find the optimal policy using an MDP:
-
-```{r ref.label='MDP-class', include=FALSE}
-```
-
-```{r Solve MDP, cache=TRUE}
-## Build the MDP
-mdp <- MDPClass$new()                           # initialize mdp object
-mdp$addStateSpace(env$getStates())              # add states
-for (s in mdp$getStateKeys()) {                 # add actions
-   mdp$addActionSpace(s, env$getActions(s))
-} 
-for (s in mdp$getStateKeys()) {                 # add trans pr and reward (this will take some time!)
-   for (a in mdp$getActionKeys(s)) {
-      lst <- env$getTransPrR(s, a, runs = 1000)
-      mdp$addAction(s, a, r = lst$r, pr = lst$pr)
-   }
-}
-## Solve the MDP
-mdp$policyIte(gamma = 1)
-# mdp$valueIte(gamma = 1)
-dfMDP <- left_join(mdp$getStateValues(), mdp$getPolicy(), by = "state") %>% 
-   select(-pr) %>% 
-   separate(state, into = c("inv", "t"), remove = F, convert = T)
-```
-
-Let us plot the optimal policy (see Figure \@ref(fig:seasonal-mdp-plot)):
-
-```{r seasonal-mdp-plot, fig.cap="Optimal policy for the MDP."}
-dfMDP %>% filter(!is.na(t)) %>% 
-   ggplot(aes(x = t, y = inv, col = action)) +
-   geom_point()
-```
-
-Note in general we change the price based on a diagonal line running from upper-left to lower-right. Some time two prices oscillate given a time due to state-values close to each other. 
-
-The best inventory level to order can be found by searching among the state-values at time one. 
-
-```{r}
-res <- dfMDP %>% 
-   filter(t == 1) %>% 
-   arrange(desc(v)) %>% 
-   print()
-```
-
-This is approx around `r res$inv[1]` items. If ordering 100 items we would loose:
-
-```{r}
-res$v[1] - dfMDP %>% 
-   filter(state == "100,1") %>% pull(v)
-```
-
-Let us now try to use RL and MC to approximate the best policy. First, we define a generic RL agent:
-
-```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
-```
-
-Pay attention to the `gpiOnPolicyMC` method which uses generalized policy iteration with every-visit estimation using on-policy sampling and an epsilon greedy policy for action selection. Note that `gpiOnPolicyMC` also takes a set of states as input which are the starting states of the episodes generated (all used in each iteration). Moreover, we do not use a step size equal $1/n_a$ but $(1/n_a)^{0.5}$ which decrease slower. Finally, the stopping criteria is added by comparing the the differences in the state-values for each state in an episode. Note the value of $\theta$ gives no guarantee that the action-values will be close to the optimal ones, since we not sample episodes. For instance if two similar episodes are generated early in run then they may be so alike that that the state-values are almost equal and hence the algorithm stops.   
-
-We define the RL agent:
-
-```{r}
-agent <- RLAgent$new()
-agent$addStates(env$getStates())   # add states
-for (s in agent$getStateKeys()) {  # add actions
-   agent$addActions(s, env$getActions(s))
-} 
-agent$getActionKeys("2,5")
-```
-
-Given the current policy an episode can be extracted using: 
-
-```{r, include=FALSE, eval=FALSE}
-env$getEpisode(agent, "50,1", eps = 0.2)
-```
-
-Each row contains the state, action and reward for a time-step. Let us try to approximate the optimal state-value and action in state $(50,1)$.
-
-```{r, cache=TRUE}
-set.seed(232)
-time <- 1
-i <- 50
-state = str_c(i, ",", time)
-agent$gpiOnPolicyMC(env, minIte = 2000, maxIte = 50000, states = state, reset = T, eps = 0.2, theta = 0.2)
-dfRL <- agent$getActionValues() %>% 
-   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
-```
-
-Let us consider the action-values at state $(50,1)$
-
-```{r}
-dfRL %>%
-   filter(inv == i, t == time) %>% 
-   left_join(dfMDP)
-```
-
-Note that actions in state $(50,1)$ are sampled differently (based on the epsilon-greedy policy). The best action found (the one with the highest action-value) also seems to be the optimal action w.r.t. the MDP. 
-
-Let us make a plot of the greedy action for the visited states:
-
-```{r}
-visits <- dfRL %>% group_by(state) %>% summarise(nS = sum(n)) 
-df1 <- dfRL %>% 
-   group_by(state) %>%
-   slice_max(q, with_ties = F) %>% 
-   left_join(visits) %>% 
-   filter(n != 0)  
-df1 %>% 
-   ggplot(aes(x = t, y = inv, size = nS, col = action)) +
-   geom_point() 
-```
-
-Observe that the states are now sampled differently. Some states are visited many times (many episodes visit that state) while others are not visited often. For the states visited often we have a better approximation of best action compared to states which are visited rarely. Here the action is more or less random, e.g. the action in state $(5,3)$ should not set the price to 10 (setting the price to 25 would be better since we only have 5 items left).
-
-
+::: {.callout-note title="Colab - Before the lecture"}
+During the lecture for example, we will work with the [notebook][colab-09-mc]. We implement the MC algorithms. Have a look at the notebook and try to understand the content. 
+:::
 
 
 ## Off-policy MC prediction {#sec-mc-off-policy}
@@ -554,8 +431,7 @@ $$
   \mathbb{E}_{a}[X] &= \mathbb{E}_{b}\left[\rho(X)X\right] \\
   &\approx \frac{1}{n}\sum_{i = 1}^n \rho(x_i)x_i \\
 \end{align}
-(\#eq:is-approx)
-$$
+$$ {#eq-is-approx}
 
 
 <!-- Example with two distributions -->
@@ -571,16 +447,14 @@ $$
                  &= \frac{\prod_{k=t}^{T-1}\pi(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}{\prod_{k=t}^{T-1}b(A_k|S_k)\Pr{}(S_{k+1}|S_k, A_k)}\\
                  &=\prod_{k=t}^{T-1}\frac{\pi(A_k|S_k)}{b(A_k|S_k)}.
 \end{align}
-(\#eq:isr)
-$$
+$$ {#eq-isr}
 Note the transition probabilities cancel out, i.e. the ratio does not depend on the MDP dynamics by only the policies. Moreover, importance sampling ratios are only non-zero for sample-paths where the target-policy has non-zero probability of acting exactly like the behaviour policy $b$. So, if the behaviour policy takes 10 steps in an sample-path, each of these 10 steps have to have been possible by the target policy, else $\pi(a|s) = 0$ and $\rho_{t:T-1} = 0$.
 
-We can now approx. $q_\pi(s,a)$ by rewriting Eq. \@ref(eq:is-approx) for $\pi$ given returns from $b$ to
+We can now approx. $q_\pi(s,a)$ by rewriting @eq-is-approx for $\pi$ given returns from $b$ to
 $$
     q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{n} \sum_{i = 1}^n \rho_iG_i,
-    (\#eq:ois)
-$$
-where we assume that given the sample-paths (episodes), have $n$ observations of the return $(G_1, \ldots, G_n)$ in state $s$ taking action $a$ with the  importance sampling ratio $\rho_i$ calculated using Eq. \@ref(eq:isr). As a result if we consider the prediction algorithm in Figure \@ref(fig:mc-prediction-alg) it must be modified by:
+$$ {#eq-ois}
+where we assume that given the sample-paths (episodes), have $n$ observations of the return $(G_1, \ldots, G_n)$ in state $s$ taking action $a$ with the  importance sampling ratio $\rho_i$ calculated using Eq. @eq-isr. As a result if we consider the prediction algorithm in @fig-mc-prediction-alg it must be modified by:
 
 * Generate an sample-path using policy $b$ instead of $\pi$.
 * Add a variable W representing the importance sampling ratio which must be set to 1 on line containing $G \leftarrow 0$.
@@ -590,13 +464,12 @@ where we assume that given the sample-paths (episodes), have $n$ observations of
 * Finally, an incremental update of $V$ can be done having a vector counting the number of of returns found for each state. Then the incremental update is 
 $$
   V(s) \leftarrow V(s) + \frac{1}{n} \left[WG - V(s)\right].
-  (\#eq:upd)
-$$
+$$  {#eq-upd}
 where $n$ denote the number of realized returns found for state $s$ and $G$ the current realized return. 
 
 ### Weighted importance sampling 
 
-When using a sample average the importance sampling method is called *ordinary importance sampling*. Ordinary importance sampling may result in a high variance which is not good. As a result we may use other weights and instead of Eq. \@ref(eq:ois) use the estimate (*weighted importance sampling*):
+When using a sample average the importance sampling method is called *ordinary importance sampling*. Ordinary importance sampling may result in a high variance which is not good. As a result we may use other weights and instead of Eq. @eq-ois use the estimate (*weighted importance sampling*):
 $$
     q_\pi(s,a) = \mathbb{E}_{\pi}[G_t|S_t = s, A_t = a] \approx \frac{1}{\sum_{i = 1}^n \rho_i} \sum_{i = 1}^n \rho_iG_i.
 $$
@@ -613,15 +486,14 @@ $$
     &= \frac{1}{C_n} (W_nG_n + C_{n}V_n - W_{n} V_n) \\
     &= V_n + \frac{W_n}{C_n} (G_n  - V_n),
 \end{align}
-(\#eq:wpd)
-$$
-where $C_n = \sum_{i = 1}^n \rho_i$ is the sum of the ratios and and $W_n$ the ratio for the n'th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy prediction algorithm using weighted importance sampling and incremental updates is given in Figure \@ref(fig:mc-pred-off-policy-alg). 
+$$ {#eq-wpd}
+where $C_n = \sum_{i = 1}^n \rho_i$ is the sum of the ratios and and $W_n$ the ratio for the n'th return. Using weighted importance sampling gives a smaller variance and hence faster convergence. An off-policy prediction algorithm using weighted importance sampling and incremental updates is given in @fig-mc-pred-off-policy-alg. 
 
-```{r mc-pred-off-policy-alg, echo=FALSE, fig.cap="Off-policy MC prediction [@Sutton18]."}
+```{r,label=fig-mc-pred-off-policy-alg, echo=FALSE, fig.cap="Off-policy MC prediction [@Sutton18]."}
 knitr::include_graphics("img/mc-off-policy-prediction.png")
 ```
 
-Note both Eq. \@ref(eq:upd) and Eq. \@ref(eq:wpd) follows the general incremental formula: 
+Note both @eq-upd and @eq-wpd follows the general incremental formula: 
 \begin{equation}
 New Estimate \leftarrow Old Estimate + Step Size \left[Observation - Old Estimate \right].
 \end{equation}
@@ -630,9 +502,9 @@ For ordinary importance sampling the step-size is $1/n$ and for weighted importa
 
 ## Off-policy control (improvement)
 
-Having discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate $\pi_*$ and $q_*$ by using rewards obtained through behaviour policy $b$. We will focus on using weighted importance sampling with incremental updates. The algorithm is given in Figure \@ref(fig:mc-gpi-off-policy-alg). The target policy $\pi$ is the greedy policy with respect to $Q$, which is an estimate of $q_\pi$. This algorithm converges to $q_\pi$ as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making $b$ $\varepsilon$-soft. The policy $\pi$ converges to $\pi_*$ at all encountered states even if $b$ changes (to another $\varepsilon$-soft policy) between or within sample-paths. Note we exit the inner loop if $A_t \neq \pi(S_t)$ which implies $W=0$.
+Having discussed a framework for off-policy MC prediction, we can now give a GPI algorithm for off-policy MC control that estimate $\pi_*$ and $q_*$ by using rewards obtained through behaviour policy $b$. We will focus on using weighted importance sampling with incremental updates. The algorithm is given in @fig-mc-gpi-off-policy-alg. The target policy $\pi$ is the greedy policy with respect to $Q$, which is an estimate of $q_\pi$. This algorithm converges to $q_\pi$ as long as an infinite number of returns are observed for each state-action pair. This can be achieved by making $b$ $\varepsilon$-soft. The policy $\pi$ converges to $\pi_*$ at all encountered states even if $b$ changes (to another $\varepsilon$-soft policy) between or within sample-paths. Note we exit the inner loop if $A_t \neq \pi(S_t)$ which implies $W=0$.
 
-```{r mc-gpi-off-policy-alg, echo=FALSE, fig.cap="Off-policy GPI [@Sutton18]."}
+```{r, label=fig-mc-gpi-off-policy-alg, echo=FALSE, fig.cap="Off-policy GPI [@Sutton18]."}
 knitr::include_graphics("img/mc-off-policy-gpi.png")
 ```
 
@@ -648,177 +520,10 @@ Read Chapter 5.10 in @Sutton18.
 
 `r strExercises`
 
-### Exercise - Seasonal inventory and sales planning {#sec-mc-seasonal}
+### Exercise - Seasonal inventory and sales planning {#sec-mc-seasonal-ex}
 
-Consider the seasonal product in Example \@ref(mc-seasonal). 
-
-```{r ref.label='RL-env-seasonal-def', include=TRUE, eval=FALSE}
-```
-
-<!-- Q1 -->
-
-```{r, solution=TRUE, text="With a low inventory level, there is a high probability of selling everything even for the highest price. This effect is more dominant if the number of time-steps left is high and decrease as we approach week 15. Contrary with a high inventory level there is a low probability of selling everything (if the price is set to high) and therefore we have to use a lower price. This effect is more dominant if the number of time-steps left is low."}
-```
-
-1) Consider the optimal policy for the MDP modelling the problem in Figure \@ref(fig:seasonal-mdp-plot). Here the optimal price is high at the lower-left and decrease as we approach the upper-right. Explain why this from an intuitive point of view seems correct. 
-
-
-<!-- Q2 -->
-```{r, solution=TRUE, text="The optimal policy is found using a threshold value, i.e the MDP finds an optimal policy with state-values within the threshold. Hence small differences in state-value may produce different optimal prices. Another reason could be that we have multiple optimal policies."}
-```
-
-2) Consider the optimal policy for the MDP modelling the problem in Figure \@ref(fig:seasonal-mdp-plot). For a fixed time $t$ the optimal price does not always decrease as the inventory level increase. Some time two prices oscillate (e.g. first green, then red and then green again). Give possible reasons for this happening. 
-
-
-<!-- Q3 -->
-```{r, solution=TRUE, text="In state $(1,1)$ the optimal price is 25 (we only have one item left to sell over 15 weeks) and in state $(100,15)$ the optimal price is 10 (we can not sell all items in one week so set price low)."}
-```
-
-3) Let us consider two extreme states $(1,1)$ and $(100,15)$. From an intuitively point of view, what is the optimal action/price to do in these states?
-
-
-<!-- Q4 -->
-```{r, solution=TRUE, text="Since the epsilon-greedy policy selects $a=20$ (at random) first, $a=20$ becomes the greedy action that is selected with highest probability. In this run, when selecting the next action, 20 is always selected and hence only $q$ for $a=20$ is updated 10 times (minimum number of iterations). Afterwards differences in state-values of states in the current episode are compared (`oldV` and `v` column). Since they are the same the algorithm stop. That is, we never get a chance to have a view on action $a=25$ or put differently, the stopping criteria may not work well for episodes with small length."}
-```
-
-4) Consider state $(1,1)$ and let us try approximating best epsilon-greedy policy using MC with the verbose option so it prints out info about each episode:
-
-```{r, cache=TRUE}
-set.seed(79)
-time <- 1
-i <- 1
-state = str_c(i, ",", time)
-agent$gpiOnPolicyMC(env, minIte = 10, maxIte = 100000, states = state, reset = T, eps = 0.2, verbose = T)
-dfRL <- agent$getActionValues() %>% 
-   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
-dfRL %>%
-   filter(inv == i, t == time) %>% 
-   left_join(dfMDP)
-```
-
-Why do we not estimate the optimal action here and why do the algorithm stop. Hint: You may have a look at method `gpiOnPolicyMC` in the RLAgent class.
-
-
-<!-- Q5 -->
-```{r, solution=TRUE, text="Since the initial action-value is high, all actions will be explored with high probability first. This may help the algorithm to get a good start."}
-```
-
-5) Let us try to set the action-value high initially:
-
-```{r, cache=TRUE}
-set.seed(105)
-agent$setActionValue(1000)
-agent$setActionCtrValue()   # reset counter
-agent$setStateCtrValue()    # reset counter
-agent$getActionValues("1,1")
-agent$gpiOnPolicyMC(env, minIte = 5, maxIte = 100000, states = state, reset = F, eps = 0.2, verbose = T)
-dfRL <- agent$getActionValues() %>% 
-   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
-dfRL %>%
-   filter(inv == i, t == time) %>% 
-   left_join(dfMDP)
-```
-
-What happens with the sequence of episodes?
-
-<!-- Q6 -->
-```{r, solution=TRUE, text="Since we do simulations (we here do 3) each simulation may produce different results depending on how the algorithm starts. That is, we need more iterations for converging to the correct state-value."}
-```
-
-6) Consider state $(1,1)$ and let us try approximating best epsilon-greedy policy using MC using more episodes:
-
-```{r, cache=TRUE}
-set.seed(749)
-agent$gpiOnPolicyMC(env, minIte = 100, maxIte = 100000, states = state, reset = T, eps = 0.2)
-agent$getStateValueQ(state)  # get the state-value v(s) of the epsilon-greedy policy
-agent$gpiOnPolicyMC(env, minIte = 1000, maxIte = 100000, states = state, reset = T, eps = 0.2)
-agent$getStateValueQ(state)  # get the state-value v(s) of the epsilon-greedy policy
-agent$gpiOnPolicyMC(env, minIte = 2000, maxIte = 100000, states = state, reset = T, eps = 0.2)
-agent$getStateValueQ(state)  # get the state-value v(s) of the epsilon-greedy policy
-```
-
-Why is the state-value not increasing monotone as number of iterations increase?
-
-
-<!-- Q7 -->
-```{r, solution=TRUE, text="No, the q-values are the averages over all the generated episodes (also those generated using bad policies). With enough simulations these numbers will converge against the action-values for the best epsilon-greedy policy ($\\epsilon = 0.5$ here), not the optimal greedy policy."}
-```
-
-7) Consider state $(25,8)$ and let us approximate the best epsilon-greedy policy:
-```{r, cache=TRUE}
-set.seed(281)
-time <- 8
-i <- 25
-state = str_c(i, ",", time)
-agent$setActionValue(1000)
-agent$setActionCtrValue()   # reset counter
-agent$setStateCtrValue()    # reset counter
-agent$gpiOnPolicyMC(env, minIte = 5000, maxIte = 100000, states = state, reset = F, eps = 0.5)
-dfRL <- agent$getActionValues() %>% 
-   separate(state, sep = ",", into = c("inv", "t"), remove = F, convert = T)
-dfRL %>%
-   filter(inv == i, t == time) %>% 
-   left_join(dfMDP)
-```
-
-As can be seen the the optimal state value for the MDP is not equal the action-value for that action. Should that have been the case if run enough simulations?
-
-
-<!-- Q8 -->
-
-8) Consider the very optimistic policy which set the price to 25 (where possible):
-
-```{r}
-## Set the policy to price 25
-states <- agent$getStateKeys() %>% setdiff("0") 
-states <- states[!str_detect(states, ",15")]
-pi = c("25" = 1)
-agent$setPolicy(states, pi)
-# set last time-step
-states <- agent$getStateKeys() %>% setdiff("0") 
-states <- states[str_detect(states, ",15")]
-pi = c("5" = 1)
-agent$setPolicy(states, pi)
-# set dummy
-pi = c("dummy" = 1)
-agent$setPolicy("0", pi)
-## Check
-agent$getPolicy()
-```
-
-We may generate an episode using:
-
-```{r}
-env$getEpisodePi(agent, "5,1")
-```
-
-Let us try to evaluate this policy in states $(5,1)$ and $(100,10)$:
-
-```{r}
-set.seed(6778)
-agent$policyEvalMC(env, states = "5,1")
-agent$getStateValues("5,1")
-dfMDP %>% filter(state == "5,1")
-agent$policyEvalMC(env, states = "100,10")
-agent$getStateValues("100,10")
-dfMDP %>% filter(state == "100,10")
-```
-
-```{r, solution=TRUE, text="For state $(5,1)$ it is optimal to set the price high for all states in the sample-path and we estimate the optimal policy. For state $(100,10)$ it is not optimal to set the price high, i.e. the state-value we estimate here is not the optimal one."}
-```
-
-Why do we have state-values close and not close to the optimal values for the MDP?
-
+Consider the seasonal product in [Example @sec-mc-seasonal] and [this section][colab-09-mc-sec-mc-seasonal-ex] in the Colab notebook to see the questions. Use your own copy if you already have one.
 
 ```{r links, child="links.md", include=FALSE}
 ```
 
-
-```{r, include=FALSE}
-# for (s in agent$getStateKeys()) {
-#    for (a in agent$getActionKeys(s)) {
-#       if (a == "25") agent$setActionValueSingle(0.1, 0, s, a)
-#    } 
-# }
-# agent$getActionValues("5,1")
-```

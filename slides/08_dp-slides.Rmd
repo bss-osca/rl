@@ -245,7 +245,7 @@ knitr::include_graphics("img/policy-ite-general.png")
 
 ---
 
-## Policy evaluation in R (evaluation)
+## Policy evaluation in Python (evaluation)
 
 ```{r policy-eval-alg, echo=FALSE, out.width="100%"}
 knitr::include_graphics("img/policy-eval.png")
@@ -253,7 +253,7 @@ knitr::include_graphics("img/policy-eval.png")
 
 ---
 
-## Policy iteration in R (control)
+## Policy iteration in Python (control)
 
 ```{r policy-ite-alg, echo=FALSE, out.width="75%"}
 knitr::include_graphics("img/policy-iteration.png")
@@ -261,7 +261,7 @@ knitr::include_graphics("img/policy-iteration.png")
 
 ---
 
-## Value iteration in R (control)
+## Value iteration in Python (control)
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("img/value-iteration.png") 
