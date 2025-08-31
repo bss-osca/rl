@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.7.34">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -59,10 +59,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e8de9bd59ba156b9e4cb33cd6f01d621.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-23102fe0f0b5b1a9f09cc09ebcc8fe5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -391,13 +391,15 @@ Figure&nbsp;5.2: Which ad to choose?
 <h2 data-number="5.4" class="anchored" data-anchor-id="estimating-the-value-of-an-action"><span class="header-section-number">5.4</span> Estimating the value of an action</h2>
 <p>How can the value of an action be estimated, i.e.&nbsp;the expected reward of an action <span class="math inline">\(q_*(a) = \mathbb{E}[R_t | A_t = a].\)</span> Assume that at time <span class="math inline">\(t\)</span> action <span class="math inline">\(a\)</span> has been chosen <span class="math inline">\(N_t(a)\)</span> times. Then the estimated action value is <span class="math display">\[\begin{equation}
     Q_t(a) = \frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)},
-\end{equation}\]</span> Storing <span class="math inline">\(Q_t(a)\)</span> this way is cumbersome since memory and computation requirements grow over time. Instead an <em>incremental</em> approach is better. If we assume that <span class="math inline">\(N_t(a) = n-1\)</span> and set <span class="math inline">\(Q_t(a) = Q_n\)</span> then <span class="math inline">\(Q_{n+1}\)</span> becomes: <span class="math display">\[\begin{align}\label{eq:avg}
+\end{equation}\]</span> Storing <span class="math inline">\(Q_t(a)\)</span> this way is cumbersome since memory and computation requirements grow over time. Instead an <em>incremental</em> approach is better. If we assume that <span class="math inline">\(N_t(a) = n-1\)</span> and set <span class="math inline">\(Q_t(a) = Q_n\)</span> then <span class="math inline">\(Q_{n+1}\)</span> becomes: <span id="eq-avg"><span class="math display">\[
+\begin{align}
   Q_{n+1} &amp;= \frac{1}{n}\sum_{i=1}^{n}R_i \nonumber \\
             &amp;= \frac{1}{n}\left( R_{n} + \sum_{i=1}^{n-1} R_i \right) \nonumber \\
             &amp;= \frac{1}{n}\left( R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i \right) \nonumber \\
             &amp;= \frac{1}{n}\left( R_{n} + (n-1)Q_n \right) \nonumber \\
            &amp;= Q_n + \frac{1}{n} \left[R_n - Q_n\right].
-\end{align}\]</span> That is, we can update the estimate of the value of <span class="math inline">\(a\)</span> using the previous estimate, the observed reward and how many times the action has occurred (<span class="math inline">\(n\)</span>).</p>
+\end{align}
+\tag{5.1}\]</span></span> That is, we can update the estimate of the value of <span class="math inline">\(a\)</span> using the previous estimate, the observed reward and how many times the action has occurred (<span class="math inline">\(n\)</span>).</p>
 <p>A greedy approach for selecting the next action is <span class="math display">\[\begin{equation}
 A_t =\arg \max_a Q_t(a).
 \end{equation}\]</span> Here <span class="math inline">\(\arg\max_a\)</span> means the value of <span class="math inline">\(a\)</span> for which <span class="math inline">\(Q_t(a)\)</span> is maximised. A pure greedy approach do not explore other actions. Instead an <span class="math inline">\(\varepsilon\)</span>-greedy approach is used in which with probability <span class="math inline">\(\varepsilon\)</span> we take a random draw from all of the actions (choosing each action with equal probability) and hereby providing some exploration.</p>
