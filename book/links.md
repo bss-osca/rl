@@ -21,6 +21,10 @@
 [colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&line=1&uniqifier=1
 [colab-09-mc]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-?usp=sharing
 [colab-09-mc-sec-mc-seasonal-ex]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-#scrollTo=1BzUCPQxstvQ&line=3&uniqifier=1
+[colab-10-td-pred]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d?usp=sharing
+[colab-10-td-pred-sec-ex-td-pred-random]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&line=4&uniqifier=1
+
+
 
 [DataCamp]: https://www.datacamp.com/
 [datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732

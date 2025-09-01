@@ -41,7 +41,7 @@ book:
     - 07_mdp-2.qmd
     - 08_dp.qmd
     - 09_mc.qmd
-    # - 10_td-pred.qmd
+    - 10_td-pred.qmd
     # - 11_td-control.qmd
     - references.qmd
   appendices:

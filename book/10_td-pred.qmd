@@ -7,7 +7,7 @@ editor_options:
 ```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
 ```
 
-```{r, child = "_algorithms.Rmd", echo=FALSE}
+```{r, child = "_algorithms.qmd", echo=FALSE}
 ```
 
 ```{r}
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # Temporal difference methods for prediction {#sec-td-pred}
 
-One of the most fundamental concepts in reinforcement learning is temporal difference (TD) learning. TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas: Like MC, TD can predict using a model-free environment and learn from experience. Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrap). That is, TD can learn on-line and do not need to wait until the whole sample-path is found. TD is in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered. 
+One of the most fundamental concepts in reinforcement learning is temporal difference (TD) learning. TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas: Like MC, TD can predict using a model-free environment and learn from experience. Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrap). That is, TD can learn on-line and do not need to wait until the whole sample-path is found. TD in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered.
 
 
 ## Learning outcomes 
@@ -47,30 +47,30 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 For this week, you will need to read Chapter 6-6.3 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation]. 
 
 ```{r, echo=FALSE}
-link_slide_file_text("07", "td-pred")
+link_slide_file_text("10", "td-pred")
 ```
 
 ## What is TD learning?
 
 Given a policy $\pi$, we want to estimate the state-value function. Recall that the state value function is 
-\[
+$$
 v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].
-\]
+$$
 where the return is 
-\[
+$$
 G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
-\]
+$$
 
 Let $V$ denote the state-value estimate. Under MC prediction we used an incremental update formula:
 $$
   V(S_t) \leftarrow V(S_t) + \alpha_n\left[G_t - V(S_t)\right],
 $$
-where $n$ denote the number of observations and $\alpha_n$ the step-size. Different values of $\alpha_n$ was discussed in Module \@ref(mod-mc). Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage $t$) e.g. for the sample average $\alpha_n = 1/n$. If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size:
+where $n$ denote the number of observations and $\alpha_n$ the step-size. Different values of $\alpha_n$ was discussed in @sec-mc. Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage $t$) e.g. for the sample average $\alpha_n = 1/n.$ If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size:
 $$
   V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],
 $$
 
-Note as pointed out in Section \@ref(sec-bandit-step-size), a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of $S_t$:
+Note as pointed out in @sec-bandit-step-size, a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of $S_t$:
 $$
 \begin{align}
 V_{n+1} &= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
@@ -95,9 +95,8 @@ $$
 then, given a realized reward $R_{t+1}$, an estimate for the return $G_t$ is $R_{t+1} + \gamma V(S_{t+1})$ and the incremental update becomes:
 $$
   V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right].
-  (\#eq:td0)
-$$
-As a result, we do not have to generate a whole sample-path (as for MC) for updating the state-value estimate of $s = S_t$ to $V(S_t)$. Instead we only have to wait until the next state is observed and update the estimate of $S_t$ given the estimate of the next state $S_{t+1}$. As the estimate of $S_{t+1}$ improve the estimate of $S_t$ also improve. The incremental update in Eq. \@ref(eq:td0) is called *TD(0)* or one-step TD because it use a one-step lookahead to update the estimate. Note updating the estimates using TD resembles the way we did for DP:
+$$ {#eq-td0}
+As a result, we do not have to generate a whole sample-path (as for MC) for updating the state-value estimate of $s = S_t$ to $V(S_t)$. Instead we only have to wait until the next state is observed and update the estimate of $S_t$ given the estimate of the next state $S_{t+1}$. As the estimate of $S_{t+1}$ improve the estimate of $S_t$ also improve. The incremental update in @eq-td0 is called *TD(0)* or one-step TD because it use a one-step lookahead to update the estimate. Note updating the estimates using TD resembles the way we did for DP:
 $$
 V(s = S_t) \leftarrow \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) V(s')\right) 
 $$
@@ -112,9 +111,9 @@ is denoted the *temporal difference error* (*TD error*) since it is the differen
 
 ## TD prediction
 
-We can now formulate a TD(0) algorithm for predicting state-values of a policy (see Figure \@ref(fig:td0-pred-alg)). No stopping criterion is given but could stop when small differences in state-values are observed. 
+We can now formulate a TD(0) algorithm for predicting state-values of a policy (see @fig-td0-pred-alg). No stopping criterion is given but could stop when small differences in state-values are observed. 
 
-```{r td0-pred-alg, echo=FALSE, fig.cap="TD(0) policy prediction [@Sutton18]."}
+```{r, label=fig-td0-pred-alg, echo=FALSE, fig.cap="TD(0) policy prediction [@Sutton18]."}
 knitr::include_graphics("img/td0-pred.png")
 ```
 
@@ -122,12 +121,12 @@ The algorithm is given for a process with episodes; however, also works for cont
 
 ### TD prediction for action-values
 
-Later we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using $q_*$ (see Eq. \@ref(eq:bell-opt-state-policy)). To find $q_*$, we first need to predict action-values for a policy $\pi$ and the incremental update Eq. \@ref(eq:td0) must be modified to use $Q$ values: 
+Later we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using $q_*$ (see @eq-bell-opt-state-policy). To find $q_*$, we first need to predict action-values for a policy $\pi$ and the incremental update @eq-td0 must be modified to use $Q$ values: 
 $$
   Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\right].
 $$
 
-Note given a policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in Module \@ref(mod-td-control). Note to ensure exploration of all action-values we need e.g. an $\epsilon$-soft behavioural policy.  
+Note given a policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in @sec-td-control. Note to ensure exploration of all action-values we need e.g. an $\epsilon$-soft behavioral policy.  
 
 
 ## Benefits of TD methods
@@ -144,7 +143,7 @@ Let us try to summarize the benefits of TD prediction
 * TD methods are good for sequential decision problems (multi-step prediction).
 * TD methods are scalable in the sense that computations do not grow exponentially with the problem size.       
 
-An example illustrating that TD methods converge faster than MC methods is given in Exercise \@ref(ex-td-pred-random)
+An example illustrating that TD methods converge faster than MC methods is given in [Exercise @sec-ex-td-pred-random].
 
 
 
@@ -161,11 +160,11 @@ An example illustrating that TD methods converge faster than MC methods is given
 
 `r strExercises`
 
-### Exercise - A randow walk {#sec-td-pred-random}
+### Exercise - A random walk {#sec-ex-td-pred-random}
 
-Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in Figure \@ref(fig:rw-trans). All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
+Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in @fig-rw-trans. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy $\pi$ is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state. 
 
-```{r rw-trans, echo=FALSE, out.width="80%", fig.height=1, fig.width=6, fig.cap = "Possible transitions between states and rewards."}
+```{r, label=fig-rw-trans, echo=FALSE, out.width="80%", fig.height=1, fig.width=6, fig.cap = "Possible transitions between states and rewards."}
 library(tidyverse)
 library(tidygraph)
 library(ggraph)
@@ -183,272 +182,7 @@ ggraph(gr, layout = "linear") +
    theme(legend.position = "none") 
 ```
 
-
-<!-- Q1 -->
-```{r, solution=TRUE, text="The state space is $\\mathcal{S} = \\{ 1, 2, \\ldots, 6, 7 \\}$ with $\\mathcal{A}(s) = \\{ \\text{left}, \\text{right}\\}$ (transition to the neighbour states) except for terminating states (1 and 7) which only have an action with transition to itself (see Figure \\@ref(fig:rw-trans)). Rewards are deterministic $\\mathcal{R} = \\{0, 1\\}$ (see Figure \\@ref(fig:rw-trans)) which also holds for the transition probabilities. The state-value can be found using the Bellman equations \\@ref(eq:bm-pol-eval) $$v_\\pi(s) = \\sum_{a \\in \\mathcal{A}}\\pi(a | s)\\left( r(s,a) + \\gamma\\sum_{s' \\in \\mathcal{S}} p(s' | s, a) v_\\pi(s')\\right),$$ which becomes $$\\begin{align}v_\\pi(2) &= 0.5v_\\pi(1) + 0.5v_\\pi(3) = 0.5v_\\pi(3) \\\\\\ v_\\pi(3) &= 0.5v_\\pi(2) + 0.5v_\\pi( 4 ) \\\\\\ v_\\pi( 4 ) &= 0.5v_\\pi(3) + 0.5v_\\pi(5) \\\\\\ v_\\pi(5) &= 0.5v_\\pi( 4 ) + 0.5v_\\pi(6) \\\\\\ v_\\pi(6) &= 0.5v_\\pi(5) + 0.5(1 + v_\\pi(7)) = 0.5v_\\pi(5) + 0.5\\\\\\ \\end{align}$$ Solving the equations with a state-value equal to 0 for the terminating states gives state-values $\\frac{1}{6}, \\frac{2}{6}, \\frac{3}{6}, \\frac{4}{6}$ and $\\frac{5}{6}$ for 2-6, respectively."} 
-```
-
-1) Formulate the MDP model and calculate the state-value $v_\pi$ for each state using the Bellman equations \@ref(eq:bm-pol-eval). Hint: there is no need to code this. Just solve the Bellman equations for state 2-6. 
-
-
-<!-- Q2 -->
-2) Consider the code below which build, set the policy and evaluate it. Try to understand what happens and check if the results are the same as found in Question 1.
-
-```{r ref.label='MDP-class', include=FALSE}
-```
-
-```{r}
-## Build the MDP
-mdp <- MDPClass$new()
-mdp$addStateSpace(1:7)   # add state keys
-states <- str_c(2:6)
-for (s in states) {
-      mdp$addActionSpace(s, c("left", "right"))
-}
-mdp$addActionSpace("1", c("dummy"))
-mdp$addActionSpace("7", c("dummy"))
-# Add trans pr and rewards
-pr <- 1
-for (s in 2:5) {
-   names(pr) = s+1
-   mdp$addAction(as.character(s), "right", r = 0, pr)
-}
-mdp$addAction("6", "right", r = 1, pr = c("7" = 1))
-for (s in 2:6) {
-   names(pr) = s-1 
-   mdp$addAction(as.character(s), "left", r = 0, pr)
-}
-mdp$addAction("1", "dummy", r = 0, pr = c("1" = 1))
-mdp$addAction("7", "dummy", r = 0, pr = c("7" = 1))
-mdp$getActionInfo("1")
-mdp$getActionInfo("2")
-mdp$getActionInfo("6")
-mdp$getActionInfo("7")
-## Set the policy
-pi = c("left" = 0.5, "right" = 0.5)
-mdp$setPolicy(states, pi)
-pi = c("dummy" = 1)
-mdp$setPolicy(c("1", "7"), pi)
-mdp$getPolicy()
-## Evaluate the policy
-mdp$policyEval(gamma = 1)
-mdp$getStateValues()
-```
-
-
-<!-- Q3 -->
-```{r, solution=TRUE, text="We use TD(0), i.e. update using $V(S_t) \\leftarrow V(S_t) + \\alpha\\left[R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)\\right]$: $$V(4) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(3) = 0.5 + 0.1(0 + 0.5 - 0.5) = 0.5,$$ $$V(2) = 0.5 + 0.1(0 + 0 - 0.5) = 0.45.$$ That is, since all states apart from the terminal states (initialized to 0) were initialised to the same value and the reward for non-terminal transitions is 0, then updates do nothing except for states that lead directly to termination. Here a reduction of 0.05."}
-```
-
-3) Consider an episode with sequence $4, 0, 3, 0, 2, 0, 1$. Let the initial state-value estimates of state 2-6 be 0.5 and update the state-values using TD(0) with $\alpha = 0.1$. It appears that only $V(2)$ change why was only the estimate for this one state changed? By exactly how much was it changed?
-
-
-<!-- Q4 -->
-4) Generate 100 episodes and run the TD(0) prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:td0-pred-alg)). Make a plot of the state-value estimate (y-axis) given state 2-6 (x-axis) for TD(0) running for 1, 10 and 100 episodes. You may use the code below as a starting point.
-
-First we need an environment representing the problem
-
-```{r}
-library(R6)
-library(hash)
-library(tidyverse)
-
-#' R6 Class representing the RL environment for the problem
-RLEnvRandom <- R6Class("RLEnvRandom",
-   public = list(
-      #' @description Return all states (keys).
-      getStates = function() {
-         return(str_c(1:7))
-      },
-      
-      #' @description Return all actions (keys) for a state.
-      #' @param s State considered.
-      getActions = function(s) {
-         if (s == "1" | s == "7") return("dummy")
-         return(c("left", "right"))
-      },
-      
-      #' @description Returns an episode as a tibble with cols s, a, r (last col the terminal reward).
-      #' @param agent The agent that holds the model with current policy stored in pi. 
-      getEpisodePi = function(agent, startState) {
-         if (startState == "1" | startState == "7") {
-            return(tibble::tibble(!!!c("s", "a", "r"), .rows = 0))  # empty tibble
-         }
-         s <- as.numeric(startState)
-         df <- tibble(s = rep(NA_character_, 1000), a = NA_character_, r = NA_real_)  # a tibble with more rows than used
-         for (i in 1:nrow(df)) {
-            if (s == 1 | s == 7) {
-               df <- df[1:(i-1),]  # remove unused rows
-               break  # have reached terminal state
-            }
-            r <- 0
-            a <- agent$getActionPi(str_c(s))
-            if (s == 6 & a == "right") r = 1
-            df$s[i] <- s
-            df$a[i] <- a
-            df$r[i] <- r
-            if (a == "right") s <- s + 1
-            if (a == "left") s <- s - 1
-          }
-         return(df)
-      },
-      
-      #' @description Returns next state and reward given current state and action in a list (with names `r` and `sN`).
-      #' @param s Current state.
-      #' @param a Current action.
-      getTimeStepData = function(s, a) {
-         s <- as.numeric(s)
-         if (a == "left" & s > 1 & s < 7) return(list(r = 0, sN = as.character(s-1)))
-         if (a == "right" & s > 1 & s < 7) {
-            if (s == 6) return(list(r = 1, sN = as.character(s+1)))
-            return(list(r = 0, sN = as.character(s+1)))
-         }
-         if ((s == 1 | s == 7) & a == "dummy") return(list(r = 0, sN = NA_character_))
-         stop("Error finding next state and reward!")
-      }
-      
-      
-   )
-)
-env <- RLEnvRandom$new()
-env$getTimeStepData("3", "right")
-env$getTimeStepData("1", "dummy")
-env$getTimeStepData("6", "right")
-```
-
-Note we define a method `getTimeStepData` that takes a state and action and return the reward and next state. This method is used by the RL agent class in method `policyEvalTD0`:
-
-```{r ref.label='RLAgent', include=TRUE, eval=TRUE}
-```
-
-We can now define the RL agent and set the policy which must be done before calling TD(0):
-
-```{r}
-agent <- RLAgent$new()
-agent$addStates(env$getStates())   # add states
-for (s in agent$getStateKeys()) {  # add actions
-   agent$addActions(s, env$getActions(s))
-} 
-## Set the policy
-states <- str_c(2:6)
-pi = c("left" = 0.5, "right" = 0.5)
-agent$setPolicy(states, pi)
-pi = c("dummy" = 1)
-agent$setPolicy(c("1", "7"), pi)
-agent$getPolicy()
-```
-
-Note a policy must be defined for each possible state that may be generated in an episode. We can now run TD(0):
-
-```{r}
-set.seed(875)
-## One episode
-agent$setStateValue(states, 0.5)
-agent$setStateValue(c("1", "7"), 0)
-agent$getStateValues()
-agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 1, reset = F)
-resTD0 <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
-```
-
-```{r, solution=TRUE}
-## 10 episodes
-agent$setStateValue(states, 0.5)
-agent$setStateValue(c("1", "7"), 0)
-agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 10, reset = F)
-resTD0 <- bind_rows(resTD0, agent$getStateValues() %>% mutate(episodes = 10))
-## 100 episodes
-agent$setStateValue(states, 0.5)
-agent$setStateValue(c("1", "7"), 0)
-agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = 100, reset = F)
-resTD0 <- bind_rows(resTD0, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
-   mutate(state = as.numeric(state), episodes = as.character(episodes)) 
-resTD0 <- bind_rows(resTD0,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
-   filter(state > 1, state < 7)
-resTD0 %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
-resTD0 <- resTD0 %>% mutate(alpha = 0.1, alg = "TD0")
-```
-
-Note we first have to set the state-values to the default specified. Next, we run TD(0) prediction with one episode `maxE = 1` and starting state 4. You now have to run similar code for 10 and 100 episodes, store the result and plot a line for each result. 
-
-
-<!-- Q5 -->
-```{r, solution=TRUE}
-set.seed(4346)
-env$getEpisodePi(agent, "4")  # test: this is the function used to generate an episode in policyEvalMC
-## 1 episode
-agent$setStateValue(states, 0.5)
-agent$setStateValue(c("1", "7"), 0)
-agent$setStateCtrValue(1)    
-agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 1, maxIte = 1, reset = F, verbose = T)
-resMC <- agent$getStateValues() %>% mutate(episodes = 1) %>% print()
-## 10 episodes
-agent$setStateValue(states, 0.5)
-agent$setStateValue(c("1", "7"), 0)
-agent$setStateCtrValue(1)    
-agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 10, maxIte = 10, reset = F, verbose = T)
-resMC <- bind_rows(resMC, agent$getStateValues() %>% mutate(episodes = 10))
-## 100 episodes
-agent$setStateValue(states, 0.5)
-agent$setStateValue(c("1", "7"), 0)
-agent$setStateCtrValue(1)    
-agent$policyEvalMC(env, gamma = 1, states = "4", minIte = 100, maxIte = 100, reset = F)
-resMC <- bind_rows(resMC, agent$getStateValues() %>% mutate(episodes = 100)) %>% 
-   mutate(state = as.numeric(state), episodes = as.character(episodes)) 
-resMC <- bind_rows(resMC,mdp$getStateValues() %>% mutate(state = as.numeric(state), episodes = "mdp")) %>% 
-   filter(state > 1, state < 7)
-resMC %>% ggplot(aes(x = state, y = v, col = episodes)) + geom_line() + geom_point()
-resMC <- resMC %>% mutate(alpha = 0.1, alg = "MC")
-```
-
-5) Run an MC prediction algorithm with $\alpha = 0.1$ (see Figure \@ref(fig:mc-prediction-alg) running for 1, 10 and 100 episodes. Hint you have to call `policyEvalMC` instead of `policyEvalTD0`.
-
-
-<!-- Q6 -->
-6) Let us join the results for TD(0) and MC and calculate the root mean square (RMS) error $$\sqrt{\frac{1}{5}\sum_{s=2}^6(V(s)-v_\pi(s))^2}$$.
-```{r}
-resMDP <- mdp$getStateValues() %>% mutate(state = as.numeric(state)) %>% rename(vMDP = v) %>%  print()
-res <- bind_rows(resTD0, resMC) %>% 
-   filter(episodes != "mdp") %>% 
-   left_join(resMDP) %>% 
-   group_by(episodes, alg, alpha) %>% 
-   summarise(rms = sqrt(0.2 * sum(v-vMDP)^2)) %>% 
-   print()
-```
-
-Which algorithm is best in estimating the state-values? Explain.
-
-
-<!-- Q7 -->
-
-7) The results are dependent on the value of the step-size parameter. Let us estimate the state-values using TD(0) for $\alpha = 0.1, 0.2$ and 0.5 and plot the root mean square (RMS) error given the number of episodes:
-
-```{r}
-set.seed(98)
-res <- NULL
-for (run in 1:20) {
-   for (alpha in c(0.1, 0.2, 0.5)) {
-      agent$setStateValue(states, 0.5)
-      agent$setStateValue(c("1", "7"), 0)
-      eOld <- 0
-      for (e in c(1,seq(5, 100, by = 5))) {
-         agent$policyEvalTD0(env, gamma = 1, states = "4", maxE = e - eOld, alpha = alpha, reset = F)
-         eOld <- e
-         res <- bind_rows(res, agent$getStateValues() %>% mutate(episodes = e, alpha = alpha, run = run))
-      }
-   }
-}
-resMDP <- mdp$getStateValues() %>% rename(vMDP = v)
-left_join(res, resMDP) %>% 
-   group_by(episodes, alpha, run) %>% 
-   summarise(rms = sqrt(0.2 * sum((v-vMDP)^2))) %>% 
-   group_by(episodes, alpha) %>%
-   summarize(rms = mean(rms)) %>% 
-   ggplot(aes(x = episodes, y = rms, col = factor(alpha))) +
-   geom_line()
-
-```
-
-Explain the plot. 
+Consider [this section][colab-10-td-pred-sec-ex-td-pred-random] in the Colab notebook to see the questions. Use your own copy if you already have one.
 
 ```{r links, child="links.md", include=FALSE}
 ```
