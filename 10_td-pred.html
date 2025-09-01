@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; RL in action – Reinforcement Learning for Business (RL)</title>
+<title>10&nbsp; Temporal difference methods for prediction – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04_python.html" rel="next">
-<link href="./02_rl-intro.html" rel="prev">
+<link href="./references.html" rel="next">
+<link href="./09_mc.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -97,8 +97,6 @@ div.csl-indent {
     document.body.classList.add('hypothesis-enabled');
   });
 </script>
-<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -131,7 +129,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="3&nbsp; RL in action – Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="10&nbsp; Temporal difference methods for prediction – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -146,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03_rl-in-action.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_td-pred.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Temporal difference methods for prediction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -195,7 +193,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link active">
+  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></a>
   </div>
 </li>
@@ -241,7 +239,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_td-pred.html" class="sidebar-item-text sidebar-link">
+  <a href="./10_td-pred.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Temporal difference methods for prediction</span></span></a>
   </div>
 </li>
@@ -284,21 +282,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-rl-intro-lo" id="toc-sec-rl-intro-lo" class="nav-link active" data-scroll-target="#sec-rl-intro-lo"><span class="header-section-number">3.1</span> Learning outcomes</a></li>
-  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</a></li>
-  <li><a href="#tic-tac-toe" id="toc-tic-tac-toe" class="nav-link" data-scroll-target="#tic-tac-toe"><span class="header-section-number">3.3</span> Tic-Tac-Toe</a></li>
-  <li><a href="#colab" id="toc-colab" class="nav-link" data-scroll-target="#colab"><span class="header-section-number">3.4</span> Colab</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
-  <li><a href="#sec-rl-in-action-ex" id="toc-sec-rl-in-action-ex" class="nav-link" data-scroll-target="#sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</a></li>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">10.1</span> Learning outcomes</a></li>
+  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">10.2</span> Textbook readings</a></li>
+  <li><a href="#what-is-td-learning" id="toc-what-is-td-learning" class="nav-link" data-scroll-target="#what-is-td-learning"><span class="header-section-number">10.3</span> What is TD learning?</a></li>
+  <li><a href="#td-prediction" id="toc-td-prediction" class="nav-link" data-scroll-target="#td-prediction"><span class="header-section-number">10.4</span> TD prediction</a></li>
+  <li><a href="#benefits-of-td-methods" id="toc-benefits-of-td-methods" class="nav-link" data-scroll-target="#benefits-of-td-methods"><span class="header-section-number">10.5</span> Benefits of TD methods</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">10.6</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/10_td-pred.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/10_td-pred.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-rl-in-action" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></h1>
+<h1 class="title"><span id="sec-td-pred" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Temporal difference methods for prediction</span></span></h1>
 </div>
 
 
@@ -315,265 +313,142 @@ window.Quarto = {
 </header>
 
 
-<p>This module learn an agent/player to play tic-tac-toe using Reinforcement learning.</p>
-<section id="sec-rl-intro-lo" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="sec-rl-intro-lo"><span class="header-section-number">3.1</span> Learning outcomes</h2>
+<!-- Various algorithms for the RL course -->
+<p>One of the most fundamental concepts in reinforcement learning is temporal difference (TD) learning. TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas: Like MC, TD can predict using a model-free environment and learn from experience. Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrap). That is, TD can learn on-line and do not need to wait until the whole sample-path is found. TD in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered.</p>
+<section id="learning-outcomes" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">10.1</span> Learning outcomes</h2>
 <p>By the end of this module, you are expected to:</p>
 <ul>
-<li>Code your first RL algorithm</li>
-<li>Formulate the blocks of the RL model (environment, agent, data, states, actions, rewards and policies).</li>
-<li>Run your first RL algorithm and evaluate on its solution.</li>
+<li>Describe what Temporal Difference (TD) learning is.</li>
+<li>Formulate the incremental update formula for TD learning.</li>
+<li>Define the temporal-difference error.</li>
+<li>Interpret the role of a fixed step-size.</li>
+<li>Identify key advantages of TD methods over DP and MC methods.</li>
+<li>Explain the TD(0) prediction algorithm.</li>
+<li>Understand the benefits of learning online with TD compared to MC methods.</li>
 </ul>
-<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 3, 6 and 9-12 of the course.</p>
+<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 3, 4, 6, 9, and 12 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
 <!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 </section>
-<section id="textbook-readings" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</h2>
-<p>For this lecture, you will need to read Section 1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<section id="textbook-readings" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">10.2</span> Textbook readings</h2>
+<p>For this week, you will need to read Chapter 6-6.3 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 Slides for this module can be seen
-<a href="https://bss-osca.github.io/rl/slides/03_rl-in-action-slides.html" target="_blank">here.</a>
+<a href="https://bss-osca.github.io/rl/slides/10_td-pred-slides.html" target="_blank">here.</a>
 You do not have to look at them before the lecture!
 </div>
 </div>
 </div>
 </section>
-<section id="tic-tac-toe" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="tic-tac-toe"><span class="header-section-number">3.3</span> Tic-Tac-Toe</h2>
-<p>Tic-Tac-Toe is a simple two-player game where players alternately place their marks on a 3x3 grid. That is, the current state of the board is the players’ marks on the grid. The first player to align three of their marks horizontally, vertically, or diagonally wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probability of winning.</p>
-<div class="cell" data-layout-align="center">
-<style type="text/css">
-.table-bordered th, .table-bordered td {
-    border: 1px solid black !important; 
-}
-</style>
-</div>
-<p>Examples of winning, loosing and a draw from player Xs point of view:</p>
-<table style="width: 100%; border: 0px !important">
-<tbody>
-<tr style="border: 0px !important;">
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a <em>draw</em> game may look as in <a href="#fig-hgf" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>. We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
+<section id="what-is-td-learning" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="what-is-td-learning"><span class="header-section-number">10.3</span> What is TD learning?</h2>
+<p>Given a policy <span class="math inline">\(\pi\)</span>, we want to estimate the state-value function. Recall that the state value function is <span class="math display">\[
+v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s].
+\]</span> where the return is <span class="math display">\[
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}
+\]</span></p>
+<p>Let <span class="math inline">\(V\)</span> denote the state-value estimate. Under MC prediction we used an incremental update formula: <span class="math display">\[
+  V(S_t) \leftarrow V(S_t) + \alpha_n\left[G_t - V(S_t)\right],
+\]</span> where <span class="math inline">\(n\)</span> denote the number of observations and <span class="math inline">\(\alpha_n\)</span> the step-size. Different values of <span class="math inline">\(\alpha_n\)</span> was discussed in <a href="09_mc.html" class="quarto-xref"><span>Chapter 9</span></a>. Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage <span class="math inline">\(t\)</span>) e.g.&nbsp;for the sample average <span class="math inline">\(\alpha_n = 1/n.\)</span> If the environment is non-stationary (e.g.&nbsp;transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size: <span class="math display">\[
+  V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],
+\]</span></p>
+<p>Note as pointed out in <a href="05_bandit.html#sec-bandit-step-size" class="quarto-xref"><span>Section 5.5</span></a>, a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of <span class="math inline">\(S_t\)</span>: <span class="math display">\[
+\begin{align}
+V_{n+1} &amp;= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
+&amp;= \alpha G_n + (1 - \alpha)V_n \nonumber \\
+&amp;= \alpha G_n + (1 - \alpha)[\alpha G_{n-1} + (1 - \alpha)V_{n-1}] \nonumber \\
+&amp;= \alpha G_n + (1 - \alpha)\alpha G_{n-1} + (1 - \alpha)^2 V_{n-1}  \nonumber \\
+&amp; \vdots \nonumber \\
+&amp;= (1-\alpha)^n V_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} G_i \\
+\end{align}
+\]</span> That is, a larger weight is used for recent observations compared to old observations.</p>
+<p>For MC prediction we needed the sample path to get the realized return <span class="math inline">\(G_t\)</span>. However, since <span class="math display">\[
+\begin{align}
+v_\pi(s) &amp;= \mathbb{E}_\pi[G_t | S_t = s] \\
+         &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s] \\
+         &amp;= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma \mathbb{E}_\pi[G_{t+1} | S_t = s] \\
+         &amp;= \mathbb{E}_\pi[R_{t+1}| S_t = s] + \gamma v_\pi(S_{t+1}),
+\end{align}
+\]</span> then, given a realized reward <span class="math inline">\(R_{t+1}\)</span>, an estimate for the return <span class="math inline">\(G_t\)</span> is <span class="math inline">\(R_{t+1} + \gamma V(S_{t+1})\)</span> and the incremental update becomes: <span id="eq-td0"><span class="math display">\[
+  V(S_t) \leftarrow V(S_t) + \alpha\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\right].
+\tag{10.1}\]</span></span> As a result, we do not have to generate a whole sample-path (as for MC) for updating the state-value estimate of <span class="math inline">\(s = S_t\)</span> to <span class="math inline">\(V(S_t)\)</span>. Instead we only have to wait until the next state is observed and update the estimate of <span class="math inline">\(S_t\)</span> given the estimate of the next state <span class="math inline">\(S_{t+1}\)</span>. As the estimate of <span class="math inline">\(S_{t+1}\)</span> improve the estimate of <span class="math inline">\(S_t\)</span> also improve. The incremental update in <a href="#eq-td0" class="quarto-xref">Equation&nbsp;<span>10.1</span></a> is called <em>TD(0)</em> or one-step TD because it use a one-step lookahead to update the estimate. Note updating the estimates using TD resembles the way we did for DP: <span class="math display">\[
+V(s = S_t) \leftarrow \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) V(s')\right)
+\]</span> Here we updated the value by considering the expectation of all the next states. This was possible since we had a model. Now, by using TD, we do not need a model to estimate the state-value.</p>
+<p>The term <span class="math display">\[
+\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t),
+\]</span> is denoted the <em>temporal difference error</em> (<em>TD error</em>) since it is the difference between the current estimate <span class="math inline">\(V(S_t)\)</span> and the better estimate <span class="math inline">\(R_{t+1} + \gamma V(S_{t+1})\)</span>.</p>
+</section>
+<section id="td-prediction" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="td-prediction"><span class="header-section-number">10.4</span> TD prediction</h2>
+<p>We can now formulate a TD(0) algorithm for predicting state-values of a policy (see <a href="#fig-td0-pred-alg" class="quarto-xref">Figure&nbsp;<span>10.1</span></a>). No stopping criterion is given but could stop when small differences in state-values are observed.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-hgf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-td0-pred-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hgf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03_rl-in-action_files/figure-html/fig-hgf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<div aria-describedby="fig-td0-pred-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/td0-pred.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="518">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hgf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.1: A draw.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-td0-pred-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10.1: TD(0) policy prediction <span class="citation" data-cites="Sutton18">(<a href="references.html#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>The algorithm is given for a process with episodes; however, also works for continuing processes. In this case the inner loop runs over an infinite number of time-steps.</p>
+<section id="td-prediction-for-action-values" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="td-prediction-for-action-values"><span class="header-section-number">10.4.1</span> TD prediction for action-values</h3>
+<p>Later we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see <a href="07_mdp-2.html#eq-bell-opt-state-policy" class="quarto-xref">Equation&nbsp;<span>7.3</span></a>). To find <span class="math inline">\(q_*\)</span>, we first need to predict action-values for a policy <span class="math inline">\(\pi\)</span> and the incremental update <a href="#eq-td0" class="quarto-xref">Equation&nbsp;<span>10.1</span></a> must be modified to use <span class="math inline">\(Q\)</span> values: <span class="math display">\[
+  Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\right].
+\]</span></p>
+<p>Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in <span class="quarto-unresolved-ref">?sec-td-control</span>. Note to ensure exploration of all action-values we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-soft behavioral policy.</p>
 </section>
-<section id="colab" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="colab"><span class="header-section-number">3.4</span> Colab</h2>
-<p>During the lecture for this module we will work with the <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">tutorial</a> where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.</p>
-<div class="callout callout-style-simple callout-note callout-titled" title="Colab - Before the lecture">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Colab - Before the lecture
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Open the <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">tutorial</a>:</p>
+</section>
+<section id="benefits-of-td-methods" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="benefits-of-td-methods"><span class="header-section-number">10.5</span> Benefits of TD methods</h2>
+<p>Let us try to summarize the benefits of TD prediction</p>
 <ul>
-<li>Have a look at the notebook and run all code cells.</li>
-<li>Try to understand the content.</li>
+<li>TD methods do not require a model of the environment (compared to DP).</li>
+<li>TD methods can be implemented online, which can speed convergence (compared to MC methods which must wait until the end of the sample-path).</li>
+<li>TD methods learn from all actions, whereas MC methods require the sample-path to have a tail equal to the target policy.</li>
+<li>TD methods do converge on the value function with a sufficiently small step-size parameter, or with a decreasing step-size.</li>
+<li>TD methods generally converge faster than MC methods, although this has not been formally proven.</li>
+<li>TD methods are extremely useful for continuing tasks that cannot be broken down into episodes as required by MC methods.</li>
+<li>TD can be seen as a method for <em>prediction learning</em> where you try to predict what happens next given you current action, get new information and make a new prediction. That is, you do not need a training set (as in supervised learning) instead the reward signal is observed as time goes by.</li>
+<li>TD methods are good for sequential decision problems (multi-step prediction).</li>
+<li>TD methods are scalable in the sense that computations do not grow exponentially with the problem size.</li>
 </ul>
-</div>
-</div>
+<p>An example illustrating that TD methods converge faster than MC methods is given in <a href="#sec-ex-td-pred-random" class="quarto-xref">Exercise&nbsp;<span>10.6.1</span></a>.</p>
+<!-- ## Summary  -->
+<!-- Read Chapter 5.10 in @Sutton18. -->
 </section>
-<section id="summary" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
-<p>Read Section 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
-</section>
-<section id="sec-rl-in-action-ex" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">10.6</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<p>You can find all these exercises as a section in this <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1">Colab notebook</a>. If you already have your own copy use this.</p>
-<section id="sec-r-intro-self" class="level3" data-number="3.6.1">
-<h3 data-number="3.6.1" class="anchored" data-anchor-id="sec-r-intro-self"><span class="header-section-number">3.6.1</span> Exercise - Self-Play</h3>
-<p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it. -->
-<!-- ::: -->
-</section>
-<section id="sec-r-intro-sym" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="sec-r-intro-sym"><span class="header-section-number">3.6.2</span> Exercise - Symmetries</h3>
-<p>Many tic-tac-toe positions appear different but are really the same because of symmetries.</p>
-<ol type="1">
-<li><p>How might we amend the reinforcement learning algorithm described above to take advantage of this?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size. -->
-<!-- ::: --></li>
-<li><p>In what ways would this improve the algorithm?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- A smaller state space would increase the speed of learning and reduce the memory required. -->
-<!-- ::: --></li>
-<li><p>Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game. -->
-<!-- ::: --></li>
-</ol>
-</section>
-<section id="sec-r-intro-greedy" class="level3" data-number="3.6.3">
-<h3 data-number="3.6.3" class="anchored" data-anchor-id="sec-r-intro-greedy"><span class="header-section-number">3.6.3</span> Exercise - Greedy Play</h3>
-<p>Consider Tic-Tac-Toe and suppose the RL player is only greedy (<span class="math inline">\(\epsilon = 0\)</span>), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required. -->
-<!-- ::: -->
-</section>
-<section id="sec-r-intro-exploit" class="level3" data-number="3.6.4">
-<h3 data-number="3.6.4" class="anchored" data-anchor-id="sec-r-intro-exploit"><span class="header-section-number">3.6.4</span> Exercise - Learning from Exploration</h3>
-<p>Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.</p>
-<ol type="1">
-<li><p>What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy. -->
-<!-- ::: --></li>
-<li><p>Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states. -->
-<!-- ::: --></li>
-</ol>
-</section>
-<section id="sec-r-intro-other" class="level3" data-number="3.6.5">
-<h3 data-number="3.6.5" class="anchored" data-anchor-id="sec-r-intro-other"><span class="header-section-number">3.6.5</span> Exercise - Other Improvements</h3>
-<p>Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state. -->
-<!-- ::: -->
+<section id="sec-ex-td-pred-random" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="sec-ex-td-pred-random"><span class="header-section-number">10.6.1</span> Exercise - A random walk</h3>
+<p>Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in <a href="#fig-rw-trans" class="quarto-xref">Figure&nbsp;<span>10.2</span></a>. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy <span class="math inline">\(\pi\)</span> is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-rw-trans" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rw-trans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="10_td-pred_files/figure-html/fig-rw-trans-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rw-trans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10.2: Possible transitions between states and rewards.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Consider <a href="https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&amp;line=4&amp;uniqifier=1">this section</a> in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -986,13 +861,13 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02_rl-intro.html" class="pagination-link" aria-label="An introduction to RL">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span>
+      <a href="./09_mc.html" class="pagination-link" aria-label="Monte Carlo methods for prediction and control">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Monte Carlo methods for prediction and control</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04_python.html" class="pagination-link" aria-label="An introduction to Python">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1001,5 +876,5 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/10_td-pred.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/10_td-pred.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

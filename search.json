@@ -770,6 +770,76 @@
     ]
   },
   {
+    "objectID": "10_td-pred.html",
+    "href": "10_td-pred.html",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "",
+    "text": "10.1 Learning outcomes\nOne of the most fundamental concepts in reinforcement learning is temporal difference (TD) learning. TD learning is a combination of Monte Carlo (MC) and dynamic programming (DP) ideas: Like MC, TD can predict using a model-free environment and learn from experience. Like DP, TD update estimates based on other learned estimates, without waiting for a final outcome (bootstrap). That is, TD can learn on-line and do not need to wait until the whole sample-path is found. TD in general learn more efficiently than MC due to bootstrapping. In this module prediction using TD is considered.\nBy the end of this module, you are expected to:\nThe learning outcomes relate to the overall learning goals number 3, 4, 6, 9, and 12 of the course.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "10_td-pred.html#learning-outcomes",
+    "href": "10_td-pred.html#learning-outcomes",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "",
+    "text": "Describe what Temporal Difference (TD) learning is.\nFormulate the incremental update formula for TD learning.\nDefine the temporal-difference error.\nInterpret the role of a fixed step-size.\nIdentify key advantages of TD methods over DP and MC methods.\nExplain the TD(0) prediction algorithm.\nUnderstand the benefits of learning online with TD compared to MC methods.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "10_td-pred.html#textbook-readings",
+    "href": "10_td-pred.html#textbook-readings",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "10.2 Textbook readings",
+    "text": "10.2 Textbook readings\nFor this week, you will need to read Chapter 6-6.3 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen here.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "10_td-pred.html#what-is-td-learning",
+    "href": "10_td-pred.html#what-is-td-learning",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "10.3 What is TD learning?",
+    "text": "10.3 What is TD learning?\nGiven a policy \\(\\pi\\), we want to estimate the state-value function. Recall that the state value function is \\[\nv_\\pi(s) = \\mathbb{E}_\\pi[G_t | S_t = s].\n\\] where the return is \\[\nG_t = R_{t+1} + \\gamma R_{t+2} + \\gamma^2 R_{t+3} + \\cdots = \\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1} = R_{t+1} + \\gamma G_{t+1}\n\\]\nLet \\(V\\) denote the state-value estimate. Under MC prediction we used an incremental update formula: \\[\n  V(S_t) \\leftarrow V(S_t) + \\alpha_n\\left[G_t - V(S_t)\\right],\n\\] where \\(n\\) denote the number of observations and \\(\\alpha_n\\) the step-size. Different values of \\(\\alpha_n\\) was discussed in Chapter 9. Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage \\(t\\)) e.g. for the sample average \\(\\alpha_n = 1/n.\\) If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size: \\[\n  V(S_t) \\leftarrow V(S_t) + \\alpha\\left[G_t - V(S_t)\\right],\n\\]\nNote as pointed out in Section 5.5, a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of \\(S_t\\): \\[\n\\begin{align}\nV_{n+1} &= V_n +\\alpha \\left[G_n - V_n\\right] \\nonumber \\\\\n&= \\alpha G_n + (1 - \\alpha)V_n \\nonumber \\\\\n&= \\alpha G_n + (1 - \\alpha)[\\alpha G_{n-1} + (1 - \\alpha)V_{n-1}] \\nonumber \\\\\n&= \\alpha G_n + (1 - \\alpha)\\alpha G_{n-1} + (1 - \\alpha)^2 V_{n-1}  \\nonumber \\\\\n& \\vdots \\nonumber \\\\\n&= (1-\\alpha)^n V_1 + \\sum_{i=1}^{n} \\alpha (1 - \\alpha)^{n-i} G_i \\\\\n\\end{align}\n\\] That is, a larger weight is used for recent observations compared to old observations.\nFor MC prediction we needed the sample path to get the realized return \\(G_t\\). However, since \\[\n\\begin{align}\nv_\\pi(s) &= \\mathbb{E}_\\pi[G_t | S_t = s] \\\\\n         &= \\mathbb{E}_\\pi[R_{t+1} + \\gamma G_{t+1} | S_t = s] \\\\\n         &= \\mathbb{E}_\\pi[R_{t+1}| S_t = s] + \\gamma \\mathbb{E}_\\pi[G_{t+1} | S_t = s] \\\\\n         &= \\mathbb{E}_\\pi[R_{t+1}| S_t = s] + \\gamma v_\\pi(S_{t+1}),\n\\end{align}\n\\] then, given a realized reward \\(R_{t+1}\\), an estimate for the return \\(G_t\\) is \\(R_{t+1} + \\gamma V(S_{t+1})\\) and the incremental update becomes: \\[\n  V(S_t) \\leftarrow V(S_t) + \\alpha\\left[R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)\\right].\n\\tag{10.1}\\] As a result, we do not have to generate a whole sample-path (as for MC) for updating the state-value estimate of \\(s = S_t\\) to \\(V(S_t)\\). Instead we only have to wait until the next state is observed and update the estimate of \\(S_t\\) given the estimate of the next state \\(S_{t+1}\\). As the estimate of \\(S_{t+1}\\) improve the estimate of \\(S_t\\) also improve. The incremental update in Equation 10.1 is called TD(0) or one-step TD because it use a one-step lookahead to update the estimate. Note updating the estimates using TD resembles the way we did for DP: \\[\nV(s = S_t) \\leftarrow \\sum_{a \\in \\mathcal{A}}\\pi(a | s)\\left( r(s,a) + \\gamma\\sum_{s' \\in \\mathcal{S}} p(s' | s, a) V(s')\\right)\n\\] Here we updated the value by considering the expectation of all the next states. This was possible since we had a model. Now, by using TD, we do not need a model to estimate the state-value.\nThe term \\[\n\\delta_t = R_{t+1} + \\gamma V(S_{t+1}) - V(S_t),\n\\] is denoted the temporal difference error (TD error) since it is the difference between the current estimate \\(V(S_t)\\) and the better estimate \\(R_{t+1} + \\gamma V(S_{t+1})\\).",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "10_td-pred.html#td-prediction",
+    "href": "10_td-pred.html#td-prediction",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "10.4 TD prediction",
+    "text": "10.4 TD prediction\nWe can now formulate a TD(0) algorithm for predicting state-values of a policy (see Figure 10.1). No stopping criterion is given but could stop when small differences in state-values are observed.\n\n\n\n\n\n\n\n\nFigure 10.1: TD(0) policy prediction (Sutton and Barto 2018).\n\n\n\n\n\nThe algorithm is given for a process with episodes; however, also works for continuing processes. In this case the inner loop runs over an infinite number of time-steps.\n\n10.4.1 TD prediction for action-values\nLater we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using \\(q_*\\) (see Equation 7.3). To find \\(q_*\\), we first need to predict action-values for a policy \\(\\pi\\) and the incremental update Equation 10.1 must be modified to use \\(Q\\) values: \\[\n  Q(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha\\left[R_{t+1} + \\gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\\right].\n\\]\nNote given a policy \\(\\pi\\) you need to know \\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\\) or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in ?sec-td-control. Note to ensure exploration of all action-values we need e.g. an \\(\\epsilon\\)-soft behavioral policy.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "10_td-pred.html#benefits-of-td-methods",
+    "href": "10_td-pred.html#benefits-of-td-methods",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "10.5 Benefits of TD methods",
+    "text": "10.5 Benefits of TD methods\nLet us try to summarize the benefits of TD prediction\n\nTD methods do not require a model of the environment (compared to DP).\nTD methods can be implemented online, which can speed convergence (compared to MC methods which must wait until the end of the sample-path).\nTD methods learn from all actions, whereas MC methods require the sample-path to have a tail equal to the target policy.\nTD methods do converge on the value function with a sufficiently small step-size parameter, or with a decreasing step-size.\nTD methods generally converge faster than MC methods, although this has not been formally proven.\nTD methods are extremely useful for continuing tasks that cannot be broken down into episodes as required by MC methods.\nTD can be seen as a method for prediction learning where you try to predict what happens next given you current action, get new information and make a new prediction. That is, you do not need a training set (as in supervised learning) instead the reward signal is observed as time goes by.\nTD methods are good for sequential decision problems (multi-step prediction).\nTD methods are scalable in the sense that computations do not grow exponentially with the problem size.\n\nAn example illustrating that TD methods converge faster than MC methods is given in Exercise 10.6.1.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "10_td-pred.html#exercises",
+    "href": "10_td-pred.html#exercises",
+    "title": "10  Temporal difference methods for prediction",
+    "section": "10.6 Exercises",
+    "text": "10.6 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n10.6.1 Exercise - A random walk\nConsider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in Figure 10.2. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy \\(\\pi\\) is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.\n\n\n\n\n\n\n\n\nFigure 10.2: Possible transitions between states and rewards.\n\n\n\n\n\nConsider this section in the Colab notebook to see the questions. Use your own copy if you already have one.\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
     "objectID": "references.html",
     "href": "references.html",
     "title": "References",
