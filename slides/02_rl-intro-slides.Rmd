@@ -33,7 +33,7 @@ library(htmltools)
 footerHtml <- withTags({
    div(class="my-footer",
       span(
-         a(href=str_c("https://bss-osca.github.io/rl/mod-", module_name, ".html"), target="_blank", "Notes"), 
+         a(href=str_c("https://bss-osca.github.io/rl/sec-", module_name, ".html"), target="_blank", "Notes"), 
          " | ",
          a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
          " | ",
@@ -272,8 +272,8 @@ footerHtml
 RL is used in many research fields using different names
 - RL (most used) originated from computer science and AI.
 - *Approximate dynamic programming (ADP)* is mostly used within operations research. 
-- *Neuro-dynamic programming* (when states are represented using a neural network).
-- RL is closely related to *Markov decision processes* (a mathematical model for a sequential decision problem).
+- *Neuro-dynamic programming* or *Deep RL* is used when states or actions are represented using a neural network.
+- RL is closely related to *Markov decision processes*, which is a mathematical model for a sequential decision problem.
 ]
 
 .pull-right[

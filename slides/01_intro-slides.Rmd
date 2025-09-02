@@ -78,14 +78,17 @@ knitr::include_graphics("./img/responses.png")
 ## Teaching form and style 
 
 - A combination of lectures and tutorials. 
-  - Before: Read the suggested material (you may also start with the exercises).
+  - Before: Read the suggested material (you may also start the exercises).
   - Lecture or tutorial. Not all material will be covered here.
   - Continue with exercises (group work).
 - It is strongly recommended that you 
   - Read the material BEFORE class.
   - Solve the exercises for each week DURING the course. 
   - This is the best way to prepare for the exam. 
-
+- How much work am I expected to do in a 10 ECTS course? 
+  - Given 30 ECTS per semester and 40 hours study per week.
+  - Then 40/3 hours, which approx is 13 hours/week, i.e. 9 hours off-class. 
+  
 ---
 
 ## Course notes 
@@ -132,10 +135,10 @@ Even though Python will be used in the course, algorithms can also be coded in R
 
 ## Exam
 
-- A 20 min oral individual exam without any preparation. 
-- Curriculum include all material such as book chapters, course notes, videos, interactive tutorials, exercises and project reports.
+- A 20-minute oral individual exam without any preparation. 
+- Curriculum includes all material such as book chapters, course notes, videos, interactive tutorials, exercises and project reports.
 - The report may be used as a starting point for discussion at the individual exam.
-- In no report we do theoretical stuff instead.
+- If no report is handed in, we do theoretical stuff instead.
 
 ---
 
