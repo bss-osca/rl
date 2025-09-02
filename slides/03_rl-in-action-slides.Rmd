@@ -234,7 +234,7 @@ plotHypergraph(gridDim, states, actions, showGrid = F, cex = 1, radx = 0.02, rad
 ## Learning to play
 
 - Define $V(S)$ to be 1 if we win, 0 if we loose and 0.5 otherwise (reward/pr of winning).
-- Most of the time we *exploit* our knowledge with $pr = 1-\epsilon$, i.e. choose the action which gives us the highest estimated reward and update the value of a state using $$V(S_t) = V(S_t) + \alpha(V(S_{t+1})-V(S_t))$$ where $\alpha$ is the *step-size* parameter. 
+- Most of the time we *exploit* our knowledge with $pr = 1-\epsilon$, i.e. choose the action which gives us the highest estimated reward and update the value of a state using $$\begin{align}V(S_t) &= V(S_t) + \alpha(V(S_{t+1})-V(S_t)) \\&= (1-\alpha)V(S_t) + \alpha V(S_{t+1})\end{align}$$ where $\alpha$ is the *step-size* parameter. 
 - Some times we *explore* with $pr = \epsilon$ and choose another action/move than what seems optimal. 
 
 ---
