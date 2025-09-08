@@ -814,7 +814,7 @@
     "href": "10_td-pred.html#td-prediction",
     "title": "10  Temporal difference methods for prediction",
     "section": "10.4 TD prediction",
-    "text": "10.4 TD prediction\nWe can now formulate a TD(0) algorithm for predicting state-values of a policy (see Figure 10.1). No stopping criterion is given but could stop when small differences in state-values are observed.\n\n\n\n\n\n\n\n\nFigure 10.1: TD(0) policy prediction (Sutton and Barto 2018).\n\n\n\n\n\nThe algorithm is given for a process with episodes; however, also works for continuing processes. In this case the inner loop runs over an infinite number of time-steps.\n\n10.4.1 TD prediction for action-values\nLater we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using \\(q_*\\) (see Equation 7.3). To find \\(q_*\\), we first need to predict action-values for a policy \\(\\pi\\) and the incremental update Equation 10.1 must be modified to use \\(Q\\) values: \\[\n  Q(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha\\left[R_{t+1} + \\gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\\right].\n\\]\nNote given a policy \\(\\pi\\) you need to know \\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\\) or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in ?sec-td-control. Note to ensure exploration of all action-values we need e.g. an \\(\\epsilon\\)-soft behavioral policy.",
+    "text": "10.4 TD prediction\nWe can now formulate a TD(0) algorithm for predicting state-values of a policy (see Figure 10.1). No stopping criterion is given but could stop when small differences in state-values are observed.\n\n\n\n\n\n\n\n\nFigure 10.1: TD(0) policy prediction (Sutton and Barto 2018).\n\n\n\n\n\nThe algorithm is given for a process with episodes; however, also works for continuing processes. In this case the inner loop runs over an infinite number of time-steps.\n\n10.4.1 TD prediction for action-values\nLater we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using \\(q_*\\) (see Equation 7.3). To find \\(q_*\\), we first need to predict action-values for a policy \\(\\pi\\) and the incremental update Equation 10.1 must be modified to use \\(Q\\) values: \\[\n  Q(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha\\left[R_{t+1} + \\gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\\right].\n\\]\nNote given a policy \\(\\pi\\) you need to know \\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\\) or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in Chapter 11. Note to ensure exploration of all action-values we need e.g. an \\(\\epsilon\\)-soft behavioral policy.",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
     ]
@@ -837,6 +837,86 @@
     "text": "10.6 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n10.6.1 Exercise - A random walk\nConsider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in Figure 10.2. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy \\(\\pi\\) is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.\n\n\n\n\n\n\n\n\nFigure 10.2: Possible transitions between states and rewards.\n\n\n\n\n\nConsider this section in the Colab notebook to see the questions. Use your own copy if you already have one.\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Temporal difference methods for prediction</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html",
+    "href": "11_td-control.html",
+    "title": "11  Temporal difference methods for control",
+    "section": "",
+    "text": "11.1 Learning outcomes\nIn Chapter 10 temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:\nBy the end of this module, you are expected to:\nThe learning outcomes relate to the overall learning goals number 3, 4, 6, 9, and 12 of the course.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#learning-outcomes",
+    "href": "11_td-control.html#learning-outcomes",
+    "title": "11  Temporal difference methods for control",
+    "section": "",
+    "text": "Describe how generalized policy iteration (GPI) can be used with TD to find improved policies.\nIdentify the properties that must the satisfied for GPI to converge to the optimal policy.\nDerive and explain SARSA an on-policy GPI algorithm using TD.\nDescribe the relationship between SARSA and the Bellman equations.\nDerive and explain Q-learning an off-policy GPI algorithm using TD.\nArgue how Q-learning can be off-policy without using importance sampling.\nDescribe the relationship between Q-learning and the Bellman optimality equations.\nDerive and explain expected SARSA an on/off-policy GPI algorithm using TD.\nDescribe the relationship between expected SARSA and the Bellman equations.\nExplain how expected SARSA generalizes Q-learning.\nList the differences between Q-learning, SARSA and expected SARSA.\nApply the algorithms to an MDP to find the optimal policy.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#textbook-readings",
+    "href": "11_td-control.html#textbook-readings",
+    "title": "11  Temporal difference methods for control",
+    "section": "11.2 Textbook readings",
+    "text": "11.2 Textbook readings\nFor this week, you will need to read Chapter 6.4-6.6 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#sarsa---on-policy-gpi-using-td",
+    "href": "11_td-control.html#sarsa---on-policy-gpi-using-td",
+    "title": "11  Temporal difference methods for control",
+    "section": "11.3 SARSA - On-policy GPI using TD",
+    "text": "11.3 SARSA - On-policy GPI using TD\nThe first GPI algorithm we will consider is SARSA. Since we do not have a model we need to estimate action-values so the optimal policy can be found using \\(q_*\\) (see Equation 7.3). Hence to predict action-values for a policy \\(\\pi\\), the incremental update Equation 10.1 must be modified to use \\(Q\\) values: \\[\nQ(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[R_{t+1} + \\gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \\right]\n\\] Note given a policy \\(\\pi\\) you need to know \\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\\) or short SARSA before you can make an update. This acronym is used to name the algorithm.\nThe algorithm is given in Figure 11.1. To ensure infinite exploration of all action-values, we need e.g. an \\(\\epsilon\\)-greedy policy. The algorithm can also be applied for processes with continuing tasks. To ensure greedy in the limit a decreasing epsilon can be used (e.g. \\(\\epsilon = 1/t\\)). No stopping criterion is given but could stop when small differences in action-values are observed.\n\n\n\n\n\n\n\n\nFigure 11.1: SARSA - On-policy GPI using TD (Sutton and Barto 2018).\n\n\n\n\n\nSARSA is a sample based algorithm that do updates based on the Bellman equation for action-values (\\(q\\)): \\[\n\\begin{align}\n  q_\\pi(s, a) &= \\mathbb{E}_\\pi[G_t | S_t = s, A_t = a] \\\\\n  &= \\mathbb{E}_\\pi[R_{t+1} + \\gamma G_{t+1} | S_t = s, A_t = a] \\\\\n  &= \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma v_\\pi(s')\\right) \\\\\n  &= \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma \\sum_{a'} \\pi(a'|s) q_\\pi(s', a')\\right).\n\\end{align}\n\\] That is, we update the estimate based on samples \\(r\\) and the estimate \\(q_\\pi\\) in \\(s'\\). This is the same approach as policy iteration in DP: we first calculate new estimates of \\(q_\\pi\\) given the current policy \\(\\pi\\) and then improve. Hence SARSA is a sample based version of policy iteration in DP.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#q-learning---off-policy-gpi-using-td",
+    "href": "11_td-control.html#q-learning---off-policy-gpi-using-td",
+    "title": "11  Temporal difference methods for control",
+    "section": "11.4 Q-learning - Off-policy GPI using TD",
+    "text": "11.4 Q-learning - Off-policy GPI using TD\nQ-learning resembles SARSA; however, there are some differences. The algorithm is given in Figure 11.2. Note the incremental update equation is now: \\[\\begin{equation}\nQ(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[R_{t+1} + \\gamma \\max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \\right]\n\\end{equation}\\] That is, the next action used to update \\(Q\\) is selected greedy. That is, we are no longer following an \\(\\epsilon\\)-greedy policy for our updates.\n\n\n\n\n\n\n\n\nFigure 11.2: Q-learning - Off-policy GPI using TD (Sutton and Barto 2018).\n\n\n\n\n\nSARSA is an on-policy algorithm, meaning that the behavioural and target policy is the same, e.g. an \\(\\epsilon\\)-greedy policy to ensure exploration. That is, for fixed \\(\\epsilon\\) the greedy in the limit assumption is not fulfilled. Q-learning, on the other hand, is an off-policy algorithm where the behavioural policy is an \\(\\epsilon\\)-greedy and the target policy is the (deterministic) greedy policy. That is, Q-learning fulfil both the ‘infinite exploration’ and ‘greedy in the limit’ assumptions.\nNote under MC prediction an off-policy algorithm needed to use importance sampling to estimate the action-value of the target policy (see Section 9.5). This is not necessary for one-step TD, since \\[\n\\begin{align}\nq_\\pi(s,a) &= \\mathbb{E}_{\\pi}[R_t + \\gamma G_{t+1}|S_t = s, A_t = a] \\\\\n           &= \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma \\sum_{a'} \\pi(a'|s) q_\\pi(s', a')\\right) \\\\\n           &= \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma \\max_{a'} q_\\pi(s', a')\\right) \\\\\n\\end{align}\n\\tag{11.1}\\]\nThat is, because the target policy is greedy and deterministic expectation the \\(G_{t+1}\\) becomes a maximum. Hence we can update the action-value estimates \\(Q\\) for the target policy \\(\\pi\\) even though we sample from an \\(\\epsilon\\)-greedy behavioural policy.\nQ-learning is a sample based algorithm that do updates based on the Bellman optimality equation for action-values (\\(q_*\\)): \\[\n\\begin{align}\n  q_*(s, a) &= \\max_\\pi q_\\pi(s, a) \\\\\n  &= \\max_\\pi \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma v_\\pi(s')\\right) \\\\\n  &= \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma \\max_\\pi v_\\pi(s')\\right) \\\\\n  &= \\sum_{s',r} p(s', r | s, a) \\left(r + \\gamma \\max_{a'} q_*(s', a')\\right)\n\\end{align}\n\\] That is, we update the estimate based on samples \\(r\\) and the estimate \\(q_*\\) in \\(s'\\). This is the same approach as value iteration in DP: we update the estimates of \\(q_\\pi\\) and improve the policy in one operation. Hence Q-learning is a sample based version of value iteration in DP.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#expected-sarsa---gpi-using-td",
+    "href": "11_td-control.html#expected-sarsa---gpi-using-td",
+    "title": "11  Temporal difference methods for control",
+    "section": "11.5 Expected SARSA - GPI using TD",
+    "text": "11.5 Expected SARSA - GPI using TD\nThe expected SARSA, as SARSA, focus on the Bellman equation Equation 11.1. SARSA generate action \\(A_{t+1}\\) from the policy \\(\\pi\\) and use the estimated action-value of \\((S_{t+1},A_{t+1})\\). However, since we know the current policy \\(\\pi\\), we might update based on the expected value instead: \\[\nQ(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[R_{t+1} + \\gamma \\sum_{a} \\pi(a | S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \\right] \\\\\n\\] That is, we use a better estimate of the Bellman equation Equation 11.1 by not sampling \\(A_{t+1}\\) but using the (deterministic) expectation over all actions instead. Doing so reduces the variance induced by selecting random actions according to an \\(\\epsilon\\)-greedy policy. As a result, given the same amount of experiences, expected SARSA generally performs better than SARSA, but has a higher computational cost.\nExpected SARSA is more robust to different step-size values. The incremental update formula can be written as \\[\nQ(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[T_t - Q(S_t, A_t) \\right] = (1-\\alpha)Q(S_t, A_t) + \\alpha T_t,\n\\] with step-size \\(\\alpha\\) and target \\(T_t\\). For SARSA the target is \\[T_t = R_{t+1} + \\gamma Q(S_{t+1}, A_{t+1}),\\] and for expected SARSA the target is: \\[T_t = R_{t+1} + \\gamma \\sum_{a} \\pi(a | S_{t+1}) Q(S_{t+1}, a).\\] Now assume that we have run the algorithm over many time-steps so that our estimates \\(Q(S_t, A_t)\\) are close to \\(q_*(S_t, A_t)\\). Since the target in expected SARSA is deterministic (we do not sample \\(A_{t+1}\\)), the target \\(T_t \\approx Q(S_t, A_t)\\) and no matter the step-size \\(Q(S_t, A_t)\\) will be updated to the same value. On the other hand, the target in SARSA uses a sample action \\(A_{t+1}\\) that might have an action-value far from the expectation. This implies that for large step-sizes \\(Q(S_t, A_t)\\) will be updated to the target which is wrong. Hence SARSA is more sensitive to large step-sizes.\nExpected SARSA can be both on-policy and off-policy. If the behavioural policy and the target policy are different it is off-policy. If they are the same it is on-policy. For instance, expected SARSA is off-policy if the target policy is greedy and the behavioural policy \\(\\epsilon\\)-greedy. In which case expected SARSA becomes Q-learning since the expectation of a greedy policy is the maximum value (\\(\\pi(s|a) = 1\\) here). Hence expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#summary",
+    "href": "11_td-control.html#summary",
+    "title": "11  Temporal difference methods for control",
+    "section": "11.6 Summary",
+    "text": "11.6 Summary\nRead Chapter 6.9 in Sutton and Barto (2018).",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
+    ]
+  },
+  {
+    "objectID": "11_td-control.html#exercises",
+    "href": "11_td-control.html#exercises",
+    "title": "11  Temporal difference methods for control",
+    "section": "11.7 Exercises",
+    "text": "11.7 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n11.7.1 Exercise - Factory Storage\nConsider Example 8.8 where a factory has a storage tank with a capacity of 4 \\(\\mathrm{m}^{3}\\) for temporarily storing waste produced by the factory. Each week the factory produces \\(0,1\\), 2 or 3 \\(\\mathrm{m}^{3}\\) waste with respective probabilities \\[p_{0}=\\displaystyle \\frac{1}{8},\\ p_{1}=\\displaystyle \\frac{1}{2},\\ p_{2}=\\displaystyle \\frac{1}{4} \\text{ and } p_{3}=\\displaystyle \\frac{1}{8}.\\] If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.\nAn MDP model was formulated in Example 8.8 and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD.\nConsider [this section][colab-11-td-control-sec-td-control-storage] in the Colab notebook to see the questions. Use your own copy if you already have one.\n\n\n11.7.2 Exercise - Car Rental\nConsider the car rental problem in Exercise 7.8.2 and Exercise 8.10.3. An MDP model was formulated in Exercise 8.10.3 and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD.\nConsider [this section][colab-11-td-control-sec-td-control-car] in the Colab notebook to see the questions. Use your own copy if you already have one.\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Temporal difference methods for control</span>"
     ]
   },
   {

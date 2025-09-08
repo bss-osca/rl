@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./11_td-control.html" rel="next">
 <link href="./09_mc.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -245,6 +245,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./11_td-control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Temporal difference methods for control</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -407,7 +413,7 @@ Figure&nbsp;10.1: TD(0) policy prediction <span class="citation" data-cites="Sut
 <p>Later we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see <a href="07_mdp-2.html#eq-bell-opt-state-policy" class="quarto-xref">Equation&nbsp;<span>7.3</span></a>). To find <span class="math inline">\(q_*\)</span>, we first need to predict action-values for a policy <span class="math inline">\(\pi\)</span> and the incremental update <a href="#eq-td0" class="quarto-xref">Equation&nbsp;<span>10.1</span></a> must be modified to use <span class="math inline">\(Q\)</span> values: <span class="math display">\[
   Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\right].
 \]</span></p>
-<p>Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in <span class="quarto-unresolved-ref">?sec-td-control</span>. Note to ensure exploration of all action-values we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-soft behavioral policy.</p>
+<p>Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in <a href="11_td-control.html" class="quarto-xref"><span>Chapter 11</span></a>. Note to ensure exploration of all action-values we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-soft behavioral policy.</p>
 </section>
 </section>
 <section id="benefits-of-td-methods" class="level2" data-number="10.5">
@@ -866,8 +872,8 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./11_td-control.html" class="pagination-link" aria-label="Temporal difference methods for control">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Temporal difference methods for control</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
