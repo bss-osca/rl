@@ -121,7 +121,7 @@ Here $\arg\max_a$ means the value of $a$ for which $Q_t(a)$ is maximised. A pure
 <!-- \end{equation} -->
 
 ::: {.callout-note title="Colab - Before the lecture"}
-During the lecture for this module we will work with the [tutorial][colab-05-bandit] where we will try to estimate the $Q$ values. We implement the algorithm using an agent and environment class. 
+During the lecture for this module, we will work with this [tutorial][colab-05-bandit] where we will try to estimate the $Q$ values. We implement the algorithm using an agent and environment class. 
 Open the [tutorial][colab-05-bandit]:
 
    - Have a look at the notebook and run all code cells.
@@ -142,7 +142,7 @@ Until now we have used the sample average $\alpha_n(a)= 1/n$; however, other cho
     \sum_n \alpha_n(a) = \infty \quad\quad \mathsf{and} \quad\quad  \sum_n \alpha_n(a)^2 < \infty.
 \end{equation}
 
-Meaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant $\alpha_n(a)= \alpha \in (0, 1]$ instead. This results in \$Q_{n+1}$ being a weighted average of the past rewards and the initial estimate $Q_1$:
+Meaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant $\alpha_n(a)= \alpha \in (0, 1]$ instead. This results in $Q_{n+1}$ being a weighted average of the past rewards and the initial estimate $Q_1$:
 
 \begin{align}
 Q_{n+1} &= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
@@ -153,12 +153,14 @@ Q_{n+1} &= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 &= (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha (1 - \alpha)^{n-i} R_i \\
 \end{align}
 
-Because the weight given to each reward depends on how long  ago it was observed, we can see that more recent rewards are given more weight. Note the weights $\alpha$ sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since  the weight given to each reward decays exponentially into the past. This sometimes called an *exponential recency-weighted average*.
+Because the weight given to each reward depends on how long  ago it was observed, we can see that more recent rewards are given more weight. Note the weights sum to 1 here, ensuring it is indeed a weighted average where more weight is allocated to recent rewards. Since  the weight given to each reward decays exponentially into the past. This sometimes called an *exponential recency-weighted average*.
 
 
 ## Optimistic initial values
 
-The methods discussed so far are dependent to some extent on the initial action-value estimate i.e. they are biased by their initial estimates. For methods with constant $(\alpha)$ this bias is permanent. We may set initial value estimates artificially high to encourage exploration in the short run. For instance, by setting initial values of $Q$ to 5 rather than 0 we encourage exploration, even in the greedy case. Here the agent will almost always be disappointed with it's samples because they are less than the initial estimate and so will explore elsewhere until the values converge.
+The methods discussed so far are dependent to some extent on the initial action-value estimate i.e. they are biased by their initial estimates. For methods with constant step-size $(\alpha)$ this bias is permanent. 
+
+We may set initial value estimates artificially high to encourage exploration in the short run. For instance, if the observed rewards in general are below 5, then by setting initial values of $Q$ to 5 rather than zero, we encourage exploration, even in the greedy case. Here, the agent will almost always be disappointed with its samples because they are less than the initial estimate, and so will explore elsewhere until the values converge.
 
 
 ## Upper-Confidence Bound Action Selection
