@@ -436,7 +436,7 @@ The problem can be modelled as a finite MDP where a state denote the amount of w
 4) Calculate the transition probabilities $p(s'|s,a)$.
 
    ::: {.callout-warning collapse="true" title="Solution"}
-   The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\text{ if } s\leq s' \leq 3$$ $$p(4|s,k) = \sum_{i\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\text{ if }  0\leq s' \leq 4$$ $$p(s'|s,a) =  0 \text{ otherwise.}$$
+   The transition probabilities are: $$p(s'|s,k) = p_{s'-s}\text{ if } s\leq s' \leq 3$$ $$p(4|s,k) = \sum_{i\geq 4-s} p_i$$ $$p(s'|s,e) = p_{s'}\text{ if }  0\leq s' < 4$$ $$p(s'|s,a) =  0 \text{ otherwise.}$$
    :::
 
 ```{r links, child="links.md", include=FALSE}
