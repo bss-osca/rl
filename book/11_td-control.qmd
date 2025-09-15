@@ -171,3 +171,6 @@ Consider the car rental problem in [Exercise @sec-mdp-2-car] and [Exercise @sec-
 
 
 Consider [this section][colab-11-td-control-sec-td-control-car] in the Colab notebook to see the questions. Use your own copy if you already have one.
+
+```{r links, child="links.md", include=FALSE}
+```
