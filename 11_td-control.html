@@ -353,7 +353,7 @@ window.Quarto = {
 </section>
 <section id="textbook-readings" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">11.2</span> Textbook readings</h2>
-<p>For this week, you will need to read Chapter 6.4-6.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].</p>
+<p>For this week, you will need to read Chapter 6.4-6.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -420,7 +420,7 @@ q_\pi(s,a) &amp;= \mathbb{E}_{\pi}[R_t + \gamma G_{t+1}|S_t = s, A_t = a] \\
            &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_\pi(s', a')\right) \\
 \end{align}
 \tag{11.1}\]</span></span></p>
-<p>That is, because the target policy is greedy and deterministic expectation the <span class="math inline">\(G_{t+1}\)</span> becomes a maximum. Hence we can update the action-value estimates <span class="math inline">\(Q\)</span> for the target policy <span class="math inline">\(\pi\)</span> even though we sample from an <span class="math inline">\(\epsilon\)</span>-greedy behavioural policy.</p>
+<p>That is, because the target policy is greedy and deterministic, the expectation of <span class="math inline">\(G_{t+1}\)</span> becomes a maximum. Hence we can update the action-value estimates <span class="math inline">\(Q\)</span> for the target policy <span class="math inline">\(\pi\)</span> even though we sample from an <span class="math inline">\(\epsilon\)</span>-greedy behavioural policy.</p>
 <p>Q-learning is a sample based algorithm that do updates based on the Bellman optimality equation for action-values (<span class="math inline">\(q_*\)</span>): <span class="math display">\[
 \begin{align}
   q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
@@ -451,12 +451,12 @@ Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = (1
 <h3 data-number="11.7.1" class="anchored" data-anchor-id="sec-td-control-storage"><span class="header-section-number">11.7.1</span> Exercise - Factory Storage</h3>
 <p>Consider <a href="08_dp.html#sec-dp-storage" class="quarto-xref">Example&nbsp;<span>8.8</span></a> where a factory has a storage tank with a capacity of 4 <span class="math inline">\(\mathrm{m}^{3}\)</span> for temporarily storing waste produced by the factory. Each week the factory produces <span class="math inline">\(0,1\)</span>, 2 or 3 <span class="math inline">\(\mathrm{m}^{3}\)</span> waste with respective probabilities <span class="math display">\[p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.\]</span> If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.</p>
 <p>An MDP model was formulated in <a href="08_dp.html#sec-dp-storage" class="quarto-xref">Example&nbsp;<span>8.8</span></a> and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD.</p>
-<p>Consider [this section][colab-11-td-control-sec-td-control-storage] in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
+<p>Consider <a href="https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1">this section</a> in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
 </section>
 <section id="sec-td-control-car" class="level3" data-number="11.7.2">
 <h3 data-number="11.7.2" class="anchored" data-anchor-id="sec-td-control-car"><span class="header-section-number">11.7.2</span> Exercise - Car Rental</h3>
 <p>Consider the car rental problem in <a href="07_mdp-2.html#sec-mdp-2-car" class="quarto-xref">Exercise&nbsp;<span>7.8.2</span></a> and <a href="08_dp.html#sec-dp-rental" class="quarto-xref">Exercise&nbsp;<span>8.10.3</span></a>. An MDP model was formulated in <a href="08_dp.html#sec-dp-rental" class="quarto-xref">Exercise&nbsp;<span>8.10.3</span></a> and solved using policy iteration. Our goal here is to solve the same problem with GPI using TD.</p>
-<p>Consider [this section][colab-11-td-control-sec-td-control-car] in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
+<p>Consider <a href="https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1">this section</a> in the Colab notebook to see the questions. Use your own copy if you already have one.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
