@@ -105,8 +105,8 @@ plotRL <- function(active = c('F', 'T', 'F'), label = c("A[0]", "O[0]", "R[1]"),
       ) +
       scale_edge_color_manual(values = c('T' = "black", 'F' = NA)) +
       geom_node_label(aes(filter = name != lblAgent, label = name), label.padding = unit(1, "lines"), fontface = "bold", size = 10) +
-      geom_node_text(aes(filter = name == lblAgent, label = name), parse = TRUE, size = 7) +
-      theme_graph(base_size = 30, background = NA, border = T, plot_margin = margin(30,30,10,50)) + 
+      geom_node_text(aes(filter = name == lblAgent, label = name), parse = TRUE, size = 7, nudge_y = -0.03) +
+      theme_graph(base_size = 30, background = NA, border = T, plot_margin = margin(30,30,30,50)) + 
       coord_cartesian(clip = "off")
    return(p)
 }
