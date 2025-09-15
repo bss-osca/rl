@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -90,14 +90,15 @@ div.csl-indent {
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-23102fe0f0b5b1a9f09cc09ebcc8fe5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d58359eb3ecc31d3bec1ed479c2cbb3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -147,7 +148,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -194,7 +195,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./img/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="./img/logo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./img/logo.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Reinforcement Learning for Business (RL)</a> 
@@ -354,7 +356,7 @@ window.Quarto = {
 </header>
 
 
-<p>This module gives an introduction to Markov decision processes (MDPs) with a finite number of states and actions. This gives us a full model of a sequential decision problem. MDPs are a classical formalization of sequential decision making, where actions influence not just immediate rewards, but also what will be the next state, and hence future rewards. Thus MDPs involve delayed reward and the need to consider the trade-off between immediate and delayed reward. MDPs are a mathematically idealized form of the RL problem where a full description is known and the optimal policy can be found. Often in a RL problem some parts of this description is unknown and we hereby have to estimate the best policy by learning. For example, in the bandit problem the rewards was unknown.</p>
+<p>This module gives an introduction to Markov decision processes (MDPs) with a finite number of states and actions. This gives us a full model of a sequential decision problem. MDPs are a classical formalization of sequential decision making, where actions influence not just immediate rewards, but also what will be the next state, and hence future rewards. Thus MDPs involve delayed reward and the need to consider the trade-off between immediate and delayed reward. MDPs are a mathematically idealized form of the RL problem where a full model/description is known and the optimal policy can be found. Often in a RL problem some parts of this description is unknown and we hereby have to estimate the best policy by learning. For example, in the bandit problem the rewards was unknown.</p>
 <section id="learning-outcomes" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">6.1</span> Learning outcomes</h2>
 <p>By the end of this module, you are expected to:</p>
@@ -412,7 +414,7 @@ You do not have to look at them before the lecture!
 </div>
 <p>Note we here assume that the <em>Markov property</em> is satisfied and the current state holds just as much information as the history of observations. That is, given the present state the future is independent of the past:</p>
 <p><span class="math display">\[\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).\]</span> That is, the probability of seeing some next state <span class="math inline">\(S_{t+1}\)</span> given the current state is exactly equal to the probability of that next state given the entire history of states.</p>
-<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in <a href="#fig-hgf1" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>. Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
+<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in <a href="#fig-hgf1" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>. Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0 = 3\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1 = 2\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-hgf1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -485,12 +487,12 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 <ol type="1">
 <li><p>Think of two sequential decision problems and try to formulate them as MDPs. Describe the states, actions and rewards in words.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -507,12 +509,12 @@ Solution
 </div></li>
 <li><p>How do the states, actions and rewards look like for the bandit problem? Try drawing the state-expanded hypergraph.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -538,19 +540,19 @@ Solution
 <ol type="1">
 <li><p>Suppose <span class="math inline">\(\gamma=0.8\)</span> and we observe the following sequence of rewards: <span class="math inline">\(R_1 = -3\)</span>, <span class="math inline">\(R_2 = 5\)</span>, <span class="math inline">\(R_3=2\)</span>, <span class="math inline">\(R_4 = 7\)</span>, and <span class="math inline">\(R_5 = 1\)</span> with a finite time-horizon of <span class="math inline">\(T=5\)</span>. What is <span class="math inline">\(G_0\)</span>? Hint: work backwards and recall that <span class="math inline">\(G_t = R_{t+1} + \gamma G_{t+1}\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>gam <span class="op">=</span> <span class="fl">0.8</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>gam <span class="op">=</span> <span class="fl">0.8</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> [<span class="op">-</span><span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">1</span>]</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f't = 5 G_5 = </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">'</span>)</span>
@@ -562,19 +564,19 @@ Solution
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 3 G_3 = 7.8</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 2 G_2 = 8.24</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 1 G_1 = 11.592</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 0 G_0 = 6.2736</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 0 G_0 = 6.2736</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div></li>
 <li><p>Suppose <span class="math inline">\(\gamma=0.9\)</span> and we observe rewards: <span class="math inline">\(R_1 = 2\)</span>, <span class="math inline">\(R_t = 7\)</span>, <span class="math inline">\(t&gt;1\)</span> given a infinite time-horizon. What is <span class="math inline">\(G_0\)</span> and <span class="math inline">\(G_1\)</span>? Hint: recall that <span class="math inline">\(\sum_{k=0}^\infty x^k = 1/(1-x)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -587,12 +589,12 @@ Solution
                         &amp;= 7\sum_{k=0}^\infty 0.9^k \\
                         &amp;= \frac{7}{1-0.9}\end{align}\]</span></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>G_1 <span class="op">=</span> <span class="dv">7</span> <span class="op">*</span> <span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">-</span><span class="fl">0.9</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>G_1 <span class="op">=</span> <span class="dv">7</span> <span class="op">*</span> <span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">-</span><span class="fl">0.9</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G_1)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 70.00000000000001</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>G_0 <span class="op">=</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.9</span> <span class="op">*</span> G_1</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(G_0)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 65.00000000000001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 65.00000000000001</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -605,12 +607,12 @@ Solution
 <ol type="1">
 <li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>. Which states are terminal states?</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -622,12 +624,12 @@ Solution
 </div></li>
 <li><p>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -639,12 +641,12 @@ Solution
 </div></li>
 <li><p>Let <span class="math inline">\(R_a\)</span> denote the reward given bet <span class="math inline">\(a\)</span> (a stochastic variable). Calculate the expected rewards. If the state-value for the terminal states is set to zero, what do the state-value of a policy mean?</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -656,12 +658,12 @@ Solution
 </div></li>
 <li><p>Let <span class="math inline">\(R_a\)</span> be zero for all bets <span class="math inline">\(a\)</span> and set the state-value for the terminal state 0 to zero and for state 100 to one. What do the state-value of a policy mean?</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -673,12 +675,12 @@ Solution
 </div></li>
 <li><p>Calculate the transition probabilities.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -697,12 +699,12 @@ Solution
 <ol type="1">
 <li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -714,12 +716,12 @@ Solution
 </div></li>
 <li><p>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -731,12 +733,12 @@ Solution
 </div></li>
 <li><p>Calculate the expected rewards <span class="math inline">\(r(s,a)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -748,12 +750,12 @@ Solution
 </div></li>
 <li><p>Calculate the transition probabilities <span class="math inline">\(p(s'|s,a)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+<span class="screen-reader-only">Warning</span>Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -826,13 +828,14 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
