@@ -690,14 +690,7 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 </div>
 </div>
 </div></li>
-</ol>
-</section>
-<section id="sec-mdp-1-storage" class="level3" data-number="6.6.4">
-<h3 data-number="6.6.4" class="anchored" data-anchor-id="sec-mdp-1-storage"><span class="header-section-number">6.6.4</span> Exercise - Factory storage</h3>
-<p>A factory has a storage tank with a capacity of 4 <span class="math inline">\(\mathrm{m}^{3}\)</span> for temporarily storing waste produced by the factory. Each week the factory produces <span class="math inline">\(0,1\)</span>, 2 or 3 <span class="math inline">\(\mathrm{m}^{3}\)</span> waste with respective probabilities <span class="math display">\[p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.\]</span> If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.</p>
-<p>The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week <span class="math inline">\(n\)</span> just before the regular removal opportunity.</p>
-<ol type="1">
-<li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</p>
+<li><p>Write an alternative MDP model having only a single absorbing state representing “game over” and let the objective be the probability of winning. That is, state 0 and 100 are not absorbing states in this case.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -710,11 +703,29 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><span class="math display">\[\mathcal{S} = \{ 0,1,2,3,4 \}\]</span></p>
+<p><strong>States</strong></p>
+<p>We add state 101 representing “game over” <span class="math display">\[\mathcal{S} = \{0, \ldots, 100, 101 \}.\]</span> Terminal state is now 101 (game over).</p>
+<p><strong>Actions</strong></p>
+<p>If <span class="math inline">\(s\leq 100\)</span> then <span class="math display">\[\mathcal{A}(s) = \{ a\in \mathcal{S} | 0 \leq a \leq \min(s, 100-s) \}.\]</span> If <span class="math inline">\(s = 101\)</span> then <span class="math inline">\(A(101) = \{d\}\)</span> (dummy action).</p>
+<p><strong>Rewards</strong></p>
+<p>The expected reward is <span class="math inline">\(r(s,a) = 0 for 0 \leq s &lt; 100, a\in A(s)\)</span>, <span class="math inline">\(r(100,0) = 1\)</span> and <span class="math inline">\(r(101,d) = 0\)</span>.</p>
+<p><strong>Transition probabilities</strong></p>
+<p>For <span class="math inline">\(0 &lt; s &lt; 100\)</span> we have that <span class="math display">\[\begin{align}
+p(s' | s, a) = 1-p_H \qquad &amp;\text{if } s' = s - a\\
+p(s' | s, a) = p_H \qquad &amp;\text{if } s' = s + a
+\end{align}
+\]</span> Moreover, we have transitions to the absorbing state as: <span class="math inline">\(p(101 | 0, 0) = p(101 | 100, 0) = 1\)</span> and <span class="math inline">\(p(101 | 101, d)\)</span>. Note that using this model, we do not need to set the state-value of the absorbing state.</p>
 </div>
 </div>
 </div></li>
-<li><p>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
+</ol>
+</section>
+<section id="sec-mdp-1-storage" class="level3" data-number="6.6.4">
+<h3 data-number="6.6.4" class="anchored" data-anchor-id="sec-mdp-1-storage"><span class="header-section-number">6.6.4</span> Exercise - Factory storage</h3>
+<p>A factory has a storage tank with a capacity of 4 <span class="math inline">\(\mathrm{m}^{3}\)</span> for temporarily storing waste produced by the factory. Each week the factory produces <span class="math inline">\(0,1\)</span>, 2 or 3 <span class="math inline">\(\mathrm{m}^{3}\)</span> waste with respective probabilities <span class="math display">\[p_{0}=\displaystyle \frac{1}{8},\ p_{1}=\displaystyle \frac{1}{2},\ p_{2}=\displaystyle \frac{1}{4} \text{ and } p_{3}=\displaystyle \frac{1}{8}.\]</span> If the amount of waste produced in one week exceeds the remaining capacity of the tank, the excess is specially removed at a cost of $30 per cubic metre. At the end of each week there is a regular opportunity to remove all waste from the storage tank at a fixed cost of $25 and a variable cost of $5 per cubic metre.</p>
+<p>The problem can be modelled as a finite MDP where a state denote the amount of waste in the tank at the end of week <span class="math inline">\(n\)</span> just before the regular removal opportunity.</p>
+<ol type="1">
+<li><p>Define the state space <span class="math inline">\(\mathcal{S}\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -727,11 +738,11 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 </div>
 <div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Let <span class="math inline">\(e\)</span> and <span class="math inline">\(k\)</span> denote empty and keep the waste from the tank. Then the action space is <span class="math display">\[\mathcal{A}(s) = \{ e, k \}.\]</span></p>
+<p><span class="math display">\[\mathcal{S} = \{ 0,1,2,3,4 \}\]</span></p>
 </div>
 </div>
 </div></li>
-<li><p>Calculate the expected rewards <span class="math inline">\(r(s,a)\)</span>.</p>
+<li><p>Define the action space <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -744,11 +755,11 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 </div>
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence <span class="math display">\[r(s, e) = -(25 + 5s)\]</span>and<span class="math display">\[r(s,k) = -30\sum_{i&gt;4-s} (s+i-4)p_i\]</span></p>
+<p>Let <span class="math inline">\(e\)</span> and <span class="math inline">\(k\)</span> denote empty and keep the waste from the tank. Then the action space is <span class="math display">\[\mathcal{A}(s) = \{ e, k \}.\]</span></p>
 </div>
 </div>
 </div></li>
-<li><p>Calculate the transition probabilities <span class="math inline">\(p(s'|s,a)\)</span>.</p>
+<li><p>Calculate the expected rewards <span class="math inline">\(r(s,a)\)</span>.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -760,6 +771,23 @@ G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \leq B \sum_{k=0}^{\infty} \gamma^k
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The expected cost of a given state and action is the cost of empting the container and the expected cost of a special removal during the next week. Hence <span class="math display">\[r(s, e) = -(25 + 5s)\]</span>and<span class="math display">\[r(s,k) = -30\sum_{i&gt;4-s} (s+i-4)p_i\]</span></p>
+</div>
+</div>
+</div></li>
+<li><p>Calculate the transition probabilities <span class="math inline">\(p(s'|s,a)\)</span>.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The transition probabilities are: <span class="math display">\[p(s'|s,k) = p_{s'-s}\text{ if } s\leq s' \leq 3\]</span> <span class="math display">\[p(4|s,k) = \sum_{i\geq 4-s} p_i\]</span> <span class="math display">\[p(s'|s,e) = p_{s'}\text{ if }  0\leq s' &lt; 4\]</span> <span class="math display">\[p(s'|s,a) =  0 \text{ otherwise.}\]</span></p>
 </div>
