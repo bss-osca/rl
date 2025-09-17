@@ -348,7 +348,7 @@ footerHtml
 
 $$v_*(s) = \max_\pi v_\pi(s).$$
 * A policy $\pi'$ is better than policy $\pi$ if its expected return is greater than or equal for all states and is strictly greater for at least one state. 
-* But the objective is not a scalar, but if the agent start in state $s_0$: 
+* Note the objective is not a scalar, but if the agent starts in state $s_0$: 
 $$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$
 That is, maximize the expected return given starting state $s_0$.
 * If the MDP has the right properties, there exists an optimal deterministic policy $\pi_*$ which is better than or just as good as all other policies.
