@@ -166,7 +166,7 @@ $$
 $$ {#eq-bell-opt-state}
 
 Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal
-value functions. Using \(v_*\), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store $v_*$, we can find $v_*$ by a one-step-ahead search using $q_*$, acting greedy.
+value functions. Using $ v _*$, the optimal expected long-term return is turned into a quantity that is immediately available for each state. On the other hand, if we do not store $v_*$, we can find $v_*$ by a one-step-ahead search using $q_*$, acting greedily.
 
 
 ## Optimality vs approximation 
@@ -277,5 +277,6 @@ Note the inventory dynamics (number of cars) at each parking lot is independent 
 Only difference is that cars moved to Location 2 is $a$ (and not $-a$): $$Y = \min(20, y + a - \min(D_2, y+a) + H_2)).$$
 :::
 
-
+```{r links, child="links.md", include=FALSE}
+```
 

@@ -165,7 +165,7 @@ layout: true
 \end{equation}`
    and the *expected reward*:
 `\begin{equation}
-    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a).
+    r(s, a) = \mathbb{E}[R_t | S_{t-1} = s, A_{t-1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r | s, a) = \sum_{r \in \mathcal{R}} r p(r | s, a).
 \end{equation}`
 
 ---
