@@ -36,7 +36,7 @@ layout: true
   
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/sec-mdp-2.html" target="_blank">Notes</a>
  | 
 <a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
  | 
@@ -115,7 +115,7 @@ layout: true
 
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/sec-mdp-2.html" target="_blank">Notes</a>
  | 
 <a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
  | 
@@ -176,7 +176,7 @@ layout: false
 
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/sec-mdp-2.html" target="_blank">Notes</a>
  | 
 <a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
  | 
@@ -190,7 +190,7 @@ layout: false
 
 `$$v_*(s) = \max_\pi v_\pi(s).$$`
 * A policy `\(\pi'\)` is better than policy `\(\pi\)` if its expected return is greater than or equal for all states and is strictly greater for at least one state. 
-* But the objective is not a scalar, but if the agent start in state `\(s_0\)`: 
+* Note the objective is not a scalar, but if the agent starts in state `\(s_0\)`: 
 `$$v_*(s_0) = \max_\pi \mathbb{E}_\pi[G_0 | S_0 = s_0] = \max_\pi v_\pi(s_0)$$`
 That is, maximize the expected return given starting state `\(s_0\)`.
 * If the MDP has the right properties, there exists an optimal deterministic policy `\(\pi_*\)` which is better than or just as good as all other policies.
@@ -223,7 +223,7 @@ q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
 layout: true
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-mdp-2.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/sec-mdp-2.html" target="_blank">Notes</a>
  | 
 <a href="https://bss-osca.github.io/rl/slides/07_mdp-2-slides.html" target="_blank">Slides</a>
  | 
@@ -286,6 +286,13 @@ layout: true
 [colab-08-dp-sec-dp-gambler]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=GweToDSPd5gj&amp;line=1&amp;uniqifier=1
 [colab-08-dp-sec-dp-maintain]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=HQnlVuuufR_Q&amp;line=1&amp;uniqifier=1
 [colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&amp;line=1&amp;uniqifier=1
+[colab-09-mc]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-?usp=sharing
+[colab-09-mc-sec-mc-seasonal-ex]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-10-td-pred]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d?usp=sharing
+[colab-10-td-pred-sec-ex-td-pred-random]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&amp;line=4&amp;uniqifier=1
+[colab-11-td-control]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw?usp=sharing
+[colab-11-td-control-sec-td-control-storage]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-11-td-control-sec-td-control-car]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1
 
 
 [DataCamp]: https://www.datacamp.com/
