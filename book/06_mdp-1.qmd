@@ -402,6 +402,32 @@ A gambler has the opportunity to make bets on the outcomes of a sequence of coin
    If $C$ denote a Bernoulli variable equal 1 if head. Then $$p(s' | s, a) = \Pr(s' = s + Ca - (1-C)a).$$ Hence there are two transitions: if $s' = s - a$ then $p(s' | s, a) = 1-p_H$ and if $s' = s + a$ then $p(s' | s, a) = p_H$.
    :::
 
+6) Write an alternative MDP model having only a single absorbing state representing "game over" and let the objective be the probability of winning. That is, state 0 and 100 are not absorbing states in this case.
+
+   ::: {.callout-warning collapse="true" title="Solution"}
+   **States**
+   
+   We add state 101 representing "game over" $$\mathcal{S} = \{0, \ldots, 100, 101 \}.$$ Terminal state is now 101 (game over).
+   
+   **Actions**
+   
+   If $s\leq 100$ then $$\mathcal{A}(s) = \{ a\in \mathcal{S} | 0 \leq a \leq \min(s, 100-s) \}.$$ If $s = 101$ then $A(101) = \{d\}$ (dummy action).
+   
+   **Rewards**
+   
+   The expected reward is $r(s,a) = 0 for 0 \leq s < 100, a\in A(s)$, $r(100,0) = 1$ and $r(101,d) = 0$.
+   
+   **Transition probabilities**
+   
+   For $0 < s < 100$ we have that 
+   $$\begin{align}
+   p(s' | s, a) = 1-p_H \qquad &\text{if } s' = s - a\\ 
+   p(s' | s, a) = p_H \qquad &\text{if } s' = s + a
+   \end{align}
+   $$
+   Moreover, we have transitions to the absorbing state as: $p(101 | 0, 0) = p(101 | 100, 0) = 1$ and $p(101 | 101, d)$. Note that using this model, we do not need to set the state-value of the absorbing state.
+   :::
+
 
 
 ### Exercise - Factory storage {#sec-mdp-1-storage}
