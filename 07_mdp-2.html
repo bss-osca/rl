@@ -350,7 +350,7 @@ window.Quarto = {
 </section>
 <section id="textbook-readings" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">7.2</span> Textbook readings</h2>
-<p>Read Chapter 3.5-3.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen [here][sutton-notation].</p>
+<p>Read Chapter 3.5-3.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. You do not have to put to much focus on the examples. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -439,7 +439,7 @@ q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
          &amp;= \max_a r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')
 \end{align}
 \tag{7.4}\]</span></span></p>
-<p>Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal value functions. Using (v_*), the optimal expected long term return is turned into a quantity that is immediately available for each state. On the other hand if we do not store <span class="math inline">\(v_*\)</span>, we can find <span class="math inline">\(v_*\)</span> by a one-step-ahead search using <span class="math inline">\(q_*\)</span>, acting greedy.</p>
+<p>Note the Bellman equations define our state-value and q-value function, while the Bellman optimality equations define how to find the optimal value functions. Using $ v _*$, the optimal expected long-term return is turned into a quantity that is immediately available for each state. On the other hand, if we do not store <span class="math inline">\(v_*\)</span>, we can find <span class="math inline">\(v_*\)</span> by a one-step-ahead search using <span class="math inline">\(q_*\)</span>, acting greedily.</p>
 </section>
 <section id="optimality-vs-approximation" class="level2" data-number="7.5">
 <h2 data-number="7.5" class="anchored" data-anchor-id="optimality-vs-approximation"><span class="header-section-number">7.5</span> Optimality vs approximation</h2>
