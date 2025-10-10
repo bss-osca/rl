@@ -133,7 +133,7 @@ $$V(S_t) \leftarrow V(S_t) + \alpha_n\left[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\
 
 ## A note about fixed step-size
 
-If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size $\alpha\in(0,1]$ may be appropriate. A fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of $S_t$:
+If the environment is non-stationary (e.g. transition probabilities change over time), then a fixed step-size $\alpha\in(0,1]$ may be appropriate. A fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of $S_t$:
 $$
 \begin{align}
 V_{n+1} &= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
@@ -145,7 +145,7 @@ V_{n+1} &= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
 \end{align}
 $$
 
-That is, a larger weight is used for recent observations compared to old observations. Moreover, if $\alpha=1$ then $V_{n+1} = G_t$ and we use the realized return as the estimate.
+That is, a larger weight is used for recent observations compared to old observations. Moreover, if $\alpha=1$ then $V_{n+1} = G_n$ and we use the realised return as the estimate.
 
 ---
 
@@ -176,6 +176,13 @@ knitr::include_graphics("img/td0-pred.png")
 * Given policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA. 
 * This acronym is used to name the SARSA algorithm for control (next week). 
 * To ensure exploration of all action-values we need e.g. an $\epsilon$-soft behavioural policy.  
+
+---
+
+## Colab
+
+* Let us have a look at the [Colab notebook][colab-10-td-pred-sec-ex-td-pred-random] for this module.
+
 
 
 <!-- # References -->

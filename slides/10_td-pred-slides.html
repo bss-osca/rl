@@ -36,7 +36,7 @@ layout: true
   
 <div class="my-footer">
 <span>
-<a href="https://bss-osca.github.io/rl/mod-td-pred.html" target="_blank">Notes</a>
+<a href="https://bss-osca.github.io/rl/sec-td-pred.html" target="_blank">Notes</a>
  | 
 <a href="https://bss-osca.github.io/rl/slides/10_td-pred-slides.html" target="_blank">Slides</a>
  | 
@@ -132,7 +132,7 @@ $$
 
 ## A note about fixed step-size
 
-If the environment is non-stationary (e.g. transition probabilities change over time) then a fixed step-size `\(\alpha\in(0,1]\)` may be appropriate. A fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of `\(S_t\)`:
+If the environment is non-stationary (e.g. transition probabilities change over time), then a fixed step-size `\(\alpha\in(0,1]\)` may be appropriate. A fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of `\(S_t\)`:
 $$
 `\begin{align}
 V_{n+1} &amp;= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
@@ -144,7 +144,7 @@ V_{n+1} &amp;= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
 \end{align}`
 $$
 
-That is, a larger weight is used for recent observations compared to old observations. Moreover, if `\(\alpha=1\)` then `\(V_{n+1} = G_t\)` and we use the realized return as the estimate.
+That is, a larger weight is used for recent observations compared to old observations. Moreover, if `\(\alpha=1\)` then `\(V_{n+1} = G_n\)` and we use the realised return as the estimate.
 
 ---
 
@@ -174,6 +174,13 @@ That is, a larger weight is used for recent observations compared to old observa
 * This acronym is used to name the SARSA algorithm for control (next week). 
 * To ensure exploration of all action-values we need e.g. an `\(\epsilon\)`-soft behavioural policy.  
 
+---
+
+## Colab
+
+* Let us have a look at the [Colab notebook][colab-10-td-pred-sec-ex-td-pred-random] for this module.
+
+
 
 &lt;!-- # References --&gt;
 
@@ -193,11 +200,25 @@ That is, a larger weight is used for recent observations compared to old observa
 [Colab]: https://colab.google/
 [colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
 [colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-03-rl-in-action-ex]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1
 [colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
 [colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
 [colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
 [colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
 [colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
+[colab-08-dp]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6?usp=sharing
+[colab-08-dp-ex-storage]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=nY6zWiv_3ikg&amp;line=21&amp;uniqifier=1
+[colab-08-dp-sec-dp-gambler]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=GweToDSPd5gj&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-maintain]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=HQnlVuuufR_Q&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&amp;line=1&amp;uniqifier=1
+[colab-09-mc]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-?usp=sharing
+[colab-09-mc-sec-mc-seasonal-ex]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-10-td-pred]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d?usp=sharing
+[colab-10-td-pred-sec-ex-td-pred-random]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&amp;line=4&amp;uniqifier=1
+[colab-11-td-control]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw?usp=sharing
+[colab-11-td-control-sec-td-control-storage]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-11-td-control-sec-td-control-car]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1
+
 
 [DataCamp]: https://www.datacamp.com/
 [datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
