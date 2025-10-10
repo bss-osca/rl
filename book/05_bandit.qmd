@@ -44,7 +44,7 @@ The learning outcomes relate to the [overall learning goals](#sec-lg-course) num
 
 ## Textbook readings
 
-For this week, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
+For this module, you will need to read Chapter 2 - 2.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
 link_slide_file_text("05", "bandit")
@@ -140,7 +140,7 @@ Until now we have used the sample average $\alpha_n(a)= 1/n$; however, other cho
 
 \begin{equation}
     \sum_n \alpha_n(a) = \infty \quad\quad \mathsf{and} \quad\quad  \sum_n \alpha_n(a)^2 < \infty.
-\end{equation}
+\end{equation} {#eq-alpha-convergence}
 
 Meaning that the coefficients must be large enough to recover from initial fluctuations, but not so large that they do not converge in the long run. However, if the process is non-stationary, i.e. the expected reward of an action change over time, then convergence is undesirable and we may want to use a constant $\alpha_n(a)= \alpha \in (0, 1]$ instead. This results in $Q_{n+1}$ being a weighted average of the past rewards and the initial estimate $Q_1$:
 
