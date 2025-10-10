@@ -26,8 +26,8 @@ xaringan::inf_mr(cast_from = ".", quiet = T)
 layout: true
   
 ```{r, echo=FALSE}
-module_name <- "td-pred"
-module_number <- "07"
+module_name <- "td-control"
+module_number <- "11"
 here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
 library(htmltools)
 footerHtml <- withTags({
@@ -223,6 +223,12 @@ $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = 
   * Expected SARSA becomes Q-learning since the expectation of a greedy policy is $$\sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) = \max_{a} Q(S_{t+1}, a).$$
 * Expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
  
+---
+
+## Colab
+
+* Let us have a look at the [Colab notebook][colab-11-td-control] for this module.
+
 
 
 <!-- # References -->

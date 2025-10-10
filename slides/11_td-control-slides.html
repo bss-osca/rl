@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Temporal difference (TD) methods for control</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lars Relund Nielsen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Temporal difference (TD) methods for control
+]
+.author[
+### Lars Relund Nielsen
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/sec-td-control.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/11_td-control-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/11_td-control-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
+
+---
+
+## Learning outcomes
+
+* Describe how GPI can be used with TD to find improved policies.
+* Identify the properties that must the satisfied for GPI to converge to the optimal policy.
+* Derive and explain SARSA an on-policy GPI algorithm using TD.
+* Describe the relationship between SARSA and the Bellman equations.
+* Derive and explain Q-learning an off-policy GPI algorithm using TD.
+* Argue how Q-learning can be off-policy without using importance sampling.
+* Describe the relationship between Q-learning and the Bellman optimality equations.
+* Derive and explain expected SARSA an on/off-policy GPI algorithm using TD.
+* Describe the relationship between expected SARSA and the Bellman equations.
+*  Explain how expected SARSA generalizes Q-learning.
+* List the differences between Q-learning, SARSA and expected SARSA.
+* Apply the algorithms to an MDP to find the optimal policy.
+
+---
+
+## GPI using TD
+
+* Last week: TD methods for prediction. This week: TD for control (improve the policy).
+* Use generalized policy iteration (GPI) with TD methods (policy evaluation, policy improvement, repeat). 
+* Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. 
+* An element of exploration are needed to estimate the action-values. 
+* For convergence to the optimal policy a model-free GPI algorithm must satisfy:
+  - *Infinite exploration*: state-action pairs should be explored infinitely many times: `$$\lim_{k\rightarrow\infty} n_k(s, a) = \infty.$$`
+  - *Greedy in the limit*: we do eventually need to converge to the optimal policy: `$$\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).$$`
+  
+---
+
+## SARSA - On-policy GPI using TD
+
+* Have to estimate action-values since no model.
+* The incremental update equation for state-values `$$V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],$$`must be modified to use `\(Q\)` values: `$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$`
+* Need to know `\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)` or short SARSA before you can make an update. 
+* Convergence:
+  * Infinite exploration: use an `\(\epsilon\)`-greedy policy. 
+  * Greedy in the limit: use a decreasing epsilon (e.g. `\(\epsilon = 1/t\)`).
+
+---
+
+## SARSA Algorithm
+
+&lt;img src="img/td-gpi-sarsa.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Can also be applied for processes with continuing tasks. 
+
+---
+
+## Q-learning - Off-policy GPI using TD
+
+&lt;img src="img/td-gpi-q-learning.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Use another incremental update of `\(Q(S_t, A_t)\)` where the next action used to update `\(Q\)` is selected greedy.
+
+---
+
+## Bellman equations and incremental updates
+
+The Bellman equations used in DP for action-values are:
+
+.small[
+.pull-left[
+**Bellman equation**:
+$$
+`\begin{align}
+  q_\pi(s, a) &amp;= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+  &amp;= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a] \\
+  &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &amp;= \sum_{s',r} p(s', r | s, a)\left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right)
+\end{align}`
+$$
+Used in the DP policy iteration algorithm.
+]]
+
+--
+
+.small[
+.pull-right[
+**Bellman optimality equation**:
+$$
+`\begin{align}
+  q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
+  &amp;= \max_\pi \sum_{s',r} p(s', r | s, a) \left(r + \gamma v_\pi(s')\right) \\
+  &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_\pi v_\pi(s')\right) \\
+  &amp;= \sum_{s',r} p(s', r | s, a) \left(r + \gamma \max_{a'} q_*(s', a')\right) 
+\end{align}`
+$$
+Used in the DP value iteration algorithm.
+]]
+
+.phantom[]
+
+--
+
+.small[
+.pull-left[
+**SARSA incremental update:** `$$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]\end{multline*}$$`
+SARSA is a sample based version of policy iteration in DP.
+]]
+
+--
+
+.small[
+.pull-right[
+**Q-learning incremental update:** `$$\begin{multline*}Q(S_t, A_t) \leftarrow Q(S_t, A_t) \\+ \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]\end{multline*}$$`
+Q-learning is a sample based version of value iteration in DP.
+]]
+
+
+---
+
+## Q-learning vs SARSA
+
+* SARSA: an on-policy algorithm (behavioural and target policy is the same).
+  * Use e.g. an `\(\epsilon\)`-greedy policy to ensure exploration. 
+  * For fixed `\(\epsilon\)` the greedy in the limit assumption is not fulfilled. 
+* SARSA is a sample based version of policy iteration in DP.
+* Q-learning: an off-policy algorithm 
+  * The behavioural policy is `\(\epsilon\)`-greedy.
+  * The target policy is the (deterministic) greedy policy. 
+* Q-learning fulfil both the 'infinite exploration' and 'greedy in the limit' assumptions. 
+* Q-learning is a sample based version of value iteration in DP.
+
+---
+
+## Expected SARSA - GPI using TD
+
+.midi[
+* Expected SARSA, as SARSA, focus on the Bellman equation:
+`$$q_\pi(s, a) = \sum_{s',r} p(s', r | s, a)\left(r + \gamma \sum_{a'} \pi(a'|s) q_\pi(s', a')\right)$$`
+* SARSA: generate action `\(A_{t+1}\)` and use the estimated action-value of `\((S_{t+1},A_{t+1})\)`: `$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]$$`
+* Expected SARSA: Know policy `\(\pi\)` and might update based on the expected value instead:
+`$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \right]$$`
+* Use a better (deterministic) estimate of the Bellman equation by not sampling `\(A_{t+1}\)` but using the expectation over all actions instead. 
+&lt;!-- * Reduces the variance induced by selecting random actions according to an `\(\epsilon\)`-greedy policy.  --&gt;
+* Given the same amount of experiences, expected SARSA generally performs better than SARSA, but has a higher computational cost.
+]
+
+---
+
+## Asymptotic behaviour 
+
+.midi[
+* The incremental update formula can be written as (with step-size `\(\alpha\)` and target `\(T_t\)`):
+`$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[T_t - Q(S_t, A_t) \right] = (1-\alpha)Q(S_t, A_t) + \alpha T_t,$$`
+* SARSA: `$$T_t = R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}),$$`
+* Expected SARSA: `$$T_t = R_{t+1} + \gamma \sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a).$$` 
+* Over many time-steps (in the limit), the estimates `\(Q(S_t, A_t)\)` are close to `\(q_*(S_t, A_t)\)`. 
+* Expected SARSA: Calc the exception deterministic (we do not sample `\(A_{t+1}\)`), the target `\(T_t \approx Q(S_t, A_t)\)` and no matter the step-size `\(Q(S_t, A_t)\)` will be updated to the same value. 
+* SARSA: uses a sample action `\(A_{t+1}\)` that might have an action-value far from the expectation. Hence for large step-sizes `\(Q(S_t, A_t)\)` will be updated to the target which is wrong. 
+* SARSA is more sensitive to large step-sizes compared to expected SARSA.
+]
+
+---
+
+## Is expected SARSA on-policy or off-policy?
+
+* Expected SARSA can be both on-policy and off-policy. 
+* Off-policy: Behavioural policy and the target policy different. 
+* On-policy: Behavioural policy and the target policy the same.  
+* Example on-policy: The target policy and the behavioural policy is `\(\epsilon\)`-greedy.
+* Example off-policy: The target policy is greedy and the behavioural policy is `\(\epsilon\)`-greedy. 
+  * Expected SARSA becomes Q-learning since the expectation of a greedy policy is `$$\sum_{a} \pi(a | S_{t+1}) Q(S_{t+1}, a) = \max_{a} Q(S_{t+1}, a).$$`
+* Expected SARSA can be seen as a generalisation of Q-learning that improves SARSA.
+ 
+---
+
+## Colab
+
+* Let us have a look at the [Colab notebook][colab-11-td-control] for this module.
+
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
+
+
+
+[BSS]: https://bss.au.dk/en/
+[bi-programme]: https://masters.au.dk/businessintelligence
+
+[course-help]: https://github.com/bss-osca/rl/issues
+[cran]: https://cloud.r-project.org
+[cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
+[course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+[Colab]: https://colab.google/
+[colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
+[colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-03-rl-in-action-ex]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1
+[colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
+[colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
+[colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
+[colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
+[colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
+[colab-08-dp]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6?usp=sharing
+[colab-08-dp-ex-storage]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=nY6zWiv_3ikg&amp;line=21&amp;uniqifier=1
+[colab-08-dp-sec-dp-gambler]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=GweToDSPd5gj&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-maintain]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=HQnlVuuufR_Q&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&amp;line=1&amp;uniqifier=1
+[colab-09-mc]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-?usp=sharing
+[colab-09-mc-sec-mc-seasonal-ex]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-10-td-pred]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d?usp=sharing
+[colab-10-td-pred-sec-ex-td-pred-random]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&amp;line=4&amp;uniqifier=1
+[colab-11-td-control]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw?usp=sharing
+[colab-11-td-control-sec-td-control-storage]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-11-td-control-sec-td-control-car]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1
+
+
+[DataCamp]: https://www.datacamp.com/
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
+[datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
+[datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
+[datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
+[datacamp-r-communicating-chap3]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/introduction-to-rmarkdown
+[datacamp-r-communicating-chap4]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/customizing-your-rmarkdown-report
+[datacamp-r-intermediate]: https://learn.datacamp.com/courses/intermediate-r
+[datacamp-r-intermediate-chap1]: https://campus.datacamp.com/courses/intermediate-r/chapter-1-conditionals-and-control-flow
+[datacamp-r-intermediate-chap2]: https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops
+[datacamp-r-intermediate-chap3]: https://campus.datacamp.com/courses/intermediate-r/chapter-3-functions
+[datacamp-r-intermediate-chap4]: https://campus.datacamp.com/courses/intermediate-r/chapter-4-the-apply-family
+[datacamp-r-functions]: https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r
+[datacamp-r-tidyverse]: https://learn.datacamp.com/courses/introduction-to-the-tidyverse
+[datacamp-r-strings]: https://learn.datacamp.com/courses/string-manipulation-with-stringr-in-r
+[datacamp-r-dplyr]: https://learn.datacamp.com/courses/data-manipulation-with-dplyr
+[datacamp-r-dplyr-bakeoff]: https://learn.datacamp.com/courses/working-with-data-in-the-tidyverse
+[datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
+[datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
+[dplyr-cran]: https://CRAN.R-project.org/package=dplyr
+
+[google-form]: https://forms.gle/s39GeDGV9AzAXUo18
+[google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
+[GitHub]: https://github.com/
+[git-install]: https://git-scm.com/downloads
+[github-actions]: https://github.com/features/actions
+[github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
+
+[happy-git]: https://happygitwithr.com
+[hg-install-git]: https://happygitwithr.com/install-git.html
+[hg-why]: https://happygitwithr.com/big-picture.html#big-picture
+[hg-github-reg]: https://happygitwithr.com/github-acct.html#github-acct
+[hg-git-install]: https://happygitwithr.com/install-git.html#install-git
+[hg-exist-github-first]: https://happygitwithr.com/existing-github-first.html
+[hg-exist-github-last]: https://happygitwithr.com/existing-github-last.html
+[hg-credential-helper]: https://happygitwithr.com/credential-caching.html
+[hypothes.is]: https://web.hypothes.is/
+
+[Jupyter]: https://jupyter.org/
+
+[osca-programme]: https://masters.au.dk/operationsandsupplychainanalytics
+
+[Peergrade]: https://peergrade.io
+[peergrade-signup]: https://app.peergrade.io/join
+[point-and-click]: https://en.wikipedia.org/wiki/Point_and_click
+[pkg-bookdown]: https://bookdown.org/yihui/bookdown/
+[pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
+[pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
+[pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+[Python]: https://www.python.org/
+[Positron]: https://positron.posit.co/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[VSCode]: https://code.visualstudio.com/
+
+[R]: https://www.r-project.org
+[RStudio]: https://rstudio.com
+[rstudio-cloud]: https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz
+[r-cloud-mod12]: https://rstudio.cloud/spaces/176810/project/2963819
+[r-cloud-mod13]: https://rstudio.cloud/spaces/176810/project/3020139
+[r-cloud-mod14]: https://rstudio.cloud/spaces/176810/project/3020322
+[r-cloud-mod15]: https://rstudio.cloud/spaces/176810/project/3020509
+[r-cloud-mod16]: https://rstudio.cloud/spaces/176810/project/3026754
+[r-cloud-mod17]: https://rstudio.cloud/spaces/176810/project/3034015
+[r-cloud-mod18]: https://rstudio.cloud/spaces/176810/project/3130795
+[r-cloud-mod19]: https://rstudio.cloud/spaces/176810/project/3266132
+[rstudio-download]: https://rstudio.com/products/rstudio/download/#download
+[rstudio-customizing]: https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio
+[rstudio-key-shortcuts]: https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts
+[rstudio-workbench]: https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png
+[r-markdown]: https://rmarkdown.rstudio.com/
+[ropensci-writexl]: https://docs.ropensci.org/writexl/
+[r4ds-pipes]: https://r4ds.had.co.nz/pipes.html
+[r4ds-factors]: https://r4ds.had.co.nz/factors.html
+[r4ds-strings]: https://r4ds.had.co.nz/strings.html
+[r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
+
+[stat-545]: https://stat545.com
+[stat-545-functions-part1]: https://stat545.com/functions-part1.html
+[stat-545-functions-part2]: https://stat545.com/functions-part2.html
+[stat-545-functions-part3]: https://stat545.com/functions-part3.html
+[slides-welcome]: https://bss-osca.github.io/rl/slides/00-rl_welcome.html
+[slides-m1-3]: https://bss-osca.github.io/rl/slides/01-welcome_r_part.html
+[slides-m4-5]: https://bss-osca.github.io/rl/slides/02-programming.html
+[slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
+[slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
+[slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
+
+[tidyverse-main-page]: https://www.tidyverse.org
+[tidyverse-packages]: https://www.tidyverse.org/packages/
+[tidyverse-core]: https://www.tidyverse.org/packages/#core-tidyverse
+[tidyverse-ggplot2]: https://ggplot2.tidyverse.org/
+[tidyverse-dplyr]: https://dplyr.tidyverse.org/
+[tidyverse-tidyr]: https://tidyr.tidyverse.org/
+[tidyverse-readr]: https://readr.tidyverse.org/
+[tidyverse-purrr]: https://purrr.tidyverse.org/
+[tidyverse-tibble]: https://tibble.tidyverse.org/
+[tidyverse-stringr]: https://stringr.tidyverse.org/
+[tidyverse-forcats]: https://forcats.tidyverse.org/
+[tidyverse-readxl]: https://readxl.tidyverse.org
+[tidyverse-googlesheets4]: https://googlesheets4.tidyverse.org/index.html
+[tutorial-markdown]: https://commonmark.org/help/tutorial/
+[tfa-course]: https://bss-osca.github.io/tfa/
+
+[video-install]: https://vimeo.com/415501284
+[video-rstudio-intro]: https://vimeo.com/416391353
+[video-packages]: https://vimeo.com/416743698
+[video-projects]: https://vimeo.com/319318233
+[video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
+[video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
+[video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10&amp;t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10
+[video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
+[video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
+[video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
+[video-tibble-vs-df]: https://www.youtube.com/watch?v=EBk6PnvE1R4
+[video-dplyr]: https://www.youtube.com/watch?v=aywFompr1F4
+
+[wiki-snake-case]: https://en.wikipedia.org/wiki/Snake_case
+[wiki-camel-case]: https://en.wikipedia.org/wiki/Camel_case
+[wiki-interpreted]: https://en.wikipedia.org/wiki/Interpreted_language
+[wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
+[wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
+[wiki-json]: https://en.wikipedia.org/wiki/JSON
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightLines": true,
+  "highlightStyle": "solarized-light",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
