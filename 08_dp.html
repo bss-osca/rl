@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -60,10 +60,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d58359eb3ecc31d3bec1ed479c2cbb3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -350,7 +350,7 @@ window.Quarto = {
 </section>
 <section id="textbook-readings" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">8.2</span> Textbook readings</h2>
-<p>For this week, you will need to read Chapter 4-4.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
+<p>For this module, you will need to read Chapter 4-4.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -370,7 +370,7 @@ v_\pi(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in 
 <p><span class="math display">\[\begin{equation}
 v_{k+1}(s) = \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_k(s')\right)
 \end{equation}\]</span></p>
-<p>We call this update an <em>expected update</em> because it is based on the expectation over all possible next states, rather than a sample of reward from the next state. This update will converge to <span class="math inline">\(v_\pi\)</span> after a number of sweeps of the state-space. Since we do not want an infinite number of sweeps we introduce a threshold <span class="math inline">\(\theta\)</span> (see Figure <a href="#fig-policy-eval-alg" class="quarto-xref">Figure&nbsp;<span>8.1</span></a>). Note the algorithm uses two arrays to maintain the state-value (<span class="math inline">\(v\)</span> and <span class="math inline">\(V\)</span>). Alternatively, a single array could be used that update values in place, i.e.&nbsp;<span class="math inline">\(V\)</span> is used in place of <span class="math inline">\(v\)</span>. Hence, state-values are updated faster.</p>
+<p>We call this update an <em>expected update</em> because it is based on the expectation over all possible next states, rather than a sample of reward from the next state. This update will converge to <span class="math inline">\(v_\pi\)</span> after a number of sweeps of the state-space. Since we do not want an infinite number of sweeps we introduce a threshold <span class="math inline">\(\theta\)</span> (see <a href="#fig-policy-eval-alg" class="quarto-xref">Figure&nbsp;<span>8.1</span></a>). Note the algorithm uses two arrays to maintain the state-value (<span class="math inline">\(v\)</span> and <span class="math inline">\(V\)</span>). Alternatively, a single array could be used that update values in place, i.e.&nbsp;<span class="math inline">\(V\)</span> is used in place of <span class="math inline">\(v\)</span>. Hence, state-values are updated faster.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-policy-eval-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -425,7 +425,7 @@ q_\pi(s, \pi'(s)) \geq q_\pi(s, \pi(s)) = v_\pi(s) \quad \forall s \in \mathcal{
 <li>Given a policy <span class="math inline">\(\pi\)</span>, estimate <span class="math inline">\(v_\pi(s)\)</span> via the policy evaluation algorithm.</li>
 <li>Generate a new, improved policy <span class="math inline">\(\pi' \geq \pi\)</span> by <em>greedily</em> picking <span class="math inline">\(\pi' = \text{greedy}(v_\pi)\)</span> using Eq. <a href="#eq-pi-mark-det" class="quarto-xref">Equation&nbsp;<span>8.3</span></a>. If <span class="math inline">\(\pi'=\pi\)</span> then stop (<span class="math inline">\(\pi_*\)</span> has been found); otherwise go to Step 2.</li>
 </ol>
-<p>The algorithm is given in Figure <a href="#fig-policy-ite-alg" class="quarto-xref">Figure&nbsp;<span>8.2</span></a>. The sequence of calculations will be: <span class="math display">\[\pi_0 \xrightarrow[]{E} v_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} v_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} v_{\pi_2}  \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} v_{*}\]</span> The number of steps of policy iteration needed to find the optimal policy are often low.</p>
+<p>The algorithm is given in <a href="#fig-policy-ite-alg" class="quarto-xref">Figure&nbsp;<span>8.2</span></a>. The sequence of calculations will be: <span class="math display">\[\pi_0 \xrightarrow[]{E} v_{\pi_0} \xrightarrow[]{I} \pi_1 \xrightarrow[]{E} v_{\pi_1} \xrightarrow[]{I} \pi_2 \xrightarrow[]{E} v_{\pi_2}  \ldots \xrightarrow[]{I} \pi_* \xrightarrow[]{E} v_{*}\]</span> The number of steps of policy iteration needed to find the optimal policy are often low.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-policy-ite-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -448,7 +448,7 @@ v_{k+1}(s) = \max_a \left(r(s,a) + \gamma\sum_{s'} p(s'|s, a)v_k(s')\right)
 \]</span> Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement, since it performs a greedy update while also evaluating the current policy. Also, it is important to understand that the value-iteration algorithm does not require a policy to work. No actions have to be chosen. Rather, the state-values are updated and after the last step of value-iteration the optimal policy <span class="math inline">\(\pi_*\)</span> is found:</p>
 <p><span class="math display">\[
 \pi_*(s) = \arg\max_{a \in \mathcal{A}} \left(r(s,a) + \gamma\sum_{s' \in \mathcal{S}} p(s' | s, a) v_*(s')\right),
-\]</span> The algorithm is given in Figure <a href="#fig-value-ite-alg" class="quarto-xref">Figure&nbsp;<span>8.3</span></a>. Since we do not want an infinite number of iterations we introduce a threshold <span class="math inline">\(\theta\)</span>. The sequence of calculations will be (where G denotes greedy action selection): <span class="math display">\[v_{0} \xrightarrow[]{EI} v_{1} \xrightarrow[]{EI} v_{2}  \ldots \xrightarrow[]{EI} v_{*} \xrightarrow[]{G} \pi_{*}\]</span></p>
+\]</span> The algorithm is given in <a href="#fig-value-ite-alg" class="quarto-xref">Figure&nbsp;<span>8.3</span></a>. Since we do not want an infinite number of iterations we introduce a threshold <span class="math inline">\(\theta\)</span>. The sequence of calculations will be (where G denotes greedy action selection): <span class="math display">\[v_{0} \xrightarrow[]{EI} v_{1} \xrightarrow[]{EI} v_{2}  \ldots \xrightarrow[]{EI} v_{*} \xrightarrow[]{G} \pi_{*}\]</span></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-value-ite-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
