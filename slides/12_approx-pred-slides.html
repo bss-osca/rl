@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>On-policy prediction with approximation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lars Relund Nielsen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# On-policy prediction with approximation
+]
+.author[
+### Lars Relund Nielsen
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/sec-approx-pred.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/12_approx-pred-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/12_approx-pred-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
+
+---
+
+## Learning outcomes
+
+-   Explain why function approximation is needed beyond tabular RL and
+    define the prediction problem.
+-   Write the *mean-squared value error* objective and derive
+    *semi-gradient* updates.
+-   Implement *Gradient Monte Carlo* and *semi-gradient TD(0)* for value
+    prediction with function approximation.
+-   Compare and solve algorithms for linear function approximation.
+-   Motivate and construct feature representations (polynomial/Fourier
+    basis, tile coding) and discuss their trade-offs.
+-   Explain causes of instability (e.g., step-size sensitivity).
+-   Describe other methods for function approximation, such as memory-based and interest/emphasis. 
+
+---
+
+## Why function approximation
+
+Tabular methods assume we can store a separate value for each state. In
+large or continuous state spaces, this is impossible. We therefore
+approximate the value function using a parametrised model
+`\(\hat v(s;\mathbf w)\)`. 
+
+* We approximate the value function using a function with parameters `\(\mathbf w \in \mathbb {R} ^d\)`. 
+* A *on-policy* policy `\(\pi\)` is assumed.
+* A *supervised learning* approach is used. However,
+  - We don't have exact training examples (we have an extimate of the state value). 
+  - We update the value approximation online when new training arrive (`\(s \rightarrowtail u\)`).
+
+---
+
+## The prediction objective
+
+The *mean-squared value error (MSVE)* is often used as an objective for
+prediction: 
+`$$e(\mathbf w) = \overline{VE}(\mathbf w) = \sum_s \mu(s)\,\big[v_\pi(s) - \hat v(s;\mathbf w)\big]^2.$$`
+
+* `\(\mu(s)\)` indicates how much we care about precision in state `\(s\)`. 
+* If distribution known, `\(\mu(s)\)` may denote the probability of visiting `\(s\)`. 
+* If `\(\mu(s)\)` is unknown, we may store state visits and `\(\mu(s)\)` becomes the fraction of visits.
+* The *RMSVE* (`\(\sqrt{e}\)`) measure of how much the approx. values differ from the true values. 
+* Since `\(|\mathbf w| \ll |{\cal S}|\)`, adjusting `\(\mathbf{w}\)` may reduce the error in a state and increase it in another.
+* Given objective `\(e\)`, the goal is to minimize `\(e\)`. That is, to find a
+global optimum, a weight vector `\(\mathbf w^*\)` for which
+`\(e(\mathbf w^*) \leq e(\mathbf w)\)` for all possible `\(\mathbf w\)`. 
+* Not always possible. Complex function approx. may converge to a local optimum. 
+  
+---
+
+## Stochastic-gradient and semi-gradient methods
+
+To minimise `\(e\)`, we use *stochastic gradient descent* (*SGD*) methods in an online setting. 
+
+* Update `\(\mathbf w\)` each time new data sample `\(S_t \mapsto v_\pi(S_t)\)` arrives. 
+&lt;!-- * Assume that states appear in samples with the same distribution, `\(\mu\)` --&gt;
+* Try to minimize error on the observed samples and adjust the weight vector after each sample by a small amount (`\(\alpha&gt;0\)`): `$$\begin{align}\mathbf w_{t+1} &amp;= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]^2\\ &amp;= \mathbf w_t + \alpha\,\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).\end{align}$$` where `\(\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t)\)` denote the partial
+derivative vector (the gradient).
+
+---
+
+## But the state value is unknown?
+
+Since we approximate `\(v_\pi(s)\)`, we do not know the exact value of `\(v_\pi(s)\)`. 
+
+* We have a target output `\(U_t\)` (an estimate of `\(v_\pi(s)\)`). 
+* Our sample is now `\(S_t \mapsto U_t\)` instead and our updates becomes:
+`$$\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).$$` 
+* If `\(U_t\)` is an *unbiased estimate* (`\(\mathbb E[U_t|S_t=s] = v_\pi(s)\)`), then 
+  - `\(w_t\)` is guaranteed to converge to a local optimum for decreasing `\(\alpha\)`. 
+  - In this case it is called a *gradient* descent method. 
+* If `\(U_t\)` is a *biased estimate* (not independent on `\(\mathbf w_t\)`) then 
+  - `\(w_t\)` is not guaranteed to converge to the true local optimum. 
+  - We call this a *semi-gradient* method. 
+
+---
+
+## Gradient method
+
+Gradient Monte Carlo:
+
+* Choose `\(U_t\)` as `\(U_t = G_t\)` (full return). 
+* Unbiased in expectation and requires episode completion. 
+* High variance because 
+  - the full return depends on all future rewards up to the end of the
+    episode. 
+  - Any randomness in transitions or rewards propagates through
+    the entire sequence.
+
+---
+
+## Semi-gradient method
+
+Semi-gradient TD(0):
+
+* Choose `\(U_t\)` as `\(U_t = R_{t+1} + \gamma\,\hat v(S_{t+1};\mathbf w_t)\)`. 
+* Target depends on `\(\mathbf w_t\)` (bias via bootstrapping). 
+* Lower variance since the target depends only on one reward and the current estimate
+    of the expected reward of the next state value.
+* Although semi-gradient (bootstrapping) methods do not converge as
+robustly as gradient methods, they do converge reliably in important
+cases such as the linear case. 
+* Offer important advantages e.g significantly faster learning.
+
+---
+
+## Linear methods
+
+The approximate function is a linear function of the weight vector.
+
+Let `\(\mathbf x(s)\in\mathbb R^d\)` be features and define $$
+\hat v(s;\mathbf w) = \mathbf w^\top \mathbf x(s) = \sum_{i=1}^d w_ix_i(s).
+$$ 
+
+Note here, the gradient (vector with partial derivatives) is easy to
+calculate `$$\nabla_{\mathbf w}\hat v(s;\mathbf w) = \mathbf x(s),$$` and our update formula becomes
+$$
+\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(s).
+$$ 
+
+In the linear case the MSVE `\(e(\textbf w)\)` is convex and has only one global optimum. That is, under gradient
+Monte Carlo `\(\mathbf w_{t}\)` converges to the global optimum.
+
+---
+
+## Semi-gradient convergence
+
+A semi-gradient method also converges, but to a point near the global optimum. The update of TD(0) becomes `$$\begin{align}\mathbf w_{t+1} =&amp; \mathbf w_t + \alpha\left( R_{t+1} + \gamma\mathbf w_t^\top \mathbf x(S_{t+1}) - \mathbf w_t^\top \mathbf x(S_t) \right) \mathbf x(S_t) \\=&amp; \mathbf w_t + \alpha\left( R_{t+1}\mathbf x(S_t) - \mathbf x(S_t) \left(\mathbf x(S_t) - \gamma\mathbf x(S_{t+1})\right)^\top \mathbf w_t \right).\end{align}$$`
+
+Taking the expectation and setting `$$\mathbf A = \mathbb E\big[ \mathbf x(S_t) \left(\mathbf x(S_t) - \gamma\mathbf x(S_{t+1})\right)^\top \big],\;\mathbf b = \mathbb E\big[R_{t+1}\mathbf x(S_t)\big].$$` Then the system converge to the weight vector `\(w^*\)` satisfying `$$\mathbf b − \mathbf A\mathbf w^* = \mathbf 0 \Leftrightarrow \mathbf w^* = \mathbf A^{-1}\mathbf b$$`
+
+The estimate `\(w^*\)`is called the *TD fixed point* and is close to the global optimum.
+
+---
+
+## Feature construction for linear models
+
+Linear methods are interesting.
+
+* Provide convergence guarantees.
+* Efficient in terms of both data and computation. 
+
+This depends on how the states are represented in terms of features 
+
+* Choosing features appropriate to the task is an important way of adding prior
+domain knowledge about the system. 
+* The features should correspond to the
+aspects of the state space along which generalization may be
+appropriate. 
+
+---
+
+## State aggregation
+
+A special case of linear function approximation in which states are grouped together. Here, the approximation is a *piecewise constant function* that is constant for each group.
+
+* One estimated value (one component of the weight vector w) for each group. 
+* The value of a state is estimated as its group’s value. 
+* Let `\(g(s)\)` be a mapping that assigns each state `\(s\)` to a group index. 
+* The features are `\(\mathbf x_i(s) = 1\)` if `\(g(s) = i\)` and `\(\mathbf x_j(s)  = 0\)` for
+`\(j\neq i\)` and `$$\hat v(s; \mathbf{w}) = w_{g(s)}.$$`
+* Note `\(\boldsymbol{x}(s)\)` is a unit vector with all entries equal to zero except entry `\(g(s)\)`, i.e. `$$w_{g(s)} \leftarrow w_{g(s)} + \alpha \,\big(U_t - w_{g(s)}\big).$$` 
+&lt;!-- All other `\(w_j\)` remain unchanged.  --&gt;
+* Let us consider the an example in the [Colab tutorial][colab-12-approx-pred].
+
+---
+
+## Polynomials
+
+Approximate `\(v_\pi(s)\)` by fitting a low-degree polynomial of *normalized* state variables. 
+&lt;!-- Note the model remains linear in parameters `\(\textbf w\)` even though it is nonlinear in `\(s\)`. --&gt;
+
+* Capture non-linear relationships and provide a smooth approximation.
+* Choosing the appropriate degree of the polynomial is important. 
+  - Too low a degree might not capture the complexity of the value function.
+  - Too high a degree can lead to overfitting and poor generalization.
+* Polynomials can have difficulty approximating value functions with sharp changes.
+* If a scalar state `\(s\)` the approximation is `$$\hat{v} (s;\mathbf w) = \mathbf w^\top \mathbf x(s) = w_0 + w_1s + w_2s^2 + \ldots + w_{d}s^d.$$` That is, the gradient becomes polynomial of degree `\(d\)`: `\(\mathbf x(s) = (1,s,s^2,\dots,s^d).\)`
+* If multiple state variables, you may combine polynomials to capture cross-effects.
+
+---
+
+## Numerical instabilities
+
+Normalise the state values because if `\(s\)` has a high value, then `\(s^d\)` may be very large, yielding numerical instabilities. 
+
+* If we normailze so state varibles are in the interval `\([-1,1]\)` then `\(s^d\)` also lies in this interval. 
+* If `\(s\in\{1,\dots,N\}\)`: use `\(z = \dfrac{s}{N+1}\in(0,1)\)` or
+    `\(u = 2z-1 \in (-1,1)\)`.
+* If `\(s\in[a,b]\)`: use `\(u = \dfrac{2s-(a+b)}{b-a}\in(-1,1)\)`.
+* To find the right step-size `\(\alpha\)`, keep track of RMSVE. If it oscillates, then the step-size `\(\alpha\)` is too high.
+* Let us consider the an example in the [Colab tutorial][colab-12-approx-pred].
+
+---
+
+## Fourier basis
+
+The *Fourier basis* approximates `\(v_\pi(s)\)` using global sine/cosine waves. 
+
+&lt;!-- * Remains *linear in parameters* even though it can represent highly nonlinear shapes.  --&gt;
+
+* Essentially any function can be approximated as accurately as desired. 
+* Fourier basis functions are of interest because they are easy to use and can perform well.
+* If a scalar state `\(s\)`. 
+  - If normalize can restrict attention to just the cosine functions. 
+  - The `\(d\)` order Fourier cosine basis consists of the `\(d + 1\)` features. `$$\hat{v} (s;\mathbf w) = \mathbf w^\top \mathbf x(s) = w_0 + w_1\cos(\pi z) + w_2\cos(2\pi z) + \ldots + w_{d}\cos(d\pi z),$$` where `\(z\)` is the normalised state and the first term is the *bias* term.
+  - The gradient are `\(x_i(z)=\cos(i\pi z), j=0,1,\dots,n.\)`
+* Let us consider the an example in the [Colab tutorial][colab-12-approx-pred].
+
+---
+
+## Coarse coding
+
+.small[
+.pull-left[
+Here, the idea is to cover the state space with many overlapping regions. 
+
+* A state activates the features whose regions contain it, producing a sparse binary vector.
+* Create *sparse*, *localized* features so that nearby states share parameters and thus generalize to each other. Hence updates are cheap.
+* If `\(s\)` have multiple state variables, regions might be discs/ellipses
+(2-D), balls/ellipsoids (3D), or any shapes convenient for the problem.
+Feature `\(i\)` is “on” if `\(s\)` falls inside the region.
+* The Linear approximation is
+$$
+\hat v(s;\mathbf w) \;=\; \mathbf w^\top \mathbf x(s) = \sum_{\{i | x_i(s) = 1\}} w_i,
+$$
+where `\(x_i(s)\in\{0,1\}\)` (1 if region `\(i\)` covers `\(s\)`).
+]]
+
+.pull-right[
+&lt;img src="img/coarse.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Tile coding
+
+A structured, grid-based special case of coarse coding that is simple and fast. 
+
+* First create a *tiling* that partitions the space into non-overlapping *tiles*. 
+* Next, offset the tiling and hereby creating `\(n\)` (multiple) tilings. 
+* Each tiling is offset slightly, so two nearby states are likely to share some tiles. 
+* For best results, normalise the state space (a consistent meaning across features).
+* For a state `\(s\)`, exactly one tile is active in each tiling, i.e. update only `\(n\)` parameters.
+* With incremental semi-gradient TD(0): `\(\mathbf w \leftarrow \mathbf w + \alpha(R_{t+1} + \gamma\,\hat v(S_{t+1}) - \hat v(S_t))\mathbf x(S_t).\)`
+* Scale the per-tiling step size to `\(\alpha \approx \frac{\alpha_0}{n}\)` (since `\(n\)` weights are
+updated per step).
+* More tilings increase overlap and stability but cost more memory/compute.
+* Finer tiles reduce bias but increase variance and memory.
+* Let us consider the an example in the [Colab tutorial][colab-12-approx-pred].
+
+---
+
+## Selecting step-size parameters manually
+
+.small[
+The goal is to pick a step size `\(\alpha\)` that removes TD error quickly without causing instability.
+
+* Tabular prediction: `\(V(S_t) \leftarrow V(S_t) + \alpha\,[\,U_t - V(S_t)\,].\)` 
+  - Think of `\(\alpha\)` as how much you trust the newest target. 
+  - Big enough to make visible progress, small enough to avoid creating noise. 
+  - A step size of `\(\alpha = 1/10\)` would take about 10 experiences to converge approximately to their mean target.
+* Function approximation: If want to learn in about `\(\tau\)` experiences with substantially the same feature
+vector. Then, good rule of thumb is to set `\(\alpha = (\tau \mathbb{E}[\textbf{x}^T\textbf{x}])^{-1}.\)`
+  - Works best if the feature vectors do not vary; ideally `\(\textbf{x}^T\textbf{x}\)` is a constant.
+  - For tile coding with `\(n\)` tillings we have that `\(\textbf{x}^T\textbf{x}=n,\)` and `\(\alpha = (\tau n)^{-1}\)`.
+  - For scalar state polynomials of degree `\(d\)`, we have that `\(\alpha = (\tau\sum_{i=0}^{d} 1/(2i+1))^{-1}\)`.
+* If features activate unevenly, damp steps by visit counts: `\(\alpha_i \;=\; \frac{\alpha_0}{1+n_i}.\)`
+* One may also try a small grid of `\(\alpha\)`. 
+  - Run a short training phase and track an error proxy (e.g., RMSVE), pick the largest `\(\alpha\)` that yields a smooth, monotone decline.
+  - Next, decrease `\(\alpha\)` when needed as training is continued.
+* Let us consider the an example in the [Colab tutorial][colab-12-approx-pred].
+]
+
+---
+
+## Artificial neural networks
+
+*Artificial neural networks (ANNs)* are widely used nonlinear function approximators. 
+
+* Capable of representing complex mappings between inputs and outputs. 
+* In RL, ANNs are employed to approximate value functions, policies, and models of the environment.
+* Deep neural networks are composed of multiple hidden layers.
+* ANNs are trained using stochastic gradient methods and the backpropagation algorithm to computes partial derivatives
+* Research in deep ANNs is a hot topic, and big advancements have been made since the book was published.
+* Using deep ANNs in RL is denoted *deep reinforcement learning*, and some RL courses focus on this. 
+* There are many implementations of deep RL algorithms.
+
+---
+
+## Memory-based function approximation
+
+* A different approach to estimating the state value. 
+* No set of parameters are adjusted, as in parametric methods. 
+* Instead, the agent stores examples of experience pairs `\(s \mapsto g\)` of states and their estimated returns (the state
+value). 
+* When an estimate of the state value in a *query state* `\(s'\)` is
+wanted, the estimates in memory is used directly. 
+*  There is no parameters and calculation is *lazy*, (calc. when an estimate is required).
+* Use a *kernel* (function) that assigns a number between two states.
+* Given the kernel *local search* based methods can be used to estimate the state value.
+* Pros: no global model, focus on regions of the state space actually visited. 
+* Cons: computational and memory cos. Retrieving and comparing neighbours may be expensive.
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
+
+
+
+[BSS]: https://bss.au.dk/en/
+[bi-programme]: https://masters.au.dk/businessintelligence
+
+[course-help]: https://github.com/bss-osca/rl/issues
+[cran]: https://cloud.r-project.org
+[cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
+[course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+[Colab]: https://colab.google/
+[colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
+[colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-03-rl-in-action-ex]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1
+[colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
+[colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
+[colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
+[colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
+[colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
+[colab-08-dp]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6?usp=sharing
+[colab-08-dp-ex-storage]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=nY6zWiv_3ikg&amp;line=21&amp;uniqifier=1
+[colab-08-dp-sec-dp-gambler]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=GweToDSPd5gj&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-maintain]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=HQnlVuuufR_Q&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&amp;line=1&amp;uniqifier=1
+[colab-09-mc]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-?usp=sharing
+[colab-09-mc-sec-mc-seasonal-ex]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-10-td-pred]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d?usp=sharing
+[colab-10-td-pred-sec-ex-td-pred-random]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&amp;line=4&amp;uniqifier=1
+[colab-11-td-control]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw?usp=sharing
+[colab-11-td-control-sec-td-control-storage]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-11-td-control-sec-td-control-car]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1
+[colab-12-approx-pred]: https://colab.research.google.com/drive/1-kh0SiNucJrzUUnIOLSidcA2RO5J1rvY?usp=sharing
+
+[DataCamp]: https://www.datacamp.com/
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
+[datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
+[datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
+[datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
+[datacamp-r-communicating-chap3]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/introduction-to-rmarkdown
+[datacamp-r-communicating-chap4]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/customizing-your-rmarkdown-report
+[datacamp-r-intermediate]: https://learn.datacamp.com/courses/intermediate-r
+[datacamp-r-intermediate-chap1]: https://campus.datacamp.com/courses/intermediate-r/chapter-1-conditionals-and-control-flow
+[datacamp-r-intermediate-chap2]: https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops
+[datacamp-r-intermediate-chap3]: https://campus.datacamp.com/courses/intermediate-r/chapter-3-functions
+[datacamp-r-intermediate-chap4]: https://campus.datacamp.com/courses/intermediate-r/chapter-4-the-apply-family
+[datacamp-r-functions]: https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r
+[datacamp-r-tidyverse]: https://learn.datacamp.com/courses/introduction-to-the-tidyverse
+[datacamp-r-strings]: https://learn.datacamp.com/courses/string-manipulation-with-stringr-in-r
+[datacamp-r-dplyr]: https://learn.datacamp.com/courses/data-manipulation-with-dplyr
+[datacamp-r-dplyr-bakeoff]: https://learn.datacamp.com/courses/working-with-data-in-the-tidyverse
+[datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
+[datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
+[dplyr-cran]: https://CRAN.R-project.org/package=dplyr
+
+[google-form]: https://forms.gle/s39GeDGV9AzAXUo18
+[google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
+[GitHub]: https://github.com/
+[git-install]: https://git-scm.com/downloads
+[github-actions]: https://github.com/features/actions
+[github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
+
+[happy-git]: https://happygitwithr.com
+[hg-install-git]: https://happygitwithr.com/install-git.html
+[hg-why]: https://happygitwithr.com/big-picture.html#big-picture
+[hg-github-reg]: https://happygitwithr.com/github-acct.html#github-acct
+[hg-git-install]: https://happygitwithr.com/install-git.html#install-git
+[hg-exist-github-first]: https://happygitwithr.com/existing-github-first.html
+[hg-exist-github-last]: https://happygitwithr.com/existing-github-last.html
+[hg-credential-helper]: https://happygitwithr.com/credential-caching.html
+[hypothes.is]: https://web.hypothes.is/
+
+[Jupyter]: https://jupyter.org/
+
+[osca-programme]: https://masters.au.dk/operationsandsupplychainanalytics
+
+[Peergrade]: https://peergrade.io
+[peergrade-signup]: https://app.peergrade.io/join
+[point-and-click]: https://en.wikipedia.org/wiki/Point_and_click
+[pkg-bookdown]: https://bookdown.org/yihui/bookdown/
+[pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
+[pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
+[pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+[Python]: https://www.python.org/
+[Positron]: https://positron.posit.co/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[VSCode]: https://code.visualstudio.com/
+
+[R]: https://www.r-project.org
+[RStudio]: https://rstudio.com
+[rstudio-cloud]: https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz
+[r-cloud-mod12]: https://rstudio.cloud/spaces/176810/project/2963819
+[r-cloud-mod13]: https://rstudio.cloud/spaces/176810/project/3020139
+[r-cloud-mod14]: https://rstudio.cloud/spaces/176810/project/3020322
+[r-cloud-mod15]: https://rstudio.cloud/spaces/176810/project/3020509
+[r-cloud-mod16]: https://rstudio.cloud/spaces/176810/project/3026754
+[r-cloud-mod17]: https://rstudio.cloud/spaces/176810/project/3034015
+[r-cloud-mod18]: https://rstudio.cloud/spaces/176810/project/3130795
+[r-cloud-mod19]: https://rstudio.cloud/spaces/176810/project/3266132
+[rstudio-download]: https://rstudio.com/products/rstudio/download/#download
+[rstudio-customizing]: https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio
+[rstudio-key-shortcuts]: https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts
+[rstudio-workbench]: https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png
+[r-markdown]: https://rmarkdown.rstudio.com/
+[ropensci-writexl]: https://docs.ropensci.org/writexl/
+[r4ds-pipes]: https://r4ds.had.co.nz/pipes.html
+[r4ds-factors]: https://r4ds.had.co.nz/factors.html
+[r4ds-strings]: https://r4ds.had.co.nz/strings.html
+[r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
+
+[stat-545]: https://stat545.com
+[stat-545-functions-part1]: https://stat545.com/functions-part1.html
+[stat-545-functions-part2]: https://stat545.com/functions-part2.html
+[stat-545-functions-part3]: https://stat545.com/functions-part3.html
+[slides-welcome]: https://bss-osca.github.io/rl/slides/00-rl_welcome.html
+[slides-m1-3]: https://bss-osca.github.io/rl/slides/01-welcome_r_part.html
+[slides-m4-5]: https://bss-osca.github.io/rl/slides/02-programming.html
+[slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
+[slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
+[slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
+
+[tidyverse-main-page]: https://www.tidyverse.org
+[tidyverse-packages]: https://www.tidyverse.org/packages/
+[tidyverse-core]: https://www.tidyverse.org/packages/#core-tidyverse
+[tidyverse-ggplot2]: https://ggplot2.tidyverse.org/
+[tidyverse-dplyr]: https://dplyr.tidyverse.org/
+[tidyverse-tidyr]: https://tidyr.tidyverse.org/
+[tidyverse-readr]: https://readr.tidyverse.org/
+[tidyverse-purrr]: https://purrr.tidyverse.org/
+[tidyverse-tibble]: https://tibble.tidyverse.org/
+[tidyverse-stringr]: https://stringr.tidyverse.org/
+[tidyverse-forcats]: https://forcats.tidyverse.org/
+[tidyverse-readxl]: https://readxl.tidyverse.org
+[tidyverse-googlesheets4]: https://googlesheets4.tidyverse.org/index.html
+[tutorial-markdown]: https://commonmark.org/help/tutorial/
+[tfa-course]: https://bss-osca.github.io/tfa/
+
+[video-install]: https://vimeo.com/415501284
+[video-rstudio-intro]: https://vimeo.com/416391353
+[video-packages]: https://vimeo.com/416743698
+[video-projects]: https://vimeo.com/319318233
+[video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
+[video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
+[video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10&amp;t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10
+[video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
+[video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
+[video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
+[video-tibble-vs-df]: https://www.youtube.com/watch?v=EBk6PnvE1R4
+[video-dplyr]: https://www.youtube.com/watch?v=aywFompr1F4
+
+[wiki-snake-case]: https://en.wikipedia.org/wiki/Snake_case
+[wiki-camel-case]: https://en.wikipedia.org/wiki/Camel_case
+[wiki-interpreted]: https://en.wikipedia.org/wiki/Interpreted_language
+[wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
+[wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
+[wiki-json]: https://en.wikipedia.org/wiki/JSON
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightLines": true,
+  "highlightStyle": "solarized-light",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

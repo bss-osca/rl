@@ -1,0 +1,742 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+# On-policy prediction with approximation {#sec-approx-pred}
+
+Tabular methods assume we can store a separate value for each state. In
+large or continuous state spaces, this is impossible. We therefore
+approximate the value function using a parametrised model
+$\hat v(s;\mathbf w)$. That is, we approximate the value function using
+a function with parameters $\mathbf w \in \mathbb {R} ^d$. In this
+module, a *on-policy* policy $\pi$ is assumed (we evaluate the value of
+the same policy we use to generate experience).
+
+Most function approximation techniques are examples of *supervised
+learning* that require parameters $\textbf{w}$ to be found using
+training examples. In our case, we update the value approximation online
+(our estimate of $\textbf{w}$) when new training arrive, i.e.
+$s \rightarrowtail u$ where $u$ is the update of the value function we'd
+like to make at state $s$.
+
+## Learning outcomes
+
+After studying this chapter, you should be able to:
+
+-   Explain why function approximation is needed beyond tabular RL and
+    define the prediction problem.
+-   Write the *mean-squared value error* objective and derive
+    *semi-gradient* updates.
+-   Implement *Gradient Monte Carlo* and *semi-gradient TD(0)* for value
+    prediction with function approximation.
+-   Compare and solve algorithms for linear function approximation.
+-   Motivate and construct feature representations (polynomial/Fourier
+    basis, tile coding) and discuss their trade-offs.
+-   Explain causes of instability (e.g., step-size sensitivity).
+-   Describe other methods for function approximation, such as
+    memory-based and interest/emphasis.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+## Textbook readings
+
+For this module, you will need to read Chapter 9-9.11 in @Sutton18. Read
+it before continuing this module. A summary of the book notation can be
+seen [here][sutton-notation].
+
+```{r, echo=FALSE}
+link_slide_file_text("12", "approx-pred")
+```
+
+## The prediction objective
+
+The *mean-squared value error (MSVE)* is often used as an objective for
+prediction: $$
+e(\mathbf w) = \overline{VE}(\mathbf w) = \sum_s \mu(s)\,\big[v_\pi(s) - \hat v(s;\mathbf w)\big]^2.
+$$
+
+Here $\mu(s)$ denotes a non-negative weight of state $s$ that indicates
+how much we care about precision in state $s$. Often, we focus on
+precision in states visited more often than others. That is, $\mu(s)$
+denote the probability of visiting $s$ ($\sum_s \mu(s) = 1$). If
+$\mu(s)$ is unknown we store the number of times $s$ have been visited
+(including if $s$ have been used as starting state for episodic tasks)
+and $\mu(s)$ becomes the fraction of time spent in $s$.
+
+The square root $\sqrt{e}$ of the MSVE gives a rough measure of how much
+the approximate values differ from the true values and is often used in
+plots (often denoted *RMSVE* or just *RMS*). Note, since
+$|\mathbf w| \ll |{\cal S}|$, adjusting $\mathbf{w}$ to reduce error at
+visited states can increase error elsewhere.
+
+It is not completely clear that $e$ is the right performance objective.
+Remember that our goal is to find a better policy. The best value
+function for this purpose is not necessarily minimizing $e$.
+Nevertheless, it is not yet clear what a more useful alternative goal
+might be.
+
+Given objective $e$, the goal is to minimize $e$. That is, to find a
+global optimum, a weight vector $\mathbf w^*$ for which
+$e(\mathbf w^*) \leq e(\mathbf w)$ for all possible $\mathbf w$. This
+is, not always possible. Complex function approximations may converge to
+a local optimum. Although this guarantee is only slightly reassuring, it
+is typically the best that can be done, and often it is enough.
+
+## Stochastic-gradient and semi-gradient methods
+
+To minimise $e$, we use *stochastic-gradient descent* (*SGD*) methods.
+SGD methods are widely used for function approximation and can be used
+in an online setting. Here we update $\mathbf w$ each time a new data
+sample $S_t \mapsto v_\pi(S_t)$ arrives (an example). That is, we have a
+sequence of updates
+$\mathbf w_t, \mathbf w_{t+1}, \mathbf w_{t+2}, \ldots$ and we assume
+that states appear in samples with the same distribution, $\mu$. A good
+strategy in this case is to try to minimize error on the observed
+examples and adjust the weight vector after each sample by a small
+amount ($\alpha>0$): $$
+\begin{align}
+\mathbf w_{t+1} &= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]^2\\
+  &= \mathbf w_t + \alpha\,\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).
+ \end{align}
+$$ where $\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t)$ denote the partial
+derivative vector (the gradient).
+
+Note that since we approximate $v_\pi(s)$, we do not know the exact
+value of $v_\pi(s)$. Instead, we have a target output $U_t$ (an estimate
+of $v_\pi(s)$). That is, our sample is now $S_t \mapsto U_t$ instead and
+our updates becomes:
+
+$$
+\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).
+$$ If $U_t$ is an *unbiased estimate*, that is, if
+$\mathbb E[U_t|S_t=s] = v_\pi(s)$, for all t, then $w_t$ is guaranteed
+to converge to a local optimum for decreasing $\alpha$. In this case it
+is called a *gradient* descent method. If $U_t$ is a *biased estimate*
+(not independent on $\mathbf w_t$) it is not guaranteed to converge to
+the true local optimum. We call these methods *semi-gradient* methods.
+We may choose $U_t$ as
+
+-   Gradient Monte Carlo: $U_t = G_t$ (full return). Unbiased in
+    expectation and requires episode completion. High variance because
+    the full return depends on all future rewards up to the end of the
+    episode. Any randomness in transitions or rewards propagates through
+    the entire sequence.
+-   Semi-gradient TD(0):
+    $U_t = R_{t+1} + \gamma\,\hat v(S_{t+1};\mathbf w_t)$. Target
+    depends on $\mathbf w_t$ (bias via bootstrapping). Lower variance
+    since the target depends only on one reward and the current estimate
+    of the expected reward of the next state value.
+
+Although semi-gradient (bootstrapping) methods do not converge as
+robustly as gradient methods, they do converge reliably in important
+cases such as the linear case discussed in the next section. Moreover,
+they offer important advantages e.g significantly faster learning.
+
+## Linear methods
+
+One important function class for function approximation is when the
+approximate function is a linear function of the weight vector.
+
+Let $\mathbf x(s)\in\mathbb R^d$ be features and define $$
+\hat v(s;\mathbf w) = \mathbf w^\top \mathbf x(s) = \sum_{i=1}^d w_ix_i(s).
+$$ {#eq-linear-approx}
+
+Note here, the gradient (vector with partial derivatives) is easy to
+calculate $$
+\nabla_{\mathbf w}\hat v(s;\mathbf w) = \mathbf x(s),
+$$ and our update formula becomes
+
+$$
+\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(s).
+$$ In the linear case the MSVE $e(\textbf w)$ is convex and has only one
+optimum, and thus any method that is guaranteed to converge is
+guaranteed to converge to the global optimum. That is, under gradient
+Monte Carlo $\mathbf w_{t}$ converges to the global optimum if $\alpha$
+is reduced over time according to the usual conditions.
+
+A semi-gradient method also converges, but not necessarily to the global
+optimum, but rather a point near the global optimum. The update at each
+time $t$ given the semi-gradient TD(0) becomes
+
+\begin{align}
+\mathbf w_{t+1} 
+      =& \mathbf w_t + \alpha\left( R_{t+1} + \gamma\mathbf w_t^\top \mathbf x(S_{t+1}) - \mathbf w_t^\top \mathbf x(S_t) \right) \mathbf x(S_t) \\
+      =& \mathbf w_t + \alpha\left( R_{t+1}\mathbf x(S_t) - \mathbf x(S_t) \left(\mathbf x(S_t) - \gamma\mathbf x(S_{t+1})\right)^\top \mathbf w_t \right).
+
+\end{align}
+
+In expectation we have \begin{align}
+\mathbb E\left( \mathbf w_{t+1} | \mathbf w_{t}\right) =& \mathbb E\left( \mathbf w_t + \alpha\left( R_{t+1}\mathbf x(S_t) - \mathbf x(S_t) \left(\mathbf x(S_t) - \gamma\mathbf x(S_{t+1})\right)^\top \mathbf w_t \right) \right) \\
+    =& \mathbf w_t + \alpha\left( \mathbf b - \mathbf A \mathbf w_t \right) \\
+
+\end{align}
+
+where $$
+\mathbf A = \mathbb E\big[ \mathbf x(S_t) \left(\mathbf x(S_t) - \gamma\mathbf x(S_{t+1})\right)^\top \big],\;
+\mathbf b = \mathbb E\big[R_{t+1}\mathbf x(S_t)\big].
+$$ If the system converges, it must converge to the weight vector $w^*$
+satisfying $$
+\mathbf b − \mathbf A\mathbf w^* = \mathbf 0 \Leftrightarrow \mathbf w^* = \mathbf A^{-1}\mathbf b
+$$ {#eq-td-fixed-point} The estimate $w^*$is called the *TD fixed
+point*. Linear semi-gradient TD(0) converges to this point and the error
+is at most (in the continuing case) $$
+e(\textbf w^*) \leq \frac{1}{1-\gamma}\min_{\textbf w} e(\textbf w).
+$$ Critical to these convergence results is that states are updated
+according to the on-policy distribution. For other update distributions
+the approximation may actually diverge to infinity.
+
+In the next sections we will focus on different way of selecting
+features, but first let us present an example to be used.
+
+## A random walk
+
+Consider a large random walk environment with 1,000 non-terminal states
+labeled 1 through 1000. Two terminal states lie just outside this range:
+state 0 on the left, which yields a reward of −1, and state 1001 on the
+right, which yields a reward of +1. Each episode begins in the center
+state, 500.
+
+From any nonterminal state $s$, the agent flips a fair coin to choose
+left or right, then samples a jump size $k$ uniformly from
+$\{1, 2, \dots, 100\}$. The agent then moves to state $s - k$ or
+$s + k$. If the resulting state lies outside $[1,1000]$, the episode
+terminates immediately with the corresponding terminal reward. All
+intermediate transitions give reward 0. The policy is fixed (a random
+policy as described) and uniform, with left and right chosen equally
+likely.
+
+The goal is to estimate the value function $v(s)$ under this policy
+using function approximation.
+
+::: {.callout-note title="Colab - Before the lecture"}
+During the lecture for this module, we will work with the
+[tutorial][colab-12-approx-pred]. We implement different functions
+approximation algorithms. You may have a look at the notebook and the
+example before the lecture.
+:::
+
+## Feature construction for linear models
+
+Linear methods are interesting because of their convergence guarantees,
+but also because in practice they can be very efficient in terms of both
+data and computation. This depends on how the states are represented in
+terms of features which are investigated in this section. Choosing
+features appropriate to the task is an important way of adding prior
+domain knowledge about the system. The features should correspond to the
+aspects of the state space along which generalization may be
+appropriate. We here consider different ways of constructing features.
+
+### State aggregation
+
+State aggregation is a special case of linear function approximation in
+which states are grouped together, with one estimated value (one
+component of the weight vector w) for each group. That is, the value of
+a state is estimated as its group’s value. Let $g(s)$ be a mapping that
+assigns each state $s$ to a group index. Then the features are
+$\mathbf x_i(s) = 1$ if $g(s) = i$ and $\mathbf x_j(s)  = 0$ for
+$j\neq i$ and @eq-linear-approx becomes $$
+\hat v(s; \mathbf{w}) = w_{g(s)}.
+$$
+
+Because $\boldsymbol{x}(s)$ is a unit vector with all entries equal to
+zero except entry $g(s)$, then $$
+w_{g(s)} \leftarrow w_{g(s)} + \alpha \,\big(U_t - w_{g(s)}\big),
+$$ and all other $w_j$ remain unchanged (the gradient is 1 for group
+$g(s)$ and 0 for the other components). That is, the approximation is a
+*piecewise constant function* that is constant for each group.
+
+::: {.callout-note title="Colab - Before the lecture"}
+For an example see the corresponding section in the
+[tutorial][colab-12-approx-pred].
+:::
+
+### Polynomials
+
+Polynomial features approximate $v_\pi(s)$ by fitting a low-degree
+polynomial of *normalized* state variables. Note the model remains
+linear in parameters $\textbf w$ even though it is nonlinear in $s$.
+
+Polynomials can capture non-linear relationships in the value function
+and provide a smoother approximation compared to methods like state
+aggregation, especially when the true value function is smooth. However,
+choosing the appropriate degree of the polynomial is important. Too low
+a degree might not capture the complexity of the value function, while
+too high a degree can lead to overfitting and poor generalization.
+Polynomials can also have difficulty approximating value functions with
+sharp changes or discontinuities.
+
+Let us first consider a state $s$ where $s$ is a scalar. Here, the
+approximation is
+
+$$
+\hat{v} (s;\mathbf w) = \mathbf w^\top \mathbf x(s) = w_0 + w_1s + w_2s^2 + \ldots + w_{d}s^d.
+$$
+
+That is, the gradient becomes polynomial of degree $d$ $$
+\mathbf x(s) = (1,s,s^2,\dots,s^d).
+$$
+
+Second, if we have *multiple state variables*
+$\mathbf s=(s_1,\dots,s_K)$ and want to consider polynomials of degree
+$d$, then each term/feature in the polynomial becomes
+
+$$
+\prod_{k=1}^K s_k^{i_k},\quad \sum_k i_k \le d.
+$$
+
+If all are included then the number of features are $\binom{K+d}{d}$.
+Note the interactions (e.g., $s_1s_2^3$) capture cross-effects (e.g.,
+inventory × demand, tenure × engagement).
+
+**Numerical instabilities**
+
+A good strategy is always to normalise the state values because if $s$
+has a high value, then $s^d$ may be very large, yielding numerical
+instabilities. If we normailze so state varibles are in the interval
+$[-1,1]$ then $s^d$ also lies in this interval. This can be done by:
+
+-   If $s\in\{1,\dots,N\}$: use $z = \dfrac{s}{N+1}\in(0,1)$ or
+    $u = 2z-1 \in (-1,1)$.
+
+-   If $s\in[a,b]$: use $u = \dfrac{2s-(a+b)}{b-a}\in(-1,1)$.
+
+Moreover, using *orthogonal polynomials* (e.g. the Legendre basis) may
+improve instabilities (not within the scope of the course).
+
+To find the right step-size $\alpha$, keep track of RMSVE. If it
+oscillates, then the step-size $\alpha$ is too high.
+
+::: {.callout-note title="Colab - Before the lecture"}
+For an example see the corresponding section in the
+[tutorial][colab-12-approx-pred].
+:::
+
+
+### Fourier basis
+
+The *Fourier basis* approximates $v_\pi(s)$ using global sine/cosine
+waves over a *normalized* state. The model remains *linear in
+parameters* even though it can represent highly nonlinear shapes. The
+Fourier series/transforms are widely used because if a function to be
+approximated is known, then essentially any function can be approximated
+as accurately as desired. In reinforcement learning, where the functions
+to be approximated are unknown, Fourier basis functions are of interest
+because they are easy to use and can perform well.
+
+Let us first consider a state $s$ where $s$ is a scalar. Here the
+Fourier series is a function having period $\tau$ which is a linear
+combination of sine and cosine functions that are each periodic with
+periods that multiplum of $1/\tau$. Note, we are interested in
+approximating an aperiodic function defined over an interval. Hence, by
+setting $\tau$ to the length of the interval, the function of interest
+is then just one period of the periodic linear combination of the sine
+and cosine features. Furthermore, if you set $\tau$ to twice the length
+of the interval of interest and restrict attention to the approximation
+over the half interval \[0, $\tau/2$\], then you can use just the cosine
+functions (see details in the book). Following this logic and letting
+$\tau = 2$, the interval becomes $s\in[0, 1]$.
+
+The one-dimensional order-$d$ Fourier cosine basis consists of the
+$d + 1$ features. Here the approximation is
+
+$$
+\hat{v} (s;\mathbf w) = \mathbf w^\top \mathbf x(s) = w_0 + w_1\cos(\pi z) + w_2\cos(2\pi z) + \ldots + w_{d}\cos(d\pi z),
+$$ where $z$ is the normalised state. That is, the entries in the
+gradient are $x_i(z)=\cos(i\pi z), j=0,1,\dots,n,$ where $j=0$ is the
+*bias* term ($\cos(0)=1$).
+
+If we have *multiple normalized state variables*
+$\mathbf z=(z_1,\dots,z_K)$, we choose *frequency vectors*
+$\mathbf c=(c_1,\dots,c_K)$ with nonnegative integers. Combinations can
+be limited by considering $c$ where $\sum_k c_k\le n$, i.e. then number
+of features are $\binom{K+n}{n}$. Each feature now becomes
+
+$$
+x_{\mathbf c}(\mathbf z)=\prod_{k=1}^K \cos\!\big(\pi c_k z_k\big).
+$$
+
+**Normalization of states**
+
+Since we want the states normalized so $s\in[0,1]$ we do
+
+-   If $s\in\{1,\dots,N\}$: use $z = \dfrac{s}{N+1}\in(0,1)$.
+
+-   If $s\in[a,b]$: use $z = \dfrac{s-a}{b-a}\in[0,1]$.
+
+<!-- **Practical guidance** -->
+
+<!-- - Normalize each dimension to $[0,1]$. -->
+
+<!-- - Start with *cosines only*, $n\in[4,16]$ per dimension (problem-dependent). -->
+
+<!-- - In higher-D, prefer a *total-frequency budget* $\sum_k c_k\le n$. -->
+
+<!-- - Track *RMSVE*; if oscillatory, reduce $n$ and/or $\alpha$. -->
+
+<!-- - If the target has strong *odd/asymmetric* components, include *sines*. -->
+
+<!-- - With linear TD(0), stability tracks feature conditioning. If you raise $n$: -->
+
+<!--   - lower the step size $\alpha$, -->
+
+<!--   - optionally normalize features (mean/std), -->
+
+<!--   - and prefer a *frequency budget* to curb very high $j$. -->
+
+::: {.callout-note title="Colab - Before the lecture"}
+For an example see the corresponding section in the
+[tutorial][colab-12-approx-pred].
+:::
+
+
+### Coarse coding
+
+Here, the idea is to cover the state space with many overlapping regions
+(often called *receptive fields* or *features*). A state activates the
+features whose regions contain it, producing a sparse binary vector.
+Coarse coding create *sparse*, *localized* features so that nearby
+states share parameters and thus generalize to each other.
+
+If $s$ is a normalized scalar we cover the values of s with several
+intervals. For instance, at $s=0.5$, perhaps three overlapping intervals
+contain $0.5$, so three features turn on.
+
+If $s$ have multiple state variables, regions might be discs/ellipses
+(2-D), balls/ellipsoids (3D), or any shapes convenient for the problem.
+Feature $i$ is “on” if $s$ falls inside the region.
+
+The Linear approximation is
+
+$$
+\hat v(s;\mathbf w) \;=\; \mathbf w^\top \mathbf x(s) = \sum_{\{i | x_i(s) = 1\}} w_i,
+$$
+
+where $x_i(s)\in\{0,1\}$ (1 if region $i$ covers $s$).
+
+Because only a few fields cover any given state, $\mathbf x(s)$ is
+*sparse* and updates are cheap.
+
+```{=html}
+<!-- *Generalization behavior.* If two states lie in many of the *same* receptive fields, they will share parameters and end up with similar predictions. Overlap controls the *radius of generalization*.
+
+*Bias–variance dial.* Large fields (wide bumps) → smoother, more biased approximations. Smaller fields → finer detail but higher variance and more parameters. Overlap (how many fields fire at once) trades stability vs. resolution. -->
+```
+
+### Tile coding
+
+Tile coding can be viewed as a structured, grid-based special case of
+coarse coding that is simple and fast. Here hyper-rectangular receptive
+fields arranged on offset grids. Overlap comes from having multiple
+tilings; each tiling itself does not overlap (it’s a partition of the
+state space), but the union of tilings does.
+
+That is, first create a *tiling* that partitions the space into
+non-overlapping *tiles*. Next, offset the tiling and hereby creating
+multiple tilings. Each tiling is offset slightly, so two nearby states
+are likely to share some tiles even if they fall on different sides of a
+grid boundary in one tiling. Steps for the scalar case becomes:
+
+-   Choose an integer number of tilings $n$ (e.g., $n=8$).
+-   In each tiling, split $[0,1]$ into $m$ equal tiles (e.g., $m=50$).
+-   Offset each tiling by a small shift (e.g.,
+    $0, \tfrac{1}{mn}, \tfrac{2}{mn}, \dots$) or randomly.
+-   For a state $s$, exactly one tile is active in each tiling; across
+    $n$ tilings, you get $n$ active features.
+
+In multiple dimensions ($k$), the only change is that each tiling is a
+Cartesian grid with $n_1\times \cdots \times n_K$ tiles.
+
+Note that offsets matter since a single grid creates discontinuities at
+tile boundaries. Multiple offset grids ensure that two nearby states
+share most of their active features, smoothing the representation and
+reducing boundary artifacts.
+
+Because each update touches only $n$ parameters, tile/coarse coding
+works *extremely well* with incremental semi-gradient TD: $$
+\mathbf w \leftarrow \mathbf w + \alpha\,\delta_t\,\mathbf x(S_t),\qquad
+\delta_t = R_{t+1} + \gamma\,\hat v(S_{t+1}) - \hat v(S_t).
+$$
+
+*Step-size scaling.* A common heuristic is to scale the per-tiling step
+size like $\alpha \approx \frac{\alpha_0}{n}$ (since $n$ weights are
+updated per step). This keeps the *total* update magnitude roughly
+controlled as you add more tilings.
+
+Note that features that are polynomials or Fourier basis are *global*.
+That is, each update affects the entire space. Coarse/tile coding is
+*local*. That is, the value function is not globally smooth, has local
+structure and thus less prone to global oscillations.
+
+**Choosing design parameters**
+
+*Number of tilings (*$m$). More tilings increase overlap and stability
+but cost more memory/compute.
+
+*Tiles per dimension.* Finer grids reduce bias (higher resolution) but
+increase variance and memory. Note that the function is
+piecewise-constant within each tile (per tiling). Summing across tilings
+reduces the effective piecewise step size, but if tiles are still large
+relative to the variation in $v_\pi$, you will see bias.Smaller tiles
+and fewer overlapping tilings increase variance (fewer shared samples
+per parameter). More tilings and/or larger tiles reduce variance by
+pooling data.
+
+*Normalization.* Always normalize each state coordinate to a fixed range
+(e.g., $[0,1]$) before tiling so that “one tile” has a consistent
+meaning across features and tasks.
+
+<!-- *A practical loop.* Start with moderate $m$ (e.g., 8) and moderate resolution. If learning is noisy or unstable, *increase $m$* or *reduce $\alpha$*. If predictions are too blocky (high bias), *increase resolution* (more tiles per dimension) or *add tilings*. -->
+
+::: {.callout-note title="Colab - Before the lecture"}
+For an example see the corresponding section in the
+[tutorial][colab-12-approx-pred].
+:::
+
+
+## Selecting step-size parameters manually
+
+The goal is to pick a step size $\alpha$ that removes TD error quickly
+*without* causing instability.
+
+In tabular prediction, a single update with target $U_t$ is
+$$V(S_t) \leftarrow V(S_t) + \alpha\,[\,U_t - V(S_t)\,].$$ Think of
+$\alpha$ as how much you trust the newest target. Big enough to make
+visible progress, small enough to avoid creating noise. A step size of
+$\alpha = 1/10$ would take about 10 experiences to converge
+approximately to their mean target, and if we wanted to learn in 100
+experiences we would use $\alpha = 1/100$.
+
+With general function approximation there is not such a clear notion of
+number of experiences with a state, as each state may be similar to and
+dissimilar from all the others to various degrees. Suppose you wanted to
+learn in about $\tau$ experiences with substantially the same feature
+vector. Then, good rule of thumb for setting the step-size parameter to
+
+\begin{equation}
+    \alpha = (\tau \mathbb{E}[\textbf{x}^T\textbf{x}])^{-1}
+\end{equation}
+
+where $\textbf{x}$ is a random feature vector chosen from the same
+distribution as input vectors will be in the SGD. This method works best
+if the feature vectors do not vary greatly in length; ideally
+$\textbf{x}^T\textbf{x}$ is a constant.
+
+For instance, for tile coding with $n$ tillings we have that
+$$\textbf{x}^T\textbf{x}=n,$$ and $$\alpha = (\tau n)^{-1}.$$
+
+Given a scalar state and a polynomial of degree $d$, we have that
+$$\textbf{x}^T\textbf{x}=(1, s, s^2, \ldots s^d)^T(1, s, s^2, \ldots s^d) = \sum_{i=0}^{d} (s^i)^2.$$
+If the state is normalised to \[-1,1\] and we assume a uniform
+distribution then $$\mathbb{E}[(s^i)^2] = 1/(2i + 1),$$ and the
+step-size becomes $$\alpha = (\tau\sum_{i=0}^{d} 1/(2i+1))^{-1}.$$
+
+<!-- -   *Dense bases (polynomial/Fourier):* start with smaller $\alpha$ -->
+
+<!--     since many coordinates move each step. -->
+
+If features activate unevenly, damp steps by visit counts: $$
+\alpha_i \;=\; \frac{\alpha_0}{1+n_i},
+$$ where $n_i$ is how often feature $i$ has been active. This mimics
+tabular $1/n$ averaging and reduces variance for frequent features.
+
+**Pratical comments**
+
+-   Try a small grid of $\alpha$ (log-spaced). For each candidate: - run
+    a short training phase, - track an error proxy (e.g., RMSVE), - pick
+    the largest $\alpha$ that yields a smooth, monotone decline.
+
+-   If curves spike or blow up, reduce $\alpha$ by a factor of $2$–$10$;
+    if flat, increase with a factor $2$–$10$.
+
+-   Feature specific
+
+    -   *Tile coding:* with $n\in\{4,8,16\}$, try $\alpha_0\in[0.1,0.4]$
+        and use $\alpha=\alpha_0/n$.\
+        Example: $m=8 \Rightarrow \alpha\in[0.0125,0.05]$ per weight.
+    -   *Fourier (cos-only), max freq* $n\in[4,16]$: start
+        $\alpha\in[10^{-4},10^{-3}]$. Lower $n$ allows larger $\alpha$.
+    -   *Polynomials (degree* $3$–$5$): start
+        $\alpha\in[10^{-4},10^{-3}]$; if you see boundary oscillations,
+        lower $\alpha$.
+
+::: {.callout-note title="Colab - Before the lecture"}
+For an example see the corresponding section in the
+[tutorial][colab-12-approx-pred].
+:::
+
+
+## Nonlinear function approximation: artificial neural networks
+
+*Artificial neural networks (ANNs)* are widely used nonlinear function
+approximators capable of representing complex mappings between inputs
+and outputs. In reinforcement learning, ANNs are employed to approximate
+value functions, policies, and models of the environment.
+
+Deep neural networks, composed of multiple hidden layers, can
+automatically construct hierarchical representations of input data. Each
+successive layer extracts more abstract features, enabling the network
+to learn complex relationships without requiring handcrafted features.
+
+ANNs are trained using stochastic gradient methods, where each
+connection weight is updated in a direction that improves the
+performance measure or objective function. In supervised learning, this
+typically involves minimizing the expected prediction error over labeled
+examples. In reinforcement learning, the objective function may involve
+minimizing temporal-difference (TD) errors when approximating value
+functions or maximizing expected reward in policy-gradient methods.
+
+To adjust weights, the learning algorithm must estimate how small
+changes in each weight influence the overall performance. The
+backpropagation algorithm efficiently computes these partial derivatives
+for networks with differentiable activation functions. It alternates
+between a forward pass, computing activations through the network, and a
+backward pass, propagating errors to compute gradients for each weight.
+These gradients serve as stochastic estimates of the true gradient used
+to update the weights.
+
+Although backpropagation can train networks with one or two hidden
+layers effectively, it struggles with deeper architectures. Increasing
+the number of layers can lead to poorer performance due to several
+factors such as overfitting (many parameters makes it difficult to
+generalize from limited training data).
+
+Even though there are difficulties, research in deep ANNs is a hot
+topic, and big advancements have been made since the book was published.
+Using deep ANNs in RL is denoted *deep reinforcement learning*, and many
+RL courses focus on this. Moreover, there are many implementations of
+deep RL algorithms.
+
+## Least-squares temporal-difference learning
+
+Consider @eq-td-fixed-point for calculating the TD fixed point.
+*Least-squares TD (LSTD)* estimate the weights using this equation by
+estimating matrix $\textbf A$ and vector $\textbf b$ incrementally from
+experience.
+
+The key advantages of LSTD are:
+
+-   it eliminates the need for a step-size parameter,
+-   it converges faster than incremental TD for stationary problems,
+-   it produces an exact least-squares solution under linear function
+    approximation.
+
+However, LSTD also has important limitations:
+
+-   it lacks a forgetting mechanism, making it unsuitable when the
+    target policy changes (as in control problems),
+-   it can be sensitive to numerical instabilities,
+-   it requires storage proportional to $d\^2$, which can be prohibitive
+    for high-dimensional features.
+
+## Memory-based function approximation
+
+Memory-based function approximation have different approach to
+estimating the state value. Here no set of parameters are adjusted, as
+in parametric methods. Instead, the agent stores examples of experience
+pairs $s \mapsto g$ of states and their estimated returns (the state
+value). When an estimate of the state value in a *query state* $s'$ is
+wanted, the estimates in memory is used directly. That is, there is no
+parameters and calculation is *lazy*, since learning is deferred until
+an estimate is required.
+
+When the value of a query state is requested, the algorithm retrieves
+from memory a set of stored examples with a short 'distance' to the
+query state. Here, the distance can be defined as a *kernel* (function)
+that assigns a number between two states (see Section 9.10 in @Sutton18
+for further details).
+
+Given the kernel, different methods can be used to calculate the state
+value of the query state. For instance, *local search* based methods
+could be *nearest neighbour*, where the value of the query state is
+taken to be that of the most similar stored example or *weighted
+average* methods, which generalise this by using several neighbours and
+computing a distance-weighted mean. Another method is *locally weighted
+regression* that fits a parametric model to the neighbourhood of the
+query state.
+
+These methods can be advantageous in reinforcement learning because they
+focus approximation effort on regions of the state space actually
+encountered by the agent, avoiding the need for a global model. However,
+their main drawback is computational cost: retrieving and comparing
+neighbours becomes increasingly expensive as more examples are stored,
+particularly in high-dimensional spaces.
+
+## On-policy learning with interest/emphasis
+
+In traditional on-policy learning methods such as TD(0), all states
+visited under the policy receive equal attention. Each state contributes
+equally to the learning process, regardless of how important it may be
+for accurate value prediction or control. Section 9.11 introduces the
+ideas of *interest* and *emphasis* to refine how learning updates are
+distributed across states. Here, *interest* $I_t$ denotes external
+weighting of states/times) and *emphasis* $M_t$ the accumulated
+weighting. As a result updates prioritize these parts of the on-policy
+distribution.
+
+## Summary
+
+Read Chapter 9.12 in @Sutton18.
+
+## Exercises
+
+`r strExercises`
+
+You may solve the exercises in the corresponding sections in this [Colab notebook][colab-12-approx-pred].
+
+### Exercise
+
+Show that tabular methods, such as those presented in Part I of this book, are a special case of linear function approximation. What would the feature vectors be?
+
+
+### Exercise
+
+Suppose we believe that one of the two state dimensions (let us say $x_1$) is more likely to have an effect on the value function than is the other ($x_2$)
+
+What kind of tilings could be used to take advantage of this prior knowledge?
+
+
+### Exercise
+
+Suppose you are using tile coding to transform a seven-dimensional continuous state space into binary feature vectors to estimate a state value function. You believe that the dimensions do not interact strongly, so you decide to use eight tilings of each dimension separately. That is, $7 \cdot 8 = 56$ tilings. In addition, in case there are some pairwise interactions between the dimensions, you also take all pairs of dimensions and tile each pair conjunctively. You make
+two tilings for each pair of dimensions, making a grand total of 21 \cdot 2 + 56 = 98 tilings.
+
+Given these feature vectors, you suspect that you still have to average out some noise, so you decide that you want learning to be gradual, taking about 10 presentations with the same feature vector first.
+
+What step-size parameter should you use? Why?
+
+
+### Exercise
+
+Consider the car rental problem described in @sec-mdp-2-car.
+
+Approximate the state value under the policy
+$$
+a = \begin{cases}
+\lfloor x/5 + 1 \rfloor & x > 5, y < 5 \\
+-\lfloor y/5 + 1 \rfloor & y > 5, x < 5 \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+```{r links, child="links.md", include=FALSE}
+```

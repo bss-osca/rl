@@ -1,6 +1,6 @@
 project:
   type: book
-  preview: 
+  preview:
     watch-inputs: true
     navigate: true
 
@@ -13,7 +13,7 @@ book:
   url: https://bss-osca.github.io/rl/
   author:
     - Lars Relund Nielsen
-  sidebar: 
+  sidebar:
     # background: "#F5F5F5"
     logo: img/logo.png
     search: true
@@ -28,7 +28,7 @@ book:
   open-graph:
     image: https://github.com/bss-osca/rl/raw/master/book/img/logo.png
     description: Course notes for the 'Reinforcement Learning for Business' course.
-    
+
   chapters:
     - part: "Introduction"
     - index.qmd
@@ -43,24 +43,20 @@ book:
     - 09_mc.qmd
     - 10_td-pred.qmd
     - 11_td-control.qmd
+    - 12_approx-pred.qmd
+    # - 13_approx-control.qmd
     - references.qmd
   appendices:
     - 99_1_appdx.qmd
     - 99_2_appdx.qmd
 
 bibliography: rl.bib
-  # - packages.bib
 biblio-style: apalike
 link-citations: true
 
-crossref:
-#   appendix-title: "App."
-#   appendix-delim: ":"
-  sec-prefix: "Module"
-
 comments:
   hypothesis: true
-  
+
 format:
   html:
     theme:
@@ -72,11 +68,15 @@ format:
     code-fold: false
     toc-depth: 2
     split-by: chapter
-    # sharing: false
+    sharing: false
     css: assets/style.css
 
-language:
-  ui:
-    chapter_name: 'Module '
-
-
+crossref:
+  chapters: true
+  fig-prefix: "Fig."
+  sec-prefix: "Module"  # don't work
+  
+language: # hack to sec-prefix not working
+  crossref-ch-prefix: "Module"
+  crossref-sec-prefix: "Module"
+  
