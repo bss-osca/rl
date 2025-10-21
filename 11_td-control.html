@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./12_approx-pred.html" rel="next">
 <link href="./10_td-pred.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -253,6 +253,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./12_approx-pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -323,7 +329,7 @@ window.Quarto = {
 
 
 <!-- Various algorithms for the RL course -->
-<p>In <a href="10_td-pred.html" class="quarto-xref"><span>Chapter 10</span></a> temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:</p>
+<p>In <a href="10_td-pred.html" class="quarto-xref"><span>Module 10</span></a> temporal difference (TD) was used to estimate state-values. In this module we focus on improving the policy (control) by applying generalized policy iteration (GPI) using TD methods. GPI repeatedly apply policy evaluation and policy improvement. Since we do not have a model (the transition probability matrix and reward distribution are not known) all our action-values are estimates. Hence an element of exploration are needed to estimate the action-values. For convergence to the optimal policy a model-free GPI algorithm must satisfy:</p>
 <ol type="1">
 <li><em>Infinite exploration</em>: all state-action <span class="math inline">\((s,a)\)</span> pairs should be explored infinitely many times as the number of iterations go to infinity (in the limit), i.e.&nbsp;as the number of iterations <span class="math inline">\(k\)</span> goes to infinity the number of visits <span class="math inline">\(n_k\)</span> does too <span class="math display">\[\lim_{k\rightarrow\infty} n_k(s, a) = \infty.\]</span></li>
 <li><em>Greedy in the limit</em>: while we maintain infinite exploration, we do eventually need to converge to the optimal policy: <span class="math display">\[\lim_{k\rightarrow\infty} \pi_k(a|s) = 1 \text{ for } a = \arg\max_a q(s, a).\]</span></li>
@@ -369,7 +375,7 @@ You do not have to look at them before the lecture!
 <p>The first GPI algorithm we will consider is SARSA. Since we do not have a model we need to estimate action-values so the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see <a href="07_mdp-2.html#eq-bell-opt-state-policy" class="quarto-xref">Equation&nbsp;<span>7.3</span></a>). Hence to predict action-values for a policy <span class="math inline">\(\pi\)</span>, the incremental update <a href="10_td-pred.html#eq-td0" class="quarto-xref">Equation&nbsp;<span>10.1</span></a> must be modified to use <span class="math inline">\(Q\)</span> values: <span class="math display">\[
 Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right]
 \]</span> Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the algorithm.</p>
-<p>The algorithm is given in <a href="#fig-td-sarsa-alg" class="quarto-xref">Figure&nbsp;<span>11.1</span></a>. To ensure infinite exploration of all action-values, we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-greedy policy. The algorithm can also be applied for processes with continuing tasks. To ensure greedy in the limit a decreasing epsilon can be used (e.g.&nbsp;<span class="math inline">\(\epsilon = 1/t\)</span>). No stopping criterion is given but could stop when small differences in action-values are observed.</p>
+<p>The algorithm is given in <a href="#fig-td-sarsa-alg" class="quarto-xref">Fig.&nbsp;<span>11.1</span></a>. To ensure infinite exploration of all action-values, we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-greedy policy. The algorithm can also be applied for processes with continuing tasks. To ensure greedy in the limit a decreasing epsilon can be used (e.g.&nbsp;<span class="math inline">\(\epsilon = 1/t\)</span>). No stopping criterion is given but could stop when small differences in action-values are observed.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-td-sarsa-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -395,7 +401,7 @@ Figure&nbsp;11.1: SARSA - On-policy GPI using TD <span class="citation" data-cit
 </section>
 <section id="q-learning---off-policy-gpi-using-td" class="level2" data-number="11.4">
 <h2 data-number="11.4" class="anchored" data-anchor-id="q-learning---off-policy-gpi-using-td"><span class="header-section-number">11.4</span> Q-learning - Off-policy GPI using TD</h2>
-<p>Q-learning resembles SARSA; however, there are some differences. The algorithm is given in <a href="#fig-td-q-learning-alg" class="quarto-xref">Figure&nbsp;<span>11.2</span></a>. Note the incremental update equation is now: <span class="math display">\[\begin{equation}
+<p>Q-learning resembles SARSA; however, there are some differences. The algorithm is given in <a href="#fig-td-q-learning-alg" class="quarto-xref">Fig.&nbsp;<span>11.2</span></a>. Note the incremental update equation is now: <span class="math display">\[\begin{equation}
 Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t) \right]
 \end{equation}\]</span> That is, the next action used to update <span class="math inline">\(Q\)</span> is selected greedy. That is, we are no longer following an <span class="math inline">\(\epsilon\)</span>-greedy policy for our updates.</p>
 <div class="cell" data-layout-align="center">
@@ -875,8 +881,8 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./12_approx-pred.html" class="pagination-link" aria-label="On-policy prediction with approximation">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

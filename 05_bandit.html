@@ -253,6 +253,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./12_approx-pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -376,7 +382,7 @@ Figure&nbsp;5.1: A 4-armed bandit.
 </div>
 </div>
 </div>
-<p>Imagine you are facing a wall with <span class="math inline">\(k\)</span> slot machines (see <a href="#fig-bandit" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state <span class="math inline">\(s\)</span> at time <span class="math inline">\(t\)</span> and have to choose among <span class="math inline">\(k\)</span> actions given the environment representing the <span class="math inline">\(k\)</span> bandits. Only the rewards from the <span class="math inline">\(k\)</span> bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy <span class="math inline">\(\pi^*(s) = \pi^* = a^*\)</span> that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.</p>
+<p>Imagine you are facing a wall with <span class="math inline">\(k\)</span> slot machines (see <a href="#fig-bandit" class="quarto-xref">Fig.&nbsp;<span>5.1</span></a>), and each one pays out at a different rate. A natural way to figure out how to make the most money (rewards) would be to try each at random for a while (exploration), and start playing the higher paying ones once you have gained some experience (exploitation). That is, from an agent/environment point of view the agent considers a single state <span class="math inline">\(s\)</span> at time <span class="math inline">\(t\)</span> and have to choose among <span class="math inline">\(k\)</span> actions given the environment representing the <span class="math inline">\(k\)</span> bandits. Only the rewards from the <span class="math inline">\(k\)</span> bandits are unknown, but the agent observe samples of the reward of an action and can use this to estimate the expected reward of that action. The objective is to find an optimal policy that maximize the total expected reward. Note since the process only have a single state, this is the same as finding an optimal policy <span class="math inline">\(\pi^*(s) = \pi^* = a^*\)</span> that chooses the action with the highest expected reward. Due to uncertainty, there is an exploration vs exploitation dilemma. The agent have one action that seems to be most valuable at a time point, but it is highly likely, at least initially, that there are actions yet to explore that are more valuable.</p>
 <!-- For finding the optimal action a learning strategy that balance the exploration vs. exploitation trade-off. -->
 <!-- To summarize: -->
 <!-- * The agent are faced repeatedly with a choice of $k$ actions. -->
@@ -399,7 +405,7 @@ Figure&nbsp;5.2: Which ad to choose?
 </div>
 </div>
 </div>
-<p>It is reasonable to assume that each of these ads will have different effects, and some will be more engaging than others. That is, each ad has some theoretical — but unknown — click-through-rate (CTR) that is assumed to not change over time. How do we go about solving which ad we should choose (see <a href="#fig-bandit-choose" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>)?</p>
+<p>It is reasonable to assume that each of these ads will have different effects, and some will be more engaging than others. That is, each ad has some theoretical — but unknown — click-through-rate (CTR) that is assumed to not change over time. How do we go about solving which ad we should choose (see <a href="#fig-bandit-choose" class="quarto-xref">Fig.&nbsp;<span>5.2</span></a>)?</p>
 </section>
 <section id="estimating-the-value-of-an-action" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="estimating-the-value-of-an-action"><span class="header-section-number">5.4</span> Estimating the value of an action</h2>
@@ -479,7 +485,7 @@ Q_{n+1} &amp;= Q_n +\alpha \left[R_n - Q_n\right] \nonumber \\
 <p>An <span class="math inline">\(\epsilon\)</span>-greedy algorithm choose the action to explore with equal probability in an exploration step. It would be better to select among non-greedy actions according to their potential for actually being optimal, taking into account both how close their estimates are to being maximal and the uncertainty in those estimates. One way to do this is to select actions using the <em>upper-confidence bound</em>: <span class="math display">\[\begin{equation}
     A_t = \arg\max_a \left(Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right),
 \end{equation}\]</span></p>
-<p>Note the square root term is a measure of the uncertainty in our estimate (see <a href="#fig-srt" class="quarto-xref">Figure&nbsp;<span>5.3</span></a>).</p>
+<p>Note the square root term is a measure of the uncertainty in our estimate (see <a href="#fig-srt" class="quarto-xref">Fig.&nbsp;<span>5.3</span></a>).</p>
 <ul>
 <li>It is proportional to <span class="math inline">\(t\)</span>, i.e.&nbsp;how many time-steps have passed and inversely proportional to <span class="math inline">\(N_t(a)\)</span> i.e.&nbsp;how many times that action has been visited.</li>
 <li>The more time has passed, and the less we have sampled an action, the higher our upper-confidence-bound.</li>

@@ -253,6 +253,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./12_approx-pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -443,7 +449,7 @@ q_*(s, a) &amp;= \max_\pi q_\pi(s, a) \\
 </section>
 <section id="optimality-vs-approximation" class="level2" data-number="7.5">
 <h2 data-number="7.5" class="anchored" data-anchor-id="optimality-vs-approximation"><span class="header-section-number">7.5</span> Optimality vs approximation</h2>
-<p>In <a href="#sec-mdp-opt" class="quarto-xref"><span>Section 7.4</span></a> optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g.&nbsp;if the number of states is huge. Consider a state <span class="math inline">\(s = (x_1,\ldots,x_n)\)</span> with state variables <span class="math inline">\(x_i\)</span> each taking two possible values, then the number of states is <span class="math inline">\(|\mathcal{S}| = 2^n\)</span>. That is, the state space grows exponentially with the number of state variables also known as the <em>curse of dimensionality</em>.</p>
+<p>In <a href="#sec-mdp-opt" class="quarto-xref"><span>Module 7.4</span></a> optimal policies and value functions was found; however solving the Bellman optimality equations can be expensive, e.g.&nbsp;if the number of states is huge. Consider a state <span class="math inline">\(s = (x_1,\ldots,x_n)\)</span> with state variables <span class="math inline">\(x_i\)</span> each taking two possible values, then the number of states is <span class="math inline">\(|\mathcal{S}| = 2^n\)</span>. That is, the state space grows exponentially with the number of state variables also known as the <em>curse of dimensionality</em>.</p>
 <p>Large state or action spaces may happen in practice; moreover, they may also be continuous. As a result we need to approximate the value functions because calculation of optimality is too expensive. This is indeed what happens in RL where we approximate the expected return. Furthermore, often we focus on states with high encountering probability while allowing the agent to make sub-optimal decisions in states that have a low probability.</p>
 <!-- \subsection{Key Takeaways} -->
 <!-- \begin{itemize} -->
@@ -493,7 +499,7 @@ Figure&nbsp;7.1: A simple MDP.
 </div>
 </div>
 </div>
-<p>Consider the transition diagram for an MDP shown in <a href="#fig-simple" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
+<p>Consider the transition diagram for an MDP shown in <a href="#fig-simple" class="quarto-xref">Fig.&nbsp;<span>7.1</span></a> with 3 states (white circles). The only decision to be made is that in the top state <span class="math inline">\(s\)</span>, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies <em>left</em> and <em>right</em>. Which policy is optimal if <span class="math inline">\(\gamma = 0, 0.9\)</span> and <span class="math inline">\(0.5\)</span>?</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">

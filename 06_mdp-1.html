@@ -288,6 +288,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./12_approx-pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -414,7 +420,7 @@ You do not have to look at them before the lecture!
 </div>
 <p>Note we here assume that the <em>Markov property</em> is satisfied and the current state holds just as much information as the history of observations. That is, given the present state the future is independent of the past:</p>
 <p><span class="math display">\[\Pr(S_{t+1} | S_t, A_t) = \Pr(S_{t+1} | S_1,...,S_t, A_t).\]</span> That is, the probability of seeing some next state <span class="math inline">\(S_{t+1}\)</span> given the current state is exactly equal to the probability of that next state given the entire history of states.</p>
-<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in <a href="#fig-hgf1" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>. Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0 = 3\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1 = 2\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
+<p>A Markov decision process (MDP) is a mathematical model that for each time-step <span class="math inline">\(t\)</span> have defined states <span class="math inline">\(S_t \in \mathcal{S}\)</span>, possible actions <span class="math inline">\(A_t \in \mathcal{A}(s)\)</span> given a state and rewards <span class="math inline">\(R_t \in \mathcal{R} \subset \mathbb{R}\)</span>. Consider the example in <a href="#fig-hgf1" class="quarto-xref">Fig.&nbsp;<span>6.1</span></a>. Each time-step have five states <span class="math inline">\(\mathcal{S} = \{1,2,3,4,5\}\)</span>. Assume that the agent start in state <span class="math inline">\(s_0 = 3\)</span> with two actions to choose among <span class="math inline">\(\mathcal{A}(s_0) = \{a_1, a_2\}\)</span>. After choosing <span class="math inline">\(a_1\)</span> a transition to <span class="math inline">\(s_1 = 2\)</span> happens with reward <span class="math inline">\(R_1 = r_1\)</span>. Next, in state <span class="math inline">\(s_1\)</span> the agent chooses action <span class="math inline">\(a_2\)</span> and a transition to <span class="math inline">\(s_2\)</span> happens with reward <span class="math inline">\(r_2\)</span>. This continues as time evolves.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-hgf1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">

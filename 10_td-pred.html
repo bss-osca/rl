@@ -253,6 +253,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./12_approx-pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -363,10 +369,10 @@ G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty}
 \]</span></p>
 <p>Let <span class="math inline">\(V\)</span> denote the state-value estimate. Under MC prediction we used an incremental update formula: <span class="math display">\[
   V(S_t) \leftarrow V(S_t) + \alpha_n\left[G_t - V(S_t)\right],
-\]</span> where <span class="math inline">\(n\)</span> denote the number of observations and <span class="math inline">\(\alpha_n\)</span> the step-size. Different values of <span class="math inline">\(\alpha_n\)</span> was discussed in <a href="09_mc.html" class="quarto-xref"><span>Chapter 9</span></a>. Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage <span class="math inline">\(t\)</span>) e.g.&nbsp;for the sample average <span class="math inline">\(\alpha_n = 1/n.\)</span> If the environment is non-stationary (e.g.&nbsp;transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size: <span class="math display">\[
+\]</span> where <span class="math inline">\(n\)</span> denote the number of observations and <span class="math inline">\(\alpha_n\)</span> the step-size. Different values of <span class="math inline">\(\alpha_n\)</span> was discussed in <a href="09_mc.html" class="quarto-xref"><span>Module 9</span></a>. Here we assumed a stationary environment (state set, transition probabilities etc. is the same for each stage <span class="math inline">\(t\)</span>) e.g.&nbsp;for the sample average <span class="math inline">\(\alpha_n = 1/n.\)</span> If the environment is non-stationary (e.g.&nbsp;transition probabilities change over time) then a fixed step-size may be appropriate. Let us for the remaining of this module consider a non-stationary process with fixed step-size: <span class="math display">\[
   V(S_t) \leftarrow V(S_t) + \alpha\left[G_t - V(S_t)\right],
 \]</span></p>
-<p>Note as pointed out in <a href="05_bandit.html#sec-bandit-step-size" class="quarto-xref"><span>Section 5.5</span></a>, a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of <span class="math inline">\(S_t\)</span>: <span class="math display">\[
+<p>Note as pointed out in <a href="05_bandit.html#sec-bandit-step-size" class="quarto-xref"><span>Module 5.5</span></a>, a fixed step-size corresponds to a weighted average of the past observed returns and the initial estimate of <span class="math inline">\(S_t\)</span>: <span class="math display">\[
 \begin{align}
 V_{n+1} &amp;= V_n +\alpha \left[G_n - V_n\right] \nonumber \\
 &amp;= \alpha G_n + (1 - \alpha)V_n \nonumber \\
@@ -394,7 +400,7 @@ V(s = S_t) \leftarrow \sum_{a \in \mathcal{A}}\pi(a | s)\left( r(s,a) + \gamma\s
 </section>
 <section id="td-prediction" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="td-prediction"><span class="header-section-number">10.4</span> TD prediction</h2>
-<p>We can now formulate a TD(0) algorithm for predicting state-values of a policy (see <a href="#fig-td0-pred-alg" class="quarto-xref">Figure&nbsp;<span>10.1</span></a>). No stopping criterion is given but could stop when small differences in state-values are observed.</p>
+<p>We can now formulate a TD(0) algorithm for predicting state-values of a policy (see <a href="#fig-td0-pred-alg" class="quarto-xref">Fig.&nbsp;<span>10.1</span></a>). No stopping criterion is given but could stop when small differences in state-values are observed.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-td0-pred-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -415,7 +421,7 @@ Figure&nbsp;10.1: TD(0) policy prediction <span class="citation" data-cites="Sut
 <p>Later we will use TD to for improving the policy (control). Since we do not have a model we need to estimate action-values instead and the optimal policy can be found using <span class="math inline">\(q_*\)</span> (see <a href="07_mdp-2.html#eq-bell-opt-state-policy" class="quarto-xref">Equation&nbsp;<span>7.3</span></a>). To find <span class="math inline">\(q_*\)</span>, we first need to predict action-values for a policy <span class="math inline">\(\pi\)</span> and the incremental update <a href="#eq-td0" class="quarto-xref">Equation&nbsp;<span>10.1</span></a> must be modified to use <span class="math inline">\(Q\)</span> values: <span class="math display">\[
   Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_t) - Q(S_t, A_t)\right].
 \]</span></p>
-<p>Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in <a href="11_td-control.html" class="quarto-xref"><span>Chapter 11</span></a>. Note to ensure exploration of all action-values we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-soft behavioral policy.</p>
+<p>Note given a policy <span class="math inline">\(\pi\)</span> you need to know <span class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)</span> or short SARSA before you can make an update. This acronym is used to name the SARSA algorithm for control in <a href="11_td-control.html" class="quarto-xref"><span>Module 11</span></a>. Note to ensure exploration of all action-values we need e.g.&nbsp;an <span class="math inline">\(\epsilon\)</span>-soft behavioral policy.</p>
 </section>
 </section>
 <section id="benefits-of-td-methods" class="level2" data-number="10.5">
@@ -441,7 +447,7 @@ Figure&nbsp;10.1: TD(0) policy prediction <span class="citation" data-cites="Sut
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
 <section id="sec-ex-td-pred-random" class="level3" data-number="10.6.1">
 <h3 data-number="10.6.1" class="anchored" data-anchor-id="sec-ex-td-pred-random"><span class="header-section-number">10.6.1</span> Exercise - A random walk</h3>
-<p>Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in <a href="#fig-rw-trans" class="quarto-xref">Figure&nbsp;<span>10.2</span></a>. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy <span class="math inline">\(\pi\)</span> is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.</p>
+<p>Consider a MDP with states 2-6 and two terminal states 1 and 7. Possible transitions are given in <a href="#fig-rw-trans" class="quarto-xref">Fig.&nbsp;<span>10.2</span></a>. All episodes start in the centre state, 4, then proceed either left or right by one state on each step. We assume the stochastic policy <span class="math inline">\(\pi\)</span> is used where each direction has equal probability. Episodes terminate either on the left (1) or the right (7). When an episode terminates on the right, reward of 1 occurs; all other rewards are zero. If the discount factor equals 1, the state-value of each state is the probability of terminating on the right if starting from that state.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-rw-trans" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
