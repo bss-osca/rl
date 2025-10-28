@@ -174,7 +174,7 @@ knitr::include_graphics("img/td0-pred.png")
 * To find $q_*$, we first need to predict action-values $q_\pi$ for a policy $\pi$.
 * The incremental update equation must be modified to use $Q$ values: $$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)\right].$$
 * Given policy $\pi$ you need to know $S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}$ or short SARSA. 
-* This acronym is used to name the SARSA algorithm for control (next week). 
+* This acronym is used to name the SARSA algorithm for control. 
 * To ensure exploration of all action-values we need e.g. an $\epsilon$-soft behavioural policy.  
 
 ---
