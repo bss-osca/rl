@@ -171,7 +171,7 @@ That is, a larger weight is used for recent observations compared to old observa
 * To find `\(q_*\)`, we first need to predict action-values `\(q_\pi\)` for a policy `\(\pi\)`.
 * The incremental update equation must be modified to use `\(Q\)` values: `$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha\left[R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)\right].$$`
 * Given policy `\(\pi\)` you need to know `\(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1}\)` or short SARSA. 
-* This acronym is used to name the SARSA algorithm for control (next week). 
+* This acronym is used to name the SARSA algorithm for control. 
 * To ensure exploration of all action-values we need e.g. an `\(\epsilon\)`-soft behavioural policy.  
 
 ---
@@ -218,7 +218,7 @@ That is, a larger weight is used for recent observations compared to old observa
 [colab-11-td-control]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw?usp=sharing
 [colab-11-td-control-sec-td-control-storage]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
 [colab-11-td-control-sec-td-control-car]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1
-
+[colab-12-approx-pred]: https://colab.research.google.com/drive/1-kh0SiNucJrzUUnIOLSidcA2RO5J1rvY?usp=sharing
 
 [DataCamp]: https://www.datacamp.com/
 [datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
