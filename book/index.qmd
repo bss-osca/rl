@@ -140,6 +140,7 @@ Materials are taken from various places:
 [Bryn Elesedy](https://github.com/brynhayder/reinforcement_learning_an_introduction) and [Peter Goldsborough](https://github.com/peter-can-write/david-silver-rl-notes).
 * Some slides are inspired by the [RL specialization](https://www.coursera.org/specializations/reinforcement-learning) at Coursera.
 * Some exercises are taken from @Sutton18 and modified slightly. 
+* Some code are inspired by [Marcin Bogdanski](https://github.com/marcinbogdanski/rl-sketchpad).
 
 I would like to thank all for their inspiration. 
 

@@ -80,7 +80,7 @@ $\hat v(s;\mathbf w)$.
 * We approximate the value function using a function with parameters $\mathbf w \in \mathbb {R} ^d$. 
 * A *on-policy* policy $\pi$ is assumed.
 * A *supervised learning* approach is used. However,
-  - We don't have exact training examples (we have an extimate of the state value). 
+  - We don't have exact training examples (we have an estimate of the state value). 
   - We update the value approximation online when new training arrive ($s \rightarrowtail u$).
 
 ---

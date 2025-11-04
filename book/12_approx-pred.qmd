@@ -211,12 +211,12 @@ features, but first let us present an example to be used.
 ## A random walk
 
 Consider a large random walk environment with 1,000 non-terminal states
-labeled 1 through 1000. Two terminal states lie just outside this range:
+labelled 1 through 1000. Two terminal states lie just outside this range:
 state 0 on the left, which yields a reward of −1, and state 1001 on the
 right, which yields a reward of +1. Each episode begins in the center
 state, 500.
 
-From any nonterminal state $s$, the agent flips a fair coin to choose
+From any non-terminal state $s$, the agent flips a fair coin to choose
 left or right, then samples a jump size $k$ uniformly from
 $\{1, 2, \dots, 100\}$. The agent then moves to state $s - k$ or
 $s + k$. If the resulting state lies outside $[1,1000]$, the episode
@@ -274,14 +274,14 @@ For an example see the corresponding section in the
 
 Polynomial features approximate $v_\pi(s)$ by fitting a low-degree
 polynomial of *normalized* state variables. Note the model remains
-linear in parameters $\textbf w$ even though it is nonlinear in $s$.
+linear in parameters $\textbf w$ even though it is non-linear in $s$.
 
 Polynomials can capture non-linear relationships in the value function
 and provide a smoother approximation compared to methods like state
 aggregation, especially when the true value function is smooth. However,
 choosing the appropriate degree of the polynomial is important. Too low
 a degree might not capture the complexity of the value function, while
-too high a degree can lead to overfitting and poor generalization.
+too high a degree can lead to over-fitting and poor generalization.
 Polynomials can also have difficulty approximating value functions with
 sharp changes or discontinuities.
 
@@ -312,7 +312,7 @@ inventory × demand, tenure × engagement).
 
 A good strategy is always to normalise the state values because if $s$
 has a high value, then $s^d$ may be very large, yielding numerical
-instabilities. If we normailze so state varibles are in the interval
+instabilities. If we normalize so state variables are in the interval
 $[-1,1]$ then $s^d$ also lies in this interval. This can be done by:
 
 -   If $s\in\{1,\dots,N\}$: use $z = \dfrac{s}{N+1}\in(0,1)$ or
@@ -336,7 +336,7 @@ For an example see the corresponding section in the
 
 The *Fourier basis* approximates $v_\pi(s)$ using global sine/cosine
 waves over a *normalized* state. The model remains *linear in
-parameters* even though it can represent highly nonlinear shapes. The
+parameters* even though it can represent highly non-linear shapes. The
 Fourier series/transforms are widely used because if a function to be
 approximated is known, then essentially any function can be approximated
 as accurately as desired. In reinforcement learning, where the functions
@@ -367,7 +367,7 @@ gradient are $x_i(z)=\cos(i\pi z), j=0,1,\dots,n,$ where $j=0$ is the
 
 If we have *multiple normalized state variables*
 $\mathbf z=(z_1,\dots,z_K)$, we choose *frequency vectors*
-$\mathbf c=(c_1,\dots,c_K)$ with nonnegative integers. Combinations can
+$\mathbf c=(c_1,\dots,c_K)$ with non-negative integers. Combinations can
 be limited by considering $c$ where $\sum_k c_k\le n$, i.e. then number
 of features are $\binom{K+n}{n}$. Each feature now becomes
 
@@ -447,7 +447,7 @@ Because only a few fields cover any given state, $\mathbf x(s)$ is
 Tile coding can be viewed as a structured, grid-based special case of
 coarse coding that is simple and fast. Here hyper-rectangular receptive
 fields arranged on offset grids. Overlap comes from having multiple
-tilings; each tiling itself does not overlap (it’s a partition of the
+tilings; each tiling itself does not overlap (it is a partition of the
 state space), but the union of tilings does.
 
 That is, first create a *tiling* that partitions the space into
@@ -469,7 +469,7 @@ Cartesian grid with $n_1\times \cdots \times n_K$ tiles.
 Note that offsets matter since a single grid creates discontinuities at
 tile boundaries. Multiple offset grids ensure that two nearby states
 share most of their active features, smoothing the representation and
-reducing boundary artifacts.
+reducing boundary artefacts.
 
 Because each update touches only $n$ parameters, tile/coarse coding
 works *extremely well* with incremental semi-gradient TD: $$
@@ -541,7 +541,7 @@ distribution as input vectors will be in the SGD. This method works best
 if the feature vectors do not vary greatly in length; ideally
 $\textbf{x}^T\textbf{x}$ is a constant.
 
-For instance, for tile coding with $n$ tillings we have that
+For instance, for tile coding with $n$ tilings we have that
 $$\textbf{x}^T\textbf{x}=n,$$ and $$\alpha = (\tau n)^{-1}.$$
 
 Given a scalar state and a polynomial of degree $d$, we have that
@@ -559,7 +559,7 @@ If features activate unevenly, damp steps by visit counts: $$
 $$ where $n_i$ is how often feature $i$ has been active. This mimics
 tabular $1/n$ averaging and reduces variance for frequent features.
 
-**Pratical comments**
+**Practical comments**
 
 -   Try a small grid of $\alpha$ (log-spaced). For each candidate: - run
     a short training phase, - track an error proxy (e.g., RMSVE), - pick
