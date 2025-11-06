@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; RL in action – Reinforcement Learning for Business (RL)</title>
+<title>13&nbsp; On-Policy Control with Approximation – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04_python.html" rel="next">
-<link href="./02_rl-intro.html" rel="prev">
+<link href="./references.html" rel="next">
+<link href="./12_approx-pred.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -98,8 +98,6 @@ div.csl-indent {
     document.body.classList.add('hypothesis-enabled');
   });
 </script>
-<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -132,7 +130,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="3&nbsp; RL in action – Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="13&nbsp; On-Policy Control with Approximation – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -147,7 +145,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03_rl-in-action.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13_approx-control.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">On-Policy Control with Approximation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -197,7 +195,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link active">
+  <a href="./03_rl-in-action.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></a>
   </div>
 </li>
@@ -261,7 +259,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_approx-control.html" class="sidebar-item-text sidebar-link">
+  <a href="./13_approx-control.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">On-Policy Control with Approximation</span></span></a>
   </div>
 </li>
@@ -304,21 +302,23 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-rl-intro-lo" id="toc-sec-rl-intro-lo" class="nav-link active" data-scroll-target="#sec-rl-intro-lo"><span class="header-section-number">3.1</span> Learning outcomes</a></li>
-  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</a></li>
-  <li><a href="#tic-tac-toe" id="toc-tic-tac-toe" class="nav-link" data-scroll-target="#tic-tac-toe"><span class="header-section-number">3.3</span> Tic-Tac-Toe</a></li>
-  <li><a href="#colab" id="toc-colab" class="nav-link" data-scroll-target="#colab"><span class="header-section-number">3.4</span> Colab</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
-  <li><a href="#sec-rl-in-action-ex" id="toc-sec-rl-in-action-ex" class="nav-link" data-scroll-target="#sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</a></li>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">13.1</span> Learning outcomes</a></li>
+  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">13.2</span> Textbook readings</a></li>
+  <li><a href="#episodic-semi-gradient-control" id="toc-episodic-semi-gradient-control" class="nav-link" data-scroll-target="#episodic-semi-gradient-control"><span class="header-section-number">13.3</span> Episodic Semi-gradient Control</a></li>
+  <li><a href="#n-step-sarsa" id="toc-n-step-sarsa" class="nav-link" data-scroll-target="#n-step-sarsa"><span class="header-section-number">13.4</span> <span class="math inline">\(n\)</span>-step SARSA</a></li>
+  <li><a href="#average-reward-a-new-problem-setting-for-continuing-tasks" id="toc-average-reward-a-new-problem-setting-for-continuing-tasks" class="nav-link" data-scroll-target="#average-reward-a-new-problem-setting-for-continuing-tasks"><span class="header-section-number">13.5</span> Average Reward: A New Problem Setting for Continuing Tasks</a></li>
+  <li><a href="#why-avoidig-discounted-reward" id="toc-why-avoidig-discounted-reward" class="nav-link" data-scroll-target="#why-avoidig-discounted-reward"><span class="header-section-number">13.6</span> Why avoidig discounted reward?</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">13.7</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">13.8</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/13_approx-control.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/13_approx-control.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-rl-in-action" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span></h1>
+<h1 class="title"><span id="sec-approx-control" class="quarto-section-identifier"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">On-Policy Control with Approximation</span></span></h1>
 </div>
 
 
@@ -335,187 +335,68 @@ window.Quarto = {
 </header>
 
 
-<p>This module learn an agent/player to play tic-tac-toe using Reinforcement learning.</p>
-<section id="sec-rl-intro-lo" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="sec-rl-intro-lo"><span class="header-section-number">3.1</span> Learning outcomes</h2>
-<p>By the end of this module, you are expected to:</p>
+<!-- Various algorithms for the RL course -->
+<p>In <a href="12_approx-pred.html" class="quarto-xref"><span>Module 12</span></a>, the focus was on predicting the state values of a policy using function approximation. Here, the emphasis is on control, specifically finding an optimal policy through function approximation of <em>action values</em> <span class="math inline">\(\hat q(s, a, \textbf{w})\)</span>. Once again, the focus remains on on-policy methods.</p>
+<p>In the episodic case, the extension from prediction to control is straightforward, but in the continuing case, discounting is not suitable to find an optimal policy. Surprisingly, once we have a genuine function approximation, we have to give up discounting and switch to an “average-reward” formulation.</p>
+<section id="learning-outcomes" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">13.1</span> Learning outcomes</h2>
+<p>After studying this chapter, you should be able to:</p>
 <ul>
-<li>Code your first RL algorithm</li>
-<li>Formulate the blocks of the RL model (environment, agent, data, states, actions, rewards and policies).</li>
-<li>Run your first RL algorithm and evaluate on its solution.</li>
+<li>Describe how to extend semi-gradient prediction to action-value approximation</li>
+<li>Implement episodic one-step semi-gradient SARSA with <span class="math inline">\(\epsilon\)</span>-greedy improvement.</li>
+<li>Be able to describe how to generalize to <span class="math inline">\(n\)</span>-step semi-gradient SARSA in episodic tasks and explain the bias–variance trade-off as <span class="math inline">\(n\)</span> increases (from TD toward Monte Carlo).<br>
+</li>
+<li>Grasp why in continuing tasks with function approximation the discounted objective lacks a reliable local improvement guarantee, motivating a shift to average-reward.</li>
+<li>Define and interpret differential returns and differential value functions for the average-reward setting.</li>
+<li>Derive the Bellman equations under the average reward criterion.</li>
+<li>Describe differential TD errors and corresponding semi-gradient updates (state-value and action-value forms) using a running estimate of the average reward.</li>
+<li>Explain how to update the estimate of the average reward.</li>
 </ul>
-<p>The learning outcomes relate to the <a href="index.html#sec-lg-course">overall learning goals</a> number 3, 6 and 9-12 of the course.</p>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
 <!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 </section>
-<section id="textbook-readings" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">3.2</span> Textbook readings</h2>
-<p>For this lecture, you will need to read Section 1.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module.</p>
+<section id="textbook-readings" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">13.2</span> Textbook readings</h2>
+<p>For this module, you will need to read Chapter 10-10.5 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 Slides for this module can be seen
-<a href="https://bss-osca.github.io/rl/slides/03_rl-in-action-slides.html" target="_blank">here.</a>
+<a href="https://bss-osca.github.io/rl/slides/13_approx-control-slides.html" target="_blank">here.</a>
 You do not have to look at them before the lecture!
 </div>
 </div>
 </div>
 </section>
-<section id="tic-tac-toe" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="tic-tac-toe"><span class="header-section-number">3.3</span> Tic-Tac-Toe</h2>
-<p>Tic-Tac-Toe is a simple two-player game where players alternately place their marks on a 3x3 grid. That is, the current state of the board is the players’ marks on the grid. The first player to align three of their marks horizontally, vertically, or diagonally wins the game. Reward for a player is 1 for ‘win’, 0.5 for ‘draw’, and 0 for ‘loss’. These values can be seen as the probability of winning.</p>
-<div class="cell" data-layout-align="center">
-<style type="text/css">
-.table-bordered th, .table-bordered td {
-    border: 1px solid black !important; 
-}
-</style>
-</div>
-<p>Examples of winning, loosing and a draw from player Xs point of view:</p>
-<table style="width: 100%; border: 0px !important">
-<tbody>
-<tr style="border: 0px !important;">
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-.
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-.
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="border: 0px !important;">
-<table border:="" solid="" black="" class="table table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-O
-</td>
-<td style="text-align:center;">
-X
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-X
-</td>
-<td style="text-align:center;">
-O
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<p>We start with an empty board and have at most 9 moves (a player may win before). If the opponent start and a state denote the board before the opponent makes a move, then a <em>draw</em> game may look as in <a href="#fig-hgf" class="quarto-xref">Fig.&nbsp;<span>3.1</span></a>. We start with an empty board state <span class="math inline">\(S_0\)</span>, and the opponent makes a move, next we choose a move <span class="math inline">\(A_0\)</span> (among the empty fields) and we end up in state <span class="math inline">\(S_1\)</span>. This continues until the game is over.</p>
+<section id="episodic-semi-gradient-control" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="episodic-semi-gradient-control"><span class="header-section-number">13.3</span> Episodic Semi-gradient Control</h2>
+<p>Consider episodic tasks. To find a good policy, the action-value function is approximated by a differentiable function <span class="math inline">\(\hat q(s,a,\mathbf{w}) \approx q^\pi(s,a)\)</span> with weight vector <span class="math inline">\(\mathbf{w}\)</span>.</p>
+<p>Training examples now take the form <span class="math inline">\((S_t, A_t) \mapsto U_t\)</span>, where <span class="math inline">\(U_t\)</span> is any target approximating <span class="math inline">\(q^\pi(S_t,A_t)\)</span>. For instance, for a one-step semi-gradient, we have<br>
+<span class="math display">\[
+U_t = R_{t+1} + \gamma\, \hat q(S_{t+1}, A_{t+1}, \mathbf{w}_t),
+\]</span> which bootstraps from the next state–action estimate produced by the same <span class="math inline">\(\varepsilon\)</span>-greedy policy.</p>
+<p>Learning is done using semi-gradient stochastic gradient descent on the squared error, yielding the generic update <span class="math display">\[
+\mathbf{w}_{t+1} = \mathbf{w}_t + \alpha\big[U_t - \hat q(S_t,A_t,\mathbf{w}_t)\big]\nabla_{\mathbf{w}} \hat q(S_t,A_t,\mathbf{w}_t).
+\]</span> This is the direct action-value analogue of semi-gradient TD for state values.</p>
+<p>To turn prediction into control, techniques for policy improvement and action selection are needed. If the action set is discrete and not too large, then we can use the techniques already developed in previous chapters. For instance, exploration using an <span class="math inline">\(\varepsilon\)</span>-greedy policy and update action values using Sarsa-style targets.</p>
+<p>Pseudo code for the episodic semi-gradient SARSAis given in <a href="#fig-ep-sarsa-control-approx-alg" class="quarto-xref">Fig.&nbsp;<span>13.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-hgf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ep-sarsa-control-approx-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hgf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03_rl-in-action_files/figure-html/fig-hgf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<div aria-describedby="fig-ep-sarsa-control-approx-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/1001_Ep_Semi_Grad_Sarsa.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="362">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hgf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.1: A draw.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ep-sarsa-control-approx-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13.1: Episodic semi-gradient SARSA <span class="citation" data-cites="Sutton18">(<a href="references.html#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="colab" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="colab"><span class="header-section-number">3.4</span> Colab</h2>
-<p>During the lecture for this module we will work with the <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">tutorial</a> where we learn how to play the game using RL. You will both test your coding skills and the dilemma between exploration and exploitation. Should the agent sacrifice what is currently known as the best action to explore a (possibly) better opportunity, or should it just exploit its best possible policy? <em>Exploitation</em> takes the action assumed to be optimal with respect to the data observed so far. <em>Exploration</em> does not take the action that seems to be optimal. That is, the agent explore to find new states that may be better.</p>
+<p>One may ask if this algorithm can be modified to use Q-learning? However, this may not work since this is an off-policy algorithm, which may diverge due to the “deadly triad” (off-policy + bootstrapping + approximation). This is true even with linear features and fixed <span class="math inline">\(\epsilon\)</span>-greedy behavior; there is no general convergence guarantee. But, we may modify the algorithm to use expected SARSA that use the same policy for action selection and estimation (on-policy).</p>
 <div class="callout callout-style-simple callout-note callout-titled" title="Colab - Before the lecture">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -526,74 +407,66 @@ Figure&nbsp;3.1: A draw.
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open the <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing">tutorial</a>:</p>
-<ul>
-<li>Have a look at the notebook and run all code cells.</li>
-<li>Try to understand the content.</li>
-</ul>
+<p>During the lecture for this module, we will work with the seasonal inventory and sales planning problem in <a href="09_mc.html#sec-mc-seasonal" class="quarto-xref"><span>Module 9.4.4</span></a>. This is done in the <a href="https://colab.research.google.com/drive/1aTPzgxC2_4O1TStfmiEAArf4kxhEVoFU?usp=sharing">tutorial</a> where we implement different functions approximation algorithms. You may have a look at the notebook and the example before the lecture.</p>
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
-<p>Read Section 1.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+<section id="n-step-sarsa" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="n-step-sarsa"><span class="header-section-number">13.4</span> <span class="math inline">\(n\)</span>-step SARSA</h2>
+<p>To extend one-step SARSA we may extend our forward view to <span class="math inline">\(n\)</span>-steps where the target accumulates the next <span class="math inline">\(n\)</span> rewards before bootstrapping: <span class="math display">\[
+U_t = \sum_{k=1}^{n} \gamma^{k-1} R_{t+k}
+\;+\;
+\gamma^{n}\, \hat q(S_{t+n}, A_{t+n}, \mathbf{w}_{t+n-1}).
+\]</span> Note if the episode terminates before <span class="math inline">\(t+n\)</span>, the bootstrap term is omitted and <span class="math inline">\(G_{t:t+n}\)</span> is just the episodic return (<span class="math inline">\(G_t\)</span>). This provides a spectrum between Monte Carlo (large <span class="math inline">\(n\)</span>) and one-step bootstrapping (<span class="math inline">\(n=1\)</span>).</p>
+<p>Out update now becomes <span class="math display">\[
+\mathbf w \leftarrow \mathbf w + \alpha\big[G_{t:t+n} - \hat q(S_\tau,A_\tau,\mathbf w)\big]\nabla_w \hat q(S_\tau,A_\tau,\mathbf w).
+\]</span></p>
+<p>Exploration could be <span class="math inline">\(\epsilon\)</span>-greedy with respect to <span class="math inline">\(\hat q\)</span>, forming an on-policy loop that both explores and improves.</p>
+<p>The choice of look-ahead steps (<span class="math inline">\(n\)</span>) involves a bias-variance trade-off: <span class="math inline">\(n=1\)</span> enables rapid learning but can be shortsighted, while very large <span class="math inline">\(n\)</span> approaches Monte Carlo methods, increasing variance. Practically, small to moderate <span class="math inline">\(n\)</span> values often lead to faster learning and better stability.</p>
 </section>
-<section id="sec-rl-in-action-ex" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="sec-rl-in-action-ex"><span class="header-section-number">3.6</span> Exercises</h2>
+<section id="average-reward-a-new-problem-setting-for-continuing-tasks" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="average-reward-a-new-problem-setting-for-continuing-tasks"><span class="header-section-number">13.5</span> Average Reward: A New Problem Setting for Continuing Tasks</h2>
+<p>The average-reward formulation treats continuing tasks by optimizing the long-run reward rate instead of discounted returns. The performance of a policy <span class="math inline">\(\pi\)</span> is defined as the <em>steady-state average</em> <span class="math display">\[
+\begin{align}
+r(\pi) &amp;= \lim_{h\to\infty}\frac{1}{h}\,\mathbb{E}_\pi\!\left[\sum_{t=1}^{h} R_t\right] \\
+  &amp;= \sum_s \mu_\pi(s) \sum_a \pi(a|s) \sum_{s',r} p(s',r|s,a)r \\
+  &amp;= \sum_s \mu_\pi(s) \sum_a \pi(a|s) \sum_{s'} p(s'|s,a)r(s,a),
+\end{align}
+\]</span> This holds if the Markov chain (MDP under <span class="math inline">\(\pi\)</span>) is <em>ergodic</em>, i.e., all states are reached with the same steady-state distribution <span class="math inline">\(\mu_\pi(s)\)</span>, regardless of the starting state.</p>
+<p>To measure preferences between states and actions without discounting, we introduce <em>differential</em> returns that subtract the average rate at each step: <span class="math display">\[
+G_t \doteq \sum_{k=0}^{\infty}\big(R_{t+1+k}-r(\pi)\big).
+\]</span></p>
+<p>The <em>differential action-value</em> functions then becomes <span class="math display">\[
+\begin{align}
+q^\pi(s,a) &amp;= \mathbb{E}_\pi[G_t\mid S_t=s, A_t=a] \\
+  &amp;= \sum_{s',r} p(s',r\mid s,a)\Big(r - r(\pi) + \sum_{a'} \pi(a'\mid s')\,q^\pi(s',a')\Big).
+\end{align}
+\]</span> They satisfy Bellman relations analogous to the discounted case but without <span class="math inline">\(\gamma\)</span> and with rewards centered by <span class="math inline">\(r(\pi)\)</span>.</p>
+<p>Learning proceeds by replacing discounted TD errors with differential TD errors that incorporate an estimate of the average reward. With function approximation on <span class="math inline">\(\hat q(s,a,w)\)</span> and a running estimate of <span class="math inline">\(\bar R_t \approx r(\pi)\)</span>, the errors become <span class="math display">\[
+\delta_t^{q} \doteq R_{t+1}-\bar R_t + \hat q(S_{t+1},A_{t+1},\textbf w_t) - \hat q(S_t,A_t,\textbf  w_t).
+\]</span> The Semi-gradient update is <span class="math display">\[
+w_{t+1} \leftarrow \textbf w_t + \alpha\,\delta_t^{q}\,\nabla_w \hat q(S_t,A_t,\textbf w_t).
+\]</span></p>
+<p>Left is how to update the average-reward estimate? This can be done incrementally with a small step size to ensure stability, e.g. <span class="math display">\[
+\bar R_{t+1} \leftarrow \bar R_t + \beta\delta_t^q.
+\]</span></p>
+<p>Control replaces policy terms with maximization as usual, defining optimal differential values <span class="math inline">\(v^*\)</span> and <span class="math inline">\(q^*\)</span> and coupling learning with <span class="math inline">\(\epsilon\)</span>-greedy improvement over <span class="math inline">\(\hat q\)</span>.</p>
+<p>Conceptually, this formulation aligns the objective with what matters in truly continuing problems (long-run reward rate), avoids artifacts from discounting, and remains compatible with multi-step, eligibility-trace, and function-approximation methods by the simple substitution of average-reward-centered TD errors.</p>
+</section>
+<section id="why-avoidig-discounted-reward" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="why-avoidig-discounted-reward"><span class="header-section-number">13.6</span> Why avoidig discounted reward?</h2>
+<p>Why are we moving from the discounted reward criterion to the avearage reward criterion?</p>
+<p>Using the discounted reward criterion is ill-suited for truly continuing tasks once function approximation enters the picture. Note, function approximation creates bias among states. Hence, with approximation, your value function may not represent the true value function accurately.</p>
+<p>The policy improvement theorem does not apply with function approximation in the discounted setting. In fact, the approximation errors can be amplified by discounting, and greedy improvement is not guaranteed to improve the policy. This loss of a policy improvement theorem means discounted control lacks a firm local-improvement foundation under approximation.</p>
+<p>Hence, the best solution is to replace discounted control in continuing tasks with the average-reward formulation and its differential value functions, which align the objective with the steady-state reward rate and integrate smoothly with semi-gradient methods.</p>
+</section>
+<section id="summary" class="level2" data-number="13.7">
+<h2 data-number="13.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">13.7</span> Summary</h2>
+<p>Read Chapter 10.6 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
+</section>
+<section id="exercises" class="level2" data-number="13.8">
+<h2 data-number="13.8" class="anchored" data-anchor-id="exercises"><span class="header-section-number">13.8</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<p>You can find all these exercises as a section in this <a href="https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1">Colab notebook</a>. If you already have your own copy use this.</p>
-<section id="sec-r-intro-self" class="level3" data-number="3.6.1">
-<h3 data-number="3.6.1" class="anchored" data-anchor-id="sec-r-intro-self"><span class="header-section-number">3.6.1</span> Exercise - Self-Play</h3>
-<p>Consider Tic-Tac-Toe and assume that instead of an RL player against a random opponent, the reinforcement learning algorithm described above played against itself. What do you think would happen in this case? Would it learn a different way of playing?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- If the exploration parameter is non-zero, the algorithm will continue to adapt until it reaches an equilibrium (either fixed or cyclical). You may try to code it. -->
-<!-- ::: -->
-</section>
-<section id="sec-r-intro-sym" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="sec-r-intro-sym"><span class="header-section-number">3.6.2</span> Exercise - Symmetries</h3>
-<p>Many tic-tac-toe positions appear different but are really the same because of symmetries.</p>
-<ol type="1">
-<li><p>How might we amend the reinforcement learning algorithm described above to take advantage of this?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- It is possible to use 4 axis of symmetry to essentially fold the board down to a quarter of the size. -->
-<!-- ::: --></li>
-<li><p>In what ways would this improve the algorithm?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- A smaller state space would increase the speed of learning and reduce the memory required. -->
-<!-- ::: --></li>
-<li><p>Suppose the opponent did not take advantage of symmetries. In that case, should we? Is it true, then, that symmetrically equivalent positions should necessarily have the same value?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- If the opponent did not use symmetries then it could result in a worse learning. For example, if the opponent always played correct except for 1 corner, then using symmetries would mean you never take advantage of that information. That is, we should not use symmetries too since symmetrically equivalent positions do not always hold the same value in such a game. -->
-<!-- ::: --></li>
-</ol>
-</section>
-<section id="sec-r-intro-greedy" class="level3" data-number="3.6.3">
-<h3 data-number="3.6.3" class="anchored" data-anchor-id="sec-r-intro-greedy"><span class="header-section-number">3.6.3</span> Exercise - Greedy Play</h3>
-<p>Consider Tic-Tac-Toe and suppose the RL player is only greedy (<span class="math inline">\(\epsilon = 0\)</span>), that is, always playing the move that that gives the highest probability of winning. Would it learn to play better, or worse, than a non-greedy player? What problems might occur?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- As seen in Section \@ref(rl-intro-tic-learn) using $\epsilon = 0$ may be okay for this game if the opponent use a simple strategy (e.g. random or first index). However, in general the RL player would play worse. The chance the optimal action is the one with the current best estimate of winning is low and depending on the gameplay the RL player might win or loose. The RL player would also be unable to adapt to an opponent that slowly alter behavior over time. required. -->
-<!-- ::: -->
-</section>
-<section id="sec-r-intro-exploit" class="level3" data-number="3.6.4">
-<h3 data-number="3.6.4" class="anchored" data-anchor-id="sec-r-intro-exploit"><span class="header-section-number">3.6.4</span> Exercise - Learning from Exploration</h3>
-<p>Consider Tic-Tac-Toe and suppose the RL player is playing against an opponent with a fixed strategy. Suppose learning updates occur after all moves, including exploratory moves. If the step-size parameter is appropriately reduced over time (but not the tendency to explore), then the state values would converge to a set of probabilities.</p>
-<ol type="1">
-<li><p>What are the two sets of probabilities computed when we do, and when we do not, learn from exploratory moves?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- The probability set $V(s)$ found by applying no learning from exploration is the probability of winning when using the optimal policy. The probability set $V(s)$ found by applying learning from exploration is the probability of winning including the active exploration policy. -->
-<!-- ::: --></li>
-<li><p>Assuming that we do continue to make exploratory moves, which set of probabilities might be better to learn? Which would result in more wins?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- The probability set found by applying no learning from exploration would result in more wins. The probability set found by applying learning from exploration is better to learn, as it reduces variance from sub-optimal future states. -->
-<!-- ::: --></li>
-</ol>
-</section>
-<section id="sec-r-intro-other" class="level3" data-number="3.6.5">
-<h3 data-number="3.6.5" class="anchored" data-anchor-id="sec-r-intro-other"><span class="header-section-number">3.6.5</span> Exercise - Other Improvements</h3>
-<p>Consider Tic-Tac-Toe. Can you think of other ways to improve the reinforcement learning player?</p>
-<!-- ::: {.callout-warning collapse="true" title="Solution"} -->
-<!-- Altering the exploration rate/learning based on the variance in the opponent's actions. If the opponent is always making the same moves and you are winning from it then using a non-zero exploration rate will make you lose you games. If the agent is able to learn how the opponent may react to certain moves, it will be easier for it to win as it can influence the opponent to make moves that leads it to a better state. -->
-<!-- ::: -->
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -601,7 +474,6 @@ Figure&nbsp;3.1: A draw.
 Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1007,13 +879,13 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02_rl-intro.html" class="pagination-link" aria-label="An introduction to RL">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">An introduction to RL</span></span>
+      <a href="./12_approx-pred.html" class="pagination-link" aria-label="On-policy prediction with approximation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">On-policy prediction with approximation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04_python.html" class="pagination-link" aria-label="An introduction to Python">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1022,5 +894,5 @@ Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introductio
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/03_rl-in-action.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/13_approx-control.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/13_approx-control.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
