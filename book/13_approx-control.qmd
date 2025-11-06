@@ -94,15 +94,15 @@ example before the lecture.
 
 To extend one-step SARSA we may extend our forward view to $n$-steps where the target accumulates the next $n$ rewards before bootstrapping:
 $$
-U_t = \sum_{k=1}^{n} \gamma^{k-1} R_{t+k}
+G_{t:t+n} = U_t = \sum_{k=1}^{n} \gamma^{k-1} R_{t+k}
 \;+\;
-\gamma^{n}\, \hat q(S_{t+n}, A_{t+n}, \mathbf{w}_{t+n-1}).
+\gamma^{n}\, \hat q(S_{t+n}, A_{t+n}, \mathbf{w}).
 $$
 Note if the episode terminates  before $t+n$, the bootstrap term is omitted and $G_{t:t+n}$ is just the episodic return ($G_t$). This provides a spectrum between Monte Carlo (large $n$) and one-step bootstrapping ($n=1$).
 
 Out update now becomes
 $$
-\mathbf w \leftarrow \mathbf w + \alpha\big[G_{t:t+n} - \hat q(S_\tau,A_\tau,\mathbf w)\big]\nabla_w \hat q(S_\tau,A_\tau,\mathbf w).
+\mathbf w \leftarrow \mathbf w + \alpha\big[G_{t:t+n} - \hat q(S_t,A_t,\mathbf w)\big]\nabla_w \hat q(S_t,A_t,\mathbf w).
 $$
 
 Exploration could be $\epsilon$-greedy with respect to $\hat q$, forming an on-policy loop that both explores and improves.

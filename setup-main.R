@@ -36,6 +36,7 @@
 # This is an example of a callout with a title.
 # :::
 #
+
 # In Colab use
 <details>
    <summary>Solution</summary>
@@ -44,10 +45,13 @@
 #
 # or #@title for code
 
-
+## Packages to install
 remotes::install_github("mitchelloharawild/icons", force = T)
 remotes::install_github("ROpenSci/bibtex")
 renv::install()
 
 # extract code
 knitr::purl("book/09_mc.qmd")
+
+## Autocompile slides
+xaringan::inf_mr("slides/13_approx-control-slides.Rmd")
