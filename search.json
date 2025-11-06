@@ -1154,7 +1154,7 @@
     "href": "13_approx-control.html#exercises",
     "title": "13  On-Policy Control with Approximation",
     "section": "13.8 Exercises",
-    "text": "13.8 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "text": "13.8 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\nYou may solve the exercises in the corresponding sections in this Colab notebook.\n\n13.8.1 Exercise\nSolve the seasonal inventory and sales planning problem in Module 9.4.4 using a Fourier basis as function approximation to estimate the action-values.\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
       "<span class='chapter-number'>13</span>  <span class='chapter-title'>On-Policy Control with Approximation</span>"
     ]
