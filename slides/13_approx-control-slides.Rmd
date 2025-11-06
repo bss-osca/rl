@@ -189,6 +189,12 @@ $$
 - This loss of a policy improvement theorem means discounted control lacks a firm local-improvement foundation under approximation.
 - Best solution is to replace the discounted criterion with the average-reward and use differential values. Here the policy improvement theorem holds.
 
+---
+
+## Colab
+
+Let us consider the an example in the [Colab tutorial][colab-13-approx-control].
+
 
 <!-- # References -->
 

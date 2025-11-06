@@ -172,11 +172,16 @@ Hence, the best solution is to replace discounted control in continuing tasks wi
 Read Chapter 10.6 in @Sutton18.
 
 
-
-
 ## Exercises
 
 `r strExercises`
+
+You may solve the exercises in the corresponding sections in this [Colab notebook][colab-13-approx-control].
+
+
+### Exercise
+
+Solve the seasonal inventory and sales planning problem in @sec-mc-seasonal using a Fourier basis as function approximation to estimate the action-values.
 
 
 ```{r links, child="links.md", include=FALSE}
