@@ -414,12 +414,12 @@ Figure&nbsp;13.1: Episodic semi-gradient SARSA <span class="citation" data-cites
 <section id="n-step-sarsa" class="level2" data-number="13.4">
 <h2 data-number="13.4" class="anchored" data-anchor-id="n-step-sarsa"><span class="header-section-number">13.4</span> <span class="math inline">\(n\)</span>-step SARSA</h2>
 <p>To extend one-step SARSA we may extend our forward view to <span class="math inline">\(n\)</span>-steps where the target accumulates the next <span class="math inline">\(n\)</span> rewards before bootstrapping: <span class="math display">\[
-U_t = \sum_{k=1}^{n} \gamma^{k-1} R_{t+k}
+G_{t:t+n} = U_t = \sum_{k=1}^{n} \gamma^{k-1} R_{t+k}
 \;+\;
-\gamma^{n}\, \hat q(S_{t+n}, A_{t+n}, \mathbf{w}_{t+n-1}).
+\gamma^{n}\, \hat q(S_{t+n}, A_{t+n}, \mathbf{w}).
 \]</span> Note if the episode terminates before <span class="math inline">\(t+n\)</span>, the bootstrap term is omitted and <span class="math inline">\(G_{t:t+n}\)</span> is just the episodic return (<span class="math inline">\(G_t\)</span>). This provides a spectrum between Monte Carlo (large <span class="math inline">\(n\)</span>) and one-step bootstrapping (<span class="math inline">\(n=1\)</span>).</p>
 <p>Out update now becomes <span class="math display">\[
-\mathbf w \leftarrow \mathbf w + \alpha\big[G_{t:t+n} - \hat q(S_\tau,A_\tau,\mathbf w)\big]\nabla_w \hat q(S_\tau,A_\tau,\mathbf w).
+\mathbf w \leftarrow \mathbf w + \alpha\big[G_{t:t+n} - \hat q(S_t,A_t,\mathbf w)\big]\nabla_w \hat q(S_t,A_t,\mathbf w).
 \]</span></p>
 <p>Exploration could be <span class="math inline">\(\epsilon\)</span>-greedy with respect to <span class="math inline">\(\hat q\)</span>, forming an on-policy loop that both explores and improves.</p>
 <p>The choice of look-ahead steps (<span class="math inline">\(n\)</span>) involves a bias-variance trade-off: <span class="math inline">\(n=1\)</span> enables rapid learning but can be shortsighted, while very large <span class="math inline">\(n\)</span> approaches Monte Carlo methods, increasing variance. Practically, small to moderate <span class="math inline">\(n\)</span> values often lead to faster learning and better stability.</p>
