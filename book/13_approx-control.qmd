@@ -1,0 +1,185 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r, child = "_algorithms.qmd", echo=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+# On-Policy Control with Approximation {#sec-approx-control}
+
+In @sec-approx-pred, the focus was on predicting the state values of a policy using function approximation. Here, the emphasis is on control, specifically finding an optimal policy through function approximation of *action values* $\hat q(s, a, \textbf{w})$. Once again, the focus remains on on-policy methods.
+
+In the episodic case, the extension from prediction to control is straightforward, but in the continuing case, discounting is not suitable to find an optimal policy. Surprisingly, once we have a genuine function approximation, we have to give up discounting and switch to an “average-reward” formulation.
+
+
+## Learning outcomes
+
+After studying this chapter, you should be able to:
+
+- Describe how to extend semi-gradient prediction to action-value approximation 
+- Implement episodic one-step semi-gradient SARSA with $\epsilon$-greedy improvement.
+- Be able to describe how to generalize to $n$-step semi-gradient SARSA in episodic tasks and explain the bias–variance trade-off as $n$ increases (from TD toward Monte Carlo).  
+- Grasp why in continuing tasks with function approximation the discounted objective lacks a reliable local improvement guarantee, motivating a shift to average-reward.
+- Define and interpret differential returns and differential value functions for the average-reward setting.
+- Derive the Bellman equations under the average reward criterion.
+- Describe differential TD errors and corresponding semi-gradient updates (state-value and action-value forms) using a running estimate of the average reward.
+- Explain how to update the estimate of the average reward.
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+
+
+## Textbook readings
+
+For this module, you will need to read Chapter 10-10.5 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
+
+```{r, echo=FALSE}
+link_slide_file_text("13", "approx-control")
+```
+
+
+## Episodic Semi-gradient Control
+
+Consider episodic tasks. To find a good policy, the action-value function is approximated by a differentiable function $\hat q(s,a,\mathbf{w}) \approx q^\pi(s,a)$ with weight vector $\mathbf{w}$.
+
+Training examples now take the form $(S_t, A_t) \mapsto U_t$, where $U_t$ is any target approximating $q^\pi(S_t,A_t)$. For instance, for a one-step semi-gradient, we have   
+$$
+U_t = R_{t+1} + \gamma\, \hat q(S_{t+1}, A_{t+1}, \mathbf{w}_t),
+$$
+which bootstraps from the next state–action estimate produced by the same $\varepsilon$-greedy policy. 
+
+Learning is done using semi-gradient stochastic gradient descent on the squared error, yielding the generic update
+$$
+\mathbf{w}_{t+1} = \mathbf{w}_t + \alpha\big[U_t - \hat q(S_t,A_t,\mathbf{w}_t)\big]\nabla_{\mathbf{w}} \hat q(S_t,A_t,\mathbf{w}_t).
+$$
+This is the direct action-value analogue of semi-gradient TD for state values.
+
+To turn prediction into control, techniques for policy improvement and action selection are needed. If the action set is discrete and not too
+large, then we can use the techniques already developed in previous chapters. For instance, exploration using an $\varepsilon$-greedy policy and update action values using Sarsa-style targets.
+
+Pseudo code for the episodic semi-gradient SARSAis given in @fig-ep-sarsa-control-approx-alg.
+
+```{r fig-ep-sarsa-control-approx-alg, echo=FALSE, fig.cap="Episodic semi-gradient SARSA [@Sutton18]."}
+knitr::include_graphics("img/1001_Ep_Semi_Grad_Sarsa.png")
+```
+
+One may ask if this algorithm can be modified to use Q-learning? However, this may not work since this is an off-policy algorithm, which may diverge due to the “deadly triad” (off-policy + bootstrapping + approximation). This is true even with linear features and fixed $\epsilon$-greedy behavior; there is no general convergence guarantee. But, we may modify the algorithm to use expected SARSA that use the same policy for action selection and estimation (on-policy).
+
+::: {.callout-note title="Colab - Before the lecture"}
+During the lecture for this module, we will work with the seasonal inventory and sales planning problem in @sec-mc-seasonal. This is done in the [tutorial][colab-13-approx-control] where we implement different functions
+approximation algorithms. You may have a look at the notebook and the
+example before the lecture.
+:::
+
+
+## $n$-step SARSA
+
+To extend one-step SARSA we may extend our forward view to $n$-steps where the target accumulates the next $n$ rewards before bootstrapping:
+$$
+U_t = \sum_{k=1}^{n} \gamma^{k-1} R_{t+k}
+\;+\;
+\gamma^{n}\, \hat q(S_{t+n}, A_{t+n}, \mathbf{w}_{t+n-1}).
+$$
+Note if the episode terminates  before $t+n$, the bootstrap term is omitted and $G_{t:t+n}$ is just the episodic return ($G_t$). This provides a spectrum between Monte Carlo (large $n$) and one-step bootstrapping ($n=1$).
+
+Out update now becomes
+$$
+\mathbf w \leftarrow \mathbf w + \alpha\big[G_{t:t+n} - \hat q(S_\tau,A_\tau,\mathbf w)\big]\nabla_w \hat q(S_\tau,A_\tau,\mathbf w).
+$$
+
+Exploration could be $\epsilon$-greedy with respect to $\hat q$, forming an on-policy loop that both explores and improves.
+
+The choice of look-ahead steps ($n$) involves a bias-variance trade-off: $n=1$ enables rapid learning but can be shortsighted, while very large $n$ approaches Monte Carlo methods, increasing variance. Practically, small to moderate $n$ values often lead to faster learning and better stability.
+
+
+## Average Reward: A New Problem Setting for Continuing Tasks
+
+The average-reward formulation treats continuing tasks by optimizing the long-run reward rate instead of discounted returns. The performance of a policy $\pi$ is defined as the *steady-state average*
+$$
+\begin{align}
+r(\pi) &= \lim_{h\to\infty}\frac{1}{h}\,\mathbb{E}_\pi\!\left[\sum_{t=1}^{h} R_t\right] \\
+  &= \sum_s \mu_\pi(s) \sum_a \pi(a|s) \sum_{s',r} p(s',r|s,a)r \\
+  &= \sum_s \mu_\pi(s) \sum_a \pi(a|s) \sum_{s'} p(s'|s,a)r(s,a),
+\end{align}
+$$
+This holds if the Markov chain (MDP under $\pi$) is *ergodic*, i.e., all states are reached with the same steady-state distribution $\mu_\pi(s)$, regardless of the starting state.
+
+To measure preferences between states and actions without discounting, we introduce *differential* returns that subtract the average rate at each step:
+$$
+G_t \doteq \sum_{k=0}^{\infty}\big(R_{t+1+k}-r(\pi)\big).
+$$
+
+The *differential action-value* functions then becomes
+$$
+\begin{align}
+q^\pi(s,a) &= \mathbb{E}_\pi[G_t\mid S_t=s, A_t=a] \\
+  &= \sum_{s',r} p(s',r\mid s,a)\Big(r - r(\pi) + \sum_{a'} \pi(a'\mid s')\,q^\pi(s',a')\Big).
+\end{align}
+$$
+They satisfy Bellman relations analogous to the discounted case but without $\gamma$ and with rewards centered by $r(\pi)$.
+
+Learning proceeds by replacing discounted TD errors with differential TD errors that incorporate an estimate of the average reward. With function approximation on $\hat q(s,a,w)$ and a running estimate of $\bar R_t \approx r(\pi)$, the errors become
+$$
+\delta_t^{q} \doteq R_{t+1}-\bar R_t + \hat q(S_{t+1},A_{t+1},\textbf w_t) - \hat q(S_t,A_t,\textbf  w_t).
+$$
+The Semi-gradient update is
+$$
+w_{t+1} \leftarrow \textbf w_t + \alpha\,\delta_t^{q}\,\nabla_w \hat q(S_t,A_t,\textbf w_t).
+$$
+
+Left is how to update the average-reward estimate? This can be done incrementally with a small step size to ensure stability, e.g.
+$$
+\bar R_{t+1} \leftarrow \bar R_t + \beta\delta_t^q.
+$$
+
+Control replaces policy terms with maximization as usual, defining optimal differential values $v^*$ and $q^*$ and coupling learning with $\epsilon$-greedy improvement over $\hat q$.
+
+
+Conceptually, this formulation aligns the objective with what matters in truly continuing problems (long-run reward rate), avoids artifacts from discounting, and remains compatible with multi-step, eligibility-trace, and function-approximation methods by the simple substitution of average-reward-centered TD errors.
+
+
+## Why avoidig discounted reward?
+
+Why are we moving from the discounted reward criterion to the avearage reward criterion?
+
+Using the discounted reward criterion is ill-suited for truly continuing tasks once function approximation enters the picture. Note, function approximation creates bias among states. Hence, with approximation, your value function may not represent the true value function accurately.
+
+The policy improvement theorem does not apply with function approximation in the discounted setting. In fact, the approximation errors can be amplified by discounting, and greedy improvement is not guaranteed to improve the policy. This loss of a policy improvement theorem means discounted control lacks a firm local-improvement foundation under approximation.
+
+Hence, the best solution is to replace discounted control in continuing tasks with the average-reward formulation and its differential value functions, which align the objective with the steady-state reward rate and integrate smoothly with semi-gradient methods.
+
+
+## Summary 
+
+Read Chapter 10.6 in @Sutton18.
+
+
+
+
+## Exercises
+
+`r strExercises`
+
+
+```{r links, child="links.md", include=FALSE}
+```
+
+

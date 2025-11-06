@@ -44,7 +44,7 @@ book:
     - 10_td-pred.qmd
     - 11_td-control.qmd
     - 12_approx-pred.qmd
-    # - 13_approx-control.qmd
+    - 13_approx-control.qmd
     - references.qmd
   appendices:
     - 99_1_appdx.qmd
