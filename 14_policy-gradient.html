@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; An introduction to Python – Reinforcement Learning for Business (RL)</title>
+<title>14&nbsp; Policy Gradient Methods – Reinforcement Learning for Business (RL)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,8 +50,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./05_bandit.html" rel="next">
-<link href="./03_rl-in-action.html" rel="prev">
+<link href="./references.html" rel="next">
+<link href="./13_approx-control.html" rel="prev">
 <link href="./assets/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -81,7 +101,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="assets/style.css">
-<meta property="og:title" content="4&nbsp; An introduction to Python – Reinforcement Learning for Business (RL)">
+<meta property="og:title" content="14&nbsp; Policy Gradient Methods – Reinforcement Learning for Business (RL)">
 <meta property="og:description" content="Course notes for the ‘Reinforcement Learning for Business’ course.">
 <meta property="og:image" content="https://github.com/bss-osca/rl/raw/master/book/img/logo.png">
 <meta property="og:site_name" content="Reinforcement Learning for Business (RL)">
@@ -96,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_python.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14_policy-gradient.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Policy Gradient Methods</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -152,7 +172,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_python.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04_python.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span></a>
   </div>
 </li>
@@ -216,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_policy-gradient.html" class="sidebar-item-text sidebar-link">
+  <a href="./14_policy-gradient.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Policy Gradient Methods</span></span></a>
   </div>
 </li>
@@ -259,19 +279,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#sec-rl-intro-lo" id="toc-sec-rl-intro-lo" class="nav-link active" data-scroll-target="#sec-rl-intro-lo"><span class="header-section-number">4.1</span> Learning outcomes</a></li>
-  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">4.2</span> Textbook readings</a></li>
-  <li><a href="#python-and-packages" id="toc-python-and-packages" class="nav-link" data-scroll-target="#python-and-packages"><span class="header-section-number">4.3</span> Python and packages</a></li>
-  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging"><span class="header-section-number">5</span> Debugging</a></li>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">14.1</span> Learning outcomes</a></li>
+  <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">14.2</span> Textbook readings</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">14.3</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">14.4</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/04_python.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/04_python.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/14_policy-gradient.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/14_policy-gradient.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-python" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">An introduction to Python</span></span></h1>
+<h1 class="title"><span id="sec-policy-gradient" class="quarto-section-identifier"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Policy Gradient Methods</span></span></h1>
 </div>
 
 
@@ -288,35 +308,51 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This module gives an introduction to Python and some of the packages we use during the course.</p>
-<section id="sec-rl-intro-lo" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="sec-rl-intro-lo"><span class="header-section-number">4.1</span> Learning outcomes</h2>
-<p>By the end of this module, you are expected to:</p>
+<!-- Various algorithms for the RL course -->
+<p>???</p>
+<section id="learning-outcomes" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">14.1</span> Learning outcomes</h2>
+<p>After studying this chapter, you should be able to:</p>
 <ul>
-<li>Identify useful Python workflows.</li>
-<li>Do different programming workflows.</li>
-<li>Code a Python class.</li>
-<li>Transform data.</li>
-<li>Plot data.</li>
+<li></li>
 </ul>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
 <!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
 </section>
-<section id="textbook-readings" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">4.2</span> Textbook readings</h2>
-<p>No readings and slides.</p>
+<section id="textbook-readings" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">14.2</span> Textbook readings</h2>
+<p>For this module, you will need to read Chapter 13-13.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+Slides for this module can be seen
+<a href="https://bss-osca.github.io/rl/slides/14_policy-gradient-slides.html" target="_blank">here.</a>
+You do not have to look at them before the lecture!
+</div>
+</div>
+</div>
 </section>
-<section id="python-and-packages" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="python-and-packages"><span class="header-section-number">4.3</span> Python and packages</h2>
-<p>An tutorial is given in this <a href="https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing">Colab</a> notebook. Open it and get an overview before class.</p>
+<section id="summary" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="summary"><span class="header-section-number">14.3</span> Summary</h2>
+<p>Read Chapter 13.8 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
 </section>
-<section id="debugging" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Debugging</h1>
-<p>An tutorial is given in this <a href="https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing">Colab</a> notebook. Open it and get an overview before class.</p>
+<section id="exercises" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="exercises"><span class="header-section-number">14.4</span> Exercises</h2>
+<p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
+<p>You may solve the exercises in the corresponding sections in this [Colab notebook][colab-14-policy-gradient].</p>
+<section id="exercise" class="level3" data-number="14.4.1">
+<h3 data-number="14.4.1" class="anchored" data-anchor-id="exercise"><span class="header-section-number">14.4.1</span> Exercise</h3>
+<p>???</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Sutton18" class="csl-entry" role="listitem">
+Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. Second Edition. MIT Press. <a href="http://incompleteideas.net/book/the-book.html">http://incompleteideas.net/book/the-book.html</a>.
+</div>
+</div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -722,13 +758,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./03_rl-in-action.html" class="pagination-link" aria-label="RL in action">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">RL in action</span></span>
+      <a href="./13_approx-control.html" class="pagination-link" aria-label="On-Policy Control with Approximation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">On-Policy Control with Approximation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05_bandit.html" class="pagination-link" aria-label="Multi-armed bandits">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Multi-armed bandits</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -737,5 +773,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/04_python.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/04_python.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/bss-osca/rl/edit/master/book/14_policy-gradient.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/14_policy-gradient.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

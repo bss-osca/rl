@@ -1154,9 +1154,49 @@
     "href": "13_approx-control.html#exercises",
     "title": "13  On-Policy Control with Approximation",
     "section": "13.8 Exercises",
-    "text": "13.8 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\nYou may solve the exercises in the corresponding sections in this Colab notebook.\n\n13.8.1 Exercise\nSolve the seasonal inventory and sales planning problem in Module 9.4.4 using a Fourier basis as function approximation to estimate the action-values.\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "text": "13.8 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\nYou may solve the exercises in the corresponding sections in this Colab notebook. Use your own copy if you already have one.\n\n13.8.1 Exercise (seasonal inventory)\nSolve the seasonal inventory and sales planning problem in Module 9.4.4 using a Fourier basis as function approximation to estimate the action-values.\n\n\n13.8.2 Exercise (car rental)\nConsider the Car rental problem in Exercise 7.8.2. Our goad is to use function approximation to estimate the optimal state value function.\nConsider the Colab notebook to see the questions.\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
     "crumbs": [
       "<span class='chapter-number'>13</span>  <span class='chapter-title'>On-Policy Control with Approximation</span>"
+    ]
+  },
+  {
+    "objectID": "14_policy-gradient.html",
+    "href": "14_policy-gradient.html",
+    "title": "14  Policy Gradient Methods",
+    "section": "",
+    "text": "14.1 Learning outcomes\n???\nAfter studying this chapter, you should be able to:",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Policy Gradient Methods</span>"
+    ]
+  },
+  {
+    "objectID": "14_policy-gradient.html#textbook-readings",
+    "href": "14_policy-gradient.html#textbook-readings",
+    "title": "14  Policy Gradient Methods",
+    "section": "14.2 Textbook readings",
+    "text": "14.2 Textbook readings\nFor this module, you will need to read Chapter 13-13.7 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen here.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Policy Gradient Methods</span>"
+    ]
+  },
+  {
+    "objectID": "14_policy-gradient.html#summary",
+    "href": "14_policy-gradient.html#summary",
+    "title": "14  Policy Gradient Methods",
+    "section": "14.3 Summary",
+    "text": "14.3 Summary\nRead Chapter 13.8 in Sutton and Barto (2018).",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Policy Gradient Methods</span>"
+    ]
+  },
+  {
+    "objectID": "14_policy-gradient.html#exercises",
+    "href": "14_policy-gradient.html#exercises",
+    "title": "14  Policy Gradient Methods",
+    "section": "14.4 Exercises",
+    "text": "14.4 Exercises\nBelow you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the help page. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!\nYou may solve the exercises in the corresponding sections in this [Colab notebook][colab-14-policy-gradient].\n\n14.4.1 Exercise\n???\n\n\n\n\nSutton, R. S., and A. G. Barto. 2018. Reinforcement Learning: An Introduction. Second Edition. MIT Press. http://incompleteideas.net/book/the-book.html.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Policy Gradient Methods</span>"
     ]
   },
   {
