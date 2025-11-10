@@ -45,6 +45,7 @@ book:
     - 11_td-control.qmd
     - 12_approx-pred.qmd
     - 13_approx-control.qmd
+    - 14_policy-gradient.qmd
     - references.qmd
   appendices:
     - 99_1_appdx.qmd

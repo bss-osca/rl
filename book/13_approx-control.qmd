@@ -176,12 +176,20 @@ Read Chapter 10.6 in @Sutton18.
 
 `r strExercises`
 
-You may solve the exercises in the corresponding sections in this [Colab notebook][colab-13-approx-control].
+You may solve the exercises in the corresponding sections in this [Colab notebook][colab-13-approx-control]. Use your own copy if you already have one.
 
 
-### Exercise
+### Exercise (seasonal inventory)
 
 Solve the seasonal inventory and sales planning problem in @sec-mc-seasonal using a Fourier basis as function approximation to estimate the action-values.
+
+
+### Exercise (car rental)
+
+Consider the Car rental problem in [Exercise @sec-mdp-2-car]. Our goad is to use function approximation to estimate the optimal state value function.
+
+Consider the Colab notebook to see the questions. 
+
 
 
 ```{r links, child="links.md", include=FALSE}

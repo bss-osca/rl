@@ -1,0 +1,70 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, code = readLines("setup.R"), cache = FALSE, include=FALSE}
+```
+
+```{r, child = "_algorithms.qmd", echo=FALSE}
+```
+
+```{r}
+knitr::opts_chunk$set(
+   echo = TRUE
+)
+```
+
+# Policy Gradient Methods {#sec-policy-gradient}
+
+???
+
+## Learning outcomes
+
+After studying this chapter, you should be able to:
+
+- 
+
+<!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
+
+<!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
+
+<!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
+
+<!-- evaluate · apply · argue · theorise · generalise · hypothesise · solve · reflect -->
+
+
+
+
+## Textbook readings
+
+For this module, you will need to read Chapter 13-13.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
+
+```{r, echo=FALSE}
+link_slide_file_text("14", "policy-gradient")
+```
+
+
+
+## Summary 
+
+Read Chapter 13.8 in @Sutton18.
+
+
+## Exercises
+
+`r strExercises`
+
+You may solve the exercises in the corresponding sections in this [Colab notebook][colab-14-policy-gradient].
+
+
+### Exercise
+
+???
+
+
+```{r links, child="links.md", include=FALSE}
+```
+
+
