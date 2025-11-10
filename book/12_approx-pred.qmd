@@ -115,8 +115,8 @@ strategy in this case is to try to minimize error on the observed
 examples and adjust the weight vector after each sample by a small
 amount ($\alpha>0$): $$
 \begin{align}
-\mathbf w_{t+1} &= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]^2\\
-  &= \mathbf w_t + \alpha\,\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).
+\mathbf w_{t+1} &= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(S_t) - \hat v(S_t;\mathbf w_t)\big]^2\\
+  &= \mathbf w_t + \alpha\,\big[v_\pi(S_t) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).
  \end{align}
 $$ where $\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t)$ denote the partial
 derivative vector (the gradient).
@@ -167,7 +167,7 @@ calculate $$
 $$ and our update formula becomes
 
 $$
-\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(s).
+\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(S_t).
 $$ In the linear case the MSVE $e(\textbf w)$ is convex and has only one
 optimum, and thus any method that is guaranteed to converge is
 guaranteed to converge to the global optimum. That is, under gradient

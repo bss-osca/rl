@@ -109,7 +109,7 @@ To minimise $e$, we use *stochastic gradient descent* (*SGD*) methods in an onli
 
 * Update $\mathbf w$ each time new data sample $S_t \mapsto v_\pi(S_t)$ arrives. 
 <!-- * Assume that states appear in samples with the same distribution, $\mu$ -->
-* Try to minimize error on the observed samples and adjust the weight vector after each sample by a small amount ($\alpha>0$): $$\begin{align}\mathbf w_{t+1} &= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]^2\\ &= \mathbf w_t + \alpha\,\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).\end{align}$$ where $\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t)$ denote the partial
+* Try to minimize error on the observed samples and adjust the weight vector after each sample by a small amount ($\alpha>0$): $$\begin{align}\mathbf w_{t+1} &= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(S_t) - \hat v(S_t;\mathbf w_t)\big]^2\\ &= \mathbf w_t + \alpha\,\big[v_\pi(S_t) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).\end{align}$$ where $\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t)$ denote the partial
 derivative vector (the gradient).
 
 ---
@@ -135,7 +135,7 @@ $$\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big
 Gradient Monte Carlo:
 
 * Choose $U_t$ as $U_t = G_t$ (full return). 
-* Unbiased in expectation and requires episode completion. 
+* Unbiased in expectation but requires episode completion. 
 * High variance because 
   - the full return depends on all future rewards up to the end of the
     episode. 
@@ -170,7 +170,7 @@ $$
 Note here, the gradient (vector with partial derivatives) is easy to
 calculate $$\nabla_{\mathbf w}\hat v(s;\mathbf w) = \mathbf x(s),$$ and our update formula becomes
 $$
-\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(s).
+\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(S_t).
 $$ 
 
 In the linear case the MSVE $e(\textbf w)$ is convex and has only one global optimum. That is, under gradient
