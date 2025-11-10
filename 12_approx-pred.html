@@ -393,8 +393,8 @@ e(\mathbf w) = \overline{VE}(\mathbf w) = \sum_s \mu(s)\,\big[v_\pi(s) - \hat v(
 <h2 data-number="12.4" class="anchored" data-anchor-id="stochastic-gradient-and-semi-gradient-methods"><span class="header-section-number">12.4</span> Stochastic-gradient and semi-gradient methods</h2>
 <p>To minimise <span class="math inline">\(e\)</span>, we use <em>stochastic-gradient descent</em> (<em>SGD</em>) methods. SGD methods are widely used for function approximation and can be used in an online setting. Here we update <span class="math inline">\(\mathbf w\)</span> each time a new data sample <span class="math inline">\(S_t \mapsto v_\pi(S_t)\)</span> arrives (an example). That is, we have a sequence of updates <span class="math inline">\(\mathbf w_t, \mathbf w_{t+1}, \mathbf w_{t+2}, \ldots\)</span> and we assume that states appear in samples with the same distribution, <span class="math inline">\(\mu\)</span>. A good strategy in this case is to try to minimize error on the observed examples and adjust the weight vector after each sample by a small amount (<span class="math inline">\(\alpha&gt;0\)</span>): <span class="math display">\[
 \begin{align}
-\mathbf w_{t+1} &amp;= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]^2\\
-  &amp;= \mathbf w_t + \alpha\,\big[v_\pi(s) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).
+\mathbf w_{t+1} &amp;= \mathbf w_t - \frac{1}{2}\alpha\nabla_{\mathbf w}\big[v_\pi(S_t) - \hat v(S_t;\mathbf w_t)\big]^2\\
+  &amp;= \mathbf w_t + \alpha\,\big[v_\pi(S_t) - \hat v(S_t;\mathbf w_t)\big]\,\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t).
 \end{align}
 \]</span> where <span class="math inline">\(\nabla_{\mathbf w}\hat v(S_t;\mathbf w_t)\)</span> denote the partial derivative vector (the gradient).</p>
 <p>Note that since we approximate <span class="math inline">\(v_\pi(s)\)</span>, we do not know the exact value of <span class="math inline">\(v_\pi(s)\)</span>. Instead, we have a target output <span class="math inline">\(U_t\)</span> (an estimate of <span class="math inline">\(v_\pi(s)\)</span>). That is, our sample is now <span class="math inline">\(S_t \mapsto U_t\)</span> instead and our updates becomes:</p>
@@ -417,7 +417,7 @@ e(\mathbf w) = \overline{VE}(\mathbf w) = \sum_s \mu(s)\,\big[v_\pi(s) - \hat v(
 \nabla_{\mathbf w}\hat v(s;\mathbf w) = \mathbf x(s),
 \]</span> and our update formula becomes</p>
 <p><span class="math display">\[
-\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(s).
+\mathbf w_{t+1} = \mathbf w_t + \alpha\,\big[U_t - \hat v(S_t;\mathbf w_t)\big]\mathbf x(S_t).
 \]</span> In the linear case the MSVE <span class="math inline">\(e(\textbf w)\)</span> is convex and has only one optimum, and thus any method that is guaranteed to converge is guaranteed to converge to the global optimum. That is, under gradient Monte Carlo <span class="math inline">\(\mathbf w_{t}\)</span> converges to the global optimum if <span class="math inline">\(\alpha\)</span> is reduced over time according to the usual conditions.</p>
 <p>A semi-gradient method also converges, but not necessarily to the global optimum, but rather a point near the global optimum. The update at each time <span class="math inline">\(t\)</span> given the semi-gradient TD(0) becomes</p>
 <p><span class="math display">\[\begin{align}
