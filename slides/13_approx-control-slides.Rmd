@@ -73,7 +73,7 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 - Now: Emphasis on control, i.e. finding an optimal policy through function approximation of *action values* $\hat q(s, a, \textbf{w})$. 
 - The focus is on on-policy methods.
 - Episodic case: Extension from prediction to control is straightforward
-- Continuing case: Discounting is not suitable to find an optimal policy. Here we have to swithc from the discounting objective to an average-reward objective.
+- Continuing case: Discounting is not suitable to find an optimal policy. Here we have to switch from the discounting objective to an average-reward objective.
 
 ---
 
@@ -93,11 +93,15 @@ Consider episodic tasks.
 ## Episodic Semi-gradient Control - Improvement
 
 - The action-value is an analogue of semi-gradient TD for state values used for prediction.
-- From prediction into control techniques for policy improvement and action selection are needed. 
-- Action set is discrete and not too large: Can use techniques developed so far:
+- Policy improvement and action selection are needed for doing control.
+- If action set is discrete and not too large: Can use techniques developed so far:
   - Exploration using an $\varepsilon$-greedy policy.
   - Update action values using SARSA targets.
 - Generalized policy iteration can be done and converge if use on-policy methods.
+
+--
+
+Will it work if action space is continuous? 
 
 ---
 
@@ -151,7 +155,7 @@ Holds if the Markov chain (MDP under $\pi$) is *ergodic*, i.e., all states are r
 
 ## Bellman equations (average reward criterion)
 
-To measure preferences between states and actions without discounting, we introduce *differential* returns that subtract the average rate at each step: $$G_t \doteq \sum_{k=0}^{\infty}\big(R_{t+1+k}-r(\pi)\big).$$
+To measure preferences between states and actions without discounting, we introduce *differential returns* that subtract the average rate at each step: $$G_t \doteq \sum_{k=0}^{\infty}\big(R_{t+1+k}-r(\pi)\big).$$
 
 The *differential action-value* functions then becomes
 $$
@@ -172,7 +176,7 @@ They satisfy Bellman relations analogous to the discounted case but without $\ga
 - The Semi-gradient update becomes $$\textbf w \leftarrow \textbf w + \alpha\big[U_t - \hat q(S_t,A_t,\mathbf w)\big]\,\nabla_w \hat q(S_t,A_t,\textbf w).$$
 - How to update the average-reward estimate? This can be done incrementally with a small step size to ensure stability, e.g.
 $$
-\bar R \leftarrow \bar R + \beta\delta_t^q.
+\bar R \leftarrow \bar R + \beta\delta_t^q, \qquad \delta_t^q = U_t - q(S_t,A_t,\mathbf w).
 $$
 
 <!-- Control replaces policy terms with maximization as usual, defining optimal differential values $v^*$ and $q^*$ and coupling learning with $\epsilon$-greedy improvement over $\hat q$. -->

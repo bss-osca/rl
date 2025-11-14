@@ -60,7 +60,7 @@ link_slide_file_text("13", "approx-control")
 
 Consider episodic tasks. To find a good policy, the action-value function is approximated by a differentiable function $\hat q(s,a,\mathbf{w}) \approx q^\pi(s,a)$ with weight vector $\mathbf{w}$.
 
-Training examples now take the form $(S_t, A_t) \mapsto U_t$, where $U_t$ is any target approximating $q^\pi(S_t,A_t)$. For instance, for a one-step semi-gradient, we have   
+Training examples now take the form $(S_t, A_t) \mapsto U_t$, where $U_t$ is any target approximating $q^\pi(S_t,A_t).$ For instance, for a one-step semi-gradient, we have   
 $$
 U_t = R_{t+1} + \gamma\, \hat q(S_{t+1}, A_{t+1}, \mathbf{w}_t),
 $$
@@ -72,12 +72,12 @@ $$
 $$
 This is the direct action-value analogue of semi-gradient TD for state values.
 
-To turn prediction into control, techniques for policy improvement and action selection are needed. If the action set is discrete and not too
-large, then we can use the techniques already developed in previous chapters. For instance, exploration using an $\varepsilon$-greedy policy and update action values using Sarsa-style targets.
+To turn prediction into control, techniques for policy improvement and action selection are needed. If the action set is *discrete and not too
+large*, then we can use the techniques already developed in previous chapters. For instance, exploration using an $\varepsilon$-greedy policy and update action values using Sarsa-style targets.
 
-Pseudo code for the episodic semi-gradient SARSAis given in @fig-ep-sarsa-control-approx-alg.
+Pseudo code for the episodic semi-gradient SARSA is given in @fig-ep-sarsa-control-approx-alg.
 
-```{r fig-ep-sarsa-control-approx-alg, echo=FALSE, fig.cap="Episodic semi-gradient SARSA [@Sutton18]."}
+```{r fig-ep-sarsa-control-approx-alg, echo=FALSE, fig.cap="Episodic semi-gradient SARSA [@Sutton18].", out.width="90%"}
 knitr::include_graphics("img/1001_Ep_Semi_Grad_Sarsa.png")
 ```
 
@@ -109,6 +109,12 @@ Exploration could be $\epsilon$-greedy with respect to $\hat q$, forming an on-p
 
 The choice of look-ahead steps ($n$) involves a bias-variance trade-off: $n=1$ enables rapid learning but can be shortsighted, while very large $n$ approaches Monte Carlo methods, increasing variance. Practically, small to moderate $n$ values often lead to faster learning and better stability.
 
+Pseudo code for the episodic n-step semi-gradient SARSA is given in @fig-ep-n-step-sarsa-control-approx-alg.
+
+```{r fig-ep-n-step-sarsa-control-approx-alg, echo=FALSE, fig.cap="Episodic $n$-step semi-gradient SARSA [@Sutton18].", out.width="90%"}
+knitr::include_graphics("img/1002_ep_n-step_sarsa.png")
+```
+
 
 ## Average Reward: A New Problem Setting for Continuing Tasks
 
@@ -122,7 +128,7 @@ r(\pi) &= \lim_{h\to\infty}\frac{1}{h}\,\mathbb{E}_\pi\!\left[\sum_{t=1}^{h} R_t
 $$
 This holds if the Markov chain (MDP under $\pi$) is *ergodic*, i.e., all states are reached with the same steady-state distribution $\mu_\pi(s)$, regardless of the starting state.
 
-To measure preferences between states and actions without discounting, we introduce *differential* returns that subtract the average rate at each step:
+To measure preferences between states and actions without discounting, we introduce *differential returns* that subtract the average rate at each step:
 $$
 G_t \doteq \sum_{k=0}^{\infty}\big(R_{t+1+k}-r(\pi)\big).
 $$
@@ -136,7 +142,7 @@ q^\pi(s,a) &= \mathbb{E}_\pi[G_t\mid S_t=s, A_t=a] \\
 $$
 They satisfy Bellman relations analogous to the discounted case but without $\gamma$ and with rewards centered by $r(\pi)$.
 
-Learning proceeds by replacing discounted TD errors with differential TD errors that incorporate an estimate of the average reward. With function approximation on $\hat q(s,a,w)$ and a running estimate of $\bar R_t \approx r(\pi)$, the errors become
+Learning proceeds by replacing discounted TD errors with differential TD errors that incorporate an estimate of the average reward. With function approximation on $\hat q(s,a,\textbf w)$ and a running estimate of $\bar R_t \approx r(\pi)$, the errors become
 $$
 \delta_t^{q} \doteq R_{t+1}-\bar R_t + \hat q(S_{t+1},A_{t+1},\textbf w_t) - \hat q(S_t,A_t,\textbf  w_t).
 $$
@@ -151,6 +157,12 @@ $$
 $$
 
 Control replaces policy terms with maximization as usual, defining optimal differential values $v^*$ and $q^*$ and coupling learning with $\epsilon$-greedy improvement over $\hat q$.
+
+Pseudo code for the continuing (differential) semi-gradient SARSA is given in @fig-cont-sarsa-control-approx-alg.
+
+```{r fig-cont-sarsa-control-approx-alg, echo=FALSE, fig.cap="Continuing semi-gradient SARSA [@Sutton18].", out.width="90%"}
+knitr::include_graphics("img/1003_cont_semi_sarsa.png")
+```
 
 
 Conceptually, this formulation aligns the objective with what matters in truly continuing problems (long-run reward rate), avoids artifacts from discounting, and remains compatible with multi-step, eligibility-trace, and function-approximation methods by the simple substitution of average-reward-centered TD errors.
