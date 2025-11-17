@@ -99,6 +99,35 @@ div.csl-indent {
   });
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="assets/style.css">
 <meta property="og:title" content="14&nbsp; Policy Gradient Methods – Reinforcement Learning for Business (RL)">
@@ -281,8 +310,16 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">14.1</span> Learning outcomes</a></li>
   <li><a href="#textbook-readings" id="toc-textbook-readings" class="nav-link" data-scroll-target="#textbook-readings"><span class="header-section-number">14.2</span> Textbook readings</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">14.3</span> Summary</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">14.4</span> Exercises</a></li>
+  <li><a href="#policy-approximation-and-its-advantages" id="toc-policy-approximation-and-its-advantages" class="nav-link" data-scroll-target="#policy-approximation-and-its-advantages"><span class="header-section-number">14.3</span> Policy Approximation and its Advantages</a></li>
+  <li><a href="#the-policy-gradient-theorem" id="toc-the-policy-gradient-theorem" class="nav-link" data-scroll-target="#the-policy-gradient-theorem"><span class="header-section-number">14.4</span> The Policy Gradient Theorem</a></li>
+  <li><a href="#reinforce-monte-carlo-policy-gradient" id="toc-reinforce-monte-carlo-policy-gradient" class="nav-link" data-scroll-target="#reinforce-monte-carlo-policy-gradient"><span class="header-section-number">14.5</span> REINFORCE: Monte Carlo Policy Gradient</a></li>
+  <li><a href="#reinforce-with-baseline" id="toc-reinforce-with-baseline" class="nav-link" data-scroll-target="#reinforce-with-baseline"><span class="header-section-number">14.6</span> REINFORCE with Baseline</a></li>
+  <li><a href="#actor-critic-methods" id="toc-actor-critic-methods" class="nav-link" data-scroll-target="#actor-critic-methods"><span class="header-section-number">14.7</span> Actor-Critic Methods</a></li>
+  <li><a href="#policy-gradient-for-continuing-problems" id="toc-policy-gradient-for-continuing-problems" class="nav-link" data-scroll-target="#policy-gradient-for-continuing-problems"><span class="header-section-number">14.8</span> Policy Gradient for Continuing Problems</a></li>
+  <li><a href="#policy-parameterisation-for-continuous-actions" id="toc-policy-parameterisation-for-continuous-actions" class="nav-link" data-scroll-target="#policy-parameterisation-for-continuous-actions"><span class="header-section-number">14.9</span> Policy Parameterisation for Continuous Actions</a></li>
+  <li><a href="#mixed-action-spaces" id="toc-mixed-action-spaces" class="nav-link" data-scroll-target="#mixed-action-spaces"><span class="header-section-number">14.10</span> Mixed Action Spaces</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">14.11</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">14.12</span> Exercises</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/bss-osca/rl/edit/master/book/14_policy-gradient.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/bss-osca/rl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/bss-osca/rl/blob/master/book/14_policy-gradient.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -309,13 +346,18 @@ div.csl-indent {
 
 
 <!-- Various algorithms for the RL course -->
-<p>???</p>
+<p>Up to this point, most methods in reinforcement learning have been based on estimating value functions, i.e.&nbsp;learning the expected return for each state–action pair. Next, the best policy can be found by selecting the action with the highest estimate. That is, the policy used is derived from the estimates and hence dependent on the estimates.</p>
+<p>Here, we consider a new approach and focus on directly learning a parameterized policy that can select actions without referring to a value function. Although a value function may still be employed to assist in learning the policy parameters, it is no longer required for decision making.</p>
+<p>Let the policy be represented as <span class="math display">\[\pi(a|s, \theta) = \Pr(A_t = a|S_t = s, \theta_t = \theta),\]</span> where <span class="math inline">\(\theta \in \mathbb{R}^{d'}\)</span> is a vector of policy parameters. That is, <span class="math inline">\(\pi(a|s, \theta)\)</span> is the probability that action <span class="math inline">\(a\)</span> is taken in state <span class="math inline">\(s\)</span> when the policy parameters have value <span class="math inline">\(\theta\)</span>.</p>
+<!-- If a value function is also used, its parameters are denoted $w \in \mathbb{R}^d$, as in $\hat v(s, w)$. -->
+<p>The objective is to learn the policy parameters by following the gradient of a scalar performance measure <span class="math inline">\(J(\theta)\)</span> with respect to <span class="math inline">\(\theta\)</span>. Because the goal is to maximize performance, the parameter updates follow a <em>stochastic gradient-ascent</em> rule: <span id="eq-pol-gradient-upd"><span class="math display">\[
+\theta_{t+1} = \theta_t + \alpha \nabla J(\theta_t)
+\tag{14.1}\]</span></span> where <span class="math inline">\(\nabla J(\theta_t)\)</span> is an estimate of the gradient of the performance measure with respect to <span class="math inline">\(\theta_t\)</span>.</p>
+<p>Any method that follows this structure is known as a <em>policy gradient method</em>. When such a method also learns a value function approximation, it is referred to as an <em>actor-critic</em> method. In this terminology, the actor is the agent that acts. It outputs an action given the current state, according to a policy. The critic is the one who criticises or evaluates the actor’s performance by estimating the value function. The critic’s evaluation is used to improve the actor.</p>
+<p>First, we consider the episodic setting, where performance is defined as the value of the start state under the parameterised policy. Next, the continuing case is considered, where performance is defined in terms of the long-run average reward.</p>
 <section id="learning-outcomes" class="level2" data-number="14.1">
 <h2 data-number="14.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">14.1</span> Learning outcomes</h2>
 <p>After studying this chapter, you should be able to:</p>
-<ul>
-<li></li>
-</ul>
 <!-- SOLO increasing: identify · memorise · name · do simple procedure · collect data · -->
 <!-- enumerate · describe · interpret · formulate · list · paraphrase · combine · do -->
 <!-- algorithms · compare · contrast · explain causes · analyse · relate · derive · -->
@@ -323,7 +365,7 @@ div.csl-indent {
 </section>
 <section id="textbook-readings" class="level2" data-number="14.2">
 <h2 data-number="14.2" class="anchored" data-anchor-id="textbook-readings"><span class="header-section-number">14.2</span> Textbook readings</h2>
-<p>For this module, you will need to read Chapter 13-13.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <a href="https://bss-osca.github.io/rl/misc/sutton-notation.pdf">here</a>.</p>
+<p>For this module, you will need to read Chapter 13-13.7 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>. Read it before continuing this module. A summary of the book notation can be seen <span class="math display">\[here\]</span><span class="math display">\[sutton-notation\]</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -334,16 +376,459 @@ You do not have to look at them before the lecture!
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="summary"><span class="header-section-number">14.3</span> Summary</h2>
+<section id="policy-approximation-and-its-advantages" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="policy-approximation-and-its-advantages"><span class="header-section-number">14.3</span> Policy Approximation and its Advantages</h2>
+<p>Policy gradient methods optimize a parameterized policy directly rather than relying on value functions for action selection. The policy, denoted <span class="math inline">\(\pi(a|s,\theta)\)</span>, depends on a vector of parameters <span class="math inline">\(\theta\)</span> and must be differentiable with respect to these parameters. In practice, to ensure exploration we generally require that the policy never becomes deterministic, i.e., that <span class="math inline">\(\pi(a|s,\theta) \in (0, 1)\)</span> for all <span class="math inline">\(s, a\)</span>.</p>
+<p>For <em>discrete action spaces</em>, a common approach is to assign a numerical preference <span class="math inline">\(h(s, a, \theta)\)</span> to each action in each state. These preferences are then transformed into action probabilities using the softmax function:</p>
+<p><span class="math display">\[
+\pi(a|s,\theta) = \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}
+\]</span></p>
+<p>This ensures that <span class="math inline">\(\pi(a|s,\theta) \in (0,1)\)</span> and that the probabilities across all actions in a state sum to one. The softmax structure guarantees continual exploration since no action ever receives zero probability. We call this policy parameterisation <em>soft-max in action preferences</em>.</p>
+<p>The action preferences <span class="math inline">\(h(s, a,\theta)\)</span> can be parameterised arbitrarily. For example, they might be computed by a neural network, or the preferences could be linear in features, as in Chapter 9.</p>
+<p>Compared to value-based methods, policy approximation offers several advantages.</p>
+<ul>
+<li>One advantage of parameterizing policies with a softmax over action preferences is that the resulting stochastic policy can approach a deterministic one. As the differences between action preferences grow, the softmax distribution becomes increasingly peaked, and in the limit it becomes deterministic.</li>
+<li>A second advantage of parameterising policies according to the softmax in action preferences is that it enables the selection of actions with arbitrary probabilities. In problems with significant function approximation, the best approximate policy may be stochastic.</li>
+<li>The policy may be a simpler function to approximate. Problems vary in the complexity of their policies and action-value functions. For some, the action-value function is simpler and thus easier to approximate. For others, the policy is simpler.</li>
+<li>The choice of policy parameterization is sometimes a good way of injecting prior knowledge about the desired form of the policy into the reinforcement learning system. This is often the most important reason for using a policy-based learning method.</li>
+<li>With continuous policy parameterization the action probabilities change smoothly as a function of the learned parameter, whereas in <span class="math inline">\(\epsilon\)</span>-greedy selection the action probabilities may change dramatically for an arbitrarily small change in the estimated action values, if that change results in a different action having the maximal value. This gives us stronger convergence guarantees.</li>
+</ul>
+</section>
+<section id="the-policy-gradient-theorem" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="the-policy-gradient-theorem"><span class="header-section-number">14.4</span> The Policy Gradient Theorem</h2>
+<p>The policy gradient theorem provides a fundamental result showing that the gradient of the performance measure with respect to the policy parameters can be expressed without involving the derivative of the state distribution.</p>
+<p>To do stochastic gradient-ascent in <a href="#eq-pol-gradient-upd" class="quarto-xref">Equation&nbsp;<span>14.1</span></a>, we need to find the gradient of the performance measure <span class="math inline">\(J(\theta)\)</span> with respect to the policy parameters <span class="math inline">\(\theta\)</span>. In the episodic case, the performance is defined as the expected return starting from the initial state <span class="math inline">\(s_0\)</span>: <span class="math display">\[
+J(\theta) = v_{\pi_\theta}(s_0)
+\]</span> where <span class="math inline">\(\pi_\theta\)</span> is the parametrized policy.</p>
+<p>Given a state, the effect of the policy parameter on the actions, and thus on reward, can be computed in a relatively straightforward way from knowledge of the parameterization. But the effect of the policy on the state distribution is a function of the environment and is typically unknown. How can we estimate the performance gradient with respect to the policy parameter when the gradient depends on the unknown effect of policy changes on the state distribution? This can be done using the policy gradient theorem, the gradient of <span class="math inline">\(J(\theta)\)</span> can be written as <span class="math display">\[
+\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla \pi(a|s,\theta)
+\]</span> where <span class="math inline">\(\mu(s)\)</span> is the on-policy distribution over states under <span class="math inline">\(\pi\)</span>. In <a href="#sec-pol-grad-proof" class="quarto-xref"><span>Module 14.4.1</span></a> is a step-by-step proof of this result in the episodic case.</p>
+<p>A more convenient form of the gradient is obtained by expressing it in terms of the gradient of the logarithm of the policy: <span class="math display">\[
+\nabla J(\theta) \propto \mathbb{E}_\pi \big[ q_\pi(S_t, A_t) \nabla \ln \pi(A_t|S_t, \theta) \big]
+\]</span> This expectation is taken with respect to the trajectory distribution generated by the current policy. It states that the policy parameters should be adjusted in proportion to the product of the action-value <span class="math inline">\(q_\pi(S_t, A_t)\)</span> and the gradient of the log-probability of the action taken.</p>
+<p>This relationship gives a practical way to compute the gradient using samples. The term <span class="math inline">\(\nabla \ln \pi(A_t|S_t, \theta)\)</span> acts as an eligibility vector, pointing in the direction that makes the selected action more probable, while <span class="math inline">\(q_\pi(S_t, A_t)\)</span> measures how good that action was. Averaging over experience yields an unbiased estimate of the true gradient.</p>
+<p>The theorem applies both to episodic and continuing tasks. In the continuing case, the average reward per time step <span class="math inline">\(r(\pi)\)</span> is used as the performance measure, and the same result holds with appropriate definitions of values and gradients.</p>
+<p>The significance of the policy gradient theorem lies in providing a clean and general foundation for all policy-gradient methods. It guarantees that by following the gradient of expected performance, the learning algorithm improves the policy without needing to differentiate the complex dynamics of the state distribution. This makes it the theoretical basis for methods such as REINFORCE and actor–critic algorithms.</p>
+<section id="sec-pol-grad-proof" class="level3" data-number="14.4.1">
+<h3 data-number="14.4.1" class="anchored" data-anchor-id="sec-pol-grad-proof"><span class="header-section-number">14.4.1</span> Proff (episodic case)</h3>
+<p>We assume:</p>
+<ul>
+<li>finite state and action sets,</li>
+<li>an episodic MDP that always terminates in finite time with probability 1,</li>
+<li>the transition dynamics <span class="math inline">\(p(s', r \mid s, a)\)</span> do not depend on <span class="math inline">\(\theta\)</span>,</li>
+<li>the policy <span class="math inline">\(\pi(a \mid s, \theta)\)</span> is differentiable in <span class="math inline">\(\theta\)</span>.</li>
+</ul>
+<p>We write <span class="math inline">\(v_\pi(s)\)</span> and <span class="math inline">\(q_\pi(s,a)\)</span> for the value and action-value functions under policy <span class="math inline">\(\pi\)</span>.</p>
+<ol type="1">
+<li><p>Express the state-value function in terms of the action-value function</p>
+<p>For any fixed policy <span class="math inline">\(\pi\)</span>, the state-value function can be written as <span class="math display">\[
+v_\pi(s) = \sum_a \pi(a \mid s, \theta)\,q_\pi(s,a).
+\]</span></p></li>
+<li><p>Differentiate the state-value function</p>
+<p>Take the gradient with respect to <span class="math inline">\(\theta\)</span>: <span class="math display">\[
+\nabla v_\pi(s)
+= \nabla \left( \sum_a \pi(a \mid s, \theta)\,q_\pi(s,a) \right)
+= \sum_a \left[ \nabla \pi(a \mid s, \theta)\,q_\pi(s,a) + \pi(a \mid s, \theta)\,\nabla q_\pi(s,a) \right].
+\]</span></p>
+<p>Define <span class="math display">\[
+g(s) \doteq \sum_a \nabla \pi(a \mid s, \theta)\,q_\pi(s,a),
+\]</span> so that <span class="math display">\[
+\nabla v_\pi(s) = g(s) + \sum_a \pi(a \mid s, \theta)\,\nabla q_\pi(s,a).
+\]</span></p></li>
+<li><p>Use the Bellman equation for <span class="math inline">\(q_\pi\)</span></p>
+<p>The Bellman equation for the action-value function is <span class="math display">\[
+q_\pi(s,a)
+= \sum_{s', r} p(s', r \mid s,a)\Bigl[r + v_\pi(s')\Bigr].
+\]</span> The transition probabilities and rewards do not depend on <span class="math inline">\(\theta\)</span>, so <span class="math display">\[
+\nabla q_\pi(s,a)
+= \sum_{s', r} p(s', r \mid s,a)\,\nabla v_\pi(s').
+\]</span></p>
+<p>Substitute this into the previous expression: <span class="math display">\[
+\nabla v_\pi(s)
+= g(s) + \sum_a \pi(a \mid s, \theta) \sum_{s', r} p(s', r \mid s,a)\,\nabla v_\pi(s').
+\]</span></p></li>
+<li><p>Introduce the one-step transition matrix under the policy</p>
+<p>Define the one-step state transition probabilities under policy <span class="math inline">\(\pi\)</span>: <span class="math display">\[
+P^\pi(s' \mid s) \doteq \sum_a \pi(a \mid s, \theta)\,p(s' \mid s,a),
+\]</span> where <span class="math inline">\(p(s' \mid s,a) = \sum_r p(s', r \mid s,a)\)</span>.</p>
+<p>Then the previous expression becomes <span class="math display">\[
+\nabla v_\pi(s)
+= g(s) + \sum_{s'} P^\pi(s' \mid s)\,\nabla v_\pi(s').
+\]</span></p>
+<p>This is a recursive equation relating <span class="math inline">\(\nabla v_\pi(s)\)</span> at one state to gradients at successor states.</p></li>
+<li><p>Unroll the recursion along trajectories</p>
+<p>We can repeatedly substitute the expression for <span class="math inline">\(\nabla v_\pi(\cdot)\)</span> on the right-hand side into itself.</p>
+<p>Define <span class="math inline">\(P^\pi_k(s \to x)\)</span> as the probability of being in state <span class="math inline">\(x\)</span> after exactly <span class="math inline">\(k\)</span> steps when starting from state <span class="math inline">\(s\)</span> and following policy <span class="math inline">\(\pi\)</span>. This is the <span class="math inline">\(k\)</span>-step transition probability under <span class="math inline">\(P^\pi\)</span>.</p>
+<p>By repeatedly expanding the recursion, we obtain <span class="math display">\[
+\nabla v_\pi(s)
+= \sum_x \sum_{k=0}^\infty P^\pi_k(s \to x)\,g(x).
+\]</span></p>
+<p>Intuitively: at each state <span class="math inline">\(x\)</span>, the local “source term” <span class="math inline">\(g(x)\)</span> contributes to the gradient at <span class="math inline">\(s\)</span>, weighted by how likely and how often we reach <span class="math inline">\(x\)</span> from <span class="math inline">\(s\)</span> under policy <span class="math inline">\(\pi\)</span>.</p></li>
+<li><p>Specialize to the performance measure <span class="math inline">\(J(\theta) = v_\pi(s_0)\)</span></p>
+<p>In the episodic case, the performance measure is defined as <span class="math display">\[
+J(\theta) \doteq v_\pi(s_0),
+\]</span> where <span class="math inline">\(s_0\)</span> is the (deterministic) start state.</p>
+<p>Hence, <span class="math display">\[
+\nabla J(\theta) = \nabla v_\pi(s_0)
+= \sum_x \sum_{k=0}^\infty P^\pi_k(s_0 \to x)\,g(x).
+\]</span></p>
+<p>Define <span class="math display">\[
+\eta(x) \doteq \sum_{k=0}^\infty P^\pi_k(s_0 \to x).
+\]</span></p>
+<p>In an episodic finite-horizon or absorbing setting, <span class="math inline">\(\eta(x)\)</span> is finite and can be interpreted as the expected number of visits to state <span class="math inline">\(x\)</span> per episode under policy <span class="math inline">\(\pi\)</span>.</p>
+<p>Thus, <span class="math display">\[
+\nabla J(\theta) = \sum_x \eta(x)\,g(x)
+= \sum_x \eta(x) \sum_a \nabla \pi(a \mid x, \theta)\,q_\pi(x,a).
+\]</span></p></li>
+<li><p>Introduce the on-policy state distribution <span class="math inline">\(\mu(s)\)</span></p>
+<p>Let the normalized on-policy state distribution <span class="math inline">\(\mu(s)\)</span> be <span class="math display">\[
+\mu(s) \doteq \frac{\eta(s)}{\sum_x \eta(x)}.
+\]</span></p>
+<p>In an episodic setting, <span class="math inline">\(\sum_x \eta(x)\)</span> is the expected episode length under policy <span class="math inline">\(\pi\)</span>; call this constant <span class="math inline">\(C &gt; 0\)</span>. Then <span class="math display">\[
+\eta(s) = C\,\mu(s),
+\]</span> and the gradient becomes <span class="math display">\[
+\nabla J(\theta)
+= \sum_s C\,\mu(s) \sum_a \nabla \pi(a \mid s, \theta)\,q_\pi(s,a)
+= C \sum_s \mu(s) \sum_a q_\pi(s,a)\,\nabla \pi(a \mid s, \theta).
+\]</span></p>
+<p>Since <span class="math inline">\(C\)</span> is a positive constant independent of <span class="math inline">\(\theta\)</span>, we have <span class="math display">\[
+\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_\pi(s,a)\,\nabla \pi(a \mid s, \theta),
+\]</span> which is exactly the policy gradient theorem in the episodic case.</p></li>
+<li><p>Optional log-policy form</p>
+<p>Using the identity <span class="math inline">\(\nabla ln(x) = \nabla x / x\)</span>, we get <span class="math display">\[
+\nabla \pi(a \mid s, \theta) = \pi(a \mid s, \theta)\,\nabla \ln \pi(a \mid s, \theta),
+\]</span> we can rewrite the inner sum as <span class="math display">\[
+\sum_a q_\pi(s,a)\,\nabla \pi(a \mid s, \theta)
+= \sum_a q_\pi(s,a)\,\pi(a \mid s, \theta)\,\nabla \ln \pi(a \mid s, \theta),
+\]</span> and thus <span class="math display">\[
+\nabla J(\theta) \propto
+\sum_s \mu(s) \sum_a \pi(a \mid s, \theta)\,q_\pi(s,a)\,\nabla \ln \pi(a \mid s, \theta),
+\]</span> which is the expectation form used to derive REINFORCE: <span class="math display">\[
+\nabla J(\theta) \propto \mathbb{E}_\pi\!\left[ q_\pi(S_t, A_t)\,\nabla \ln \pi(A_t \mid S_t, \theta) \right].
+\]</span></p></li>
+</ol>
+<p>This completes the proof of the policy gradient theorem in the episodic case.</p>
+</section>
+</section>
+<section id="reinforce-monte-carlo-policy-gradient" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="reinforce-monte-carlo-policy-gradient"><span class="header-section-number">14.5</span> REINFORCE: Monte Carlo Policy Gradient</h2>
+<p>REINFORCE is the simplest policy-gradient algorithm. It performs stochastic gradient ascent on the expected return by using Monte Carlo returns to estimate the gradient direction. That is, it is applicable to episodic tasks because it relies on full-episode returns.</p>
+<p>Our objective is maximize the performance objective: <span class="math display">\[
+J(\theta) = v_{\pi_\theta}(s_0)
+\]</span></p>
+<p>Using gradient ascent: <span class="math display">\[
+\theta_{t+1} = \theta_t + \alpha\,\widehat{\nabla J(\theta_t)}
+\]</span></p>
+<p>The Policy Gradient Theorem gives:</p>
+<p><span class="math display">\[
+\begin{alignat}{3}
+    \nabla J(\theta) &amp;\propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla \pi(a|s,\theta) \\
+    &amp;= \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a)\nabla\,\pi(a \mid S_t, \theta)\right]
+        &amp;&amp;\qquad\text{(mean given $\mu(s)$, $S_t$ now stochastic)} \\
+    &amp;= \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a) \pi(a \mid S_t, \theta)\,\nabla \ln \pi(a \mid S_t, \theta)\right]
+        &amp;&amp;\qquad\text{(use $\nabla \pi(a \mid S_t, \theta) = \pi(a \mid s, \theta)\,\nabla \ln \pi(a \mid s, \theta)$)} \\
+    &amp;= \mathbb{E}_\pi\left[q_\pi(S_t, A_t)\,\nabla \ln \pi(A_t|S_t, \theta)\right]
+        &amp;&amp;\qquad\text{(replace $a$ with stochastic $A_t\sim\pi$)} \\
+    &amp;= \mathbb{E}_\pi\left[G_t\,\nabla \ln \pi(A_t|S_t, \theta)\right]
+        &amp;&amp;\qquad\text{($\mathbb{E}_\pi[G_t|A_t, S_t] = q_\pi(S_t, A_t)$)} \\
+\end{alignat}
+\]</span></p>
+<p>Note, since <span class="math inline">\(q_\pi(S_t, A_t)\)</span> cannot be computed exactly, we use the Monte Carlo estimate <span class="math inline">\(G_t\)</span>. The update now becomes: <span class="math display">\[
+\theta_{t+1}
+= \theta_t + \alpha\,G_t \nabla \ln \pi(A_t|S_t, \theta_t)
+\]</span></p>
+<p>Observations:</p>
+<ul>
+<li>The gradient <span class="math display">\[
+  \nabla \ln \pi(A_t|S_t, \theta) = \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t,\theta)}.\]</span> Hence <span class="math inline">\(\nabla \ln \pi(A_t|S_t,\theta)\)</span> is the direction that increases the probability of action <span class="math inline">\(A_t\)</span> divided by the probability of taking that action. If the action had low probability, the update is amplified and if the action had high probability, the update is weaker.</li>
+<li>The return <span class="math inline">\(G_t\)</span> is used for adjustment. Good returns push probability up, bad returns push it down. Good outcomes imply increased probability of the actions that led to them. Bad outcomes imply decreased probability.<br>
+</li>
+<li>We do Monte Carlo, ie. no bootstrapping (high variance but unbiased).</li>
+<li>This is direct policy optimization with no value function.</li>
+</ul>
+<p>The vector <span class="math inline">\(\nabla \ln \pi(A_t|S_t, \theta_t)\)</span> is called the <em>eligibility vector</em>. Note this is the only place where the policy parametrization appears.</p>
+<p><strong>Key Formulas</strong></p>
+<p>Policy gradient estimate: <span class="math display">\[
+\widehat{\nabla J(\theta)} = G_t\,\nabla \ln \pi(A_t|S_t,\theta)
+\]</span></p>
+<p>REINFORCE update: <span class="math display">\[
+\theta \leftarrow \theta + \alpha G_t \nabla \ln \pi(A_t|S_t,\theta)
+\]</span></p>
+<p>Return definition (episodic): <span class="math display">\[
+G_t = \sum_{k=t+1}^T \gamma^{k-t-1} R_k
+\]</span></p>
+<p>Log-policy derivative identity: <span class="math display">\[
+\nabla \ln \pi(a|s,\theta) = \frac{\nabla \pi(a|s,\theta)}{\pi(a|s,\theta)}
+\]</span></p>
+<!-- REINFORCE is simple and has sound theoretical convergence properties because it is an unbiased Monte Carlo estimate of the true gradient. However, since it depends on full returns, it often suffers from high variance and slow learning. Later extensions, such as REINFORCE with baseline and actor–critic methods, reduce this variance while preserving the correctness of the expected gradient direction. -->
+<p>Pseudo code for REINFORCE is given in <a href="#fig-reinforce-alg" class="quarto-xref">Fig.&nbsp;<span>14.1</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-reinforce-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-reinforce-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/1303_REINFORCE.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reinforce-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14.1: REINFORCE: Monte Carlo Policy Gradient Control (episodic) <span class="citation" data-cites="Sutton18">(<a href="references.html#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="reinforce-with-baseline" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="reinforce-with-baseline"><span class="header-section-number">14.6</span> REINFORCE with Baseline</h2>
+<p>The original REINFORCE algorithm updates the policy parameters using the full Monte Carlo return: <span class="math display">\[
+\theta_{t+1} = \theta_t + \alpha\,G_t\,\nabla \ln \pi(A_t|S_t,\theta_t).
+\]</span> This update is unbiased but typically has very high variance. To reduce this variance, a baseline function <span class="math inline">\(b(s)\)</span> can be subtracted from the return. This does not change the expected value of the gradient but can greatly improve learning stability.</p>
+<p>The key idea is to replace the return <span class="math inline">\(G_t\)</span> with the advantage-like term <span class="math inline">\(G_t - b(S_t)\)</span>. The new update rule becomes: <span class="math display">\[
+\theta_{t+1}
+= \theta_t + \alpha\,(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta_t).
+\]</span> The baseline may depend on the state but must not depend on the action. If it did depend on the action, it would bias the estimate of the gradient. The reason it does not introduce bias is: <span class="math display">\[
+\sum_a b(s)\,\nabla \pi(a|s,\theta) = b(s)\,\nabla \sum_a \pi(a|s,\theta) = b(s)\,\nabla 1 = 0.
+\]</span> Thus, subtracting <span class="math inline">\(b(s)\)</span> alters only variance, not the expectation.</p>
+<p>A natural and effective choice for the baseline is the state-value function: <span class="math display">\[
+b(s) = \hat v(s, w),
+\]</span> where the parameter vector <span class="math inline">\(w\)</span> is learned from data. The value-function parameters are updated by a Monte Carlo regression method: <span class="math display">\[
+w \leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w).
+\]</span> This produces a <em>critic</em> that approximates how good each state is on average. The policy update (the <em>actor</em>) then adjusts the probabilities in proportion to how much better or worse the return was compared to what is expected for the state: <span class="math display">\[
+\theta \leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
+\]</span></p>
+<p>REINFORCE with baseline remains a Monte Carlo method: it requires full-episode returns and performs updates only after the episode ends. It still provides unbiased estimates of the policy gradient. The improvement is purely variance reduction, which can significantly accelerate learning. Empirically, adding a learned baseline commonly leads to much faster convergence, especially when episode returns vary widely.</p>
+<p>These ideas capture the essence of REINFORCE with baseline: the gradient direction is preserved, variance is reduced, and learning becomes more efficient.</p>
+<p><strong>Key formulas</strong></p>
+<p><span class="math display">\[
+\nabla J(\theta) \propto \mathbb{E}_\pi[(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)],
+\]</span> and the baseline restriction: <span class="math display">\[
+b(s)\text{ must not depend on }a.
+\]</span> Using a value-function baseline: <span class="math display">\[
+b(s) = \hat v(s,w),
+\]</span> leads to a combined learning rule for actor and critic: <span class="math display">\[
+\begin{aligned}
+w &amp;\leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w), \\
+\theta &amp;\leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
+\end{aligned}
+\]</span></p>
+<p>Pseudo code for REINFORCE with baseline algorithm is given in <a href="#fig-reinforce-baseline-alg" class="quarto-xref">Fig.&nbsp;<span>14.2</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-reinforce-baseline-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-reinforce-baseline-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/1304_REINFORCE_With_Baseline.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reinforce-baseline-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14.2: REINFORCE with baseline: Monte Carlo Policy Gradient Control (episodic) <span class="citation" data-cites="Sutton18">(<a href="references.html#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="actor-critic-methods" class="level2" data-number="14.7">
+<h2 data-number="14.7" class="anchored" data-anchor-id="actor-critic-methods"><span class="header-section-number">14.7</span> Actor-Critic Methods</h2>
+<p>Actor-critic methods extend the REINFORCE with baseline algorithm by replacing the full Monte Carlo return with a bootstrapped estimate. In these methods, the policy is the <em>actor</em> and the value function is the <em>critic</em>. The critic evaluates how good the current state is, and the actor uses this evaluation to adjust the policy parameters.</p>
+<p>The key observation motivating actor-critic methods is that in REINFORCE with baseline, the critic (the state-value function) is used only as a baseline for variance reduction and is evaluated using Monte Carlo returns. Because Monte Carlo returns can have large variance, learning becomes slow. A natural improvement is to let the critic use temporal-difference style updates, producing a more immediate and less variable assessment of action quality.</p>
+<p>To achieve this, actor-critic methods use the <em>one-step return</em>: <span class="math display">\[
+G_{t:t+1} = R_{t+1} + \gamma \hat v(S_{t+1}, w),
+\]</span> which leads to the temporal-difference error: <span class="math display">\[
+\delta_t = R_{t+1} + \gamma \hat v(S_{t+1}, w) - \hat v(S_t, w).
+\]</span> This error serves two roles: it updates the critic by TD learning and it provides the advantage signal for the actor.</p>
+<p>The critic update becomes: <span class="math display">\[
+w \leftarrow w + \alpha_w \,\delta_t\, \nabla \hat v(S_t, w).
+\]</span> The actor update becomes: <span class="math display">\[
+\theta \leftarrow \theta + \alpha_\theta\,\delta_t\,\nabla \ln \pi(A_t|S_t, \theta).
+\]</span></p>
+<p>This replaces the Monte Carlo return <span class="math inline">\(G_t\)</span> used in REINFORCE with the more immediate <span class="math inline">\(\delta_t\)</span>. Although <span class="math inline">\(\delta_t\)</span> introduces bias (because <span class="math inline">\(\hat v\)</span> is only an approximation), the resulting variance reduction often greatly improves learning efficiency.</p>
+<p>Actor-critic methods can be seen as the policy-gradient analogue of SARSA, in the sense that they learn online, incrementally, and from single-step bootstrapped targets. Multi-step versions and methods with eligibility traces can also be built in direct analogy with the <span class="math inline">\(n\)</span>-step TD algorithms.</p>
+<p>The introduction of bootstrapping means that actor-critic methods are no longer pure Monte Carlo. They combine the benefits of policy gradient methods (direct optimization of the policy) with the benefits of TD learning (low variance and online updates). This blend makes them practical for long-horizon tasks where Monte Carlo variance would be problematic.</p>
+<!-- A typical one-step actor-critic algorithm updates both actor and critic at every time step:
+- sample action $A_t$ from $\pi(\cdot|S_t,\theta)$
+- observe reward and next state
+- compute $\delta_t$
+- update critic parameters $w$
+- update actor parameters $\theta$
+
+The TD error $\delta_t$ tells the actor whether the chosen action led to a better-than-expected or worse-than-expected outcome relative to the critic's evaluation. This provides a refined advantage signal, improving learning stability. -->
+<p>Actor-critic methods form the foundation for many modern reinforcement learning algorithms, including those used in deep RL. The version introduced here is the simplest: one-step, on-policy, with a tabular or approximate state-value critic.</p>
+<p>Pseudo code for the one-step Actor-Critic algorithm is given in <a href="#fig-actor-critic-alg" class="quarto-xref">Fig.&nbsp;<span>14.3</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-actor-critic-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-actor-critic-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/1305a_One_Step_Actor_Critic.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-actor-critic-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14.3: One-step Actor-Critic (episodic) <span class="citation" data-cites="Sutton18">(<a href="references.html#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="policy-gradient-for-continuing-problems" class="level2" data-number="14.8">
+<h2 data-number="14.8" class="anchored" data-anchor-id="policy-gradient-for-continuing-problems"><span class="header-section-number">14.8</span> Policy Gradient for Continuing Problems</h2>
+<p>In the continuing setting, there are no episodes, and returns do not naturally terminate. Because of this, the performance measure used in episodic policy gradients <span class="math inline">\(J(\theta) = v_{\pi}(s_0)\)</span> no longer applies. Instead, policy gradient methods for continuing tasks optimize the <em>average reward</em>: <span class="math display">\[
+r(\pi) = \sum_s \mu(s)\sum_a \pi(a|s)\sum_{s',r} p(s',r|s,a)\, r.
+\]</span> Here, the distribution <span class="math inline">\(\mu(s)\)</span> is the stationary on-policy distribution over states under the current policy. This describes how often the agent visits each state in the long-run average sense.</p>
+<p>The policy gradient theorem still holds in the continuing case, but with an important difference: the constant of proportionality becomes exactly 1. Thus, <span class="math display">\[
+\nabla r(\pi) = \sum_s \mu(s) \sum_a q_\pi(s,a)\,\nabla \pi(a|s,\theta).
+\]</span> This means the gradient depends only on the action-value function and the stationary distribution, not on the derivative of the distribution with respect to the policy parameters. This is what makes policy gradient methods tractable even in continuing tasks.</p>
+<p>The relevant action-value function becomes the <em>differential</em> action-value: <span class="math display">\[
+q_\pi(s,a) = \mathbb{E}_\pi\bigl[\,G_t \mid S_t=s, A_t=a\,\bigr],
+\]</span> where the return is defined as: <span class="math display">\[
+G_t = R_{t+1} - r(\pi) + R_{t+2} - r(\pi) + \cdots.
+\]</span> This return subtracts the average reward so that long-term returns are finite and meaningful in a continuing environment. The corresponding value function is the <em>differential value</em>: <span class="math display">\[
+v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t=s].
+\]</span></p>
+<p>To construct a Monte Carlo-style policy gradient, one replaces <span class="math inline">\(q_\pi\)</span> with sampled differential returns. The resulting gradient estimate is: <span class="math display">\[
+\nabla r(\pi) \approx \mathbb{E}\left[(G_t)\,\nabla \ln \pi(A_t|S_t,\theta)\right].
+\]</span> As in the episodic setting, baselines can be used to reduce variance. The baseline must not depend on the action, and a natural choice is the differential value function <span class="math inline">\(v_\pi(s)\)</span>. Subtracting it leads to: <span class="math display">\[
+\nabla r(\pi) \approx \mathbb{E}\left[(G_t - v_\pi(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)\right].
+\]</span> This produces an unbiased gradient estimate while helping to control variance in ongoing tasks.</p>
+<p>A major difference from the episodic case is that the average reward <span class="math inline">\(r(\pi)\)</span> must be estimated during learning. This can be done incrementally, often using a running average of observed rewards. Differential actor-critic methods incorporate this into the critic: they estimate both the differential value function and the average reward, then use the temporal-difference error: <span class="math display">\[
+\delta_t = R_{t+1} - \hat r + \hat v(S_{t+1}) - \hat v(S_t),
+\]</span> which is the natural TD error for average-reward problems. This error then drives both critic and actor updates.</p>
+<p>The essential message is that policy gradient methods extend naturally to the continuing case, but the formulation shifts from episodic returns to average reward and differential values. The policy gradient theorem still applies with almost the same structure, enabling the creation of both Monte Carlo and actor-critic algorithms for continuing tasks.</p>
+<p>Pseudo code for the Actor-Critic with eligibility traces algorithm is given in <a href="#fig-actor-critic-cont-alg" class="quarto-xref">Fig.&nbsp;<span>14.4</span></a>. Note that we have not considered eligibility traces in this course. However, think of it as the one-step actor-critic is TD(0), i.e.&nbsp;<span class="math inline">\(\lambda^\textbf w = \lambda^\theta  = 0\)</span> and if increase these weights you come closer to monte carlo (<span class="math inline">\(\lambda^\textbf w = \lambda^\theta  = 1\)</span>).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-actor-critic-cont-alg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-actor-critic-cont-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/1306_actor-critic-cont.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-actor-critic-cont-alg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14.4: Actor-critic with eligibility traces (continuing) <span class="citation" data-cites="Sutton18">(<a href="references.html#ref-Sutton18" role="doc-biblioref">Sutton and Barto 2018</a>)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="policy-parameterisation-for-continuous-actions" class="level2" data-number="14.9">
+<h2 data-number="14.9" class="anchored" data-anchor-id="policy-parameterisation-for-continuous-actions"><span class="header-section-number">14.9</span> Policy Parameterisation for Continuous Actions</h2>
+<p>Until now, we have assumed a discrete action space so the softmax function could be used to approximate the policy. If <em>continuous action spaces</em>, meaning actions are real-valued (or vector-valued), discrete softmax policies are no longer suitable. Instead, policies are represented as <em>parameterised probability density functions</em> over continuous actions.</p>
+<p>The main idea is to model the policy as: <span class="math display">\[
+\pi(a \mid s, \theta) = \text{a differentiable density over } a,
+\]</span> so that gradients concerning the parameters can be calculated and employed in policy gradient updates.</p>
+<p>A common parameterisation is the univariate Gaussian or Normal distribution: <span class="math display">\[
+\pi(a \mid s, \theta) = \frac{1}{\sqrt{2\pi\sigma^2(s, \theta)}} \exp\left( -\frac{(a - \mu(s, \theta))^2}{2\sigma^2(s, \theta)} \right),
+\]</span> where both the mean <span class="math inline">\(\mu(s)\)</span> and standard deviation <span class="math inline">\(\sigma(s)\)</span> may depend on the state and are parameterised by separate sets of weights <span class="math inline">\(\theta = (\theta_\mu, \theta_\sigma)\)</span>. Note we slightly misuse the notation here. The <span class="math inline">\(\pi\)</span> on the left is notation for the policy, while the <span class="math inline">\(\pi\)</span> on the right simply denotes the number <span class="math inline">\(\pi\)</span>.</p>
+<p>Usually, the mean is expressed as a linear function of features <span class="math display">\[\mu(s, \theta) = {\theta_\mu}^\top \textbf x_\mu(s).\]</span></p>
+<p>The variance must be kept strictly positive (e.g., via taking the exponential) <span class="math display">\[\sigma^2(s, \theta) = \exp({\theta_\sigma}^\top \textbf x_\sigma(s)).\]</span></p>
+<p>Remaining is to calculate the eligibility vector <span class="math inline">\(\nabla \ln \pi(A_t|S_t, \theta_t)\)</span> for the algorithm:</p>
+<p><span class="math display">\[
+\begin{align}
+\nabla \ln \pi(a|s, \theta_\mu)
+  &amp;= \frac{a-\mu(s, \theta_\mu)}{\sigma(s, \theta_\sigma)^2}\, \nabla \mu(s, \theta_\mu) \\
+\nabla \ln \pi(a|s, \theta_\mu)
+  &amp;= \left(\frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2} - 1\right)
+\nabla\ln\sigma(s, \theta_\sigma).
+\end{align}
+\]</span></p>
+<p>These two equations can be found by first note that <span class="math display">\[
+\ln \pi(a \mid s, \theta)
+=
+-\ln(\sqrt{2\pi})
+-\ln \sigma(s, \theta_\sigma)
+-\frac{(a - \mu(s, \theta_\mu))^2}{2\sigma(s, \theta_\sigma)^2}.
+\]</span></p>
+<p>Taking the derivative w.r.t. <span class="math inline">\(\theta_\mu\)</span>: <span class="math display">\[
+\begin{align}
+\nabla \ln \pi(a|s, \theta_\mu)
+  &amp;= -\frac{1}{2\sigma(s, \theta_\sigma)^2}2(a-\mu(s, \theta_\mu))(-1)\nabla \mu(s, \theta_\mu) \\
+  &amp;= \frac{a-\mu(s, \theta_\mu)}{\sigma(s, \theta_\sigma)^2}\, \nabla \mu(s, \theta_\mu).
+\end{align}
+\]</span></p>
+<p>Taking the derivative w.r.t. <span class="math inline">\(\theta_\sigma\)</span>: <span class="math display">\[
+\begin{align}
+\nabla \ln \pi(a|s, \theta_\mu)
+  &amp;= -\nabla\ln\sigma(s, \theta_\sigma)  
+  - \frac{(-2)(a-\mu(s, \theta_\mu))^2}{2\sigma(s, \theta_\sigma)^3}\nabla\sigma(s, \theta_\sigma)  \\
+  &amp;= -\nabla\ln\sigma(s, \theta_\sigma)  
+  + \frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2}
+  \frac{\nabla\sigma(s, \theta_\sigma)}{\sigma(s, \theta_\sigma)} \\
+  &amp;= -\nabla\ln\sigma(s, \theta_\sigma)  
+  + \frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2}
+  \nabla\ln\sigma(s, \theta_\sigma) \\
+  &amp;= \left(\frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2} - 1\right)\nabla\ln\sigma(s, \theta_\sigma).
+\end{align}
+\]</span></p>
+<p>Hence <span class="math display">\[
+\nabla \ln \pi(a|s, \theta)
+  = \frac{a-\mu(s, \theta_\mu)}{\sigma(s, \theta_\sigma)^2}\, \nabla \mu(s, \theta_\mu) +
+  \left(\frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2} - 1\right)
+\nabla\ln\sigma(s, \theta_\sigma).
+\]</span></p>
+<p>The first term shifts the mean towards actions that led to better returns; the second term adjusts the variance depending on how surprising the sampled action was relative to the current policy.</p>
+<p>Using linear features we get <span class="math display">\[
+\nabla \ln \pi(a|s, \theta)
+  = \frac{a-\mu(s, \theta_\mu)}{\sigma(s, \theta_\sigma)^2}\, \textbf x(s, \theta_\mu) +
+  \left(\frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2} - 1\right)
+\textbf x(s, \theta_\sigma).
+\]</span></p>
+<!-- A common simplification is to fix the variance, making $\sigma$ constant. This yields:
+$$
+\nabla \ln \pi(a|s) = \frac{a - \mu(s)}{\sigma^2}\,\nabla \mu(s),
+$$
+which is easy to compute and works well when exploration demands are modest. -->
+<p>The choice of parameterization has important effects. If the variance is too small, exploration collapses; if too large, gradient estimates become noisy. Learning both mean and variance enables adaptive exploration: the variance shrinks in well-understood regions and grows where uncertainty is higher.</p>
+<p>Once a differentiable density is available, all previous machinery for policy gradients applies unchanged. The policy gradient theorem still holds, as it does not depend on action space cardinality. Actor-critic methods remain preferable because they reduce variance, even more critical in continuous action settings where gradients may be noisier.</p>
+</section>
+<section id="mixed-action-spaces" class="level2" data-number="14.10">
+<h2 data-number="14.10" class="anchored" data-anchor-id="mixed-action-spaces"><span class="header-section-number">14.10</span> Mixed Action Spaces</h2>
+<p>When an action includes both continuous and discrete components, the policy must represent a joint distribution over this mixed action space. Policy gradient methods handle this naturally as long as the policy is differentiable.</p>
+<p>Suppose an action is: <span class="math display">\[
+a = (a^{\text{disc}},\, a^{\text{cont}}).
+\]</span></p>
+<p>A standard and convenient factorization is: <span class="math display">\[
+\pi(a \mid s)
+= \pi(a^{\text{disc}} \mid s)\,
+  \pi(a^{\text{cont}} \mid s, a^{\text{disc}}).
+\]</span></p>
+<p>This means:</p>
+<ul>
+<li>First choose the discrete action component.</li>
+<li>Then choose the continuous parameters conditioned on the discrete choice.</li>
+</ul>
+<p>This factorization is compatible with the policy gradient theorem. The log-policy splits naturally: <span class="math display">\[
+\ln \pi(a \mid s)
+=
+\ln \pi(a^{\text{disc}} \mid s)
++
+\ln \pi(a^{\text{cont}} \mid s, a^{\text{disc}}).
+\]</span></p>
+<p>Thus the gradient becomes: <span class="math display">\[
+\nabla_\theta \ln \pi(a \mid s)
+=
+\nabla_\theta \ln \pi(a^{\text{disc}} \mid s)
++
+\nabla_\theta \ln \pi(a^{\text{cont}} \mid s, a^{\text{disc}}).
+\]</span></p>
+<p>A REINFORCE-style policy gradient update takes the form: <span class="math display">\[
+\theta \leftarrow \theta
++ \alpha\, G_t\,
+\big(
+\nabla \ln \pi(a^{\text{disc}}|s)
++
+\nabla \ln \pi(a^{\text{cont}}|s,a^{\text{disc}})
+\big).
+\]</span></p>
+<p>Both the discrete and continuous components contribute independently to the gradient.</p>
+</section>
+<section id="summary" class="level2" data-number="14.11">
+<h2 data-number="14.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">14.11</span> Summary</h2>
 <p>Read Chapter 13.8 in <span class="citation" data-cites="Sutton18">Sutton and Barto (<a href="references.html#ref-Sutton18" role="doc-biblioref">2018</a>)</span>.</p>
 </section>
-<section id="exercises" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="exercises"><span class="header-section-number">14.4</span> Exercises</h2>
+<section id="exercises" class="level2" data-number="14.12">
+<h2 data-number="14.12" class="anchored" data-anchor-id="exercises"><span class="header-section-number">14.12</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<p>You may solve the exercises in the corresponding sections in this [Colab notebook][colab-14-policy-gradient].</p>
-<section id="exercise" class="level3" data-number="14.4.1">
-<h3 data-number="14.4.1" class="anchored" data-anchor-id="exercise"><span class="header-section-number">14.4.1</span> Exercise</h3>
+<p>You may solve the exercises in the corresponding sections in this <span class="math display">\[Colab notebook\]</span><span class="math display">\[colab-14-policy-gradient\]</span>.</p>
+<section id="exercise" class="level3" data-number="14.12.1">
+<h3 data-number="14.12.1" class="anchored" data-anchor-id="exercise"><span class="header-section-number">14.12.1</span> Exercise</h3>
 <p>???</p>
 
 

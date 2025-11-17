@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Policy Gradient Methods</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lars Relund Nielsen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Policy Gradient Methods
+]
+.author[
+### Lars Relund Nielsen
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+layout: true
+  
+<div class="my-footer">
+<span>
+<a href="https://bss-osca.github.io/rl/sec-policy-gradient.html" target="_blank">Notes</a>
+ | 
+<a href="https://bss-osca.github.io/rl/slides/14_policy-gradient-slides.html" target="_blank">Slides</a>
+ | 
+<a href="https://github.com/bss-osca/rl/blob/master/slides/14_policy-gradient-slides.Rmd" target="_blank">Source</a>
+</span>
+</div>
+
+
+
+&lt;!-- Templates --&gt;
+&lt;!-- .pull-left[] .pull-right[] --&gt;
+&lt;!-- knitr::include_graphics("img/bandit.png") --&gt;
+&lt;!-- .left-column-wide[]  .right-column-small[] --&gt;
+
+---
+
+## Learning outcomes
+
+- Identify why policy gradient methods differs from value-based methods.
+- Explain why differentiable, parameterized policies are needed for policy gradient algorithms.
+- Describe the softmax policy parameterization and how action preferences define stochastic policies.
+
+- Understand the structure and meaning of the policy gradient theorem for both episodic and continuing tasks.
+- Explain why the gradient of the performance measure does not require differentiating the state distribution.
+- Explain the REINFORCE algorithm and understand why it is an unbiased Monte Carlo estimator of the policy gradient.
+- Explain how introducing baselines reduces variance without altering the expected gradient.
+- Understand the conceptual and mathematical foundations of actor–critic methods.
+- Understand how the TD error provides a lower-variance advantage signal for the actor.
+- Explain how policy gradient methods extend to continuing tasks via average reward and differential value functions.
+- Describe the differential TD error used in continuing actor–critic methods.
+- Understand how to parameterize policies for continuous action spaces, especially Gaussian policies.
+- Recognize how mixed discrete–continuous action spaces can be handled with joint or factorized policies.
+
+---
+
+# Policy Gradient Methods 
+
+- Up to this point approximated based on value functions.
+- The best policy can be found by selecting the action with the highest estimate. 
+- Policy used is derived from the estimates and hence dependent on the estimates.
+- Now focus on directly learning a parametrized policy `\(\pi(a|s, \theta)\)`.
+- Can select actions without referring to a value function. 
+- The objective is to learn the policy the maximize a performance measure `\(J(\theta)\)`. 
+- These methods are known as a *policy gradient method*. 
+- The value function may still be employed to assist in learning the policy parameters.
+- If also learns a value function approximation, it is referred to as an *actor-critic* method. 
+- The actor is the agent that acts. The critic is the one who criticises or evaluates the actor's performance by estimating the value function.
+
+---
+
+## Policy Approximation 
+
+- Let the policy be differentiable with respect to `\(\theta\)`: `$$\pi(a|s, \theta) = \Pr(A_t = a|S_t = s, \theta_t = \theta).$$` 
+- In practice, to ensure exploration `\(\pi(a|s,\theta) \in (0, 1)\)` for all `\(s, a\)`.
+- Updates follow a *stochastic gradient-ascent* rule: `$$\theta_{t+1} = \theta_t + \alpha \nabla J(\theta_t)$$` 
+- For *discrete actions*, we use a softmax function (*soft-max in action preferences*): `$$\pi(a|s,\theta) = \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}},$$` where `\(h(s, a, \theta)\)` is a numerical preference (can be parametrised arbitrarily).
+- Guarantees continual exploration since no action ever receives zero probability. 
+
+---
+
+## Policy Approximation and its Advantages
+
+Compared to value-based methods, policy approximation offers several advantages.
+
+- In policies with a softmax the resulting stochastic policy can approach a deterministic one. As the differences between preferences grow, the softmax distribution becomes increasingly peaked, and in the limit it becomes deterministic. 
+- Enables the selection of actions with arbitrary probabilities. In problems with significant function approximation, the best approximate policy may be stochastic.
+-   The policy may be a simpler function to approximate. 
+-   The choice of policy parameterization is sometimes a good way of injecting prior knowledge about the desired form of the policy into the RL system (important reason).
+- Stronger convergence guarantees with continuous policy parameterization. 
+  - The action probabilities change smoothly as a function of the learned parameter.
+  - In `\(\epsilon\)`-greedy selection, the action probabilities may change dramatically given a small change in action values.
+
+---
+
+## The Policy Gradient Theorem
+
+- To do stochastic gradient-ascent, we need to find the gradient of the performance measure `\(J(\theta)\)` with respect to the policy parameters `\(\theta\)`. 
+- Episodic case: Objective/performance `\(J(\theta) = v_{\pi_\theta}(s_0)\)` given `\(\pi_\theta\)`.
+- Given `\(s\)` and `\(\pi_\theta\)` we can find the next action and reward.
+- But how can we estimate the performance gradient when the gradient depends on the unknown effect of policy changes on the state distribution? 
+- Policy gradient theorem: The gradient of `\(J(\theta)\)` can be written as `$$\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla \pi(a|s,\theta)$$` where `\(\mu(s)\)` is the on-policy distribution over states under `\(\pi\)`.
+- The gradient can be expressed without involving the derivative of the state distribution.  
+
+---
+
+## From policy gradient to eligibility vector
+
+Using `\(\nabla \pi(a \mid S_t, \theta) = \pi(a \mid s, \theta)\,\nabla \ln \pi(a \mid s, \theta)\)`, we may modify the Policy Gradient Theorem:
+
+`$$\begin{align*}
+\nabla J(\theta) &amp;\propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla \pi(a|s,\theta) = \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a)\nabla\,\pi(a \mid S_t, \theta)\right] \\
+    &amp;= \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a) \pi(a \mid S_t, \theta)\,\nabla \ln \pi(a \mid S_t, \theta)\right]\\
+    &amp;= \mathbb{E}_\pi\left[q_\pi(S_t, A_t)\,\nabla \ln \pi(A_t|S_t, \theta)\right]
+    = \mathbb{E}_\pi\left[G_t\,\nabla \ln \pi(A_t|S_t, \theta)\right]\\
+\end{align*}$$`
+
+- Expectation is taken based on the trajectory distribution generated by the current policy. 
+- The policy parameters is adjusted in proportion to the product of the action-value `\(q_\pi(S_t, A_t)\)` and the gradient of the log-probability.
+- The gradient `\(\nabla \ln \pi(A_t|S_t, \theta)\)` is often called the *eligibility vector*. 
+
+---
+
+## REINFORCE: Monte Carlo Policy Gradient
+
+&lt;img src="img/1303_REINFORCE.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Note an discount rate have been added here (we didn't include it in the policy gradient theorem).
+
+---
+
+## REINFORCE with Baseline
+
+The original REINFORCE algorithm updates the policy parameters using the full Monte Carlo return:
+$$
+\theta_{t+1} = \theta_t + \alpha\,G_t\,\nabla \ln \pi(A_t|S_t,\theta_t).
+$$
+This update is unbiased but typically has very high variance. To reduce this variance, a baseline function `\(b(s)\)` can be subtracted from the return. This does not change the expected value of the gradient but can greatly improve learning stability.
+
+The key idea is to replace the return `\(G_t\)` with the advantage-like term `\(G_t - b(S_t)\)`. The new update rule becomes:
+$$
+\theta_{t+1}
+= \theta_t + \alpha\,(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta_t).
+$$
+The baseline may depend on the state but must not depend on the action. If it did depend on the action, it would bias the estimate of the gradient. The reason it does not introduce bias is:
+$$
+\sum_a b(s)\,\nabla \pi(a|s,\theta) = b(s)\,\nabla \sum_a \pi(a|s,\theta) = b(s)\,\nabla 1 = 0.
+$$
+Thus, subtracting `\(b(s)\)` alters only variance, not the expectation.
+
+A natural and effective choice for the baseline is the state-value function:
+$$
+b(s) = \hat v(s, w),
+$$
+where the parameter vector `\(w\)` is learned from data. The value-function parameters are updated by a Monte Carlo regression method:
+$$
+w \leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w).
+$$
+This produces a *critic* that approximates how good each state is on average. The policy update (the *actor*) then adjusts the probabilities in proportion to how much better or worse the return was compared to what is expected for the state:
+$$
+\theta \leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
+$$
+
+REINFORCE with baseline remains a Monte Carlo method: it requires full-episode returns and performs updates only after the episode ends. It still provides unbiased estimates of the policy gradient. The improvement is purely variance reduction, which can significantly accelerate learning. Empirically, adding a learned baseline commonly leads to much faster convergence, especially when episode returns vary widely.
+
+These ideas capture the essence of REINFORCE with baseline: the gradient direction is preserved, variance is reduced, and learning becomes more efficient.
+
+**Key formulas** 
+
+$$
+\nabla J(\theta) \propto \mathbb{E}_\pi[(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)],
+$$
+and the baseline restriction:
+$$
+b(s)\text{ must not depend on }a.
+$$
+Using a value-function baseline:
+$$
+b(s) = \hat v(s,w),
+$$
+leads to a combined learning rule for actor and critic:
+$$
+`\begin{aligned}
+w &amp;\leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w), \\
+\theta &amp;\leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
+\end{aligned}`
+$$
+
+Pseudo code for REINFORCE with baseline algorithm is given in @fig-reinforce-baseline-alg.
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/1304_REINFORCE_With_Baseline.png" alt="REINFORCE with baseline: Monte Carlo Policy Gradient Control (episodic) [@Sutton18]." width="90%" /&gt;
+&lt;p class="caption"&gt;REINFORCE with baseline: Monte Carlo Policy Gradient Control (episodic) [@Sutton18].&lt;/p&gt;
+&lt;/div&gt;
+
+
+## Colab
+
+Let us consider the an example in the [Colab tutorial][colab-14-policy-gradient].
+
+
+&lt;!-- # References --&gt;
+
+&lt;!-- ```{r, results='asis', echo=FALSE} --&gt;
+&lt;!-- PrintBibliography(bib) --&gt;
+&lt;!-- ``` --&gt;
+
+
+
+[BSS]: https://bss.au.dk/en/
+[bi-programme]: https://masters.au.dk/businessintelligence
+
+[course-help]: https://github.com/bss-osca/rl/issues
+[cran]: https://cloud.r-project.org
+[cheatsheet-readr]: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf
+[course-welcome-to-the-tidyverse]: https://github.com/rstudio-education/welcome-to-the-tidyverse
+[Colab]: https://colab.google/
+[colab-01-intro-colab]: https://colab.research.google.com/drive/1o_Dk4FKTsDxPYxTXBRAUEsfPYU3dJhxg?usp=sharing
+[colab-03-rl-in-action]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD?usp=sharing
+[colab-03-rl-in-action-ex]: https://colab.research.google.com/drive/18O9MruUBA-twpIDpc-9boXQw-cSjkRoD#scrollTo=JUKOdK_UqKRJ&amp;line=3&amp;uniqifier=1
+[colab-04-python]: https://colab.research.google.com/drive/1_TQoJVTJPiXbynegeUtzTWBgktpL5VQT?usp=sharing
+[colab-04-debug-python]: https://colab.research.google.com/drive/1JHVxbE89iJ8CGJuwY-A4aEEbWYXMH4dp?usp=sharing
+[colab-05-bandit]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs?usp=sharing
+[colab-05-ex-bandit-adv]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=Df1pWZ-DZB7v&amp;line=1
+[colab-05-ex-bandit-coin]: https://colab.research.google.com/drive/19-tUda-gBb40NWHjpSQboqWq18jYpHPs#scrollTo=gRGiE26m3inM
+[colab-08-dp]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6?usp=sharing
+[colab-08-dp-ex-storage]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=nY6zWiv_3ikg&amp;line=21&amp;uniqifier=1
+[colab-08-dp-sec-dp-gambler]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=GweToDSPd5gj&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-maintain]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=HQnlVuuufR_Q&amp;line=1&amp;uniqifier=1
+[colab-08-dp-sec-dp-car]: https://colab.research.google.com/drive/1PrLZ2vppqnq0xk0_Qu7UiW3fASftZUX6#scrollTo=xERxGYQDkR87&amp;line=1&amp;uniqifier=1
+[colab-09-mc]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-?usp=sharing
+[colab-09-mc-sec-mc-seasonal-ex]: https://colab.research.google.com/drive/1I4gBqDqYQAEPOVlMqTyBG1AKSHTgyDm-#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-10-td-pred]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d?usp=sharing
+[colab-10-td-pred-sec-ex-td-pred-random]: https://colab.research.google.com/drive/1JhLDAtc-5lJ3fzp7natjT_ea_JRiQS7d#scrollTo=1BzUCPQxstvQ&amp;line=4&amp;uniqifier=1
+[colab-11-td-control]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw?usp=sharing
+[colab-11-td-control-sec-td-control-storage]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=1BzUCPQxstvQ&amp;line=3&amp;uniqifier=1
+[colab-11-td-control-sec-td-control-car]: https://colab.research.google.com/drive/1EC7qmhZqirQdfV1lDn5wqabGlgE49Ghw#scrollTo=5CcNmaUVXekC&amp;line=1&amp;uniqifier=1
+[colab-12-approx-pred]: https://colab.research.google.com/drive/1-kh0SiNucJrzUUnIOLSidcA2RO5J1rvY?usp=sharing
+[colab-13-approx-control]: https://colab.research.google.com/drive/1aTPzgxC2_4O1TStfmiEAArf4kxhEVoFU?usp=sharing
+[colab-14-policy-gradient]: https://colab.research.google.com/drive/1noa3mzdi4sLyBB9GCzsV9__5ikOwwSn4?usp=sharing
+
+[DataCamp]: https://www.datacamp.com/
+[datacamp-signup]: https://www.datacamp.com/groups/shared_links/45955e75eff4dd8ef9e8c3e7cbbfaff9e28e393b38fc25ce24cb525fb2155732
+[datacamp-r-intro]: https://learn.datacamp.com/courses/free-introduction-to-r
+[datacamp-r-rmarkdown]: https://campus.datacamp.com/courses/reporting-with-rmarkdown
+[datacamp-r-communicating]: https://learn.datacamp.com/courses/communicating-with-data-in-the-tidyverse
+[datacamp-r-communicating-chap3]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/introduction-to-rmarkdown
+[datacamp-r-communicating-chap4]: https://campus.datacamp.com/courses/communicating-with-data-in-the-tidyverse/customizing-your-rmarkdown-report
+[datacamp-r-intermediate]: https://learn.datacamp.com/courses/intermediate-r
+[datacamp-r-intermediate-chap1]: https://campus.datacamp.com/courses/intermediate-r/chapter-1-conditionals-and-control-flow
+[datacamp-r-intermediate-chap2]: https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops
+[datacamp-r-intermediate-chap3]: https://campus.datacamp.com/courses/intermediate-r/chapter-3-functions
+[datacamp-r-intermediate-chap4]: https://campus.datacamp.com/courses/intermediate-r/chapter-4-the-apply-family
+[datacamp-r-functions]: https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r
+[datacamp-r-tidyverse]: https://learn.datacamp.com/courses/introduction-to-the-tidyverse
+[datacamp-r-strings]: https://learn.datacamp.com/courses/string-manipulation-with-stringr-in-r
+[datacamp-r-dplyr]: https://learn.datacamp.com/courses/data-manipulation-with-dplyr
+[datacamp-r-dplyr-bakeoff]: https://learn.datacamp.com/courses/working-with-data-in-the-tidyverse
+[datacamp-r-ggplot2-intro]: https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2
+[datacamp-r-ggplot2-intermediate]: https://learn.datacamp.com/courses/intermediate-data-visualization-with-ggplot2
+[dplyr-cran]: https://CRAN.R-project.org/package=dplyr
+
+[google-form]: https://forms.gle/s39GeDGV9AzAXUo18
+[google-grupper]: https://docs.google.com/spreadsheets/d/1DHxthd5AQywAU4Crb3hM9rnog2GqGQYZ2o175SQgn_0/edit?usp=sharing
+[GitHub]: https://github.com/
+[git-install]: https://git-scm.com/downloads
+[github-actions]: https://github.com/features/actions
+[github-pages]: https://pages.github.com/
+[gh-rl-student]: https://github.com/bss-osca/rl-student
+[gh-rl]: https://github.com/bss-osca/rl
+
+[happy-git]: https://happygitwithr.com
+[hg-install-git]: https://happygitwithr.com/install-git.html
+[hg-why]: https://happygitwithr.com/big-picture.html#big-picture
+[hg-github-reg]: https://happygitwithr.com/github-acct.html#github-acct
+[hg-git-install]: https://happygitwithr.com/install-git.html#install-git
+[hg-exist-github-first]: https://happygitwithr.com/existing-github-first.html
+[hg-exist-github-last]: https://happygitwithr.com/existing-github-last.html
+[hg-credential-helper]: https://happygitwithr.com/credential-caching.html
+[hypothes.is]: https://web.hypothes.is/
+
+[Jupyter]: https://jupyter.org/
+
+[osca-programme]: https://masters.au.dk/operationsandsupplychainanalytics
+
+[Peergrade]: https://peergrade.io
+[peergrade-signup]: https://app.peergrade.io/join
+[point-and-click]: https://en.wikipedia.org/wiki/Point_and_click
+[pkg-bookdown]: https://bookdown.org/yihui/bookdown/
+[pkg-openxlsx]: https://ycphs.github.io/openxlsx/index.html
+[pkg-ropensci-writexl]: https://docs.ropensci.org/writexl/
+[pkg-jsonlite]: https://cran.r-project.org/web/packages/jsonlite/index.html
+[Python]: https://www.python.org/
+[Positron]: https://positron.posit.co/
+[PyCharm]: https://www.jetbrains.com/pycharm/
+[VSCode]: https://code.visualstudio.com/
+
+[R]: https://www.r-project.org
+[RStudio]: https://rstudio.com
+[rstudio-cloud]: https://rstudio.cloud/spaces/176810/join?access_code=LSGnG2EXTuzSyeYaNXJE77vP33DZUoeMbC0xhfCz
+[r-cloud-mod12]: https://rstudio.cloud/spaces/176810/project/2963819
+[r-cloud-mod13]: https://rstudio.cloud/spaces/176810/project/3020139
+[r-cloud-mod14]: https://rstudio.cloud/spaces/176810/project/3020322
+[r-cloud-mod15]: https://rstudio.cloud/spaces/176810/project/3020509
+[r-cloud-mod16]: https://rstudio.cloud/spaces/176810/project/3026754
+[r-cloud-mod17]: https://rstudio.cloud/spaces/176810/project/3034015
+[r-cloud-mod18]: https://rstudio.cloud/spaces/176810/project/3130795
+[r-cloud-mod19]: https://rstudio.cloud/spaces/176810/project/3266132
+[rstudio-download]: https://rstudio.com/products/rstudio/download/#download
+[rstudio-customizing]: https://support.rstudio.com/hc/en-us/articles/200549016-Customizing-RStudio
+[rstudio-key-shortcuts]: https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts
+[rstudio-workbench]: https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png
+[r-markdown]: https://rmarkdown.rstudio.com/
+[ropensci-writexl]: https://docs.ropensci.org/writexl/
+[r4ds-pipes]: https://r4ds.had.co.nz/pipes.html
+[r4ds-factors]: https://r4ds.had.co.nz/factors.html
+[r4ds-strings]: https://r4ds.had.co.nz/strings.html
+[r4ds-iteration]: https://r4ds.had.co.nz/iteration.html
+
+
+[stat-545]: https://stat545.com
+[stat-545-functions-part1]: https://stat545.com/functions-part1.html
+[stat-545-functions-part2]: https://stat545.com/functions-part2.html
+[stat-545-functions-part3]: https://stat545.com/functions-part3.html
+[slides-welcome]: https://bss-osca.github.io/rl/slides/00-rl_welcome.html
+[slides-m1-3]: https://bss-osca.github.io/rl/slides/01-welcome_r_part.html
+[slides-m4-5]: https://bss-osca.github.io/rl/slides/02-programming.html
+[slides-m6-8]: https://bss-osca.github.io/rl/slides/03-transform.html
+[slides-m9]: https://bss-osca.github.io/rl/slides/04-plot.html
+[slides-m83]: https://bss-osca.github.io/rl/slides/05-joins.html
+[sutton-notation]: https://bss-osca.github.io/rl/misc/sutton-notation.pdf
+
+[tidyverse-main-page]: https://www.tidyverse.org
+[tidyverse-packages]: https://www.tidyverse.org/packages/
+[tidyverse-core]: https://www.tidyverse.org/packages/#core-tidyverse
+[tidyverse-ggplot2]: https://ggplot2.tidyverse.org/
+[tidyverse-dplyr]: https://dplyr.tidyverse.org/
+[tidyverse-tidyr]: https://tidyr.tidyverse.org/
+[tidyverse-readr]: https://readr.tidyverse.org/
+[tidyverse-purrr]: https://purrr.tidyverse.org/
+[tidyverse-tibble]: https://tibble.tidyverse.org/
+[tidyverse-stringr]: https://stringr.tidyverse.org/
+[tidyverse-forcats]: https://forcats.tidyverse.org/
+[tidyverse-readxl]: https://readxl.tidyverse.org
+[tidyverse-googlesheets4]: https://googlesheets4.tidyverse.org/index.html
+[tutorial-markdown]: https://commonmark.org/help/tutorial/
+[tfa-course]: https://bss-osca.github.io/tfa/
+
+[video-install]: https://vimeo.com/415501284
+[video-rstudio-intro]: https://vimeo.com/416391353
+[video-packages]: https://vimeo.com/416743698
+[video-projects]: https://vimeo.com/319318233
+[video-r-intro-p1]: https://www.youtube.com/watch?v=vGY5i_J2c-c
+[video-r-intro-p2]: https://www.youtube.com/watch?v=w8_XdYI3reU
+[video-r-intro-p3]: https://www.youtube.com/watch?v=NuY6jY4qE7I
+[video-subsetting]: https://www.youtube.com/watch?v=hWbgqzsQJF0&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10&amp;t=0s
+[video-datatypes]: https://www.youtube.com/watch?v=5AQM-yUX9zg&amp;list=PLjTlxb-wKvXPqyY3FZDO8GqIaWuEDy-Od&amp;index=10
+[video-control-structures]: https://www.youtube.com/watch?v=s_h9ruNwI_0
+[video-conditional-loops]: https://www.youtube.com/watch?v=2evtsnPaoDg
+[video-functions]: https://www.youtube.com/watch?v=ffPeac3BigM
+[video-tibble-vs-df]: https://www.youtube.com/watch?v=EBk6PnvE1R4
+[video-dplyr]: https://www.youtube.com/watch?v=aywFompr1F4
+
+[wiki-snake-case]: https://en.wikipedia.org/wiki/Snake_case
+[wiki-camel-case]: https://en.wikipedia.org/wiki/Camel_case
+[wiki-interpreted]: https://en.wikipedia.org/wiki/Interpreted_language
+[wiki-literate-programming]: https://en.wikipedia.org/wiki/Literate_programming
+[wiki-csv]: https://en.wikipedia.org/wiki/Comma-separated_values
+[wiki-json]: https://en.wikipedia.org/wiki/JSON
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightLines": true,
+  "highlightStyle": "solarized-light",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
