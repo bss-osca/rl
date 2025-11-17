@@ -596,7 +596,6 @@ w \leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w).
 \theta \leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
 \]</span></p>
 <p>REINFORCE with baseline remains a Monte Carlo method: it requires full-episode returns and performs updates only after the episode ends. It still provides unbiased estimates of the policy gradient. The improvement is purely variance reduction, which can significantly accelerate learning. Empirically, adding a learned baseline commonly leads to much faster convergence, especially when episode returns vary widely.</p>
-<p>These ideas capture the essence of REINFORCE with baseline: the gradient direction is preserved, variance is reduced, and learning becomes more efficient.</p>
 <p><strong>Key formulas</strong></p>
 <p><span class="math display">\[
 \nabla J(\theta) \propto \mathbb{E}_\pi[(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)],
@@ -684,7 +683,7 @@ G_t = R_{t+1} - r(\pi) + R_{t+2} - r(\pi) + \cdots.
 v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t=s].
 \]</span></p>
 <p>To construct a Monte Carlo-style policy gradient, one replaces <span class="math inline">\(q_\pi\)</span> with sampled differential returns. The resulting gradient estimate is: <span class="math display">\[
-\nabla r(\pi) \approx \mathbb{E}\left[(G_t)\,\nabla \ln \pi(A_t|S_t,\theta)\right].
+\nabla r(\pi) \approx \mathbb{E}\left[G_t\,\nabla \ln \pi(A_t|S_t,\theta)\right].
 \]</span> As in the episodic setting, baselines can be used to reduce variance. The baseline must not depend on the action, and a natural choice is the differential value function <span class="math inline">\(v_\pi(s)\)</span>. Subtracting it leads to: <span class="math display">\[
 \nabla r(\pi) \approx \mathbb{E}\left[(G_t - v_\pi(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)\right].
 \]</span> This produces an unbiased gradient estimate while helping to control variance in ongoing tasks.</p>
@@ -714,7 +713,7 @@ Figure&nbsp;14.4: Actor-critic with eligibility traces (continuing) <span class=
 <p>The main idea is to model the policy as: <span class="math display">\[
 \pi(a \mid s, \theta) = \text{a differentiable density over } a,
 \]</span> so that gradients concerning the parameters can be calculated and employed in policy gradient updates.</p>
-<p>A common parameterisation is the univariate Gaussian or Normal distribution: <span class="math display">\[
+<p>A common parametrisation is the univariate Gaussian or Normal distribution: <span class="math display">\[
 \pi(a \mid s, \theta) = \frac{1}{\sqrt{2\pi\sigma^2(s, \theta)}} \exp\left( -\frac{(a - \mu(s, \theta))^2}{2\sigma^2(s, \theta)} \right),
 \]</span> where both the mean <span class="math inline">\(\mu(s)\)</span> and standard deviation <span class="math inline">\(\sigma(s)\)</span> may depend on the state and are parameterised by separate sets of weights <span class="math inline">\(\theta = (\theta_\mu, \theta_\sigma)\)</span>. Note we slightly misuse the notation here. The <span class="math inline">\(\pi\)</span> on the left is notation for the policy, while the <span class="math inline">\(\pi\)</span> on the right simply denotes the number <span class="math inline">\(\pi\)</span>.</p>
 <p>Usually, the mean is expressed as a linear function of features <span class="math display">\[\mu(s, \theta) = {\theta_\mu}^\top \textbf x_\mu(s).\]</span></p>
