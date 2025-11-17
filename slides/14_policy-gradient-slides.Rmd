@@ -1,0 +1,235 @@
+---
+title: "Policy Gradient Methods"
+author: "Lars Relund Nielsen"
+output:
+  xaringan::moon_reader:
+    css: "./libs/slides.css"
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+      slideNumberFormat: ""
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, child = "setup.Rmd", echo=FALSE}
+```
+
+```{r include=FALSE, eval=FALSE}
+# to preview
+xaringan::inf_mr(cast_from = ".", quiet = T)
+```
+
+layout: true
+  
+```{r, echo=FALSE}
+module_name <- "policy-gradient"
+module_number <- "14"
+here::i_am(str_c("slides/", module_number, "_", module_name, "-slides.Rmd"))
+library(htmltools)
+footerHtml <- withTags({
+   div(class="my-footer",
+      span(
+         a(href=str_c("https://bss-osca.github.io/rl/sec-", module_name, ".html"), target="_blank", "Notes"), 
+         " | ",
+         a(href=str_c("https://bss-osca.github.io/rl/slides/", module_number, "_", module_name, "-slides.html"), target="_blank", "Slides"),    
+         " | ",
+         a(href=str_c("https://github.com/bss-osca/rl/blob/master/slides/", module_number, "_", module_name, "-slides.Rmd"), target="_blank", "Source"),  
+      )
+   )
+})
+footerHtml
+knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
+```
+
+
+
+<!-- Templates -->
+<!-- .pull-left[] .pull-right[] -->
+<!-- knitr::include_graphics("img/bandit.png") -->
+<!-- .left-column-wide[]  .right-column-small[] -->
+
+---
+
+## Learning outcomes
+
+- Identify why policy gradient methods differs from value-based methods.
+- Explain why differentiable, parameterized policies are needed for policy gradient algorithms.
+- Describe the softmax policy parameterization and how action preferences define stochastic policies.
+
+- Understand the structure and meaning of the policy gradient theorem for both episodic and continuing tasks.
+- Explain why the gradient of the performance measure does not require differentiating the state distribution.
+- Explain the REINFORCE algorithm and understand why it is an unbiased Monte Carlo estimator of the policy gradient.
+- Explain how introducing baselines reduces variance without altering the expected gradient.
+- Understand the conceptual and mathematical foundations of actor–critic methods.
+- Understand how the TD error provides a lower-variance advantage signal for the actor.
+- Explain how policy gradient methods extend to continuing tasks via average reward and differential value functions.
+- Describe the differential TD error used in continuing actor–critic methods.
+- Understand how to parameterize policies for continuous action spaces, especially Gaussian policies.
+- Recognize how mixed discrete–continuous action spaces can be handled with joint or factorized policies.
+
+---
+
+# Policy Gradient Methods 
+
+- Up to this point approximated based on value functions.
+- The best policy can be found by selecting the action with the highest estimate. 
+- Policy used is derived from the estimates and hence dependent on the estimates.
+- Now focus on directly learning a parametrized policy $\pi(a|s, \theta)$.
+- Can select actions without referring to a value function. 
+- The objective is to learn the policy the maximize a performance measure $J(\theta)$. 
+- These methods are known as a *policy gradient method*. 
+- The value function may still be employed to assist in learning the policy parameters.
+- If also learns a value function approximation, it is referred to as an *actor-critic* method. 
+- The actor is the agent that acts. The critic is the one who criticises or evaluates the actor's performance by estimating the value function.
+
+---
+
+## Policy Approximation 
+
+- Let the policy be differentiable with respect to $\theta$: $$\pi(a|s, \theta) = \Pr(A_t = a|S_t = s, \theta_t = \theta).$$ 
+- In practice, to ensure exploration $\pi(a|s,\theta) \in (0, 1)$ for all $s, a$.
+- Updates follow a *stochastic gradient-ascent* rule: $$\theta_{t+1} = \theta_t + \alpha \nabla J(\theta_t)$$ 
+- For *discrete actions*, we use a softmax function (*soft-max in action preferences*): $$\pi(a|s,\theta) = \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}},$$ where $h(s, a, \theta)$ is a numerical preference (can be parametrised arbitrarily).
+- Guarantees continual exploration since no action ever receives zero probability. 
+
+---
+
+## Policy Approximation and its Advantages
+
+Compared to value-based methods, policy approximation offers several advantages.
+
+- In policies with a softmax the resulting stochastic policy can approach a deterministic one. As the differences between preferences grow, the softmax distribution becomes increasingly peaked, and in the limit it becomes deterministic. 
+- Enables the selection of actions with arbitrary probabilities. In problems with significant function approximation, the best approximate policy may be stochastic.
+-   The policy may be a simpler function to approximate. 
+-   The choice of policy parameterization is sometimes a good way of injecting prior knowledge about the desired form of the policy into the RL system (important reason).
+- Stronger convergence guarantees with continuous policy parameterization. 
+  - The action probabilities change smoothly as a function of the learned parameter.
+  - In $\epsilon$-greedy selection, the action probabilities may change dramatically given a small change in action values.
+
+---
+
+## The Policy Gradient Theorem
+
+- To do stochastic gradient-ascent, we need to find the gradient of the performance measure $J(\theta)$ with respect to the policy parameters $\theta$. 
+- Episodic case: Objective/performance $J(\theta) = v_{\pi_\theta}(s_0)$ given $\pi_\theta$.
+- Given $s$ and $\pi_\theta$ we can find the next action and reward.
+- But how can we estimate the performance gradient when the gradient depends on the unknown effect of policy changes on the state distribution? 
+- Policy gradient theorem: The gradient of $J(\theta)$ can be written as $$\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla \pi(a|s,\theta)$$ where $\mu(s)$ is the on-policy distribution over states under $\pi$.
+- The gradient can be expressed without involving the derivative of the state distribution.  
+
+---
+
+## From policy gradient to eligibility vector
+
+Using $\nabla \pi(a \mid S_t, \theta) = \pi(a \mid s, \theta)\,\nabla \ln \pi(a \mid s, \theta)$, we may modify the Policy Gradient Theorem:
+
+$$\begin{align*}
+\nabla J(\theta) &\propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla \pi(a|s,\theta) = \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a)\nabla\,\pi(a \mid S_t, \theta)\right] \\
+    &= \mathbb{E}_\pi\left[\sum_a q_\pi(S_t,a) \pi(a \mid S_t, \theta)\,\nabla \ln \pi(a \mid S_t, \theta)\right]\\
+    &= \mathbb{E}_\pi\left[q_\pi(S_t, A_t)\,\nabla \ln \pi(A_t|S_t, \theta)\right]
+    = \mathbb{E}_\pi\left[G_t\,\nabla \ln \pi(A_t|S_t, \theta)\right]\\
+\end{align*}$$
+
+- Expectation is taken based on the trajectory distribution generated by the current policy. 
+- The policy parameters is adjusted in proportion to the product of the action-value $q_\pi(S_t, A_t)$ and the gradient of the log-probability.
+- The gradient $\nabla \ln \pi(A_t|S_t, \theta)$ is often called the *eligibility vector*. 
+
+---
+
+## REINFORCE: Monte Carlo Policy Gradient
+
+```{r, echo=FALSE}
+knitr::include_graphics("img/1303_REINFORCE.png")
+```
+
+Note an discount rate have been added here (we didn't include it in the policy gradient theorem).
+
+---
+
+## REINFORCE with Baseline
+
+The original REINFORCE algorithm updates the policy parameters using the full Monte Carlo return:
+$$
+\theta_{t+1} = \theta_t + \alpha\,G_t\,\nabla \ln \pi(A_t|S_t,\theta_t).
+$$
+This update is unbiased but typically has very high variance. To reduce this variance, a baseline function $b(s)$ can be subtracted from the return. This does not change the expected value of the gradient but can greatly improve learning stability.
+
+The key idea is to replace the return $G_t$ with the advantage-like term $G_t - b(S_t)$. The new update rule becomes:
+$$
+\theta_{t+1}
+= \theta_t + \alpha\,(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta_t).
+$$
+The baseline may depend on the state but must not depend on the action. If it did depend on the action, it would bias the estimate of the gradient. The reason it does not introduce bias is:
+$$
+\sum_a b(s)\,\nabla \pi(a|s,\theta) = b(s)\,\nabla \sum_a \pi(a|s,\theta) = b(s)\,\nabla 1 = 0.
+$$
+Thus, subtracting $b(s)$ alters only variance, not the expectation.
+
+A natural and effective choice for the baseline is the state-value function:
+$$
+b(s) = \hat v(s, w),
+$$
+where the parameter vector $w$ is learned from data. The value-function parameters are updated by a Monte Carlo regression method:
+$$
+w \leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w).
+$$
+This produces a *critic* that approximates how good each state is on average. The policy update (the *actor*) then adjusts the probabilities in proportion to how much better or worse the return was compared to what is expected for the state:
+$$
+\theta \leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
+$$
+
+REINFORCE with baseline remains a Monte Carlo method: it requires full-episode returns and performs updates only after the episode ends. It still provides unbiased estimates of the policy gradient. The improvement is purely variance reduction, which can significantly accelerate learning. Empirically, adding a learned baseline commonly leads to much faster convergence, especially when episode returns vary widely.
+
+These ideas capture the essence of REINFORCE with baseline: the gradient direction is preserved, variance is reduced, and learning becomes more efficient.
+
+**Key formulas** 
+
+$$
+\nabla J(\theta) \propto \mathbb{E}_\pi[(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)],
+$$
+and the baseline restriction:
+$$
+b(s)\text{ must not depend on }a.
+$$
+Using a value-function baseline:
+$$
+b(s) = \hat v(s,w),
+$$
+leads to a combined learning rule for actor and critic:
+$$
+\begin{aligned}
+w &\leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w), \\
+\theta &\leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
+\end{aligned}
+$$
+
+Pseudo code for REINFORCE with baseline algorithm is given in @fig-reinforce-baseline-alg.
+
+```{r fig-reinforce-baseline-alg, echo=FALSE, fig.cap="REINFORCE with baseline: Monte Carlo Policy Gradient Control (episodic) [@Sutton18].", out.width="90%"}
+knitr::include_graphics("img/1304_REINFORCE_With_Baseline.png")
+```
+
+
+## Colab
+
+Let us consider the an example in the [Colab tutorial][colab-14-policy-gradient].
+
+
+<!-- # References -->
+
+<!-- ```{r, results='asis', echo=FALSE} -->
+<!-- PrintBibliography(bib) -->
+<!-- ``` -->
+
+
+```{r links, child="../book/links.md"}
+```
+
+```{r postprocess, include=FALSE}
+system2("Rscript", args = "-e 'rmarkdown::render(\"index.Rmd\", quiet = TRUE)'")
+file.copy("./slides.css", "./libs/", overwrite = T)
+```
