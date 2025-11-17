@@ -376,8 +376,6 @@ $$
 
 REINFORCE with baseline remains a Monte Carlo method: it requires full-episode returns and performs updates only after the episode ends. It still provides unbiased estimates of the policy gradient. The improvement is purely variance reduction, which can significantly accelerate learning. Empirically, adding a learned baseline commonly leads to much faster convergence, especially when episode returns vary widely.
 
-These ideas capture the essence of REINFORCE with baseline: the gradient direction is preserved, variance is reduced, and learning becomes more efficient.
-
 **Key formulas** 
 
 $$
@@ -485,7 +483,7 @@ $$
 
 To construct a Monte Carlo-style policy gradient, one replaces $q_\pi$ with sampled differential returns. The resulting gradient estimate is:
 $$
-\nabla r(\pi) \approx \mathbb{E}\left[(G_t)\,\nabla \ln \pi(A_t|S_t,\theta)\right].
+\nabla r(\pi) \approx \mathbb{E}\left[G_t\,\nabla \ln \pi(A_t|S_t,\theta)\right].
 $$
 As in the episodic setting, baselines can be used to reduce variance. The baseline must not depend on the action, and a natural choice is the differential value function $v_\pi(s)$. Subtracting it leads to:
 $$
@@ -518,7 +516,7 @@ $$
 $$
 so that gradients concerning the parameters can be calculated and employed in policy gradient updates.
 
-A common parameterisation is the univariate Gaussian or Normal distribution:
+A common parametrisation is the univariate Gaussian or Normal distribution:
 $$
 \pi(a \mid s, \theta) = \frac{1}{\sqrt{2\pi\sigma^2(s, \theta)}} \exp\left( -\frac{(a - \mu(s, \theta))^2}{2\sigma^2(s, \theta)} \right),
 $$

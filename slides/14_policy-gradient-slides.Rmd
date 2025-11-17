@@ -150,69 +150,148 @@ Note an discount rate have been added here (we didn't include it in the policy g
 
 ---
 
-## REINFORCE with Baseline
+## REINFORCE with Baseline (1)
 
-The original REINFORCE algorithm updates the policy parameters using the full Monte Carlo return:
-$$
-\theta_{t+1} = \theta_t + \alpha\,G_t\,\nabla \ln \pi(A_t|S_t,\theta_t).
-$$
-This update is unbiased but typically has very high variance. To reduce this variance, a baseline function $b(s)$ can be subtracted from the return. This does not change the expected value of the gradient but can greatly improve learning stability.
-
-The key idea is to replace the return $G_t$ with the advantage-like term $G_t - b(S_t)$. The new update rule becomes:
+- The REINFORCE algorithm use the full MC return (often very high variance). 
+- To reduce this variance/stability, a baseline $b(s)$ can be subtracted from the return. 
+- Replace the return $G_t$ with $G_t - b(S_t)$. The new update rule becomes:
 $$
 \theta_{t+1}
 = \theta_t + \alpha\,(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta_t).
 $$
-The baseline may depend on the state but must not depend on the action. If it did depend on the action, it would bias the estimate of the gradient. The reason it does not introduce bias is:
+- The baseline may depend on the state but must not depend on the action. Hence
 $$
 \sum_a b(s)\,\nabla \pi(a|s,\theta) = b(s)\,\nabla \sum_a \pi(a|s,\theta) = b(s)\,\nabla 1 = 0.
 $$
-Thus, subtracting $b(s)$ alters only variance, not the expectation.
+- Subtracting $b(s)$ alters only variance, not the expectation.
+- An effective choice is using the approx. state-value $b(s) = \hat v(s, w)$ with updates
+$$w \leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w).$$
 
-A natural and effective choice for the baseline is the state-value function:
-$$
-b(s) = \hat v(s, w),
-$$
-where the parameter vector $w$ is learned from data. The value-function parameters are updated by a Monte Carlo regression method:
-$$
-w \leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w).
-$$
-This produces a *critic* that approximates how good each state is on average. The policy update (the *actor*) then adjusts the probabilities in proportion to how much better or worse the return was compared to what is expected for the state:
-$$
-\theta \leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
-$$
+---
 
-REINFORCE with baseline remains a Monte Carlo method: it requires full-episode returns and performs updates only after the episode ends. It still provides unbiased estimates of the policy gradient. The improvement is purely variance reduction, which can significantly accelerate learning. Empirically, adding a learned baseline commonly leads to much faster convergence, especially when episode returns vary widely.
+## REINFORCE with Baseline (2)
 
-These ideas capture the essence of REINFORCE with baseline: the gradient direction is preserved, variance is reduced, and learning becomes more efficient.
 
-**Key formulas** 
-
-$$
-\nabla J(\theta) \propto \mathbb{E}_\pi[(G_t - b(S_t))\,\nabla \ln \pi(A_t|S_t,\theta)],
-$$
-and the baseline restriction:
-$$
-b(s)\text{ must not depend on }a.
-$$
-Using a value-function baseline:
-$$
-b(s) = \hat v(s,w),
-$$
-leads to a combined learning rule for actor and critic:
+- This produces a *critic* that approximates how good each state is on average. 
+- The policy update (the *actor*) then adjusts the probabilities in proportion to how much better or worse the return was compared to what is expected for the state.
+- Still a Monte Carlo method.
+- Still provides unbiased estimates of the policy gradient. 
+- The improvement is purely variance reduction to accelerate learning. 
+- Empirically, leads to much faster convergence.
+- We now have both learning rules for actor and critic:
 $$
 \begin{aligned}
 w &\leftarrow w + \alpha_w\,(G_t - \hat v(S_t,w))\,\nabla \hat v(S_t,w), \\
 \theta &\leftarrow \theta + \alpha_\theta\,(G_t - \hat v(S_t,w))\,\nabla \ln \pi(A_t|S_t,\theta).
 \end{aligned}
 $$
+---
 
-Pseudo code for REINFORCE with baseline algorithm is given in @fig-reinforce-baseline-alg.
+## REINFORCE with Baseline algorithm
 
-```{r fig-reinforce-baseline-alg, echo=FALSE, fig.cap="REINFORCE with baseline: Monte Carlo Policy Gradient Control (episodic) [@Sutton18].", out.width="90%"}
+```{r, echo=FALSE}
 knitr::include_graphics("img/1304_REINFORCE_With_Baseline.png")
 ```
 
+---
+
+## Actor-Critic Methods
+
+- Actor-critic methods replace the full MC return with a bootstrapped estimate. 
+- The policy is the *actor* and the value function is the *critic*. The critic evaluates the state value, and the actor adjust the policy parameters.
+- Now let the critic use TD updates (faster updates and less variance). TD error:
+$$\delta_t = R_{t+1} + \gamma \hat v(S_{t+1}, w) - \hat v(S_t, w).$$
+- The critic update becomes:
+$$w \leftarrow w + \alpha_w \,\delta_t\, \nabla \hat v(S_t, w).$$
+The actor update becomes (with bias but lower variance):
+$$\theta \leftarrow \theta + \alpha_\theta\,\delta_t\,\nabla \ln \pi(A_t|S_t, \theta).$$ 
+- Actor-critic methods can be seen as the policy-gradient analogue of SARSA.
+
+---
+
+## Actor-Critic algorithm
+
+```{r, echo=FALSE, out.width="90%"}
+knitr::include_graphics("img/1305a_One_Step_Actor_Critic.png")
+```
+
+---
+
+## Policy Gradient for Continuing Problems (1)
+
+- New objective *average reward*: $$J(\theta) = r(\pi) = \sum_s \mu(s)\sum_a \pi(a|s)\sum_{s',r} p(s',r|s,a)\, r.$$
+- The policy gradient theorem still holds (now with equal sign) $$\nabla r(\pi) = \sum_s \mu(s) \sum_a q_\pi(s,a)\,\nabla \pi(a|s,\theta).$$
+- Value functions are as before except that the return is defined as the *differential value*: $$G_t = R_{t+1} - r(\pi) + R_{t+2} - r(\pi) + \cdots.$$
+
+---
+
+## Policy Gradient for Continuing Problems (2)
+
+- The gradient with a baseline then becomes $$\nabla r(\pi) \approx \mathbb{E}\left[(G_t-b(s))\,\nabla \ln \pi(A_t|S_t,\theta)\right].
+$$
+- If use TD and let the baseline be the state-value, then $$G_t - b(s) \approx \delta_t = (R_{t+1} - \hat r + \hat v(S_{t+1})) - \hat v(S_t)$$
+- Now also the average reward $r(\pi)$ must be estimated during learning $(\hat r)$. 
+- Policy gradient methods extend naturally to the continuing case, but the formulation shifts from episodic returns to average reward and differential values. 
+
+---
+
+## Policy Gradient algorithm (continuing case)
+
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("img/1306_actor-critic-cont.png")
+```
+
+---
+
+## Policy Parameterisation for Continuous Actions (1)
+
+- Consider *continuous action spaces*, meaning actions are real-valued (or vector-valued). 
+- Policies are *parameterised probability density functions* over continuous actions $$\pi(a \mid s, \theta) = \text{a differentiable density over } a$$
+- A common parametrisation is the univariate Gaussian or Normal distribution:
+$$
+\pi(a \mid s, \theta) = \frac{1}{\sqrt{2\pi\sigma^2(s, \theta)}} \exp\left( -\frac{(a - \mu(s, \theta))^2}{2\sigma^2(s, \theta)} \right),
+$$
+where both the mean $\mu(s)$ and standard deviation $\sigma(s)$ may depend on the state and are parametrised by separate sets of weights $\theta = (\theta_\mu, \theta_\sigma)$. 
+- The mean and variance can be $$\mu(s, \theta) = {\theta_\mu}^\top \textbf x_\mu(s), \qquad \sigma^2(s, \theta) = \exp({\theta_\sigma}^\top \textbf x_\sigma(s)).$$ 
+ 
+---
+
+## Policy Parameterisation for Continuous Actions (2)
+
+- The eligibility vector $\nabla \ln \pi(A_t|S_t, \theta_t)$ becomes:
+$$\nabla \ln \pi(a|s, \theta) 
+  = \frac{a-\mu(s, \theta_\mu)}{\sigma(s, \theta_\sigma)^2}\, \textbf x(s, \theta_\mu) +
+  \left(\frac{(a-\mu(s, \theta_\mu))^2}{\sigma(s, \theta_\sigma)^2} - 1\right)
+\textbf x(s, \theta_\sigma).$$
+- The choice of parametrization has important effects. 
+  - If the variance is too small, exploration collapses; if too large, gradient estimates become noisy. 
+  - Learning both mean and variance enables adaptive exploration: the variance shrinks in well-understood regions and grows where uncertainty is higher.
+- Once a differentiable density is available, all previous machinery for policy gradients applies unchanged. 
+- The policy gradient theorem still holds, as it does not depend on action space cardinality. 
+- Actor-critic methods remain preferable because they reduce variance.
+
+---
+
+## Mixed Action Spaces
+
+- The action includes both continuous and discrete components $a = (a^{\text{disc}},\, a^{\text{cont}}).$
+- The policy must represent a joint distribution over this mixed action space. 
+- Policy gradient methods handle this naturally as long as the policy is differentiable. 
+- A standard and convenient factorization is:
+$$
+\pi(a \mid s)
+= \pi(a^{\text{disc}} \mid s)\,
+  \pi(a^{\text{cont}} \mid s, a^{\text{disc}}).
+$$
+- First choose the discrete action component. Then choose the continuous parameters conditioned on the discrete choice.
+- The log-policy splits naturally: $$\ln \pi(a \mid s) = \ln \pi(a^{\text{disc}} \mid s) + \ln \pi(a^{\text{cont}} \mid s, a^{\text{disc}}).$$
+$$\nabla_\theta \ln \pi(a \mid s)
+=
+\nabla_\theta \ln \pi(a^{\text{disc}} \mid s)
++
+\nabla_\theta \ln \pi(a^{\text{cont}} \mid s, a^{\text{disc}}).$$
+
+---
 
 ## Colab
 
