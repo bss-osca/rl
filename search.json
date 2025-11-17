@@ -1170,6 +1170,16 @@
     ]
   },
   {
+    "objectID": "14_policy-gradient.html#learning-outcomes",
+    "href": "14_policy-gradient.html#learning-outcomes",
+    "title": "14  Policy Gradient Methods",
+    "section": "",
+    "text": "Identify why policy gradient methods differs from value-based methods.\nExplain why differentiable, parameterized policies are needed for policy gradient algorithms.\nDescribe the softmax policy parameterization and how action preferences define stochastic policies.\nUnderstand the structure and meaning of the policy gradient theorem for both episodic and continuing tasks.\nExplain the REINFORCE algorithm and understand why it is an unbiased Monte Carlo estimator of the policy gradient.\nExplain how introducing baselines reduces variance without altering the expected gradient.\nUnderstand the conceptual and mathematical foundations of actor–critic methods.\nUnderstand how the TD error provides a lower-variance advantage signal for the actor.\nExplain how policy gradient methods extend to continuing tasks via average reward and differential value functions.\nUnderstand how to parametrize policies for continuous action spaces, especially Gaussian policies.\nRecognize how mixed discrete–continuous action spaces can be handled using factorized policies.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Policy Gradient Methods</span>"
+    ]
+  },
+  {
     "objectID": "14_policy-gradient.html#textbook-readings",
     "href": "14_policy-gradient.html#textbook-readings",
     "title": "14  Policy Gradient Methods",
