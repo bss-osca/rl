@@ -838,10 +838,92 @@ a = (a^{\text{disc}},\, a^{\text{cont}}).
 <section id="exercises" class="level2" data-number="14.12">
 <h2 data-number="14.12" class="anchored" data-anchor-id="exercises"><span class="header-section-number">14.12</span> Exercises</h2>
 <p>Below you will find a set of exercises. Always have a look at the exercises before you meet in your study group and try to solve them yourself. Are you stuck, see the <a href="99_2_appdx.html">help page</a>. Sometimes hints and solutions can be revealed. Beware, you will not learn by giving up too early. Put some effort into finding a solution!</p>
-<p>You may solve the exercises in the corresponding sections in this <span class="math display">\[Colab notebook\]</span><span class="math display">\[colab-14-policy-gradient\]</span>.</p>
-<section id="exercise" class="level3" data-number="14.12.1">
-<h3 data-number="14.12.1" class="anchored" data-anchor-id="exercise"><span class="header-section-number">14.12.1</span> Exercise</h3>
-<p>???</p>
+<p>You may solve the exercises in the corresponding sections in this <a href="https://colab.research.google.com/drive/1noa3mzdi4sLyBB9GCzsV9__5ikOwwSn4?usp=sharing">Colab notebook</a>.</p>
+<section id="exercise-calculate-the-gradient" class="level3" data-number="14.12.1">
+<h3 data-number="14.12.1" class="anchored" data-anchor-id="exercise-calculate-the-gradient"><span class="header-section-number">14.12.1</span> Exercise (calculate the gradient)</h3>
+<p>Given a policy parametrizations using the soft-max function with linear action preferences, show that the eligibility vector is <span class="math display">\[
+\nabla_\theta \ln \pi(a \mid s; \theta)
+= x(s, a) - \sum_b \pi(b \mid s;\theta) x(s, b).
+\]</span></p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Solution">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>We assume a softmax policy with linear preferences:</p>
+<ul>
+<li>Feature vector: <span class="math inline">\(x(s,a) \in \mathbb{R}^d\)</span></li>
+<li>Parameters: <span class="math inline">\(\theta \in \mathbb{R}^d\)</span></li>
+<li>Preference: <span class="math display">\[
+h(s,a;\theta) = \theta^\top x(s,a)
+\]</span></li>
+<li>Policy: <span class="math display">\[
+\pi(a \mid s;\theta)
+= \frac{\exp\big(h(s,a;\theta)\big)}{\sum_b \exp\big(h(s,b;\theta)\big)}
+= \frac{\exp\big(\theta^\top x(s,a)\big)}{\sum_b \exp\big(\theta^\top x(s,b)\big)}.
+\]</span></li>
+</ul>
+<p>Let us start by taking the natural logarithm: <span class="math display">\[
+\begin{align}
+\ln \pi(a \mid s;\theta) &amp;= \ln \exp\big(\theta^\top x(s,a)\big) - \ln \sum_b \exp\big(\theta^\top x(s,b)\big) \\
+   &amp;= \theta^\top x(s,a) - \ln \sum_b \exp\big(\theta^\top x(s,b)\big) \\
+   &amp;= \theta^\top x(s,a) - \ln f(\theta).
+\end{align}
+\]</span></p>
+<p>Let us consider the second term and differentiate. Note that <span class="math display">\[
+\begin{align}
+\nabla_\theta \ln f(\theta) &amp;= \frac{1}{f(\theta)} \nabla_\theta f(\theta) \\
+   &amp;= \frac{1}{f(\theta)} \nabla_\theta \sum_b \exp\big(\theta^\top x(s,b)\big) \\
+   &amp;= \frac{1}{f(\theta)} \sum_b \nabla_\theta \exp\big(\theta^\top x(s,b)\big) \\
+   &amp;= \frac{1}{f(\theta)} \sum_b \exp\big(\theta^\top x(s,b)\big)x(s,b) \\
+   &amp;= \sum_b  \frac{\exp\big(\theta^\top x(s,b)\big)}{f(\theta)} x(s,b) \\
+   &amp;= \sum_b \pi(b \mid s;\theta)x(s,b). \\
+\end{align}
+\]</span></p>
+<p>Hence, <span class="math display">\[
+\begin{align}
+\nabla_\theta \ln \pi(a \mid s;\theta) &amp;= x(s,a) - \sum_b \pi(b \mid s;\theta)x(s,b).
+\end{align}
+\]</span> This is the desired result.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-seasonal-inventory" class="level3" data-number="14.12.2">
+<h3 data-number="14.12.2" class="anchored" data-anchor-id="exercise-seasonal-inventory"><span class="header-section-number">14.12.2</span> Exercise (seasonal inventory)</h3>
+<p>Consider the seasonal inventory and sales planning problem using the environment:</p>
+<pre><code>env = RLEnvSeasonal(
+    max_inv=65,
+    max_t=15,
+    scrap_price=25.0,
+    purchase_price=0,
+    prices=[5, 25],
+    start_q=65,
+    seed=876
+)</code></pre>
+<ol type="1">
+<li>How do you expect the optimal policy to look? Solve the problem.</li>
+</ol>
+<p>Now change the enviroment to</p>
+<pre><code>env = RLEnvSeasonal(
+    max_inv=10,
+    max_t=15,
+    scrap_price=-25.0,
+    purchase_price=0,
+    prices=[5, 25],
+    start_q=10,
+    seed=876
+)</code></pre>
+<ol start="2" type="1">
+<li>How do you expect the optimal policy to look? Solve the problem.</li>
+</ol>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
