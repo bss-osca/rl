@@ -735,5 +735,43 @@ This is the desired result.
 
 
 
+### Exercise (seasonal inventory)
+
+Consider the seasonal inventory and sales planning problem using the environment:
+
+```
+env = RLEnvSeasonal(
+    max_inv=65,
+    max_t=15,
+    scrap_price=25.0,
+    purchase_price=0,
+    prices=[5, 25],
+    start_q=65,
+    seed=876
+)
+```
+
+1. How do you expect the optimal policy to look? Solve the problem.
+
+Now change the enviroment to 
+
+```
+env = RLEnvSeasonal(
+    max_inv=10,
+    max_t=15,
+    scrap_price=-25.0,
+    purchase_price=0,
+    prices=[5, 25],
+    start_q=10,
+    seed=876
+)
+```
+
+2. How do you expect the optimal policy to look? Solve the problem.
+
+
+
+
+
 ```{r links, child="links.md", include=FALSE}
 ```
