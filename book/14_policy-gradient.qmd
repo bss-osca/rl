@@ -677,11 +677,63 @@ Read Chapter 13.8 in @Sutton18.
 
 `r strExercises`
 
-You may solve the exercises in the corresponding sections in this $$Colab notebook$$$$colab-14-policy-gradient$$.
+You may solve the exercises in the corresponding sections in this [Colab notebook][colab-14-policy-gradient].
 
-### Exercise
+### Exercise (calculate the gradient)
 
-???
+Given a policy parametrizations using the soft-max function with linear action preferences, show that the eligibility vector is
+$$
+\nabla_\theta \ln \pi(a \mid s; \theta)
+= x(s, a) - \sum_b \pi(b \mid s;\theta) x(s, b).
+$$
+
+::: {.callout-warning collapse="true" title="Solution"}
+We assume a softmax policy with linear preferences:
+
+- Feature vector: $x(s,a) \in \mathbb{R}^d$
+- Parameters: $\theta \in \mathbb{R}^d$
+- Preference:
+  $$
+  h(s,a;\theta) = \theta^\top x(s,a)
+  $$
+- Policy:
+  $$
+  \pi(a \mid s;\theta)
+  = \frac{\exp\big(h(s,a;\theta)\big)}{\sum_b \exp\big(h(s,b;\theta)\big)}
+  = \frac{\exp\big(\theta^\top x(s,a)\big)}{\sum_b \exp\big(\theta^\top x(s,b)\big)}.
+  $$
+
+Let us start by taking the natural logarithm:
+$$
+\begin{align}
+\ln \pi(a \mid s;\theta) &= \ln \exp\big(\theta^\top x(s,a)\big) - \ln \sum_b \exp\big(\theta^\top x(s,b)\big) \\
+   &= \theta^\top x(s,a) - \ln \sum_b \exp\big(\theta^\top x(s,b)\big) \\
+   &= \theta^\top x(s,a) - \ln f(\theta).
+ \end{align}
+$$
+
+Let us consider the second term and differentiate. Note that
+$$
+\begin{align}
+\nabla_\theta \ln f(\theta) &= \frac{1}{f(\theta)} \nabla_\theta f(\theta) \\
+   &= \frac{1}{f(\theta)} \nabla_\theta \sum_b \exp\big(\theta^\top x(s,b)\big) \\
+   &= \frac{1}{f(\theta)} \sum_b \nabla_\theta \exp\big(\theta^\top x(s,b)\big) \\
+   &= \frac{1}{f(\theta)} \sum_b \exp\big(\theta^\top x(s,b)\big)x(s,b) \\
+   &= \sum_b  \frac{\exp\big(\theta^\top x(s,b)\big)}{f(\theta)} x(s,b) \\
+   &= \sum_b \pi(b \mid s;\theta)x(s,b). \\
+\end{align}
+$$
+
+Hence, 
+$$
+\begin{align}
+\nabla_\theta \ln \pi(a \mid s;\theta) &= x(s,a) - \sum_b \pi(b \mid s;\theta)x(s,b).
+ \end{align}
+$$
+This is the desired result. 
+:::
+
+
 
 ```{r links, child="links.md", include=FALSE}
 ```

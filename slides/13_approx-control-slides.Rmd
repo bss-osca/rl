@@ -70,7 +70,7 @@ knitr::opts_chunk$set(fig.path=str_c("img/", module_name, "-"))
 ## On-Policy Control with Approximation
 
 - In previous module: Focus on predicting the state values of a policy using function approximation. 
-- Now: Emphasis on control, i.e. finding an optimal policy through function approximation of *action values* $\hat q(s, a, \textbf{w})$. 
+- Now: Emphasis on control, i.e. finding an optimal policy through function approximation of action values $\hat q(s, a, \textbf{w})$. 
 - The focus is on on-policy methods.
 - Episodic case: Extension from prediction to control is straightforward
 - Continuing case: Discounting is not suitable to find an optimal policy. Here we have to switch from the discounting objective to an average-reward objective.
