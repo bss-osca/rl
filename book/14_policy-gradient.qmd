@@ -62,7 +62,7 @@ After studying this chapter, you should be able to:
 
 ## Textbook readings
 
-For this module, you will need to read Chapter 13-13.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen $$here$$$$sutton-notation$$.
+For this module, you will need to read Chapter 13-13.7 in @Sutton18. Read it before continuing this module. A summary of the book notation can be seen [here][sutton-notation].
 
 ```{r, echo=FALSE}
 link_slide_file_text("14", "policy-gradient")
