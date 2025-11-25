@@ -55,17 +55,17 @@ layout: true
 
 ## Learning outcomes
 
-- Identify why policy gradient methods differs from value-based methods.
-- Explain why differentiable, parameterized policies are needed for policy gradient algorithms.
-- Describe the softmax policy parameterization and how action preferences define stochastic policies.
-- Understand the structure and meaning of the policy gradient theorem for both episodic and continuing tasks.
-- Explain the REINFORCE algorithm and understand why it is an unbiased Monte Carlo estimator of the policy gradient.
-- Explain how introducing baselines reduces variance without altering the expected gradient.
+- Identify why policy gradient (PG) methods differs from value-based methods.
+- Explain why differentiable, parameterized policies are needed for PG algorithms.
+- Describe the softmax policy parameterization using action preferences.
+- Understand the structure and meaning of the PG theorem.
+- Explain the REINFORCE algorithm and understand why it is an unbiased MC estimator.
+- Explain how baselines reduces variance without altering the expected gradient.
 - Understand the conceptual and mathematical foundations of actor–critic methods.
 - Understand how the TD error provides a lower-variance advantage signal for the actor.
-- Explain how policy gradient methods extend to continuing tasks via average reward and differential value functions.
-- Understand how to parametrize policies for continuous action spaces, especially Gaussian policies.
-- Recognize how mixed discrete–continuous action spaces can be handled using factorized policies.
+- Explain how PG methods extend to continuing tasks via average reward.
+- Understand how to parametrize policies for continuous action spaces.
+- Recognize how mixed discrete–continuous action spaces can be handled.
 
 ---
 
@@ -204,6 +204,12 @@ The actor update becomes (with bias but lower variance):
 ## Actor-Critic algorithm
 
 &lt;img src="img/1305a_One_Step_Actor_Critic.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Colab
+
+Let us consider the an example in the [Colab tutorial][colab-14-policy-gradient].
 
 ---
 
