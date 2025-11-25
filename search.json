@@ -1184,7 +1184,7 @@
     "href": "14_policy-gradient.html#textbook-readings",
     "title": "14  Policy Gradient Methods",
     "section": "14.2 Textbook readings",
-    "text": "14.2 Textbook readings\nFor this module, you will need to read Chapter 13-13.7 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen \\[here\\]\\[sutton-notation\\].\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
+    "text": "14.2 Textbook readings\nFor this module, you will need to read Chapter 13-13.7 in Sutton and Barto (2018). Read it before continuing this module. A summary of the book notation can be seen here.\n\n\n\nSlides for this module can be seen\nhere.\nYou do not have to look at them before the lecture!",
     "crumbs": [
       "<span class='chapter-number'>14</span>  <span class='chapter-title'>Policy Gradient Methods</span>"
     ]
