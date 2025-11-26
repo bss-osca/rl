@@ -531,9 +531,9 @@ w_{g(s)} \leftarrow w_{g(s)} + \alpha \,\big(U_t - w_{g(s)}\big),
 <p><span class="math display">\[
 \hat{v} (s;\mathbf w) = \mathbf w^\top \mathbf x(s) = w_0 + w_1\cos(\pi z) + w_2\cos(2\pi z) + \ldots + w_{d}\cos(d\pi z),
 \]</span> where <span class="math inline">\(z\)</span> is the normalised state. That is, the entries in the gradient are <span class="math inline">\(x_i(z)=\cos(i\pi z), j=0,1,\dots,n,\)</span> where <span class="math inline">\(j=0\)</span> is the <em>bias</em> term (<span class="math inline">\(\cos(0)=1\)</span>).</p>
-<p>If we have <em>multiple normalized state variables</em> <span class="math inline">\(\mathbf z=(z_1,\dots,z_K)\)</span>, we choose <em>frequency vectors</em> <span class="math inline">\(\mathbf c=(c_1,\dots,c_K)\)</span> with non-negative integers. Combinations can be limited by considering <span class="math inline">\(c\)</span> where <span class="math inline">\(\sum_k c_k\le n\)</span>, i.e.&nbsp;then number of features are <span class="math inline">\(\binom{K+n}{n}\)</span>. Each feature now becomes</p>
+<p>If we have <em>multiple normalized state variables</em> <span class="math inline">\(\mathbf z=(z_1,\dots,z_k)\)</span>, we choose <em>frequency vectors</em> <span class="math inline">\(\mathbf c=(c_1,\dots,c_k)\)</span> with non-negative integers. Combinations can be limited by considering <span class="math inline">\(c\)</span> where <span class="math inline">\(c_k\in 0,\ldots, n\)</span>, i.e.&nbsp;then number of features are <span class="math inline">\(m = (n+1)^k\)</span>. Given the <span class="math inline">\(m\)</span> frequency vectors, the feature vector for the <span class="math inline">\(i\)</span>’th <span class="math inline">\(c^i\)</span> now becomes</p>
 <p><span class="math display">\[
-x_{\mathbf c}(\mathbf z)=\prod_{k=1}^K \cos\!\big(\pi c_k z_k\big).
+x_{\mathbf c^i}(\mathbf z)=\cos\big(\pi  z^\top c^i\big).
 \]</span></p>
 <p><strong>Normalization of states</strong></p>
 <p>Since we want the states normalized so <span class="math inline">\(s\in[0,1]\)</span> we do</p>
