@@ -366,13 +366,13 @@ gradient are $x_i(z)=\cos(i\pi z), j=0,1,\dots,n,$ where $j=0$ is the
 *bias* term ($\cos(0)=1$).
 
 If we have *multiple normalized state variables*
-$\mathbf z=(z_1,\dots,z_K)$, we choose *frequency vectors*
-$\mathbf c=(c_1,\dots,c_K)$ with non-negative integers. Combinations can
-be limited by considering $c$ where $\sum_k c_k\le n$, i.e. then number
-of features are $\binom{K+n}{n}$. Each feature now becomes
+$\mathbf z=(z_1,\dots,z_k)$, we choose *frequency vectors*
+$\mathbf c=(c_1,\dots,c_k)$ with non-negative integers. Combinations can
+be limited by considering $c$ where $c_k\in 0,\ldots, n$, i.e. then number
+of features are $m = (n+1)^k$. Given the $m$ frequency vectors, the feature vector for the $i$'th $c^i$ now becomes
 
 $$
-x_{\mathbf c}(\mathbf z)=\prod_{k=1}^K \cos\!\big(\pi c_k z_k\big).
+x_{\mathbf c^i}(\mathbf z)=\cos\big(\pi  z^\top c^i\big).
 $$
 
 **Normalization of states**
