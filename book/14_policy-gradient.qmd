@@ -770,6 +770,17 @@ env = RLEnvSeasonal(
 2. How do you expect the optimal policy to look? Solve the problem.
 
 
+### Exercise (car rental)
+
+Modify the car rental environment so that we change the demand rates to `lD =[4, 1]` and the return rates to `lH = [1, 4]` and let the maximum number of cars be 10.
+
+1. How do you expect the optimal policy to look? Solve the problem.
+
+Modify the car rental environment so that we change the demand rates to `lD =[2, 2]` and the return rates to `lH = [0, 4]` and let the maximum number of cars be 10.
+
+2. How do you expect the optimal policy to look? Solve the problem.
+
+
 
 
 
