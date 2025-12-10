@@ -11,11 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Practicalities
 
 - Be ready in front of the exam room on time.
-- Bring your project report as hard copy or easy available on your computer.
+- Bring your project reports (the ones you handed in) so easy available on your computer.
 - Remember to bring your student id card.
 - We will have pen and paper, or you may use the blackboard. 
 - You are not allowed to look in your notes/report during the exam. However, we may ask question related to the report.
-
 
 ## Format
 
@@ -23,7 +22,7 @@ The exam is a 20 min oral individual exam without any preparation. Since censor 
 
 - The oral examination lasts 15 minutes exactly.
 - You might be interrupted in the middle of a sentence which is not to be rude but to make sure we stick to the schedule.
-- The exam will begin by you picking one of the exam-topics specified. For each topic prepare a 4-6 minutes pitch where you explain the core concepts and what you find important and relevant.
+- The exam will begin by you picking one of the exam-topics specified. For each topic prepare a 4-6 minutes pitch where you explain the core concepts and what you find important and relevant. You may be asked to do this pitch.
 - We will use the last minutes to ask questions, e.g. about the example in your project report or link your pitch to other topics in the curriculum.
 
 ## Exam-topics
@@ -37,5 +36,8 @@ The following topics can be selected:
 5) Monte Carlo methods for prediction and control
 6) Temporal difference methods for prediction
 7) Temporal difference methods for control
+8) On-policy prediction with approximation
+9) On-Policy Control with Approximation
+10) Policy Gradient Methods
 
 Have a look at the learning goals for each topic to get an overview over the topic.
