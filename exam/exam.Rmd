@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - Bring your project reports (the ones you handed in) so easy available on your computer.
 - Remember to bring your student id card.
 - We will have pen and paper, or you may use the blackboard. 
-- You are not allowed to look in your notes/report during the exam. However, we may ask question related to the report.
+- You are not allowed to look in your notes/report during the exam if not asked to. 
 
 ## Format
 
@@ -22,8 +22,9 @@ The exam is a 20 min oral individual exam without any preparation. Since censor 
 
 - The oral examination lasts 15 minutes exactly.
 - You might be interrupted in the middle of a sentence which is not to be rude but to make sure we stick to the schedule.
-- The exam will begin by you picking one of the exam-topics specified. For each topic prepare a 4-6 minutes pitch where you explain the core concepts and what you find important and relevant. You may be asked to do this pitch.
-- We will use the last minutes to ask questions, e.g. about the example in your project report or link your pitch to other topics in the curriculum.
+- The exam will begin by you picking one of the exam-topics specified. 
+- For each topic prepare a 2-3 minutes pitch where you explain the core concepts and what you find important and relevant (not about your projects). You may be asked to do this pitch.
+- We will use the last minutes to ask questions, e.g. about the topic, relate the topic to your projects or link your pitch to other topics in the curriculum.
 
 ## Exam-topics
 
